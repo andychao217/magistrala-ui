@@ -1,12 +1,13 @@
 # Copyright (c) Abstract Machines
 # SPDX-License-Identifier: Apache-2.0
 
+MG_DOCKER_IMAGE_USERNAME_PREFIX ?= andychao217
 MG_DOCKER_IMAGE_NAME_PREFIX ?= magistrala
 SVC = ui
 BUILD_DIR = build
 CGO_ENABLED ?= 0
 GOOS ?= linux
-GOARCH ?= amd64
+GOARCH ?= arm64
 VERSION ?= $(shell git describe --abbrev=0 --tags || echo "none")
 COMMIT ?= $(shell git rev-parse HEAD)
 TIME ?= $(shell date +%F_%T)
@@ -22,15 +23,13 @@ define compile_service
 endef
 
 define make_docker
-	docker build \
+	docker buildx build --platform=linux/amd64,linux/arm64 \
 		--no-cache \
 		--build-arg SVC=$(SVC) \
-		--build-arg GOARCH=$(GOARCH) \
-		--build-arg GOARM=$(GOARM) \
 		--build-arg VERSION=$(VERSION) \
 		--build-arg COMMIT=$(COMMIT) \
 		--build-arg TIME=$(TIME) \
-		--tag=$(MG_DOCKER_IMAGE_NAME_PREFIX)/$(SVC) \
+		--tag=$(MG_DOCKER_IMAGE_USERNAME_PREFIX)/$(MG_DOCKER_IMAGE_NAME_PREFIX)-$(SVC) \
 		-f docker/Dockerfile .
 endef
 
@@ -38,7 +37,7 @@ define make_docker_dev
 	docker build \
 		--no-cache \
 		--build-arg SVC=$(SVC) \
-		--tag=$(MG_DOCKER_IMAGE_NAME_PREFIX)/$(SVC) \
+		--tag=$(MG_DOCKER_IMAGE_USERNAME_PREFIX)/$(MG_DOCKER_IMAGE_NAME_PREFIX)-$(svc) \
 		-f docker/Dockerfile.dev .
 endef
 
