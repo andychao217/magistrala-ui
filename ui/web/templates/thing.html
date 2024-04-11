@@ -17,10 +17,12 @@ SPDX-License-Identifier: Apache-2.0 -->
               {{ template "breadcrumb" . }}
               <div class="row">
                 <div class="buttons mb-3">
+                  <!-- 隐藏按钮 -->
                   <a
                     class="btn body-button"
                     href="{{ printf "%s/things/%s/channels" pathPrefix .Entity.ID }}"
                     role="button"
+                    style="display: none;"
                   >
                     Connect
                   </a>
@@ -28,6 +30,7 @@ SPDX-License-Identifier: Apache-2.0 -->
                     class="btn body-button"
                     href="{{ printf "%s/things/%s/users" pathPrefix .Entity.ID }}"
                     role="button"
+                    style="display: none;"
                   >
                     Share
                   </a>
@@ -132,7 +135,8 @@ SPDX-License-Identifier: Apache-2.0 -->
                     </tbody>
                   </table>
                   <div id="error-message" class="text-danger"></div>
-                  <div class="row-mb-3 mt-3">
+                  <!-- 隐藏按钮 -->
+                  <div class="row-mb-3 mt-3" style="display: none;">
                     {{ if eq .Entity.Status "enabled" }}
                       <button
                         type="button"

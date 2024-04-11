@@ -149,7 +149,8 @@ SPDX-License-Identifier: Apache-2.0 -->
 
       <!-- Heading -->
       <div class="sidebar-heading mb-3">THINGS MANAGEMENT</div>
-      <li class="nav-item mb-2 mx-2">
+      <!-- 隐藏页面 -->
+      <li class="nav-item mb-2 mx-2" style="display: none;">
         {{ $navbarActive = "groups" }}
         <a
           href="{{ printf "%s/groups" pathPrefix }}"
@@ -188,7 +189,8 @@ SPDX-License-Identifier: Apache-2.0 -->
           <span>Channels</span>
         </a>
       </li>
-      <li class="nav-item mb-2 mx-2">
+      <!-- 隐藏页面 -->
+      <li class="nav-item mb-2 mx-2" style="display: none;">
         {{ $navbarActive = "bootstraps" }}
         <a
           href="{{ printf "%s/bootstraps" pathPrefix }}"

@@ -7,7 +7,7 @@ export function submitCreateForm(config) {
   form.addEventListener("submit", function (event) {
     event.preventDefault();
     const formData = new FormData(form);
-
+    
     fetch(config.url, {
       method: "POST",
       body: formData,
@@ -70,4 +70,33 @@ function showError(errorMessage, alertDiv) {
 	  <div>${errorMessage}</div>
 	  <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="close"></button>
 	</div> `;
+}
+
+//默认新增一个通道
+export function createDefaultChannel (url) {
+  let formData = new FormData();
+  formData.append("name", "Default Channel");
+  formData.append("description", "");
+  formData.append("metadata", JSON.stringify({}));
+  fetch(url, {
+    method: "POST",
+    body: formData,
+  })
+    .then(function (response) {
+      if (!response.ok) {
+        const errorMessage = response.headers.get("X-Error-Message");
+        if (errorMessage) {
+          console.log("error submitting form: ", errorMessage);
+        } else {
+          console.log(`Error: ${response.status}`);
+        }
+      } else {
+        console.log("createDefaultChannel sucess ");
+        console.log('response',response)
+        window.location.reload();
+      }
+    })
+    .catch((error) => {
+      console.log("error submitting form: ", error);
+    });
 }

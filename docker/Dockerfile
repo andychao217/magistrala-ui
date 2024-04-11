@@ -2,6 +2,11 @@
 # SPDX-License-Identifier: Apache-2.0
 
 FROM --platform=$BUILDPLATFORM golang:1.21-alpine AS builder
+
+# 设置GOPROXY环境变量
+ENV GOPROXY=https://goproxy.cn,https://goproxy.io,https://mirrors.aliyun.com/goproxy/,https://proxy.golang.org,direct
+#5.更新Alpine的软件源为阿里云，因为从默认官源拉取实在太慢了
+
 ARG TARGETOS
 ARG TARGETARCH
 ARG SVC

@@ -57,7 +57,8 @@ SPDX-License-Identifier: Apache-2.0 -->
                               />
                               <div id="nameError" class="text-danger"></div>
                             </div>
-                            <div class="mb-3">
+                            <!-- 隐藏不能使用的字段 -->
+                            <div class="mb-3" style="display: none;">
                               <label for="thingID" class="form-label">Thing ID</label>
                               <input
                                 type="text"
@@ -275,14 +276,15 @@ SPDX-License-Identifier: Apache-2.0 -->
         function viewThing(id) {
           window.location.href = '{{printf "%s/things/" pathPrefix}}' + id;
         }
-      </script>      <script type="module">
+      </script>      
+      <script type="module">
         import {
           attachValidationListener,
           validateName,
           validateJSON,
           validateStringArray,
         } from "/js/validation.js";
-        import { submitCreateForm } from "/js/forms.js";
+        import { submitCreateForm, createDefaultChannel } from "/js/forms.js";
 
         attachValidationListener({
           buttonId: "create-thing-button",
@@ -316,6 +318,9 @@ SPDX-License-Identifier: Apache-2.0 -->
           alertDiv: "alertBulkMessage",
           modal: thingsModal,
         });
+
+        //默认新增一个通道
+        createDefaultChannel('{{ printf "%s/channels" pathPrefix }}')
       </script>
     </body>
   </html>

@@ -17,8 +17,9 @@ SPDX-License-Identifier: Apache-2.0 -->
               {{ template "breadcrumb" . }}
               <div class="row">
                 <div class="buttons mb-3">
+                   <!-- 隐藏按钮 -->
                   <!-- Button trigger modal -->
-                  <button type="button" class="btn body-button" onclick="openModal('single')">
+                  <button type="button" class="btn body-button" onclick="openModal('single')" style="display: none;">
                     Add Channel
                   </button>
 
@@ -95,8 +96,9 @@ SPDX-License-Identifier: Apache-2.0 -->
                     </div>
                   </div>
 
+                  <!-- 隐藏按钮 -->
                   <!-- Button trigger modal -->
-                  <button type="button" class="btn body-button" onclick="openModal('bulk')">
+                  <button type="button" class="btn body-button" onclick="openModal('bulk')" style="display: none;">
                     Add Channels
                   </button>
 
@@ -228,9 +230,10 @@ SPDX-License-Identifier: Apache-2.0 -->
         function viewChannels(id) {
           window.location.href = "{{ printf "%s/channels/" pathPrefix }}" + id;
         }
-      </script>      <script type="module">
+      </script>      
+      <script type="module">
         import { attachValidationListener, validateName, validateJSON } from "/js/validation.js";
-        import { submitCreateForm } from "/js/forms.js";
+        import { submitCreateForm, createDefaultChannel } from "/js/forms.js";
         import { fetchIndividualEntity } from "/js/infinitescroll.js";
 
         attachValidationListener({
@@ -262,6 +265,9 @@ SPDX-License-Identifier: Apache-2.0 -->
           alertDiv: "alertBulkMessage",
           modal: channelsModal,
         });
+
+        //默认新增一个通道
+        createDefaultChannel('{{ printf "%s/channels" pathPrefix }}')
       </script>
     </body>
   </html>
