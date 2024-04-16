@@ -441,6 +441,13 @@ func MakeHandler(svc ui.Service, r *chi.Mux, instanceID, prefix string, secureCo
 						encodeResponse,
 						opts...,
 					).ServeHTTP)
+
+					r.Delete("/{id}", kithttp.NewServer(
+						deleteClientEndpoint(svc),
+						decodeDeleteClientReq,
+						encodeResponse,
+						opts...,
+					).ServeHTTP)
 				})
 
 				r.Route("/channels", func(r chi.Router) {
@@ -1466,6 +1473,24 @@ func decodeThingSecretUpdate(_ context.Context, r *http.Request) (interface{}, e
 			Credentials: credentials,
 		},
 	}, nil
+}
+
+func decodeDeleteClientReq(_ context.Context, r *http.Request) (interface{}, error) {
+	session, err := sessionFromHeader(r)
+	if err != nil {
+		return nil, err
+	}
+	var credentials sdk.Credentials
+	if err := json.NewDecoder(r.Body).Decode(&credentials); err != nil {
+		return nil, err
+	}
+
+	req := deleteClientReq{
+		token: session.Token,
+		id:    r.Form.Get("id"),
+	}
+
+	return req, nil
 }
 
 func decodeThingStatusUpdate(_ context.Context, r *http.Request) (interface{}, error) {

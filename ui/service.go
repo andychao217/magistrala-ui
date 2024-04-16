@@ -241,6 +241,8 @@ type Service interface {
 	ListThingUsers(s Session, id, relation string, page, limit uint64) ([]byte, error)
 	// ListChannelsByThing retrieves a list of channels based on the given thing ID.
 	ListChannelsByThing(s Session, id string, page, limit uint64) ([]byte, error)
+	// DeleteClient deletes client with given ID.
+	DeleteClient(token string, id string) error
 
 	// CreateChannel creates a new channel.
 	CreateChannel(channel sdk.Channel, token string) error
@@ -920,6 +922,14 @@ func (us *uiService) UpdateThingTags(token string, thing sdk.Thing) error {
 func (us *uiService) UpdateThingSecret(token string, thing sdk.Thing) error {
 	if _, err := us.sdk.UpdateThingSecret(thing.ID, thing.Credentials.Secret, token); err != nil {
 		return errors.Wrap(ErrFailedUpdate, err)
+	}
+
+	return nil
+}
+
+func (us *uiService) DeleteClient(token, id string) error {
+	if err := us.sdk.DeleteThing(id, token); err != nil {
+		return errors.Wrap(ErrFailedDisable, err)
 	}
 
 	return nil

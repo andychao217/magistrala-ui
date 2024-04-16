@@ -429,6 +429,21 @@ func (req createThingsReq) validate() error {
 	return nil
 }
 
+type deleteClientReq struct {
+	token string
+	id    string
+}
+
+func (req deleteClientReq) validate() error {
+	if req.token == "" {
+		return errInvalidCredentials
+	}
+	if req.id == "" {
+		return errMissingThingID
+	}
+	return nil
+}
+
 type createChannelReq struct {
 	token string
 	sdk.Channel

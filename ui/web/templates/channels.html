@@ -168,12 +168,13 @@ SPDX-License-Identifier: Apache-2.0 -->
                           <th class="desc-col" scope="col">Description</th>
                           <th class="meta-col" scope="col">Metadata</th>
                           <th class="created-col" scope="col">Created At</th>
-                          <th class="status-col" scope="col">Status</th>
+                          <!-- <th class="status-col" scope="col">Status</th> -->
+                          <th class="operation-col" scope="col">Operation</th>
                         </tr>
                       </thead>
                       <tbody>
                         {{ range $i, $c := .Channels }}
-                          <tr onclick="viewChannels('{{ $c.ID }}')" class="clickable-row">
+                          <tr class="clickable-row">
                             <td>{{ $c.Name }}</td>
                             <td class="desc-col">{{ $c.Description }}</td>
                             <td class="meta-col">
@@ -182,7 +183,8 @@ SPDX-License-Identifier: Apache-2.0 -->
                               </div>
                             </td>
                             <td class="created-col">{{ $c.CreatedAt }}</td>
-                            <td>
+                            <!-- 隐藏不能使用的字段 -->
+                            <!-- <td>
                               {{ if eq $c.Status "enabled" }}
                                 <span class="badge rounded-pill enabled-pill">{{ $c.Status }}</span>
                               {{ else if eq $c.Status "disabled" }}
@@ -190,6 +192,11 @@ SPDX-License-Identifier: Apache-2.0 -->
                                   {{ $c.Status }}
                                 </span>
                               {{ end }}
+                            </td> -->
+                            <td class="operation-col">
+                              <button class="btn body-button" onclick="viewChannels('{{ $c.ID }}')">
+                                <i class="fa-solid fa-info"></i>
+                              </button>
                             </td>
                           </tr>
                           <script>
@@ -230,7 +237,7 @@ SPDX-License-Identifier: Apache-2.0 -->
         function viewChannels(id) {
           window.location.href = "{{ printf "%s/channels/" pathPrefix }}" + id;
         }
-      </script>      
+      </script>
       <script type="module">
         import { attachValidationListener, validateName, validateJSON } from "/js/validation.js";
         import { submitCreateForm, createDefaultChannel } from "/js/forms.js";
@@ -266,7 +273,6 @@ SPDX-License-Identifier: Apache-2.0 -->
           modal: channelsModal,
         });
 
-        //默认新增一个通道
         createDefaultChannel('{{ printf "%s/channels" pathPrefix }}')
       </script>
     </body>

@@ -731,6 +731,7 @@ button.edit-btn {
   .table-container .created-col,
   .table-container .desc-col,
   .table-container .alias-col,
+  .table-container .operation-col,
   .doc-button {
     display: none;
   }

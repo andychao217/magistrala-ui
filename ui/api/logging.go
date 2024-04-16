@@ -531,6 +531,24 @@ func (lm *loggingMiddleware) DisableThing(token, id string) (err error) {
 	return lm.svc.DisableThing(token, id)
 }
 
+// DeleteClient adds logging middleware to delete thing method.
+func (lm *loggingMiddleware) DeleteClient(token string, id string) (err error) {
+	defer func(begin time.Time) {
+		args := []any{
+			slog.String("duration", time.Since(begin).String()),
+			slog.String("thing_id", id),
+		}
+		if err != nil {
+			args = append(args, slog.Any("error", err))
+			lm.logger.Warn("Delete thing failed to complete successfully", args...)
+			return
+		}
+		lm.logger.Info("Delete thing completed successfully", args...)
+	}(time.Now())
+
+	return lm.svc.DeleteClient(token, id)
+}
+
 // ShareThing adds logging middleware to share thing method.
 func (lm *loggingMiddleware) ShareThing(token, thingID string, req sdk.UsersRelationRequest) (err error) {
 	defer func(begin time.Time) {

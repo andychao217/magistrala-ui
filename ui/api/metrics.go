@@ -339,6 +339,16 @@ func (mm *metricsMiddleware) DisableThing(token, id string) error {
 	return mm.svc.DisableThing(token, id)
 }
 
+// DeleteClient adds metrics middleware to delete thing method.
+func (mm *metricsMiddleware) DeleteClient(token string, id string) error {
+	defer func(begin time.Time) {
+		mm.counter.With("method", "delete_thing").Add(1)
+		mm.latency.With("method", "delete_thing").Observe(time.Since(begin).Seconds())
+	}(time.Now())
+
+	return mm.svc.DeleteClient(token, id)
+}
+
 // ShareThing adds metrics middleware to share thing method.
 func (mm *metricsMiddleware) ShareThing(token, thingID string, req sdk.UsersRelationRequest) error {
 	defer func(begin time.Time) {

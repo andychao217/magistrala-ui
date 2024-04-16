@@ -63,7 +63,7 @@ export function submitUpdateForm(config) {
     });
 }
 
-function showError(errorMessage, alertDiv) {
+export function showError(errorMessage, alertDiv) {
   const alert = document.getElementById(alertDiv);
   alert.innerHTML = `
 	<div class="alert alert-danger alert-dismissable fade show d-flex flex-row justify-content-between" role="alert">
@@ -73,7 +73,7 @@ function showError(errorMessage, alertDiv) {
 }
 
 //默认新增一个通道
-export function createDefaultChannel (url) {
+export function createDefaultChannel(url) {
   let formData = new FormData();
   formData.append("name", "Default Channel");
   formData.append("description", "");

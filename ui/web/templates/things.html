@@ -211,12 +211,13 @@ SPDX-License-Identifier: Apache-2.0 -->
                           <th class="tags-col" scope="col">Tags</th>
                           <th class="meta-col" scope="col">Metadata</th>
                           <th class="created-col" scope="col">Created At</th>
-                          <th class="status-col" scope="col">Status</th>
+                          <!-- <th class="status-col" scope="col">Status</th> -->
+                          <th class="operation-col" scope="col">Operation</th>
                         </tr>
                       </thead>
                       <tbody>
                         {{ range $i, $t := .Things }}
-                          <tr onclick="viewThing('{{ $t.ID }}')" class="clickable-row">
+                          <tr class="clickable-row">
                             <td>{{ $t.Name }}</td>
                             <td class="tags-col">
                               {{ range $j, $tag := $t.Tags }}
@@ -229,7 +230,8 @@ SPDX-License-Identifier: Apache-2.0 -->
                               </div>
                             </td>
                             <td class="created-col">{{ $t.CreatedAt }}</td>
-                            <td>
+                            <!-- 隐藏不能使用的字段 -->
+                            <!-- <td>
                               {{ if eq $t.Status "enabled" }}
                                 <span class="badge rounded-pill enabled-pill">{{ $t.Status }}</span>
                               {{ else if eq $t.Status "disabled" }}
@@ -237,6 +239,14 @@ SPDX-License-Identifier: Apache-2.0 -->
                                   {{ $t.Status }}
                                 </span>
                               {{ end }}
+                            </td> -->
+                            <td class="operation-col">
+                              <button class="btn body-button" onclick="viewThing('{{ $t.ID }}')">
+                                <i class="fa-solid fa-info"></i>
+                              </button>
+                              <button class="btn body-button" onclick="deleteThing('{{ $t.ID }}')" style="display: none;">
+                                <i class="fa-solid fa-trash-can"></i>
+                              </button>
                             </td>
                           </tr>
                           <script>
@@ -276,7 +286,44 @@ SPDX-License-Identifier: Apache-2.0 -->
         function viewThing(id) {
           window.location.href = '{{printf "%s/things/" pathPrefix}}' + id;
         }
-      </script>      
+
+        //删除
+        function deleteThing(id) {
+          // 显示确认对话框
+          const userConfirmed = confirm("你确定要删除所选数据吗？");
+          
+          // 根据用户的选择执行不同的操作
+          if (userConfirmed) {
+            const url = "{{ printf "%s/things/" pathPrefix }}" + id;
+            let formData = new FormData();
+            formData.append("id", id)
+            fetch(url, {
+              method: "DELETE",
+              body: formData,
+            })
+              .then(function (response) {
+                if (!response.ok) {
+                  const errorMessage = response.headers.get("X-Error-Message");
+                  if (errorMessage) {
+                    console.log(errorMessage);
+                  } else {
+                    console.log(`Error: ${response.status}`);
+                  }
+                } else {
+                  form.reset();
+                  config.modal.hide();
+                  window.location.reload();
+                }
+              })
+              .catch((error) => {
+                console.error("error submitting form: ", error);
+              });
+          } else {
+              console.log("用户点击了取消。");
+              // 执行取消后的操作
+          }
+        }
+      </script>  
       <script type="module">
         import {
           attachValidationListener,
@@ -319,8 +366,84 @@ SPDX-License-Identifier: Apache-2.0 -->
           modal: thingsModal,
         });
 
-        //默认新增一个通道
-        createDefaultChannel('{{ printf "%s/channels" pathPrefix }}')
+        createDefaultChannel("{{ printf "%s/channels/" pathPrefix }}");
+
+        // const url = "{{ printf "%s/channels/" pathPrefix }}";
+        // fetch(url, {
+        //   method: "GET",
+        // })
+        //   .then(function (response) {
+        //     console.log('response',response)
+
+        //     // 转换HTML字符串为Stream
+        //     function stringToStream(str) {
+        //       const readableStream = new ReadableStream({
+        //         async pull(controller) {
+        //           controller.enqueue(str);
+        //           controller.close();
+        //         }
+        //       });
+        //       return readableStream;
+        //     }
+            
+        //     // 使用DOMParser解析Stream中的HTML
+        //     async function parseHTML(stream) {
+        //       const reader = stream.getReader();
+        //       const result = await reader.read();
+        //       const html = result.value;
+        //       const parser = new DOMParser();
+        //       const document = parser.parseFromString(html, 'text/html');
+        //       return document;
+        //     }
+            
+        //     // 使用ReadableStream处理HTML
+        //     async function handleHTML(htmlString) {
+        //       const stream = stringToStream(htmlString);
+        //       const document = await parseHTML(stream);
+        //       console.log(document.body.innerHTML); // 打印解析后的HTML内容
+        //     }
+            
+        //     // 运行函数
+        //     handleHTML(response.body);
+
+            
+        //     const stream = new ReadableStream({
+        //       start(controller) {
+        //         controller.enqueue(response.body);
+        //         controller.close();
+        //       }
+        //     });
+            
+        //     const reader = stream.getReader();
+        //     reader.read().then(({ value, done }) => {
+        //       if (done) {
+        //         return;
+        //       }
+        //       // 使用DOMParser将读取的HTML字符串转换为DOM元素
+        //       const parser = new DOMParser();
+        //       const doc = parser.parseFromString(value, 'text/html');
+        //       console.log(`doc: ${doc}`);
+        //       console.dir(doc);
+        //       console.log(doc.documentElement.innerHTML)
+        //       rowCount = doc.querySelectorAll('td.clickable-row').length;
+        //       console.log(`<td class="clickable-row">的数量: ${rowCount}`);
+        //     });
+        //     // if (!response.ok) {
+        //     //   const errorMessage = response.headers.get("X-Error-Message");
+        //     //   if (errorMessage) {
+        //     //     console.log(errorMessage);
+        //     //   } else {
+        //     //     console.log(`Error: ${response.status}`);
+        //     //   }
+        //     // } else {
+        //     //   form.reset();
+        //     //   config.modal.hide();
+        //     //   window.location.reload();
+        //     // }
+        //   })
+        //   .catch((error) => {
+        //     // console.error("error submitting form: ", error);
+        //   });
       </script>
     </body>
   </html>
