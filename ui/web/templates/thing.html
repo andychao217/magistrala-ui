@@ -161,7 +161,7 @@ SPDX-License-Identifier: Apache-2.0 -->
                   </div>
                 </div>
               </div>
-              <div class="row align-items-between" style="margin-top:10px">
+              <!-- <div class="row align-items-between" style="margin-top:10px">
                 <div class="col-6">
                   <div class="card">
                     <div class="card-header">
@@ -182,7 +182,7 @@ SPDX-License-Identifier: Apache-2.0 -->
                     </div>
                   </div>
                 </div>
-              </div>
+              </div> -->
             </div>
           </div>
         </div>
@@ -206,69 +206,6 @@ SPDX-License-Identifier: Apache-2.0 -->
           button: "save-metadata",
           value: parsedMetadata,
         });
-
-        function extractIPFromURL(url) {  
-          // 使用正则表达式匹配IP地址  
-          const ipRegex = /(\d{1,3}\.){3}\d{1,3}/;  
-          const match = url.match(ipRegex);  
-            
-          // 如果找到匹配项，返回IP地址；否则返回null  
-          return match ? match[0] : null;  
-        }
-
-        const ipAddress = extractIPFromURL(window.location.href);
-        var secret = "{{.Entity.Credentials.Secret}}";
-
-        const url = `ws://${ipAddress}:63000/websocket`
-        const socket = new WebSocket(url);  
-
-        function setupWebSocket() {
-          let ws = null;
-          function connect() {
-            socket.onopen = function(event) {
-              const channelId = "91b2957b-fabd-45f9-8ec0-1509028426bc";
-	            const socketUrl = `ws://${ipAddress}:8186/channels/${channelId}/messages?authorization=${secret}`;
-              socket.send(socketUrl);  
-              console.log('WebSocket connected');
-              setTimeout(() => {
-                socket.send('message from web 9095');  
-              }, 5000);
-            };
-            socket.onclose = function(event) {
-              console.log('WebSocket disconnected');
-              setTimeout(connect, 1000); // 5秒后尝试重新连接
-            };
-            socket.onerror = function(error) {
-              console.error('WebSocket error observed:', error);
-            };
-            socket.onmessage = function(event) {
-              console.log('Message from server:', event.data);
-
-              // 获取div元素
-              let container = document.getElementById("recevicedMessageDiv");
-              // 创建一个新的文本节点
-              let newContent = document.createTextNode(event.data);
-              // 创建一个新的元素，并将文本节点添加进去
-              let newDiv = document.createElement("p");
-              // 为新div添加一个class
-              newDiv.className = "card-text";
-              newDiv.appendChild(newContent);
-              // 将新创建的元素append到div中
-              container.appendChild(newDiv);
-            };
-          }
-          connect(); // 初始连接
-        }
-        setupWebSocket();
-
-        // 获取按钮元素  
-        let button = document.getElementById('sendMessageButton'); 
-        // 使用 addEventListener 绑定点击事件处理函数  
-        button.addEventListener('click', function() {  
-          const textarea = document.getElementById("sendMessageTextArea");
-          socket.send(textarea.value);
-          textarea.value = "";
-        }); 
       </script>     
       <script type="module">
         import { attachEditRowListener, updateName, updateSecret, updateTags, updateMetadata} from "/js/update.js";

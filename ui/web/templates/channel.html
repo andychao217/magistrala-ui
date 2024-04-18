@@ -17,7 +17,7 @@ SPDX-License-Identifier: Apache-2.0 -->
               {{ template "breadcrumb" . }}
               <div class="row">
                 <!-- 隐藏按钮 -->
-                <div class="buttons mb-3" style="display: '';">
+                <div class="buttons mb-3" style="display: 'none';">
                   <a
                     href="{{ printf "%s/channels/%s/things" pathPrefix .Entity.ID }}"
                     type="button"
