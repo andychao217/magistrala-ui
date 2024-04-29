@@ -289,22 +289,12 @@ SPDX-License-Identifier: Apache-2.0 -->
         const thingModal = new bootstrap.Modal(document.getElementById("addThingModal"));
         const thingsModal = new bootstrap.Modal(document.getElementById("addThingsModal"));
 
-        fetch('{{ printf "%s/userProfile" pathPrefix }}', {
-            method: "GET",
-          })
-          .then(response => {  
-              if (!response.ok) {  
-                  throw new Error('Network response was not ok');  
-              }  
-              return response.json(); // 直接将流转换为JSON对象  
-          })  
-          .then(json => {  
-            const data = json.data;
-            console.log("userInfo: ", JSON.parse(data));
-          })  
-          .catch(error => {  
-              console.error('处理fetch或JSON时出错:', error);  
-          });
+        //获取当前domain的ID号
+        const domainLinkElement = document.getElementById('domain');
+        const domainHrefValue = domainLinkElement.href;   
+        const domainID = domainHrefValue.split('/').pop(); 
+        //从sessionStorage中获取当前登陆用户信息
+        const userInfo = JSON.parse(sessionStorage.getItem("userInfo"))
 
         function openModal(modal) {
           if (modal === "single") {
@@ -377,16 +367,16 @@ SPDX-License-Identifier: Apache-2.0 -->
         }
 
         const ipAddress = extractIPFromURL(window.location.href);
-        var secret = "admin";
-
         const url = `ws://${ipAddress}:63000/websocket`
         const socket = new WebSocket(url);  
-
+        const secret = 'platform';
+        
         function setupWebSocket() {
           let ws = null;
           function connect() {
             socket.onopen = function(event) {
-              const channelId = "b8710f61-4296-42ae-949d-a937f697ecc4";
+              //通过当前domainID号在当前登陆用户信息中找出默认channelID
+              const channelId = userInfo.metadata[domainID];
 	            const socketUrl = `ws://${ipAddress}:8186/channels/${channelId}/messages?authorization=${secret}`;
               socket.send(socketUrl);  
               console.log('WebSocket connected');

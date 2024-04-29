@@ -90,6 +90,26 @@ SPDX-License-Identifier: Apache-2.0 -->
         </div>
       </div>
     <script>
+      //获取当前登陆用户信息，并保存到sessionStorage中
+      fetch('{{ printf "%s/userProfile" pathPrefix }}', {
+            method: "GET",
+          })
+          .then(response => {  
+              if (!response.ok) {  
+                  throw new Error('Network response was not ok');  
+              }  
+              return response.json(); // 直接将流转换为JSON对象  
+          })  
+          .then(json => {  
+            const data = json.data;
+            const userInfo = JSON.parse(data).user
+            console.log("userInfo: ", userInfo);
+            sessionStorage.setItem("userInfo", JSON.stringify(userInfo))
+          })  
+          .catch(error => {  
+              console.error('处理fetch或JSON时出错:', error);  
+          });
+
       var enabledUsers = parseInt("{{.Summary.EnabledUsers}}");
       var disabledUsers = parseInt("{{.Summary.DisabledUsers}}");
       var enabledThings = parseInt("{{.Summary.EnabledThings}}");
