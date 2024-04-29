@@ -263,6 +263,13 @@ func MakeHandler(svc ui.Service, r *chi.Mux, instanceID, prefix string, secureCo
 					opts...,
 				).ServeHTTP)
 
+				r.Get("/userProfile", kithttp.NewServer(
+					profileUserEndpoint(svc),
+					decodeProfileUserRequest,
+					encodeJSONResponse,
+					opts...,
+				).ServeHTTP)
+
 				r.Route("/users", func(r chi.Router) {
 					r.Use(AdminAuthMiddleware(prefix))
 					r.Post("/", kithttp.NewServer(
@@ -1178,6 +1185,17 @@ func decodeUserCreation(_ context.Context, r *http.Request) (interface{}, error)
 	return createUserReq{
 		token: session.Token,
 		User:  user,
+	}, nil
+}
+
+func decodeProfileUserRequest(_ context.Context, r *http.Request) (interface{}, error) {
+	session, err := sessionFromHeader(r)
+	if err != nil {
+		return nil, err
+	}
+
+	return profileUserReq{
+		Session: session,
 	}, nil
 }
 
@@ -2563,6 +2581,7 @@ func AdminAuthMiddleware(prefix string) func(http.Handler) http.Handler {
 			}
 
 			if session.User.Role != "admin" {
+				fmt.Println("session.User.Role 123: ", session.User.Role)
 				err = errAuthorization
 				return
 			}

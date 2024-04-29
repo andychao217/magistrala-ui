@@ -289,6 +289,23 @@ SPDX-License-Identifier: Apache-2.0 -->
         const thingModal = new bootstrap.Modal(document.getElementById("addThingModal"));
         const thingsModal = new bootstrap.Modal(document.getElementById("addThingsModal"));
 
+        fetch('{{ printf "%s/userProfile" pathPrefix }}', {
+            method: "GET",
+          })
+          .then(response => {  
+              if (!response.ok) {  
+                  throw new Error('Network response was not ok');  
+              }  
+              return response.json(); // 直接将流转换为JSON对象  
+          })  
+          .then(json => {  
+            const data = json.data;
+            console.log("userInfo: ", JSON.parse(data));
+          })  
+          .catch(error => {  
+              console.error('处理fetch或JSON时出错:', error);  
+          });
+
         function openModal(modal) {
           if (modal === "single") {
             thingModal.show();
@@ -369,12 +386,12 @@ SPDX-License-Identifier: Apache-2.0 -->
           let ws = null;
           function connect() {
             socket.onopen = function(event) {
-              const channelId = "91b2957b-fabd-45f9-8ec0-1509028426bc";
+              const channelId = "b8710f61-4296-42ae-949d-a937f697ecc4";
 	            const socketUrl = `ws://${ipAddress}:8186/channels/${channelId}/messages?authorization=${secret}`;
               socket.send(socketUrl);  
               console.log('WebSocket connected');
               setTimeout(() => {
-                socket.send('message from web 9095:admin');  
+                socket.send(`message from web 9095:${secret}`);  
               }, 5000);
             };
             socket.onclose = function(event) {
@@ -386,8 +403,10 @@ SPDX-License-Identifier: Apache-2.0 -->
             };
             socket.onmessage = function(event) {
               console.log('Message from server:', event.data);
-              if(event.data === 'refreshPage') {
-                window.location.reload();
+              if(event.data.includes('refreshPage')) {
+                setTimeout(() => {
+                  window.location.reload();
+                }, 3000);
               }
             };
           }
@@ -402,7 +421,7 @@ SPDX-License-Identifier: Apache-2.0 -->
           validateJSON,
           validateStringArray,
         } from "/js/validation.js";
-        import { submitCreateForm, createDefaultChannel } from "/js/forms.js";
+        import { submitCreateForm } from "/js/forms.js";
 
         attachValidationListener({
           buttonId: "create-thing-button",
@@ -436,85 +455,6 @@ SPDX-License-Identifier: Apache-2.0 -->
           alertDiv: "alertBulkMessage",
           modal: thingsModal,
         });
-
-        createDefaultChannel("{{ printf "%s/channels/" pathPrefix }}");
-
-        // const url = "{{ printf "%s/channels/" pathPrefix }}";
-        // fetch(url, {
-        //   method: "GET",
-        // })
-        //   .then(function (response) {
-        //     console.log('response',response)
-
-        //     // 转换HTML字符串为Stream
-        //     function stringToStream(str) {
-        //       const readableStream = new ReadableStream({
-        //         async pull(controller) {
-        //           controller.enqueue(str);
-        //           controller.close();
-        //         }
-        //       });
-        //       return readableStream;
-        //     }
-            
-        //     // 使用DOMParser解析Stream中的HTML
-        //     async function parseHTML(stream) {
-        //       const reader = stream.getReader();
-        //       const result = await reader.read();
-        //       const html = result.value;
-        //       const parser = new DOMParser();
-        //       const document = parser.parseFromString(html, 'text/html');
-        //       return document;
-        //     }
-            
-        //     // 使用ReadableStream处理HTML
-        //     async function handleHTML(htmlString) {
-        //       const stream = stringToStream(htmlString);
-        //       const document = await parseHTML(stream);
-        //       console.log(document.body.innerHTML); // 打印解析后的HTML内容
-        //     }
-            
-        //     // 运行函数
-        //     handleHTML(response.body);
-
-            
-        //     const stream = new ReadableStream({
-        //       start(controller) {
-        //         controller.enqueue(response.body);
-        //         controller.close();
-        //       }
-        //     });
-            
-        //     const reader = stream.getReader();
-        //     reader.read().then(({ value, done }) => {
-        //       if (done) {
-        //         return;
-        //       }
-        //       // 使用DOMParser将读取的HTML字符串转换为DOM元素
-        //       const parser = new DOMParser();
-        //       const doc = parser.parseFromString(value, 'text/html');
-        //       console.log(`doc: ${doc}`);
-        //       console.dir(doc);
-        //       console.log(doc.documentElement.innerHTML)
-        //       rowCount = doc.querySelectorAll('td.clickable-row').length;
-        //       console.log(`<td class="clickable-row">的数量: ${rowCount}`);
-        //     });
-        //     // if (!response.ok) {
-        //     //   const errorMessage = response.headers.get("X-Error-Message");
-        //     //   if (errorMessage) {
-        //     //     console.log(errorMessage);
-        //     //   } else {
-        //     //     console.log(`Error: ${response.status}`);
-        //     //   }
-        //     // } else {
-        //     //   form.reset();
-        //     //   config.modal.hide();
-        //     //   window.location.reload();
-        //     // }
-        //   })
-        //   .catch((error) => {
-        //     // console.error("error submitting form: ", error);
-        //   });
       </script>
     </body>
   </html>

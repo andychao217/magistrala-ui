@@ -246,6 +246,23 @@ func (lm *loggingMiddleware) ListUsers(s ui.Session, status string, page, limit 
 	return lm.svc.ListUsers(s, status, page, limit)
 }
 
+// ProfileUser adds logging middleware to profile user method.
+func (lm *loggingMiddleware) ProfileUser(s ui.Session) (user sdk.User, err error) {
+	defer func(begin time.Time) {
+		args := []any{
+			slog.String("duration", time.Since(begin).String()),
+		}
+		if err != nil {
+			args = append(args, slog.Any("error", err))
+			lm.logger.Warn("View user failed to complete successfully", args...)
+			return
+		}
+		lm.logger.Info("View user completed successfully", args...)
+	}(time.Now())
+
+	return lm.svc.ProfileUser(s)
+}
+
 // ViewUser adds logging middleware to view user method.
 func (lm *loggingMiddleware) ViewUser(s ui.Session, id string) (b []byte, err error) {
 	defer func(begin time.Time) {

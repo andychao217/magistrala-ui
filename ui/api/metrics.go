@@ -179,6 +179,16 @@ func (mm *metricsMiddleware) ListUsers(s ui.Session, status string, page, limit 
 	return mm.svc.ListUsers(s, status, page, limit)
 }
 
+// ProfileUser adds metrics middleware to profile user method.
+func (mm *metricsMiddleware) ProfileUser(s ui.Session) (sdk.User, error) {
+	defer func(begin time.Time) {
+		mm.counter.With("method", "profile_user").Add(1)
+		mm.latency.With("method", "profile_user").Observe(time.Since(begin).Seconds())
+	}(time.Now())
+
+	return mm.svc.ProfileUser(s)
+}
+
 // ViewUser adds metrics middleware to view user method.
 func (mm *metricsMiddleware) ViewUser(s ui.Session, id string) ([]byte, error) {
 	defer func(begin time.Time) {

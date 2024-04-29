@@ -466,6 +466,46 @@ func createUsersEndpoint(svc ui.Service) endpoint.Endpoint {
 	}
 }
 
+func profileUserEndpoint(svc ui.Service) endpoint.Endpoint {
+	return func(_ context.Context, request interface{}) (response interface{}, err error) {
+		req := request.(profileUserReq)
+
+		jsonData, _ := json.Marshal(req)
+		fmt.Println("profileUserReq: ", jsonData)
+
+		if err := req.validate(); err != nil {
+			fmt.Println("profileUser validate: ", err)
+			return nil, err
+		}
+
+		user, err := svc.ProfileUser(req.Session)
+		jsonData, _ = json.Marshal(user)
+		fmt.Println("user: ", jsonData)
+
+		if err != nil {
+			fmt.Println("profileUser profile: ", err)
+			return nil, err
+		}
+
+		// 创建一个map，其中包含一个User实例
+		data := map[string]interface{}{
+			"user": user,
+		}
+
+		// 将map编码为JSON字符串
+		jsonData, err = json.Marshal(data)
+		fmt.Println("user: ", jsonData)
+		if err != nil {
+			fmt.Println("profileUser Marshal: ", err)
+			return nil, err
+		}
+
+		return jsonResponse{
+			Data: string(jsonData),
+		}, nil
+	}
+}
+
 func listUsersEndpoint(svc ui.Service) endpoint.Endpoint {
 	return func(_ context.Context, request interface{}) (interface{}, error) {
 		req := request.(listEntityReq)

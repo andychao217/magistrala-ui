@@ -70,6 +70,10 @@ func (res uiRes) Empty() bool {
 	return res.html == nil
 }
 
+type jsonResponse struct {
+	Data string `json:"data"`
+}
+
 type terminalResponse struct {
 	Command string `json:"command"`
 	Result  string `json:"result"`

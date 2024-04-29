@@ -195,11 +195,12 @@ type Service interface {
 	DomainLogin(login sdk.Login, refreshToken string) (sdk.Token, error)
 	// Session retrieves the details of the user's session.
 	Session(s Session) (Session, error)
-
 	// CreateUsers creates new users.
 	CreateUsers(token string, users ...sdk.User) error
 	// ListUsers retrieves users owned/shared by a user.
 	ListUsers(s Session, status string, page, limit uint64) ([]byte, error)
+	// Gets info on currently logged in user. Info is obtained using authorization token.
+	ProfileUser(s Session) (sdk.User, error)
 	// ViewUser retrieves information about the user with the given ID.
 	ViewUser(s Session, id string) ([]byte, error)
 	// UpdateUser updates the user with the given ID.
@@ -656,6 +657,14 @@ func (us *uiService) CreateUsers(token string, users ...sdk.User) error {
 	}
 
 	return nil
+}
+
+func (us *uiService) ProfileUser(s Session) (sdk.User, error) {
+	user, err := us.sdk.UserProfile(s.Token)
+	if err != nil {
+		return sdk.User{}, errors.Wrap(ErrFailedRetreive, err)
+	}
+	return user, nil
 }
 
 func (us *uiService) ListUsers(s Session, status string, page, limit uint64) ([]byte, error) {

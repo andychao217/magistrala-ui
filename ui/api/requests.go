@@ -189,6 +189,17 @@ func (req viewResourceReq) validate() error {
 	return nil
 }
 
+type profileUserReq struct {
+	ui.Session
+}
+
+func (req profileUserReq) validate() error {
+	if req.Token == "" {
+		return errInvalidCredentials
+	}
+	return nil
+}
+
 type updateUserReq struct {
 	token string
 	sdk.User

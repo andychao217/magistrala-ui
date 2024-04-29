@@ -165,6 +165,7 @@ SPDX-License-Identifier: Apache-2.0 -->
                       <thead>
                         <tr>
                           <th scope="col">Name</th>
+                          <th scope="col">ID</th>
                           <th class="desc-col" scope="col">Description</th>
                           <th class="meta-col" scope="col">Metadata</th>
                           <th class="created-col" scope="col">Created At</th>
@@ -176,6 +177,7 @@ SPDX-License-Identifier: Apache-2.0 -->
                         {{ range $i, $c := .Channels }}
                           <tr class="clickable-row">
                             <td>{{ $c.Name }}</td>
+                            <td>{{ $c.ID }}</td>
                             <td class="desc-col">{{ $c.Description }}</td>
                             <td class="meta-col">
                               <div class="meta-div">
@@ -240,7 +242,7 @@ SPDX-License-Identifier: Apache-2.0 -->
       </script>
       <script type="module">
         import { attachValidationListener, validateName, validateJSON } from "/js/validation.js";
-        import { submitCreateForm, createDefaultChannel } from "/js/forms.js";
+        import { submitCreateForm } from "/js/forms.js";
         import { fetchIndividualEntity } from "/js/infinitescroll.js";
 
         attachValidationListener({
@@ -272,8 +274,6 @@ SPDX-License-Identifier: Apache-2.0 -->
           alertDiv: "alertBulkMessage",
           modal: channelsModal,
         });
-
-        createDefaultChannel('{{ printf "%s/channels" pathPrefix }}')
       </script>
     </body>
   </html>
