@@ -61,11 +61,10 @@ SPDX-License-Identifier: Apache-2.0 -->
                             <div class="mb-3">
                               <label for="email" class="form-label">Identity</label>
                               <input
-                                type="email"
                                 class="form-control email-field"
                                 name="identity"
                                 id="email"
-                                placeholder="User Email"
+                                placeholder="User Email or Phone Number"
                               />
                               <div id="emailError" class="text-danger"></div>
                             </div>
@@ -275,7 +274,7 @@ SPDX-License-Identifier: Apache-2.0 -->
         import {
           attachValidationListener,
           validateName,
-          validateEmail,
+          validateEmailOrPhone,
           validatePassword,
           validateJSON,
           validateStringArray,
@@ -293,7 +292,7 @@ SPDX-License-Identifier: Apache-2.0 -->
           },
           validations: {
             name: validateName,
-            email: validateEmail,
+            email: validateEmailOrPhone,
             secret: validatePassword,
             metadata: validateJSON,
             userTags: validateStringArray,

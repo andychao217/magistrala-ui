@@ -46,10 +46,9 @@ SPDX-License-Identifier: Apache-2.0 -->
                       <i class="fas fa-solid fa-envelope me-2"></i>
                       <input
                         class="p-3 w-100 me-2"
-                        type="email"
                         name="email"
                         id="email"
-                        placeholder="Email Address"
+                        placeholder="Email Address or Phone Number"
                       />
                     </div>
                     <div id="emailError" class="text-danger"></div>
@@ -102,7 +101,7 @@ SPDX-License-Identifier: Apache-2.0 -->
         import {
           attachValidationListener,
           validateName,
-          validateEmail,
+          validateEmailOrPhone,
           validatePassword,
         } from "/js/validation.js";
 
@@ -110,7 +109,7 @@ SPDX-License-Identifier: Apache-2.0 -->
           buttonId: "register-button",
           validations: {
             name: validateName,
-            email: validateEmail,
+            email: validateEmailOrPhone,
             password: validatePassword,
           },
           errorDivs: {
@@ -160,7 +159,7 @@ SPDX-License-Identifier: Apache-2.0 -->
               switch (response.status) {
                 case 409:
                   emailField.classList.add("border-red");
-                  errorMessage = "User with this email already exists";
+                  errorMessage = "User with this email or phone number already exists";
                   showError(errorMessage);
                   break;
                 default:

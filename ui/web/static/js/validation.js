@@ -4,6 +4,7 @@
 import { displayErrorMessage, removeErrorMessage } from "./errors.js";
 
 const emailRegex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
+const phoneRegex = /^1[3-9]\d{9}$/; //手机号码正则
 const minLength = 8;
 
 function validateName(name, errorDiv, fieldName, event) {
@@ -25,6 +26,20 @@ function validateEmail(email, errorDiv, fieldName, event) {
   } else if (!email.match(emailRegex)) {
     event.preventDefault();
     displayErrorMessage("Invalid email format", errorDiv, fieldName);
+    return false;
+  }
+  return true;
+}
+
+function validateEmailOrPhone(emailOrPhone, errorDiv, fieldName, event) {
+  removeErrorMessage(errorDiv, fieldName);
+  if (emailOrPhone.trim() === "") {
+    event.preventDefault();
+    displayErrorMessage("Email or phone number is Required", errorDiv, fieldName);
+    return false;
+  } else if (!(emailOrPhone.match(emailRegex) || emailOrPhone.match(phoneRegex))) {
+    event.preventDefault();
+    displayErrorMessage("Invalid email or phone number format", errorDiv, fieldName);
     return false;
   }
   return true;
@@ -115,6 +130,7 @@ function attachValidationListener(config) {
 export {
   validateName,
   validateEmail,
+  validateEmailOrPhone,
   validatePassword,
   validateJSON,
   validateStringArray,
