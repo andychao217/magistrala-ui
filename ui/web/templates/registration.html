@@ -127,7 +127,6 @@ SPDX-License-Identifier: Apache-2.0 -->
       <script>
         const nameField = document.querySelector(".name-field");
         const passwordField = document.getElementById("password");
-        const togglePassword = document.querySelector(".password-toggle-icon i");
         const emailField = document.querySelector(".email-field");
         const registrationError = document.getElementById("registrationError");
 
@@ -135,15 +134,16 @@ SPDX-License-Identifier: Apache-2.0 -->
           registrationError.innerHTML = "";
         });
         // Code for toggling the visibility of the password
-        togglePassword.addEventListener("click", function () {
-          if (passwordField.type === "password") {
-            passwordField.type = "text";
-            togglePassword.classList.remove("fa-eye");
-            togglePassword.classList.add("fa-eye-slash");
+        $('span.password-toggle-icon').click(function() {  
+          let inputType =  $("#password").attr("type");
+          if (inputType=== "password")  {
+            $("#password").attr("type", "text");
+            $('span.password-toggle-icon').empty();
+            $("<i class='fa-solid fa-eye-slash'></i>").appendTo('span.password-toggle-icon');
           } else {
-            passwordField.type = "password";
-            togglePassword.classList.remove("fa-eye-slash");
-            togglePassword.classList.add("fa-eye");
+            $("#password").attr("type", "password");
+            $('span.password-toggle-icon').empty();
+            $("<i class='fa-solid fa-eye'></i>").appendTo('span.password-toggle-icon');
           }
         });
 
