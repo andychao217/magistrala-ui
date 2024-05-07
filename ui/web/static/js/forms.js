@@ -6,8 +6,16 @@ export function submitCreateForm(config) {
   const form = document.getElementById(config.formId);
   form.addEventListener("submit", function (event) {
     event.preventDefault();
-    const formData = new FormData(form);
+    let formData = new FormData(form);
     
+    if (config.formId === "userform") {
+      //密码加密
+      const password = formData.get('password');
+      const encryptedData = encryptByAesCbc(password, SECRET_KEY);
+      formData.delete("password");
+      formData.append("password",encryptedData);
+    }
+
     fetch(config.url, {
       method: "POST",
       body: formData,

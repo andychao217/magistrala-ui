@@ -150,10 +150,18 @@ SPDX-License-Identifier: Apache-2.0 -->
         function submitRegistrationForm() {
           event.preventDefault();
           var form = event.target;
+
+          //密码加密
+          let formData = new FormData(form);
+          const password = formData.get('password');
+          const encryptedData = encryptByAesCbc(password, SECRET_KEY);
+          formData.delete("password");
+          formData.append("password",encryptedData);
+
           let pathPrefix = "{{ pathPrefix }}";
           fetch( `${pathPrefix}/register`, {
             method: "POST",
-            body: new FormData(form),
+            body: formData,
           })
             .then((response) => {
               switch (response.status) {

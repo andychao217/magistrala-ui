@@ -23,7 +23,7 @@ define compile_service
 endef
 
 define make_docker
-	docker buildx build --platform=linux/amd64,linux/arm64 \
+	docker buildx build --platform=linux/amd64,linux/arm64,windows/amd64,windows/arm64 \
 		--no-cache \
 		--build-arg SVC=$(SVC) \
 		--build-arg VERSION=$(VERSION) \
