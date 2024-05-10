@@ -60,7 +60,10 @@ SPDX-License-Identifier: Apache-2.0 -->
       }
       const newQueryStr = params.toString();
       const href = `?${newQueryStr}`;
-      element.setAttribute("href", href);
+      // 增加判空处理，减少报错
+      if(element) {
+        element.setAttribute("href", href);
+      }
     }
 
     var itemsPerPage = document.querySelectorAll(".itemsPerPage a");

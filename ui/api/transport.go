@@ -365,6 +365,13 @@ func MakeHandler(svc ui.Service, r *chi.Mux, instanceID, prefix string, secureCo
 						opts...,
 					).ServeHTTP)
 
+					r.Get("/thingsData", kithttp.NewServer(
+						listThingsDataEndpoint(svc),
+						decodeListEntityRequest,
+						encodeJSONResponse,
+						opts...,
+					).ServeHTTP)
+
 					r.Post("/enable", kithttp.NewServer(
 						enableThingEndpoint(svc, prefix),
 						decodeThingStatusUpdate,
@@ -567,6 +574,13 @@ func MakeHandler(svc ui.Service, r *chi.Mux, instanceID, prefix string, secureCo
 						ListChannelGroupsEndpoint(svc),
 						decodeListEntityByIDRequest,
 						encodeResponse,
+						opts...,
+					).ServeHTTP)
+
+					r.Post("/messages", kithttp.NewServer(
+						postMessageEndpoint(svc),
+						decodePostMessageRequest,
+						encodeJSONResponse,
 						opts...,
 					).ServeHTTP)
 				})
@@ -1763,6 +1777,14 @@ func decodeAddGroupToChannelRequest(_ context.Context, r *http.Request) (interfa
 	}
 
 	return req, nil
+}
+
+func decodePostMessageRequest(_ context.Context, r *http.Request) (interface{}, error) {
+	return postMessageReq{
+		ChannelID:   r.PostFormValue("channelID"),
+		Message:     r.PostFormValue("message"),
+		ThingSecret: r.PostFormValue("thingSecret"),
+	}, nil
 }
 
 func decodeGroupCreation(_ context.Context, r *http.Request) (interface{}, error) {

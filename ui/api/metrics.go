@@ -289,6 +289,15 @@ func (mm *metricsMiddleware) ListThings(s ui.Session, status string, page, limit
 	return mm.svc.ListThings(s, status, page, limit)
 }
 
+func (mm *metricsMiddleware) ListThingsData(s ui.Session, status string, page, limit uint64) (sdk.ThingsPage, error) {
+	defer func(begin time.Time) {
+		mm.counter.With("method", "list_things").Add(1)
+		mm.latency.With("method", "list_things").Observe(time.Since(begin).Seconds())
+	}(time.Now())
+
+	return mm.svc.ListThingsData(s, status, page, limit)
+}
+
 // viewThing adds metrics middleware to view thing method.
 func (mm *metricsMiddleware) ViewThing(s ui.Session, id string) ([]byte, error) {
 	defer func(begin time.Time) {
@@ -567,6 +576,16 @@ func (mm *metricsMiddleware) RemoveUserGroupFromChannel(token, channelID string,
 	}(time.Now())
 
 	return mm.svc.RemoveUserGroupFromChannel(token, channelID, req)
+}
+
+// PostMessage to the channels
+func (mm *metricsMiddleware) PostMessage(chanID, message, key string) error {
+	defer func(begin time.Time) {
+		mm.counter.With("method", "list_channel_usergroups").Add(1)
+		mm.latency.With("method", "list_channel_usergroups").Observe(time.Since(begin).Seconds())
+	}(time.Now())
+
+	return mm.svc.PostMessage(chanID, message, key)
 }
 
 // ListChannelUserGroups adds metrics middleware to list channel usergroups method.

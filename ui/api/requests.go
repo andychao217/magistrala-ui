@@ -584,6 +584,23 @@ func (req createGroupReq) validate() error {
 	return nil
 }
 
+// post messages to the channels
+type postMessageReq struct {
+	ChannelID   string `json:"channelID"`
+	Message     string `json:"message"`
+	ThingSecret string `json:"thingSecret"`
+}
+
+func (req postMessageReq) validate() error {
+	if req.ChannelID == "" {
+		return errMissingChannelID
+	}
+	if req.ThingSecret == "" {
+		return errMissingThingKey
+	}
+	return nil
+}
+
 type createGroupsReq struct {
 	token  string
 	Groups []sdk.Group

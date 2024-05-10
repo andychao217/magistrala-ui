@@ -222,6 +222,7 @@ type Service interface {
 	CreateThings(token string, things ...sdk.Thing) error
 	// ListThings retrieves things owned/shared by a user.
 	ListThings(s Session, status string, page, limit uint64) ([]byte, error)
+	ListThingsData(s Session, status string, page, limit uint64) (sdk.ThingsPage, error)
 	// ViewThing retrieves information about the thing with the given ID.
 	ViewThing(s Session, id string) ([]byte, error)
 	// UpdateThing updates the thing with the given ID.
@@ -281,6 +282,8 @@ type Service interface {
 	RemoveUserGroupFromChannel(token, id string, req sdk.UserGroupsRequest) error
 	// ListChannelUserGroups retrieves a list of userGroups connected to a channel.
 	ListChannelUserGroups(s Session, id string, page, limit uint64) ([]byte, error)
+	// 向通道发送信息
+	PostMessage(channelId, message, thingSecret string) error
 
 	// CreateGroups creates new groups.
 	CreateGroups(token string, groups ...sdk.Group) error
@@ -866,6 +869,21 @@ func (us *uiService) ListThings(s Session, status string, page, limit uint64) ([
 		return []byte{}, errors.Wrap(ErrExecTemplate, err)
 	}
 	return btpl.Bytes(), nil
+}
+
+func (us *uiService) ListThingsData(s Session, status string, page, limit uint64) (sdk.ThingsPage, error) {
+	offset := (page - 1) * limit
+
+	pgm := sdk.PageMetadata{
+		Offset: offset,
+		Limit:  limit,
+		Status: status,
+	}
+	things, err := us.sdk.Things(pgm, s.Token)
+	if err != nil {
+		return sdk.ThingsPage{}, errors.Wrap(ErrFailedRetreive, err)
+	}
+	return things, nil
 }
 
 func (us *uiService) ViewThing(s Session, id string) ([]byte, error) {
@@ -1468,6 +1486,14 @@ func (us *uiService) ListChannelUserGroups(s Session, id string, page, limit uin
 	}
 
 	return btpl.Bytes(), nil
+}
+
+func (us *uiService) PostMessage(chanID, message, thingSecret string) error {
+	err := us.sdk.SendMessage(chanID, message, thingSecret)
+	if err != nil {
+		return err
+	}
+	return nil
 }
 
 func (us *uiService) CreateGroups(token string, groups ...sdk.Group) error {

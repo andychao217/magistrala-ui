@@ -440,6 +440,25 @@ func (lm *loggingMiddleware) ListThings(s ui.Session, status string, page, limit
 	return lm.svc.ListThings(s, status, page, limit)
 }
 
+func (lm *loggingMiddleware) ListThingsData(s ui.Session, status string, page, limit uint64) (b sdk.ThingsPage, err error) {
+	defer func(begin time.Time) {
+		args := []any{
+			slog.String("duration", time.Since(begin).String()),
+			slog.String("status", status),
+			slog.Uint64("page", page),
+			slog.Uint64("limit", limit),
+		}
+		if err != nil {
+			args = append(args, slog.Any("error", err))
+			lm.logger.Warn("List things failed to complete successfully", args...)
+			return
+		}
+		lm.logger.Info("List things completed successfully", args...)
+	}(time.Now())
+
+	return lm.svc.ListThingsData(s, status, page, limit)
+}
+
 // ViewThing adds logging middleware to view thing method.
 func (lm *loggingMiddleware) ViewThing(s ui.Session, id string) (b []byte, err error) {
 	defer func(begin time.Time) {
@@ -964,6 +983,26 @@ func (lm *loggingMiddleware) RemoveUserGroupFromChannel(token, channelID string,
 	}(time.Now())
 
 	return lm.svc.RemoveUserGroupFromChannel(token, channelID, req)
+}
+
+// PostMessage to the channels
+func (lm *loggingMiddleware) PostMessage(chanID, message, key string) (err error) {
+	defer func(begin time.Time) {
+		args := []any{
+			slog.String("duration", time.Since(begin).String()),
+			slog.String("channel_id", chanID),
+			slog.String("message", message),
+			slog.String("key", key),
+		}
+		if err != nil {
+			args = append(args, slog.Any("error", err))
+			lm.logger.Warn("PostMessage to the channels failed to complete successfully", args...)
+			return
+		}
+		lm.logger.Info("PostMessage to the channels successfully", args...)
+	}(time.Now())
+
+	return lm.svc.PostMessage(chanID, message, key)
 }
 
 // ListChannelUserGroups adds logging middleware to list channel user groups method.

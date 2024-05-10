@@ -774,6 +774,41 @@ func listThingsEndpoint(svc ui.Service) endpoint.Endpoint {
 	}
 }
 
+// 以json形式查询thingsList
+func listThingsDataEndpoint(svc ui.Service) endpoint.Endpoint {
+	return func(_ context.Context, request interface{}) (interface{}, error) {
+		req := request.(listEntityReq)
+		if err := req.validate(); err != nil {
+			return nil, err
+		}
+
+		res, err := svc.ListThingsData(req.Session, req.status, req.page, req.limit)
+		jsonData, _ := json.Marshal(res)
+		fmt.Println("thingsData 123: ", jsonData)
+
+		if err != nil {
+			fmt.Println("get things data 123: ", err)
+			return nil, err
+		}
+
+		data := map[string]interface{}{
+			"thingsData": res,
+		}
+
+		// 将map编码为JSON字符串
+		jsonData, err = json.Marshal(data)
+		fmt.Println("thingsData 123: ", jsonData)
+		if err != nil {
+			fmt.Println("thingsData Marshal 123: ", err)
+			return nil, err
+		}
+
+		return jsonResponse{
+			Data: string(jsonData),
+		}, nil
+	}
+}
+
 func viewThingEndpoint(svc ui.Service) endpoint.Endpoint {
 	return func(_ context.Context, request interface{}) (interface{}, error) {
 		req := request.(viewResourceReq)
@@ -1226,6 +1261,24 @@ func ListChannelGroupsEndpoint(svc ui.Service) endpoint.Endpoint {
 
 		return uiRes{
 			html: res,
+			code: http.StatusOK,
+		}, nil
+	}
+}
+
+// PostMessages to the channels
+func postMessageEndpoint(svc ui.Service) endpoint.Endpoint {
+	return func(_ context.Context, request interface{}) (interface{}, error) {
+		req := request.(postMessageReq)
+		if err := req.validate(); err != nil {
+			return nil, err
+		}
+
+		if err := svc.PostMessage(req.ChannelID, req.Message, req.ThingSecret); err != nil {
+			return nil, err
+		}
+
+		return uiRes{
 			code: http.StatusOK,
 		}, nil
 	}

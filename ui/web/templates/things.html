@@ -230,7 +230,7 @@ SPDX-License-Identifier: Apache-2.0 -->
                               </div>
                             </td> -->
                             <td class="created-col">{{ $t.CreatedAt }}</td>
-                            <td>
+                            <td id="{{ $t.ID}}-onlineStatusTD">
                               {{ if eq $t.Metadata.isOnline "1" }}  
                                 <span class="badge rounded-pill enabled-pill">Online</span>  
                               {{ else }}  
@@ -403,6 +403,83 @@ SPDX-License-Identifier: Apache-2.0 -->
           connect(); // 初始连接
         }
         setupWebSocket();
+
+
+        function refreshThingsData() {
+          // 获取当前页面的完整URL  
+          var currentUrl = window.location.href;  
+          // 创建URL对象  
+          var urlObj = new URL(currentUrl);  
+          // 使用URL对象的searchParams属性获取URLSearchParams对象  
+          var searchParams = urlObj.searchParams;  
+          // 使用get方法从URLSearchParams对象中获取page和limit的值  
+          var page = searchParams.get('page') || 1;  
+          var limit = searchParams.get('limit') || 10; 
+          //获取当前登陆用户信息，并保存到sessionStorage中
+          fetch(`/ui/things/thingsData?page=${page}&limit=${limit}`, {
+            method: "GET",
+          })
+          .then(response => {  
+              if (!response.ok) {  
+                  throw new Error('Network response was not ok');  
+              }  
+              return response.json(); // 直接将流转换为JSON对象  
+          })  
+          .then(json => {  
+            const data = json.data;
+            const thingsData = JSON.parse(data).thingsData
+            console.log("thingsData: ", thingsData);
+
+            const things = thingsData.things;
+            things.forEach((thing)=>{
+              const onlineStatus = thing.metadata && thing.metadata.isOnline === "1";
+              $(`#${thing.id}-onlineStatusTD`).empty();
+              if(onlineStatus) {
+                $('<span class="badge rounded-pill enabled-pill">Online</span>').appendTo(`#${thing.id}-onlineStatusTD`);
+              }else{
+                $('<span class="badge rounded-pill disabled-pill">Offline</span>').appendTo(`#${thing.id}-onlineStatusTD`);
+              }
+            })
+          })  
+          .catch(error => {  
+              console.error('处理fetch或JSON时出错:', error);  
+          });
+        }
+        var intervalRefreshData = setInterval(refreshThingsData, 2000); 
+
+        let formData = new FormData();
+        formData.append("channelID","f9acc1c4-a2c5-45c8-9c92-a25d016b5fe6");
+        formData.append("message","testMessage");
+        formData.append("thingSecret","platform");
+        fetch(`/ui/channels/messages`, {
+            method: "POST",
+            body: formData,
+          })
+          .then(response => {  
+              if (!response.ok) {  
+                  throw new Error('Network response was not ok');  
+              }  
+              return response.json(); // 直接将流转换为JSON对象  
+          })  
+          .then(json => {  
+            const data = json.data;
+            const thingsData = JSON.parse(data).thingsData
+            console.log("thingsData: ", thingsData);
+
+            const things = thingsData.things;
+            things.forEach((thing)=>{
+              const onlineStatus = thing.metadata && thing.metadata.isOnline === "1";
+              $(`#${thing.id}-onlineStatusTD`).empty();
+              if(onlineStatus) {
+                $('<span class="badge rounded-pill enabled-pill">Online</span>').appendTo(`#${thing.id}-onlineStatusTD`);
+              }else{
+                $('<span class="badge rounded-pill disabled-pill">Offline</span>').appendTo(`#${thing.id}-onlineStatusTD`);
+              }
+            })
+          })  
+          .catch(error => {  
+              console.error('处理fetch或JSON时出错:', error);  
+          });
       </script>  
       <script type="module">
         import {
