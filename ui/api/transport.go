@@ -1618,6 +1618,7 @@ func decodeChannelCreation(_ context.Context, r *http.Request) (interface{}, err
 	}
 
 	ch := sdk.Channel{
+		ID:          r.PostFormValue("id"),
 		Name:        r.PostFormValue("name"),
 		Description: r.PostFormValue("description"),
 		Metadata:    meta,

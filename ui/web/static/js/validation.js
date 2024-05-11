@@ -7,11 +7,31 @@ const emailRegex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
 const phoneRegex = /^1[3-9]\d{9}$/; //手机号码正则
 const minLength = 8;
 
+function validateNoSpaces(inputString) {  
+  // 使用正则表达式匹配任何包含空格的字符串  
+  // 如果匹配到空格，则返回true；否则返回false  
+  return /\s/.test(inputString);  
+}
+
 function validateName(name, errorDiv, fieldName, event) {
   removeErrorMessage(errorDiv, fieldName);
   if (name.trim() === "") {
     event.preventDefault();
     displayErrorMessage("Name is Required", errorDiv, fieldName);
+    return false;
+  }
+  return true;
+}
+
+function validateID(id, errorDiv, fieldName, event) {
+  removeErrorMessage(errorDiv, fieldName);
+  if (id.trim() === "") {
+    event.preventDefault();
+    displayErrorMessage("ID is Required", errorDiv, fieldName);
+    return false;
+  } else if (validateNoSpaces(id)) {
+    event.preventDefault();
+    displayErrorMessage("ID不能含有空格", errorDiv, fieldName);
     return false;
   }
   return true;
@@ -129,6 +149,7 @@ function attachValidationListener(config) {
 
 export {
   validateName,
+  validateID,
   validateEmail,
   validateEmailOrPhone,
   validatePassword,

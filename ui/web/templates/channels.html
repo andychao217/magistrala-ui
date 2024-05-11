@@ -19,7 +19,7 @@ SPDX-License-Identifier: Apache-2.0 -->
                 <div class="buttons mb-3">
                    <!-- 隐藏按钮 -->
                   <!-- Button trigger modal -->
-                  <button type="button" class="btn body-button" onclick="openModal('single')" style="display: none;">
+                  <button type="button" class="btn body-button" onclick="openModal('single')">
                     Add Channel
                   </button>
 
@@ -46,7 +46,6 @@ SPDX-License-Identifier: Apache-2.0 -->
                         <form method="post" id="channelform">
                           <div class="modal-body">
                             <div id="alertMessage"></div>
-
                             <div class="mb-3">
                               <label for="name" class="form-label">Name</label>
                               <input
@@ -57,6 +56,17 @@ SPDX-License-Identifier: Apache-2.0 -->
                                 placeholder="Channel Name"
                               />
                               <div id="nameError" class="text-danger"></div>
+                            </div>
+                            <div class="mb-3">
+                              <label for="id" class="form-label">ID</label>
+                              <input
+                                type="text"
+                                class="form-control id-field"
+                                name="id"
+                                id="id"
+                                placeholder="Channel ID"
+                              />
+                              <div id="idError" class="text-danger"></div>
                             </div>
                             <div class="mb-3">
                               <label for="description" class="form-label">Description</label>
@@ -241,7 +251,7 @@ SPDX-License-Identifier: Apache-2.0 -->
         }
       </script>
       <script type="module">
-        import { attachValidationListener, validateName, validateJSON } from "/js/validation.js";
+        import { attachValidationListener, validateName, validateID, validateJSON } from "/js/validation.js";
         import { submitCreateForm } from "/js/forms.js";
         import { fetchIndividualEntity } from "/js/infinitescroll.js";
 
@@ -249,14 +259,17 @@ SPDX-License-Identifier: Apache-2.0 -->
           buttonId: "create-channel-button",
           errorDivs: {
             name: "nameError",
+            id: "idError",
             metadata: "metadataError",
           },
           validations: {
             name: validateName,
+            id: validateID,
             metadata: validateJSON,
           },
           fields: {
             name: "name-field",
+            id: "id-field",
             metadata: "metadata-field",
           },
         });
