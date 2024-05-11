@@ -212,9 +212,9 @@ SPDX-License-Identifier: Apache-2.0 -->
                               <button 
                                   id="{{ $c.ID}}-deleteBtn" 
                                   class="btn body-button" 
-                                  onclick="deleteChannel('{{ $t.ID}}')" 
+                                  onclick="deleteChannel('{{ $c.ID}}')" 
                                 >
-                                  <i class="fa-solid fa-arrows-rotate"></i>
+                                  <i class="fa-solid fa-trash-can"></i>
                                 </button>
                             </td>
                           </tr>
@@ -258,7 +258,7 @@ SPDX-License-Identifier: Apache-2.0 -->
         }
 
         //删除
-        function deleteThing(channelID) {
+        function deleteChannel(channelID) {
           // 显示确认对话框
           const userConfirmed = confirm("你确定要删除所选数据吗？");
           
