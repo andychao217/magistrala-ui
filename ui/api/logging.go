@@ -793,6 +793,25 @@ func (lm *loggingMiddleware) ListThingsByChannel(s ui.Session, id string, page, 
 	return lm.svc.ListThingsByChannel(s, id, page, limit)
 }
 
+func (lm *loggingMiddleware) ListThingsByChannelInJSON(s ui.Session, id string, page, limit uint64) (b sdk.ThingsPage, err error) {
+	defer func(begin time.Time) {
+		args := []any{
+			slog.String("duration", time.Since(begin).String()),
+			slog.String("thing_id", id),
+			slog.Uint64("page", page),
+			slog.Uint64("limit", limit),
+		}
+		if err != nil {
+			args = append(args, slog.Any("error", err))
+			lm.logger.Warn("List channels by thing failed to complete successfully", args...)
+			return
+		}
+		lm.logger.Info("List channels by thing completed successfully", args...)
+	}(time.Now())
+
+	return lm.svc.ListThingsByChannelInJSON(s, id, page, limit)
+}
+
 // EnableChannel adds logging middleware to enable channel method.
 func (lm *loggingMiddleware) EnableChannel(token, id string) (err error) {
 	defer func(begin time.Time) {

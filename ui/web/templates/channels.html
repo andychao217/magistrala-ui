@@ -261,32 +261,54 @@ SPDX-License-Identifier: Apache-2.0 -->
         function deleteChannel(channelID) {
           // 显示确认对话框
           const userConfirmed = confirm("你确定要删除所选数据吗？");
-          
           // 根据用户的选择执行不同的操作
           if (userConfirmed) {
-            fetch(`/ui/channels/${channelID}`, {
-              method: "DELETE",
+            fetch(`/ui/channels/${channelID}/thingsInJSON?page=1&limit=100`, {
+              method: "GET",
             })
-              .then(function (response) {
-                if (!response.ok) {
-                  const errorMessage = response.headers.get("X-Error-Message");
-                  if (errorMessage) {
-                    console.log(errorMessage);
-                  } else {
-                    console.log(`Error: ${response.status}`);
-                  }
-                } else {
-                  window.location.reload();
-                }
-              })
-              .catch((error) => {
-                window.location.reload();
-                console.error("error submitting form: ", error);
-              });
+            .then(response => {  
+                if (!response.ok) {  
+                    throw new Error('Network response was not ok');  
+                }  
+                return response.json(); // 直接将流转换为JSON对象  
+            })  
+            .then(json => {  
+              const data = json.data;
+              const thingsData = JSON.parse(data).thingsData;
+              const things = thingsData.things;
+              const fetchPromises = things.map((thing)=>disconnectThingsAndChannels(thing.id, channelID)); 
+              Promise.all(fetchPromises).then(responses => {})
+                .then(jsonData => {handleDelete(channelID)})
+                .catch(error => {  
+                  // 如果有任何错误发生，这里会捕获到  
+                  console.error('An error occurred:', error);  
+                });
+            })
           } else {
               console.log("用户点击了取消。");
-              // 执行取消后的操作
           }
+        }
+
+        function handleDelete(channelID) {
+          fetch(`/ui/channels/${channelID}`, {
+            method: "DELETE",
+          })
+          .then(function (response) {
+            if (!response.ok) {
+              const errorMessage = response.headers.get("X-Error-Message");
+              if (errorMessage) {
+                console.log(errorMessage);
+              } else {
+                console.log(`Error: ${response.status}`);
+              }
+            } else {
+              window.location.reload();
+            }
+          })
+          .catch((error) => {
+            window.location.reload();
+            console.error("error submitting form: ", error);
+          });
         }
       </script>
       <script type="module">

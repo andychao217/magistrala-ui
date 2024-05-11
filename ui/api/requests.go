@@ -508,6 +508,25 @@ func (req updateChannelReq) validate() error {
 	return nil
 }
 
+type connectChannelAndThingsReq struct {
+	token     string
+	thingID   string
+	channelID string
+}
+
+func (req connectChannelAndThingsReq) validate() error {
+	if req.token == "" {
+		return errInvalidCredentials
+	}
+	if req.channelID == "" {
+		return errMissingChannelID
+	}
+	if req.thingID == "" {
+		return errMissingThingID
+	}
+	return nil
+}
+
 type connectThingReq struct {
 	token     string
 	thingID   string

@@ -259,6 +259,7 @@ type Service interface {
 	UpdateChannel(token string, channel sdk.Channel) error
 	// ListThingsByChannel retrieves a list of things based on the given channel ID.
 	ListThingsByChannel(s Session, id string, page, limit uint64) ([]byte, error)
+	ListThingsByChannelInJSON(s Session, id string, page, limit uint64) (sdk.ThingsPage, error)
 	// EnableChannel updates the status of the channel with the given ID to enabled.
 	EnableChannel(token, id string) error
 	// DisableChannel updates the status of the channel with the given ID to disabled.
@@ -1309,6 +1310,22 @@ func (us *uiService) ListThingsByChannel(s Session, channelID string, page, limi
 		return []byte{}, errors.Wrap(ErrExecTemplate, err)
 	}
 	return btpl.Bytes(), nil
+}
+
+func (us *uiService) ListThingsByChannelInJSON(s Session, channelID string, page, limit uint64) (sdk.ThingsPage, error) {
+	offset := (page - 1) * limit
+
+	pgm := sdk.PageMetadata{
+		Offset:     offset,
+		Limit:      limit,
+		Visibility: statusAll,
+	}
+
+	thsPage, err := us.sdk.ThingsByChannel(channelID, pgm, s.Token)
+	if err != nil {
+		return sdk.ThingsPage{}, errors.Wrap(ErrFailedRetreive, err)
+	}
+	return thsPage, nil
 }
 
 func (us *uiService) EnableChannel(token, channelID string) error {

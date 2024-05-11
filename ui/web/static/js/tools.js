@@ -60,3 +60,23 @@ function decryptByAesCbc(base64String, key) {
 
 // const decryptedMessage = decryptByAesCbc(encryptedData.ciphertext, SECRET_KEY, encryptedData.iv);
 // console.log("Decrypted:", decryptedMessage);
+
+
+function disconnectThingsAndChannels(thingID, channelID){
+    let formData = new FormData();
+    formData.append("thingID", thingID);
+    formData.append("channelID", channelID);
+    fetch(`/ui/channels/disconnect?thingID=${thingID}&channelID=${channelID}`, {
+        method: "POST",
+        body: formData
+    })
+    .then(response => {  
+        if (!response.ok) {  
+            throw new Error('Network response was not ok');  
+        }  
+        return response.json(); // 直接将流转换为JSON对象  
+    })  
+    .then(json => {  
+        console.error('处理fetch或JSON时出错:');  
+    });
+}

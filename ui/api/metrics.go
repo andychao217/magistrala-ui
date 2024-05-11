@@ -477,6 +477,15 @@ func (mm *metricsMiddleware) ListThingsByChannel(s ui.Session, id string, page, 
 	return mm.svc.ListThingsByChannel(s, id, page, limit)
 }
 
+func (mm *metricsMiddleware) ListThingsByChannelInJSON(s ui.Session, id string, page, limit uint64) (sdk.ThingsPage, error) {
+	defer func(begin time.Time) {
+		mm.counter.With("method", "list_things_by_channel").Add(1)
+		mm.latency.With("method", "list_things_by_channel").Observe(time.Since(begin).Seconds())
+	}(time.Now())
+
+	return mm.svc.ListThingsByChannelInJSON(s, id, page, limit)
+}
+
 // EnableChannel adds metrics middleware to enable channel method.
 func (mm *metricsMiddleware) EnableChannel(token, id string) error {
 	defer func(begin time.Time) {

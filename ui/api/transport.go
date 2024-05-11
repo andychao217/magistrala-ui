@@ -542,6 +542,13 @@ func MakeHandler(svc ui.Service, r *chi.Mux, instanceID, prefix string, secureCo
 						opts...,
 					).ServeHTTP)
 
+					r.Get("/{id}/thingsInJSON", kithttp.NewServer(
+						listThingsByChannelInJSONEndpoint(svc),
+						decodeListEntityByIDRequest,
+						encodeJSONResponse,
+						opts...,
+					).ServeHTTP)
+
 					r.Post("/{id}/users/assign", kithttp.NewServer(
 						AddMemberToChannelEndpoint(svc, prefix),
 						decodeAddMemberToChannelRequest,
@@ -594,6 +601,20 @@ func MakeHandler(svc ui.Service, r *chi.Mux, instanceID, prefix string, secureCo
 					r.Delete("/{id}", kithttp.NewServer(
 						deleteChannelEndpoint(svc),
 						decodeDeleteClientOrChannelReq,
+						encodeJSONResponse,
+						opts...,
+					).ServeHTTP)
+
+					r.Post("/connect", kithttp.NewServer(
+						connectChannelAndThingsEndpoint(svc),
+						decodeConnectChannelAndThings,
+						encodeJSONResponse,
+						opts...,
+					).ServeHTTP)
+
+					r.Post("/disconnect", kithttp.NewServer(
+						disconnectChannelAndThingsEndpoint(svc),
+						decodeConnectChannelAndThings,
 						encodeJSONResponse,
 						opts...,
 					).ServeHTTP)
@@ -1709,6 +1730,26 @@ func decodeChannelUpdate(_ context.Context, r *http.Request) (interface{}, error
 		token:   session.Token,
 		Channel: channel,
 	}, nil
+}
+
+func decodeConnectChannelAndThings(_ context.Context, r *http.Request) (interface{}, error) {
+	session, err := sessionFromHeader(r)
+	if err != nil {
+		return nil, err
+	}
+	if err := r.ParseForm(); err != nil {
+		return nil, err
+	}
+
+	fmt.Println("Form.Get 123: ", r.Form.Get("channelID"))
+	fmt.Println("PostFormValue 123: ", r.PostFormValue("channelID"))
+	req := connectChannelAndThingsReq{
+		token:     session.Token,
+		channelID: r.Form.Get("channelID"),
+		thingID:   r.Form.Get("thingID"),
+	}
+
+	return req, nil
 }
 
 func decodeConnectChannel(_ context.Context, r *http.Request) (interface{}, error) {

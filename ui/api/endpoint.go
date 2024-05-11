@@ -972,9 +972,6 @@ func listChannelsByThingInJSONEndpoint(svc ui.Service) endpoint.Endpoint {
 		}
 
 		res, err := svc.ListChannelsByThingInJSON(req.Session, req.id, req.page, req.limit)
-		jsonData, _ := json.Marshal(res)
-		fmt.Println("listChannelsByThingInJSON 123: ", jsonData)
-
 		if err != nil {
 			fmt.Println("get listChannelsByThingInJSON 123: ", err)
 			return nil, err
@@ -985,8 +982,7 @@ func listChannelsByThingInJSONEndpoint(svc ui.Service) endpoint.Endpoint {
 		}
 
 		// 将map编码为JSON字符串
-		jsonData, err = json.Marshal(data)
-		fmt.Println("listChannelsByThingInJSON 123: ", jsonData)
+		jsonData, err := json.Marshal(data)
 		if err != nil {
 			fmt.Println("listChannelsByThingInJSON Marshal 123: ", err)
 			return nil, err
@@ -1025,6 +1021,40 @@ func connectChannelEndpoint(svc ui.Service, prefix string) endpoint.Endpoint {
 		}
 
 		return ret, nil
+	}
+}
+
+func connectChannelAndThingsEndpoint(svc ui.Service) endpoint.Endpoint {
+	return func(_ context.Context, request interface{}) (interface{}, error) {
+		req := request.(connectChannelAndThingsReq)
+		if err := req.validate(); err != nil {
+			return nil, err
+		}
+
+		if err := svc.ConnectThing(req.thingID, req.channelID, req.token); err != nil {
+			return nil, err
+		}
+
+		return jsonResponse{
+			Data: "Connect Success",
+		}, nil
+	}
+}
+
+func disconnectChannelAndThingsEndpoint(svc ui.Service) endpoint.Endpoint {
+	return func(_ context.Context, request interface{}) (interface{}, error) {
+		req := request.(connectChannelAndThingsReq)
+		if err := req.validate(); err != nil {
+			return nil, err
+		}
+
+		if err := svc.DisconnectThing(req.thingID, req.channelID, req.token); err != nil {
+			return nil, err
+		}
+
+		return jsonResponse{
+			Data: "Disconnect Success",
+		}, nil
 	}
 }
 
@@ -1162,6 +1192,36 @@ func listThingsByChannelEndpoint(svc ui.Service) endpoint.Endpoint {
 		return uiRes{
 			code: http.StatusOK,
 			html: res,
+		}, nil
+	}
+}
+
+func listThingsByChannelInJSONEndpoint(svc ui.Service) endpoint.Endpoint {
+	return func(_ context.Context, request interface{}) (interface{}, error) {
+		req := request.(listEntityByIDReq)
+		if err := req.validate(); err != nil {
+			return nil, err
+		}
+
+		res, err := svc.ListThingsByChannelInJSON(req.Session, req.id, req.page, req.limit)
+		if err != nil {
+			fmt.Println("get listThingsByChannelInJSONEndpoint 123: ", err)
+			return nil, err
+		}
+
+		data := map[string]interface{}{
+			"thingsData": res,
+		}
+
+		// 将map编码为JSON字符串
+		jsonData, err := json.Marshal(data)
+		if err != nil {
+			fmt.Println("listThingsByChannelInJSONEndpoint Marshal 123: ", err)
+			return nil, err
+		}
+
+		return jsonResponse{
+			Data: string(jsonData),
 		}, nil
 	}
 }
@@ -1309,8 +1369,8 @@ func postMessageEndpoint(svc ui.Service) endpoint.Endpoint {
 			return nil, err
 		}
 
-		return uiRes{
-			code: http.StatusOK,
+		return jsonResponse{
+			Data: "Post message success",
 		}, nil
 	}
 }

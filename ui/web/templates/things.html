@@ -337,29 +337,53 @@ SPDX-License-Identifier: Apache-2.0 -->
           
           // 根据用户的选择执行不同的操作
           if (userConfirmed) {
-            fetch(`/ui/things/${thingID}`, {
-              method: "DELETE",
+            fetch(`/ui/things/${thingID}/channelsInJSON?page=1&limit=100`, {
+              method: "GET",
             })
-              .then(function (response) {
-                if (!response.ok) {
-                  const errorMessage = response.headers.get("X-Error-Message");
-                  if (errorMessage) {
-                    console.log(errorMessage);
-                  } else {
-                    console.log(`Error: ${response.status}`);
-                  }
-                } else {
-                  window.location.reload();
-                }
-              })
-              .catch((error) => {
-                window.location.reload();
-                console.error("error submitting form: ", error);
-              });
+            .then(response => {  
+                if (!response.ok) {  
+                    throw new Error('Network response was not ok');  
+                }  
+                return response.json(); // 直接将流转换为JSON对象  
+            })  
+            .then(json => {  
+              const data = json.data;
+              const channelsData = JSON.parse(data).channelsData;
+              const channels = channelsData.groups;
+              const fetchPromises = channels.map((channel)=>disconnectThingsAndChannels(thingID, channel.id)); 
+              Promise.all(fetchPromises).then(responses => {})
+                .then(jsonData => {handleDelete(thingID)})
+                .catch(error => {  
+                  // 如果有任何错误发生，这里会捕获到  
+                  console.error('An error occurred:', error);  
+                });
+            })
           } else {
               console.log("用户点击了取消。");
               // 执行取消后的操作
           }
+        }
+
+        function handleDelete(thingID) {
+          fetch(`/ui/things/${thingID}`, {
+            method: "DELETE",
+          })
+          .then(function (response) {
+            if (!response.ok) {
+              const errorMessage = response.headers.get("X-Error-Message");
+              if (errorMessage) {
+                console.log(errorMessage);
+              } else {
+                console.log(`Error: ${response.status}`);
+              }
+            } else {
+              window.location.reload();
+            }
+          })
+          .catch((error) => {
+            window.location.reload();
+            console.error("error submitting form: ", error);
+          });
         }
 
         //控制设备
