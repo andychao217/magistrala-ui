@@ -440,12 +440,12 @@ func (req createThingsReq) validate() error {
 	return nil
 }
 
-type deleteClientReq struct {
+type deleteClientOrChannelReq struct {
 	token string
 	id    string
 }
 
-func (req deleteClientReq) validate() error {
+func (req deleteClientOrChannelReq) validate() error {
 	if req.token == "" {
 		return errInvalidCredentials
 	}

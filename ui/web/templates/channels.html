@@ -209,6 +209,13 @@ SPDX-License-Identifier: Apache-2.0 -->
                               <button class="btn body-button" onclick="viewChannels('{{ $c.ID }}')">
                                 <i class="fa-solid fa-info"></i>
                               </button>
+                              <button 
+                                  id="{{ $c.ID}}-deleteBtn" 
+                                  class="btn body-button" 
+                                  onclick="deleteChannel('{{ $t.ID}}')" 
+                                >
+                                  <i class="fa-solid fa-arrows-rotate"></i>
+                                </button>
                             </td>
                           </tr>
                           <script>
@@ -248,6 +255,38 @@ SPDX-License-Identifier: Apache-2.0 -->
 
         function viewChannels(id) {
           window.location.href = "{{ printf "%s/channels/" pathPrefix }}" + id;
+        }
+
+        //删除
+        function deleteThing(channelID) {
+          // 显示确认对话框
+          const userConfirmed = confirm("你确定要删除所选数据吗？");
+          
+          // 根据用户的选择执行不同的操作
+          if (userConfirmed) {
+            fetch(`/ui/channels/${channelID}`, {
+              method: "DELETE",
+            })
+              .then(function (response) {
+                if (!response.ok) {
+                  const errorMessage = response.headers.get("X-Error-Message");
+                  if (errorMessage) {
+                    console.log(errorMessage);
+                  } else {
+                    console.log(`Error: ${response.status}`);
+                  }
+                } else {
+                  window.location.reload();
+                }
+              })
+              .catch((error) => {
+                window.location.reload();
+                console.error("error submitting form: ", error);
+              });
+          } else {
+              console.log("用户点击了取消。");
+              // 执行取消后的操作
+          }
         }
       </script>
       <script type="module">

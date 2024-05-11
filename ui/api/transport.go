@@ -465,7 +465,7 @@ func MakeHandler(svc ui.Service, r *chi.Mux, instanceID, prefix string, secureCo
 
 					r.Delete("/{id}", kithttp.NewServer(
 						deleteClientEndpoint(svc),
-						decodeDeleteClientReq,
+						decodeDeleteClientOrChannelReq,
 						encodeJSONResponse,
 						opts...,
 					).ServeHTTP)
@@ -587,6 +587,13 @@ func MakeHandler(svc ui.Service, r *chi.Mux, instanceID, prefix string, secureCo
 					r.Post("/messages", kithttp.NewServer(
 						postMessageEndpoint(svc),
 						decodePostMessageRequest,
+						encodeJSONResponse,
+						opts...,
+					).ServeHTTP)
+
+					r.Delete("/{id}", kithttp.NewServer(
+						deleteChannelEndpoint(svc),
+						decodeDeleteClientOrChannelReq,
 						encodeJSONResponse,
 						opts...,
 					).ServeHTTP)
@@ -1514,12 +1521,12 @@ func decodeThingSecretUpdate(_ context.Context, r *http.Request) (interface{}, e
 	}, nil
 }
 
-func decodeDeleteClientReq(_ context.Context, r *http.Request) (interface{}, error) {
+func decodeDeleteClientOrChannelReq(_ context.Context, r *http.Request) (interface{}, error) {
 	session, err := sessionFromHeader(r)
 	if err != nil {
 		return nil, err
 	}
-	req := deleteClientReq{
+	req := deleteClientOrChannelReq{
 		token: session.Token,
 		id:    chi.URLParam(r, "id"),
 	}

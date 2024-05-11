@@ -1024,6 +1024,23 @@ func (lm *loggingMiddleware) PostMessage(chanID, message, key string) (err error
 	return lm.svc.PostMessage(chanID, message, key)
 }
 
+func (lm *loggingMiddleware) DeleteChannel(token string, id string) (err error) {
+	defer func(begin time.Time) {
+		args := []any{
+			slog.String("duration", time.Since(begin).String()),
+			slog.String("thing_id", id),
+		}
+		if err != nil {
+			args = append(args, slog.Any("error", err))
+			lm.logger.Warn("Delete thing failed to complete successfully", args...)
+			return
+		}
+		lm.logger.Info("Delete thing completed successfully", args...)
+	}(time.Now())
+
+	return lm.svc.DeleteChannel(token, id)
+}
+
 // ListChannelUserGroups adds logging middleware to list channel user groups method.
 func (lm *loggingMiddleware) ListChannelUserGroups(s ui.Session, id string, page, limit uint64) (b []byte, err error) {
 	defer func(begin time.Time) {

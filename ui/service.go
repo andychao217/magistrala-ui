@@ -285,6 +285,8 @@ type Service interface {
 	ListChannelUserGroups(s Session, id string, page, limit uint64) ([]byte, error)
 	// 向通道发送信息
 	PostMessage(channelId, message, thingSecret string) error
+	// DeleteChannel deletes client with given ID.
+	DeleteChannel(token string, id string) error
 
 	// CreateGroups creates new groups.
 	CreateGroups(token string, groups ...sdk.Group) error
@@ -1511,6 +1513,14 @@ func (us *uiService) PostMessage(chanID, message, thingSecret string) error {
 	if err != nil {
 		return err
 	}
+	return nil
+}
+
+func (us *uiService) DeleteChannel(token, id string) error {
+	if err := us.sdk.DeleteChannel(id, token); err != nil {
+		return errors.Wrap(ErrFailedDisable, err)
+	}
+
 	return nil
 }
 

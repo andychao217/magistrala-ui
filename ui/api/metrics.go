@@ -597,6 +597,15 @@ func (mm *metricsMiddleware) PostMessage(chanID, message, key string) error {
 	return mm.svc.PostMessage(chanID, message, key)
 }
 
+func (mm *metricsMiddleware) DeleteChannel(token string, id string) error {
+	defer func(begin time.Time) {
+		mm.counter.With("method", "delete_thing").Add(1)
+		mm.latency.With("method", "delete_thing").Observe(time.Since(begin).Seconds())
+	}(time.Now())
+
+	return mm.svc.DeleteChannel(token, id)
+}
+
 // ListChannelUserGroups adds metrics middleware to list channel usergroups method.
 func (mm *metricsMiddleware) ListChannelUserGroups(s ui.Session, id string, page, limit uint64) ([]byte, error) {
 	defer func(begin time.Time) {

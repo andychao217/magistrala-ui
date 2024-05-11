@@ -826,7 +826,7 @@ func viewThingEndpoint(svc ui.Service) endpoint.Endpoint {
 
 func deleteClientEndpoint(svc ui.Service) endpoint.Endpoint {
 	return func(_ context.Context, request interface{}) (interface{}, error) {
-		req := request.(deleteClientReq)
+		req := request.(deleteClientOrChannelReq)
 		if err := req.validate(); err != nil {
 			return nil, err
 		}
@@ -1311,6 +1311,24 @@ func postMessageEndpoint(svc ui.Service) endpoint.Endpoint {
 
 		return uiRes{
 			code: http.StatusOK,
+		}, nil
+	}
+}
+
+func deleteChannelEndpoint(svc ui.Service) endpoint.Endpoint {
+	return func(_ context.Context, request interface{}) (interface{}, error) {
+		req := request.(deleteClientOrChannelReq)
+		if err := req.validate(); err != nil {
+			return nil, err
+		}
+
+		if err := svc.DeleteChannel(req.token, req.id); err != nil {
+			fmt.Println("deleteChannelEndpoint 123: ", err)
+			return nil, err
+		}
+
+		return jsonResponse{
+			Data: "Delete Success",
 		}, nil
 	}
 }
