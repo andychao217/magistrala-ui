@@ -243,6 +243,7 @@ type Service interface {
 	ListThingUsers(s Session, id, relation string, page, limit uint64) ([]byte, error)
 	// ListChannelsByThing retrieves a list of channels based on the given thing ID.
 	ListChannelsByThing(s Session, id string, page, limit uint64) ([]byte, error)
+	ListChannelsByThingInJSON(s Session, id string, page, limit uint64) (sdk.ChannelsPage, error)
 	// DeleteClient deletes client with given ID.
 	DeleteClient(token string, id string) error
 
@@ -1050,6 +1051,23 @@ func (us *uiService) ListThingUsers(s Session, id, relation string, page, limit 
 		return []byte{}, errors.Wrap(ErrExecTemplate, err)
 	}
 	return btpl.Bytes(), nil
+}
+
+func (us *uiService) ListChannelsByThingInJSON(s Session, id string, page, limit uint64) (sdk.ChannelsPage, error) {
+	offset := (page - 1) * limit
+
+	pgm := sdk.PageMetadata{
+		Offset:     offset,
+		Limit:      limit,
+		Visibility: statusAll,
+	}
+
+	chsPage, err := us.sdk.ChannelsByThing(id, pgm, s.Token)
+	if err != nil {
+		return sdk.ChannelsPage{}, errors.Wrap(ErrFailedRetreive, err)
+	}
+
+	return chsPage, nil
 }
 
 func (us *uiService) ListChannelsByThing(s Session, id string, page, limit uint64) ([]byte, error) {

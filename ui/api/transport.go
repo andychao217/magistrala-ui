@@ -365,7 +365,7 @@ func MakeHandler(svc ui.Service, r *chi.Mux, instanceID, prefix string, secureCo
 						opts...,
 					).ServeHTTP)
 
-					r.Get("/thingsData", kithttp.NewServer(
+					r.Get("/thingsData ", kithttp.NewServer(
 						listThingsDataEndpoint(svc),
 						decodeListEntityRequest,
 						encodeJSONResponse,
@@ -421,6 +421,13 @@ func MakeHandler(svc ui.Service, r *chi.Mux, instanceID, prefix string, secureCo
 						opts...,
 					).ServeHTTP)
 
+					r.Get("/{id}/channelsInJSON", kithttp.NewServer(
+						listChannelsByThingInJSONEndpoint(svc),
+						decodeListEntityByIDRequest,
+						encodeJSONResponse,
+						opts...,
+					).ServeHTTP)
+
 					r.Post("/{id}/channels/connect", kithttp.NewServer(
 						connectChannelEndpoint(svc, prefix),
 						decodeConnectChannel,
@@ -459,7 +466,7 @@ func MakeHandler(svc ui.Service, r *chi.Mux, instanceID, prefix string, secureCo
 					r.Delete("/{id}", kithttp.NewServer(
 						deleteClientEndpoint(svc),
 						decodeDeleteClientReq,
-						encodeResponse,
+						encodeJSONResponse,
 						opts...,
 					).ServeHTTP)
 				})
@@ -1512,16 +1519,11 @@ func decodeDeleteClientReq(_ context.Context, r *http.Request) (interface{}, err
 	if err != nil {
 		return nil, err
 	}
-	var credentials sdk.Credentials
-	if err := json.NewDecoder(r.Body).Decode(&credentials); err != nil {
-		return nil, err
-	}
-
 	req := deleteClientReq{
 		token: session.Token,
-		id:    r.Form.Get("id"),
+		id:    chi.URLParam(r, "id"),
 	}
-
+	fmt.Println("deleteClientReq 123: ", req)
 	return req, nil
 }
 

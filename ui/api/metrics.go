@@ -408,6 +408,15 @@ func (mm *metricsMiddleware) ListChannelsByThing(s ui.Session, id string, page, 
 	return mm.svc.ListChannelsByThing(s, id, page, limit)
 }
 
+func (mm *metricsMiddleware) ListChannelsByThingInJSON(s ui.Session, id string, page, limit uint64) (sdk.ChannelsPage, error) {
+	defer func(begin time.Time) {
+		mm.counter.With("method", "list_channels_by_thing").Add(1)
+		mm.latency.With("method", "list_channels_by_thing").Observe(time.Since(begin).Seconds())
+	}(time.Now())
+
+	return mm.svc.ListChannelsByThingInJSON(s, id, page, limit)
+}
+
 // CreateChannel adds metrics middleware to create channel method.
 func (mm *metricsMiddleware) CreateChannel(channel sdk.Channel, token string) error {
 	defer func(begin time.Time) {

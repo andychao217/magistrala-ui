@@ -252,19 +252,41 @@ SPDX-License-Identifier: Apache-2.0 -->
                                 <i class="fa-solid fa-info"></i>
                               </button>
                               {{ if eq $t.Metadata.isOnline "1" }}  
-                                <button class="btn body-button" onclick="rebootThing('{{ $t.Credentials.Identity }}')" title="Reboot">
+                                <button 
+                                  id="{{ $t.ID}}-rebootBtn" 
+                                  class="btn body-button" 
+                                  onclick="conntrolThing('{{ $t.ID}}', '{{ $t.Credentials.Identity }}', 'reboot')" 
+                                  title="Reboot"
+                                >
                                   <i class="fa-solid fa-arrows-rotate"></i>
                                 </button>
-                                <!-- <button class="btn body-button" onclick="deleteThing('{{ $t.ID }}')" title="Delete">
+                                <button
+                                  id="{{ $t.ID}}-deleteBtn" 
+                                  class="btn body-button" 
+                                  onclick="deleteThing('{{ $t.ID }}')" 
+                                  title="Delete"
+                                  disabled
+                                >
                                   <i class="fa-solid fa-trash-can"></i>
-                                </button> -->
+                                </button>
                               {{ else }}  
-                                <button class="btn body-button" title="Reboot" disabled>
+                                <button 
+                                  id="{{ $t.ID}}-rebootBtn" 
+                                  class="btn body-button" 
+                                  onclick="conntrolThing('{{ $t.ID}}', '{{ $t.Credentials.Identity }}', 'reboot')" 
+                                  title="Reboot"
+                                  disabled
+                                >
                                   <i class="fa-solid fa-arrows-rotate"></i>
                                 </button>
-                                <!-- <button class="btn body-button" disabled>
+                                <button
+                                  id="{{ $t.ID}}-deleteBtn" 
+                                  class="btn body-button" 
+                                  onclick="deleteThing('{{ $t.ID }}')" 
+                                  title="Delete"
+                                >
                                   <i class="fa-solid fa-trash-can"></i>
-                                </button> -->
+                                </button>
                               {{ end }}  
                             </td>
                           </tr>
@@ -289,13 +311,6 @@ SPDX-License-Identifier: Apache-2.0 -->
         const thingModal = new bootstrap.Modal(document.getElementById("addThingModal"));
         const thingsModal = new bootstrap.Modal(document.getElementById("addThingsModal"));
 
-        //获取当前domain的ID号
-        const domainLinkElement = document.getElementById('domain');
-        const domainHrefValue = domainLinkElement.href;   
-        const domainID = domainHrefValue.split('/').pop(); 
-        //从sessionStorage中获取当前登陆用户信息
-        const userInfo = JSON.parse(sessionStorage.getItem("userInfo"))
-
         function openModal(modal) {
           if (modal === "single") {
             thingModal.show();
@@ -316,18 +331,14 @@ SPDX-License-Identifier: Apache-2.0 -->
         }
 
         //删除
-        function deleteThing(id) {
+        function deleteThing(thingID) {
           // 显示确认对话框
           const userConfirmed = confirm("你确定要删除所选数据吗？");
           
           // 根据用户的选择执行不同的操作
           if (userConfirmed) {
-            const url = "{{ printf "%s/things/" pathPrefix }}" + id;
-            let formData = new FormData();
-            formData.append("id", id)
-            fetch(url, {
+            fetch(`/ui/things/${thingID}`, {
               method: "DELETE",
-              body: formData,
             })
               .then(function (response) {
                 if (!response.ok) {
@@ -338,12 +349,11 @@ SPDX-License-Identifier: Apache-2.0 -->
                     console.log(`Error: ${response.status}`);
                   }
                 } else {
-                  form.reset();
-                  config.modal.hide();
                   window.location.reload();
                 }
               })
               .catch((error) => {
+                window.location.reload();
                 console.error("error submitting form: ", error);
               });
           } else {
@@ -352,59 +362,29 @@ SPDX-License-Identifier: Apache-2.0 -->
           }
         }
 
-        //重启设备
-        function rebootThing(identity) {
-          socket.send(`reboot thing: ${identity}`);
+        //控制设备
+        function conntrolThing(thingID, thingIdentity, controlType) {
+          fetch(`/ui/things/${thingID}/channelsInJSON?page=1&limit=100`, {
+            method: "GET",
+          })
+          .then(response => {  
+              if (!response.ok) {  
+                  throw new Error('Network response was not ok');  
+              }  
+              return response.json(); // 直接将流转换为JSON对象  
+          })  
+          .then(json => {  
+            const data = json.data;
+            const channelsData = JSON.parse(data).channelsData;
+            const channels = channelsData.groups;
+            channels.forEach((channel)=>{
+              const message = `${controlType} ${thingIdentity}`;
+              postMessage(channel.id, message);
+            });
+          })
         }
 
-        function extractIPFromURL(url) {  
-          // 使用正则表达式匹配IP地址  
-          const ipRegex = /(\d{1,3}\.){3}\d{1,3}/;  
-          const match = url.match(ipRegex);  
-            
-          // 如果找到匹配项，返回IP地址；否则返回null  
-          return match ? match[0] : null;  
-        }
-
-        const ipAddress = extractIPFromURL(window.location.href);
-        const url = `ws://${ipAddress}:63000/websocket`
-        const socket = new WebSocket(url);  
-        const secret = 'platform';
-        
-        function setupWebSocket() {
-          let ws = null;
-          function connect() {
-            socket.onopen = function(event) {
-              //通过当前domainID号在当前登陆用户信息中找出默认channelID
-              const channelId = userInfo.metadata[domainID];
-	            const socketUrl = `ws://${ipAddress}:8186/channels/${channelId}/messages?authorization=${secret}`;
-              socket.send(socketUrl);  
-              console.log('WebSocket connected');
-              setTimeout(() => {
-                socket.send(`message from web 9095:${secret}`);  
-              }, 5000);
-            };
-            socket.onclose = function(event) {
-              console.log('WebSocket disconnected');
-              setTimeout(connect, 1000); // 5秒后尝试重新连接
-            };
-            socket.onerror = function(error) {
-              console.error('WebSocket error observed:', error);
-            };
-            socket.onmessage = function(event) {
-              console.log('Message from server:', event.data);
-              if(event.data.includes('refreshPage')) {
-                setTimeout(() => {
-                  window.location.reload();
-                }, 3000);
-              }
-            };
-          }
-          connect(); // 初始连接
-        }
-        setupWebSocket();
-
-
+        //轮询刷新thingslist，以实现监听things在线状态的
         function refreshThingsData() {
           // 获取当前页面的完整URL  
           var currentUrl = window.location.href;  
@@ -428,7 +408,7 @@ SPDX-License-Identifier: Apache-2.0 -->
           .then(json => {  
             const data = json.data;
             const thingsData = JSON.parse(data).thingsData
-            console.log("thingsData: ", thingsData);
+            // console.log("thingsData: ", thingsData);
 
             const things = thingsData.things;
             things.forEach((thing)=>{
@@ -436,50 +416,43 @@ SPDX-License-Identifier: Apache-2.0 -->
               $(`#${thing.id}-onlineStatusTD`).empty();
               if(onlineStatus) {
                 $('<span class="badge rounded-pill enabled-pill">Online</span>').appendTo(`#${thing.id}-onlineStatusTD`);
+                $(`#${thing.id}-rebootBtn`).prop('disabled', false);
+                $(`#${thing.id}-deleteBtn`).prop('disabled', true);
               }else{
                 $('<span class="badge rounded-pill disabled-pill">Offline</span>').appendTo(`#${thing.id}-onlineStatusTD`);
+                $(`#${thing.id}-rebootBtn`).prop('disabled', true);
+                $(`#${thing.id}-deleteBtn`).prop('disabled', false);
               }
             })
           })  
           .catch(error => {  
-              console.error('处理fetch或JSON时出错:', error);  
+              // console.error('处理fetch或JSON时出错:', error);  
           });
         }
         var intervalRefreshData = setInterval(refreshThingsData, 2000); 
 
-        let formData = new FormData();
-        formData.append("channelID","f9acc1c4-a2c5-45c8-9c92-a25d016b5fe6");
-        formData.append("message","testMessage");
-        formData.append("thingSecret","platform");
-        fetch(`/ui/channels/messages`, {
-            method: "POST",
-            body: formData,
-          })
-          .then(response => {  
-              if (!response.ok) {  
-                  throw new Error('Network response was not ok');  
-              }  
-              return response.json(); // 直接将流转换为JSON对象  
-          })  
-          .then(json => {  
-            const data = json.data;
-            const thingsData = JSON.parse(data).thingsData
-            console.log("thingsData: ", thingsData);
-
-            const things = thingsData.things;
-            things.forEach((thing)=>{
-              const onlineStatus = thing.metadata && thing.metadata.isOnline === "1";
-              $(`#${thing.id}-onlineStatusTD`).empty();
-              if(onlineStatus) {
-                $('<span class="badge rounded-pill enabled-pill">Online</span>').appendTo(`#${thing.id}-onlineStatusTD`);
-              }else{
-                $('<span class="badge rounded-pill disabled-pill">Offline</span>').appendTo(`#${thing.id}-onlineStatusTD`);
-              }
+        function postMessage(channelID, message){
+          let formData = new FormData();
+          formData.append("channelID", channelID);
+          formData.append("message", message);
+          formData.append("thingSecret","platform");
+          fetch(`/ui/channels/messages`, {
+              method: "POST",
+              body: formData,
             })
-          })  
-          .catch(error => {  
-              console.error('处理fetch或JSON时出错:', error);  
-          });
+            .then(response => {  
+                if (!response.ok) {  
+                    throw new Error('Network response was not ok');  
+                }  
+                return response.json(); // 直接将流转换为JSON对象  
+            })  
+            .then(json => {  
+              //
+            })  
+            .catch(error => {  
+                console.error('处理fetch或JSON时出错:', error);  
+            });
+        }
       </script>  
       <script type="module">
         import {

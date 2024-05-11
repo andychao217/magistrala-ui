@@ -783,9 +783,6 @@ func listThingsDataEndpoint(svc ui.Service) endpoint.Endpoint {
 		}
 
 		res, err := svc.ListThingsData(req.Session, req.status, req.page, req.limit)
-		jsonData, _ := json.Marshal(res)
-		fmt.Println("thingsData 123: ", jsonData)
-
 		if err != nil {
 			fmt.Println("get things data 123: ", err)
 			return nil, err
@@ -796,8 +793,7 @@ func listThingsDataEndpoint(svc ui.Service) endpoint.Endpoint {
 		}
 
 		// 将map编码为JSON字符串
-		jsonData, err = json.Marshal(data)
-		fmt.Println("thingsData 123: ", jsonData)
+		jsonData, err := json.Marshal(data)
 		if err != nil {
 			fmt.Println("thingsData Marshal 123: ", err)
 			return nil, err
@@ -836,11 +832,12 @@ func deleteClientEndpoint(svc ui.Service) endpoint.Endpoint {
 		}
 
 		if err := svc.DeleteClient(req.token, req.id); err != nil {
+			fmt.Println("deleteClientEndpoint 123: ", err)
 			return nil, err
 		}
 
-		return uiRes{
-			code: http.StatusOK,
+		return jsonResponse{
+			Data: "Delete Success",
 		}, nil
 	}
 }
@@ -963,6 +960,40 @@ func listChannelsByThingEndpoint(svc ui.Service) endpoint.Endpoint {
 		return uiRes{
 			code: http.StatusOK,
 			html: res,
+		}, nil
+	}
+}
+
+func listChannelsByThingInJSONEndpoint(svc ui.Service) endpoint.Endpoint {
+	return func(_ context.Context, request interface{}) (interface{}, error) {
+		req := request.(listEntityByIDReq)
+		if err := req.validate(); err != nil {
+			return nil, err
+		}
+
+		res, err := svc.ListChannelsByThingInJSON(req.Session, req.id, req.page, req.limit)
+		jsonData, _ := json.Marshal(res)
+		fmt.Println("listChannelsByThingInJSON 123: ", jsonData)
+
+		if err != nil {
+			fmt.Println("get listChannelsByThingInJSON 123: ", err)
+			return nil, err
+		}
+
+		data := map[string]interface{}{
+			"channelsData": res,
+		}
+
+		// 将map编码为JSON字符串
+		jsonData, err = json.Marshal(data)
+		fmt.Println("listChannelsByThingInJSON 123: ", jsonData)
+		if err != nil {
+			fmt.Println("listChannelsByThingInJSON Marshal 123: ", err)
+			return nil, err
+		}
+
+		return jsonResponse{
+			Data: string(jsonData),
 		}, nil
 	}
 }
