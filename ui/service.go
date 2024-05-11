@@ -222,7 +222,7 @@ type Service interface {
 	CreateThings(token string, things ...sdk.Thing) error
 	// ListThings retrieves things owned/shared by a user.
 	ListThings(s Session, status string, page, limit uint64) ([]byte, error)
-	ListThingsData(s Session, status string, page, limit uint64) (sdk.ThingsPage, error)
+	ListThingsInJSON(s Session, status string, page, limit uint64) (sdk.ThingsPage, error)
 	// ViewThing retrieves information about the thing with the given ID.
 	ViewThing(s Session, id string) ([]byte, error)
 	// UpdateThing updates the thing with the given ID.
@@ -314,6 +314,7 @@ type Service interface {
 	Publish(channelID, thingKey string, message Message) error
 	// ReadMessages retrieves messages published in a channel.
 	ReadMessages(s Session, channelID, thingKey string, mpgm sdk.MessagePageMetadata) ([]byte, error)
+	ReadMessagesInJSON(s Session, channelID, thingKey string, mpgm sdk.MessagePageMetadata) (sdk.MessagesPage, error)
 	// FetchChartData retrieves messages published in a channel to populate charts.
 	FetchChartData(token string, channelID string, mpgm sdk.MessagePageMetadata) ([]byte, error)
 
@@ -875,7 +876,7 @@ func (us *uiService) ListThings(s Session, status string, page, limit uint64) ([
 	return btpl.Bytes(), nil
 }
 
-func (us *uiService) ListThingsData(s Session, status string, page, limit uint64) (sdk.ThingsPage, error) {
+func (us *uiService) ListThingsInJSON(s Session, status string, page, limit uint64) (sdk.ThingsPage, error) {
 	offset := (page - 1) * limit
 
 	pgm := sdk.PageMetadata{
@@ -1859,6 +1860,19 @@ func (us *uiService) ReadMessages(s Session, channelID, thingKey string, mpgm sd
 	}
 
 	return btpl.Bytes(), nil
+}
+
+func (us *uiService) ReadMessagesInJSON(s Session, channelID, thingKey string, mpgm sdk.MessagePageMetadata) (sdk.MessagesPage, error) {
+	msg, err := us.sdk.ReadMessages(mpgm, channelID, s.Token)
+	if err != nil {
+		return sdk.MessagesPage{}, errors.Wrap(ErrFailedRetreive, err)
+	}
+
+	for i := 0; i < len(msg.Messages); i++ {
+		msg.Messages[i].Time = msg.Messages[i].Time / MilliToNanoRatio
+	}
+
+	return msg, nil
 }
 
 func (us *uiService) FetchChartData(token string, channelID string, mpgm sdk.MessagePageMetadata) ([]byte, error) {

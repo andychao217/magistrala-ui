@@ -782,7 +782,7 @@ func listThingsDataEndpoint(svc ui.Service) endpoint.Endpoint {
 			return nil, err
 		}
 
-		res, err := svc.ListThingsData(req.Session, req.status, req.page, req.limit)
+		res, err := svc.ListThingsInJSON(req.Session, req.status, req.page, req.limit)
 		if err != nil {
 			fmt.Println("get things data 123: ", err)
 			return nil, err
@@ -1585,6 +1585,37 @@ func readMessagesEndpoint(svc ui.Service) endpoint.Endpoint {
 		return uiRes{
 			code: http.StatusOK,
 			html: res,
+		}, nil
+	}
+}
+
+func readMessagesInJSONEndpoint(svc ui.Service) endpoint.Endpoint {
+	return func(_ context.Context, request interface{}) (response interface{}, err error) {
+		req := request.(readMessagesReq)
+		if err := req.validate(); err != nil {
+			return nil, err
+		}
+
+		res, err := svc.ReadMessagesInJSON(req.Session, req.channelID, req.thingKey, req.mpgm)
+		if err != nil {
+			return nil, err
+		}
+
+		// 创建一个map，其中包含一个User实例
+		data := map[string]interface{}{
+			"messagesData": res,
+		}
+
+		// 将map编码为JSON字符串
+		jsonData, err := json.Marshal(data)
+		fmt.Println("messages: ", jsonData)
+		if err != nil {
+			fmt.Println("read messages Marshal: ", err)
+			return nil, err
+		}
+
+		return jsonResponse{
+			Data: string(jsonData),
 		}, nil
 	}
 }

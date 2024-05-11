@@ -365,7 +365,7 @@ func MakeHandler(svc ui.Service, r *chi.Mux, instanceID, prefix string, secureCo
 						opts...,
 					).ServeHTTP)
 
-					r.Get("/thingsData ", kithttp.NewServer(
+					r.Get("/thingsInJSON", kithttp.NewServer(
 						listThingsDataEndpoint(svc),
 						decodeListEntityRequest,
 						encodeJSONResponse,
@@ -724,6 +724,13 @@ func MakeHandler(svc ui.Service, r *chi.Mux, instanceID, prefix string, secureCo
 						readMessagesEndpoint(svc),
 						decodeReadMessagesRequest,
 						encodeResponse,
+						opts...,
+					).ServeHTTP)
+
+					r.Get("/inJSON", kithttp.NewServer(
+						readMessagesInJSONEndpoint(svc),
+						decodeReadMessagesRequest,
+						encodeJSONResponse,
 						opts...,
 					).ServeHTTP)
 				})

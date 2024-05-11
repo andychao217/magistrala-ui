@@ -440,7 +440,7 @@ func (lm *loggingMiddleware) ListThings(s ui.Session, status string, page, limit
 	return lm.svc.ListThings(s, status, page, limit)
 }
 
-func (lm *loggingMiddleware) ListThingsData(s ui.Session, status string, page, limit uint64) (b sdk.ThingsPage, err error) {
+func (lm *loggingMiddleware) ListThingsInJSON(s ui.Session, status string, page, limit uint64) (b sdk.ThingsPage, err error) {
 	defer func(begin time.Time) {
 		args := []any{
 			slog.String("duration", time.Since(begin).String()),
@@ -456,7 +456,7 @@ func (lm *loggingMiddleware) ListThingsData(s ui.Session, status string, page, l
 		lm.logger.Info("List things completed successfully", args...)
 	}(time.Now())
 
-	return lm.svc.ListThingsData(s, status, page, limit)
+	return lm.svc.ListThingsInJSON(s, status, page, limit)
 }
 
 // ViewThing adds logging middleware to view thing method.
@@ -1306,6 +1306,24 @@ func (lm *loggingMiddleware) ReadMessages(s ui.Session, channelID, thingKey stri
 	}(time.Now())
 
 	return lm.svc.ReadMessages(s, channelID, thingKey, mpgm)
+}
+
+func (lm *loggingMiddleware) ReadMessagesInJSON(s ui.Session, channelID, thingKey string, mpgm sdk.MessagePageMetadata) (b sdk.MessagesPage, err error) {
+	defer func(begin time.Time) {
+		args := []any{
+			slog.String("duration", time.Since(begin).String()),
+			slog.String("channel_id", channelID),
+			slog.Any("page_metadata", mpgm),
+		}
+		if err != nil {
+			args = append(args, slog.Any("error", err))
+			lm.logger.Warn("Read messages failed to complete successfully", args...)
+			return
+		}
+		lm.logger.Info("Read messages completed successfully", args...)
+	}(time.Now())
+
+	return lm.svc.ReadMessagesInJSON(s, channelID, thingKey, mpgm)
 }
 
 // FetchChartData adds logging middleware to fetch chart data method.

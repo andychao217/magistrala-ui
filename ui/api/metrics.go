@@ -289,13 +289,13 @@ func (mm *metricsMiddleware) ListThings(s ui.Session, status string, page, limit
 	return mm.svc.ListThings(s, status, page, limit)
 }
 
-func (mm *metricsMiddleware) ListThingsData(s ui.Session, status string, page, limit uint64) (sdk.ThingsPage, error) {
+func (mm *metricsMiddleware) ListThingsInJSON(s ui.Session, status string, page, limit uint64) (sdk.ThingsPage, error) {
 	defer func(begin time.Time) {
 		mm.counter.With("method", "list_things").Add(1)
 		mm.latency.With("method", "list_things").Observe(time.Since(begin).Seconds())
 	}(time.Now())
 
-	return mm.svc.ListThingsData(s, status, page, limit)
+	return mm.svc.ListThingsInJSON(s, status, page, limit)
 }
 
 // viewThing adds metrics middleware to view thing method.
@@ -743,6 +743,15 @@ func (mm *metricsMiddleware) ReadMessages(s ui.Session, channelID, thingKey stri
 	}(time.Now())
 
 	return mm.svc.ReadMessages(s, channelID, thingKey, mpgm)
+}
+
+func (mm *metricsMiddleware) ReadMessagesInJSON(s ui.Session, channelID, thingKey string, mpgm sdk.MessagePageMetadata) (sdk.MessagesPage, error) {
+	defer func(begin time.Time) {
+		mm.counter.With("method", "read_messages").Add(1)
+		mm.latency.With("method", "read_messages").Observe(time.Since(begin).Seconds())
+	}(time.Now())
+
+	return mm.svc.ReadMessagesInJSON(s, channelID, thingKey, mpgm)
 }
 
 // FetchChartData adds metrics middleware to fetch chart data method.
