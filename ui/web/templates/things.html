@@ -251,14 +251,6 @@ SPDX-License-Identifier: Apache-2.0 -->
                               <button class="btn body-button" onclick="viewThing('{{ $t.ID }}')">
                                 <i class="fa-solid fa-info"></i>
                               </button>
-                              <button
-                                id="{{ $t.ID}}-deleteBtn" 
-                                class="btn body-button" 
-                                onclick="conntrolThing('{{ $t.ID }}', '{{ $t.Credentials.Identity }}', 'readMessage')" 
-                                title="Delete"
-                              >
-                                <i class="fa-solid fa-trash-can"></i>
-                              </button>
                               {{ if eq $t.Metadata.isOnline "1" }}  
                                 <button 
                                   id="{{ $t.ID}}-rebootBtn" 
@@ -409,23 +401,10 @@ SPDX-License-Identifier: Apache-2.0 -->
             const data = json.data;
             const channelsData = JSON.parse(data).channelsData;
             const channels = channelsData.groups;
-            if (controlType === 'readMessage') {
-              const fetchPromises = channels.map((channel)=>readMessage(thingID, channel.id)); 
-              Promise.all(fetchPromises)
-                .then(responses => {
-                  console.log("responses 123", responses)
-                })
-                .then(jsonData => {})
-                .catch(error => {  
-                  // 如果有任何错误发生，这里会捕获到  
-                  console.error('An error occurred:', error);  
-                });
-            } else {
-              const message = `${controlType} ${thingIdentity}`;
+            const message = `${controlType} ${thingIdentity}`;
               const fetchPromises = channels.map((channel)=>postMessage(channel.id, message)); 
               Promise.all(fetchPromises).then(responses => {}).then(jsonData => {})
               .catch(error => {console.error('An error occurred:', error); });
-            }
           })
         }
 
@@ -496,24 +475,6 @@ SPDX-License-Identifier: Apache-2.0 -->
             .catch(error => {  
                 console.error('处理fetch或JSON时出错:', error);  
             });
-        }
-
-        function readMessage(thingID, channelID) {
-          fetch(`/ui/messages/inJSON?channel=${channelID}&thing=platform&limit=1000`, {
-            method: "GET",
-          })
-          .then(response => {  
-              if (!response.ok) {  
-                  throw new Error('Network response was not ok');  
-              }  
-              return response.json(); // 直接将流转换为JSON对象  
-          })  
-          .then(json => {  
-            const data = json.data;
-            const messagesData = JSON.parse(data).messagesData;
-            const messages = messagesData.messages;
-            console.log("messages 123: ", messages)
-          })
         }
       </script>  
       <script type="module">
