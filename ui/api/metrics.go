@@ -447,6 +447,15 @@ func (mm *metricsMiddleware) ListChannels(s ui.Session, status string, page, lim
 	return mm.svc.ListChannels(s, status, page, limit)
 }
 
+func (mm *metricsMiddleware) ListChannelsInJSON(s ui.Session, status string, page, limit uint64) (sdk.ChannelsPage, error) {
+	defer func(begin time.Time) {
+		mm.counter.With("method", "list_channels").Add(1)
+		mm.latency.With("method", "list_channels").Observe(time.Since(begin).Seconds())
+	}(time.Now())
+
+	return mm.svc.ListChannelsInJSON(s, status, page, limit)
+}
+
 // ViewChannel adds metrics middleware to view channels method.
 func (mm *metricsMiddleware) ViewChannel(s ui.Session, id string) ([]byte, error) {
 	defer func(begin time.Time) {

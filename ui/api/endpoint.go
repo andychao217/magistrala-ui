@@ -78,14 +78,14 @@ func registerUserEndpoint(svc ui.Service) endpoint.Endpoint {
 					Name:     accessTokenKey,
 					Value:    token.AccessToken,
 					Path:     "/",
-					HttpOnly: true,
+					HttpOnly: false,
 					Expires:  accessExp,
 				},
 				{
 					Name:     refreshTokenKey,
 					Value:    token.RefreshToken,
 					Path:     "/",
-					HttpOnly: true,
+					HttpOnly: false,
 					Expires:  refreshExp,
 				},
 			},
@@ -276,14 +276,14 @@ func tokenEndpoint(svc ui.Service) endpoint.Endpoint {
 					Name:     accessTokenKey,
 					Value:    token.AccessToken,
 					Path:     "/",
-					HttpOnly: true,
+					HttpOnly: false,
 					Expires:  accessExp,
 				},
 				{
 					Name:     refreshTokenKey,
 					Value:    token.RefreshToken,
 					Path:     "/",
-					HttpOnly: true,
+					HttpOnly: false,
 					Expires:  refreshExp,
 				},
 			},
@@ -336,21 +336,21 @@ func secureTokenEndpoint(svc ui.Service, s *securecookie.SecureCookie, prefix st
 					Name:     sessionDetailsKey,
 					Value:    secureSessionDetails,
 					Path:     "/",
-					HttpOnly: true,
+					HttpOnly: false,
 				},
 				{
 					Name:     refreshTokenKey,
 					Value:    secureRefreshToken,
 					Path:     fmt.Sprintf("%s/%s", prefix, tokenRefreshAPIEndpoint),
 					Expires:  refreshExp,
-					HttpOnly: true,
+					HttpOnly: false,
 				},
 				{
 					Name:     refreshTokenKey,
 					Value:    secureRefreshToken,
 					Path:     fmt.Sprintf("%s/%s/login", prefix, domainsAPIEndpoint),
 					Expires:  refreshExp,
-					HttpOnly: true,
+					HttpOnly: false,
 				},
 				{
 					Name:   accessTokenKey,
@@ -409,21 +409,21 @@ func refreshTokenEndpoint(svc ui.Service, s *securecookie.SecureCookie, prefix s
 					Name:     sessionDetailsKey,
 					Value:    secureSessionDetails,
 					Path:     "/",
-					HttpOnly: true,
+					HttpOnly: false,
 				},
 				{
 					Name:     refreshTokenKey,
 					Value:    secureRefreshToken,
 					Path:     fmt.Sprintf("%s/%s", prefix, tokenRefreshAPIEndpoint),
 					Expires:  refreshExp,
-					HttpOnly: true,
+					HttpOnly: false,
 				},
 				{
 					Name:     refreshTokenKey,
 					Value:    secureRefreshToken,
 					Path:     fmt.Sprintf("%s/%s/login", prefix, domainsAPIEndpoint),
 					Expires:  refreshExp,
-					HttpOnly: true,
+					HttpOnly: false,
 				},
 			},
 		}
@@ -1133,10 +1133,38 @@ func listChannelsEndpoint(svc ui.Service) endpoint.Endpoint {
 		if err != nil {
 			return nil, err
 		}
-
 		return uiRes{
 			code: http.StatusOK,
 			html: res,
+		}, nil
+	}
+}
+
+func listChannelsInJSONEndpoint(svc ui.Service) endpoint.Endpoint {
+	return func(_ context.Context, request interface{}) (interface{}, error) {
+		req := request.(listEntityReq)
+		if err := req.validate(); err != nil {
+			return nil, err
+		}
+
+		res, err := svc.ListChannelsInJSON(req.Session, req.status, req.page, req.limit)
+		if err != nil {
+			return nil, err
+		}
+
+		data := map[string]interface{}{
+			"channelsData": res,
+		}
+
+		// 将map编码为JSON字符串
+		jsonData, err := json.Marshal(data)
+		if err != nil {
+			fmt.Println("channelsData Marshal 123: ", err)
+			return nil, err
+		}
+
+		return jsonResponse{
+			Data: string(jsonData),
 		}, nil
 	}
 }
@@ -1912,21 +1940,21 @@ func domainLoginEndpoint(svc ui.Service, s *securecookie.SecureCookie, prefix st
 					Name:     sessionDetailsKey,
 					Value:    secureSessionDetails,
 					Path:     "/",
-					HttpOnly: true,
+					HttpOnly: false,
 				},
 				{
 					Name:     refreshTokenKey,
 					Value:    secureRefreshToken,
 					Path:     fmt.Sprintf("%s/%s", prefix, tokenRefreshAPIEndpoint),
 					Expires:  refreshExp,
-					HttpOnly: true,
+					HttpOnly: false,
 				},
 				{
 					Name:     refreshTokenKey,
 					Value:    secureRefreshToken,
 					Path:     fmt.Sprintf("%s/%s/login", prefix, domainsAPIEndpoint),
 					Expires:  refreshExp,
-					HttpOnly: true,
+					HttpOnly: false,
 				},
 			},
 			headers: map[string]string{"Location": fmt.Sprintf("%s/?domain=%s", prefix, req.DomainID)},

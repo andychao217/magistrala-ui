@@ -253,6 +253,7 @@ type Service interface {
 	CreateChannels(token string, channels ...sdk.Channel) error
 	// ListChannels retrieves channels owned/shared by a user.
 	ListChannels(s Session, status string, page, limit uint64) ([]byte, error)
+	ListChannelsInJSON(s Session, status string, page, limit uint64) (sdk.ChannelsPage, error)
 	// ViewChannel retrievs information about the channel with the given ID.
 	ViewChannel(s Session, id string) ([]byte, error)
 	// UpdateChannel updates the channel with the given ID.
@@ -1202,6 +1203,22 @@ func (us *uiService) ListChannels(s Session, status string, page, limit uint64) 
 	}
 
 	return btpl.Bytes(), nil
+}
+
+func (us *uiService) ListChannelsInJSON(s Session, status string, page, limit uint64) (sdk.ChannelsPage, error) {
+	offset := (page - 1) * limit
+
+	pgm := sdk.PageMetadata{
+		Offset: offset,
+		Limit:  limit,
+		Status: status,
+	}
+	chsPage, err := us.sdk.Channels(pgm, s.Token)
+	if err != nil {
+		return sdk.ChannelsPage{}, errors.Wrap(ErrFailedRetreive, err)
+	}
+
+	return chsPage, nil
 }
 
 func (us *uiService) ViewChannel(s Session, channelID string) ([]byte, error) {

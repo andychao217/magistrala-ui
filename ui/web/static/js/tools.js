@@ -80,3 +80,18 @@ function disconnectThingsAndChannels(thingID, channelID){
         console.error('处理fetch或JSON时出错:');  
     });
 }
+
+function containsLoginInUrl() {  
+    // 获取完整的URL  
+    var url = window.location.href;  
+    // 或者只获取路径部分（不包含域名和查询字符串）  
+    // var url = window.location.pathname;  
+  
+    // 检查URL是否包含"login"或者"register" 
+    if (url.indexOf('login') !== -1 || url.indexOf('register') !== -1) {  
+        // 如果包含，返回true  
+        return true;  
+    }  
+    // 如果不包含，返回false  
+    return false;  
+} 

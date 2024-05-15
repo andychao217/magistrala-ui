@@ -737,6 +737,25 @@ func (lm *loggingMiddleware) ListChannels(s ui.Session, status string, page, lim
 	return lm.svc.ListChannels(s, status, page, limit)
 }
 
+func (lm *loggingMiddleware) ListChannelsInJSON(s ui.Session, status string, page, limit uint64) (b sdk.ChannelsPage, err error) {
+	defer func(begin time.Time) {
+		args := []any{
+			slog.String("duration", time.Since(begin).String()),
+			slog.String("status", status),
+			slog.Uint64("page", page),
+			slog.Uint64("limit", limit),
+		}
+		if err != nil {
+			args = append(args, slog.Any("error", err))
+			lm.logger.Warn("List channels failed to complete successfully", args...)
+			return
+		}
+		lm.logger.Info("List channels completed successfully", args...)
+	}(time.Now())
+
+	return lm.svc.ListChannelsInJSON(s, status, page, limit)
+}
+
 // ViewChannel adds logging middleware to view channel method.
 func (lm *loggingMiddleware) ViewChannel(s ui.Session, id string) (b []byte, err error) {
 	defer func(begin time.Time) {

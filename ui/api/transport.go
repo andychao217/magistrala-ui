@@ -493,6 +493,13 @@ func MakeHandler(svc ui.Service, r *chi.Mux, instanceID, prefix string, secureCo
 						opts...,
 					).ServeHTTP)
 
+					r.Get("/channelsInJSON", kithttp.NewServer(
+						listChannelsInJSONEndpoint(svc),
+						decodeListEntityRequest,
+						encodeJSONResponse,
+						opts...,
+					).ServeHTTP)
+
 					r.Post("/enable", kithttp.NewServer(
 						enableChannelEndpoint(svc, prefix),
 						decodeChannelStatusUpdate,
