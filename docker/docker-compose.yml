@@ -12,8 +12,13 @@ volumes:
 
 services:
   ui:
-    image: magistrala/ui:${MG_RELEASE_TAG}
+    image: andychao217/magistrala-ui:${MG_RELEASE_TAG}
     container_name: magistrala-ui
+    logging:  
+      driver: "json-file"  
+      options:  
+        max-size: "10m"  
+        max-file: "3"
     restart: on-failure
     ports:
       - ${MG_UI_PORT}:${MG_UI_PORT}
@@ -53,6 +58,11 @@ services:
   ui-db:
     image: postgres:16.1-alpine
     container_name: magistrala-ui-db
+    logging:  
+      driver: "json-file"  
+      options:  
+        max-size: "10m"  
+        max-file: "3"
     restart: on-failure
     command: postgres -c "max_connections=${MG_POSTGRES_MAX_CONNECTIONS}"
     ports:
