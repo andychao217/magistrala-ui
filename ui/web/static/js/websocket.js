@@ -1,24 +1,19 @@
-var ws = null; 
-const url = window.location.href;  
-const ipAddress = extractIPFromURL(url); 
+var ws = null;
+const hostName = getHostname(window.location); 
   
-function extractIPFromURL(url) {  
-    // 使用正则表达式匹配IP地址  
-    const ipRegex = /(\d{1,3}\.){3}\d{1,3}/;  
-    const match = url.match(ipRegex);  
-        
-    // 如果找到匹配项，返回IP地址；否则返回null  
-    return match ? match[0] : null;  
+function getHostname(url) {  
+  const parsedUrl = new URL(url);  
+  return parsedUrl.hostname;  
 } 
 
-function connectWebSocket(ip) {  
+function connectWebSocket(host) {  
   // 假设WebSocket服务器在ws://your-websocket-server-url  
-  ws = new WebSocket(`ws://${ip}:63000/websocket`);  
+  ws = new WebSocket(`ws://${host}:63000/websocket`);  
   
   ws.onopen = function(event) {  
     console.log('WebSocket is open now.');  
     // 可以在这里发送初始消息等
-    getChannelsAndSendMessage(ip)
+    getChannelsAndSendMessage(host)
   };  
   
   ws.onmessage = function(event) {  
@@ -38,7 +33,7 @@ function connectWebSocket(ip) {
   
   ws.onerror = function(error) {  
     console.error('WebSocket Error: ', error);  
-    connectWebSocket(ip)
+    connectWebSocket(host)
   };  
 }  
 
@@ -56,8 +51,8 @@ function getChannelsAndSendMessage(ip) {
     const data = json.data;
     const channelsData = JSON.parse(data).channelsData;
     const channels = channelsData.groups;
-    const urls = channels.map((channel)=> `ws://${ip}:8186/channels/${channel.id}/messages?authorization=platform`);
-    const message = {urls: urls.join(';'), message: 'connect'}
+    const topics = channels.map((channel)=> `/channels/${channel.id}/messages`);
+    const message = {topics: topics.join(';'), host: hostName, thingSecret: 'platform', message: 'connect'}
     ws.send(JSON.stringify(message))  
   })
 }
@@ -66,6 +61,6 @@ function getChannelsAndSendMessage(ip) {
 $(function() {  
     // DOM 加载完成后执行的代码
     if (!containsLoginInUrl()) {  
-      connectWebSocket(ipAddress)
+      connectWebSocket(hostName)
     }
 });
