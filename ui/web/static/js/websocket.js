@@ -51,7 +51,7 @@ function getChannelsAndSendMessage(ip) {
     const data = json.data;
     const channelsData = JSON.parse(data).channelsData;
     const channels = channelsData.groups;
-    const topics = channels.map((channel)=> `/channels/${channel.id}/messages`);
+    const topics = channels.map((channel)=> `channels/${channel.id}/messages`);
     const message = {topics: topics.join(';'), host: hostName, thingSecret: 'platform', message: 'connect'}
     ws.send(JSON.stringify(message))  
   })
