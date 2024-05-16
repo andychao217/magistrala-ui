@@ -16,8 +16,7 @@ SPDX-License-Identifier: Apache-2.0 -->
             <div class="col-lg-12 mx-auto py-3">
               {{ template "breadcrumb" . }}
               <div class="row">
-                <!-- 隐藏按钮 -->
-                <div class="buttons mb-3" style="display: 'none';">
+                <div class="buttons mb-3">
                   <a
                     href="{{ printf "%s/channels/%s/things" pathPrefix .Entity.ID }}"
                     type="button"
@@ -29,6 +28,7 @@ SPDX-License-Identifier: Apache-2.0 -->
                     href="{{ printf "%s/channels/%s/users" pathPrefix .Entity.ID }}"
                     type="button"
                     class="btn body-button"
+                    style="display:none"
                   >
                     Assign Users
                   </a>
@@ -36,6 +36,7 @@ SPDX-License-Identifier: Apache-2.0 -->
                     href="{{ printf "%s/channels/%s/groups" pathPrefix .Entity.ID }}"
                     type="button"
                     class="btn body-button"
+                    style="display:none"
                   >
                     Assign Groups
                   </a>
@@ -117,8 +118,7 @@ SPDX-License-Identifier: Apache-2.0 -->
                     </tbody>
                   </table>
                   <div id="error-message" class="text-danger"></div>
-                  <!-- 隐藏按钮 -->
-                  <div class="row-mb-3 mt-3" style="display: none;">
+                  <div class="row-mb-3 mt-3">
                     {{ if eq .Entity.Status "enabled" }}
                       <button
                         type="button"

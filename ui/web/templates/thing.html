@@ -17,15 +17,14 @@ SPDX-License-Identifier: Apache-2.0 -->
               {{ template "breadcrumb" . }}
               <div class="row">
                 <div class="buttons mb-3">
-                  <!-- 隐藏按钮 -->
                   <a
                     class="btn body-button"
                     href="{{ printf "%s/things/%s/channels" pathPrefix .Entity.ID }}"
                     role="button"
-                    style="display: none;"
                   >
                     Connect
                   </a>
+                  <!-- 隐藏按钮 -->
                   <a
                     class="btn body-button"
                     href="{{ printf "%s/things/%s/users" pathPrefix .Entity.ID }}"
@@ -135,8 +134,7 @@ SPDX-License-Identifier: Apache-2.0 -->
                     </tbody>
                   </table>
                   <div id="error-message" class="text-danger"></div>
-                  <!-- 隐藏按钮 -->
-                  <div class="row-mb-3 mt-3" style="display: none;">
+                  <div class="row-mb-3 mt-3">
                     {{ if eq .Entity.Status "enabled" }}
                       <button
                         type="button"
@@ -161,28 +159,6 @@ SPDX-License-Identifier: Apache-2.0 -->
                   </div>
                 </div>
               </div>
-              <!-- <div class="row align-items-between" style="margin-top:10px">
-                <div class="col-6">
-                  <div class="card">
-                    <div class="card-header">
-                      Recevied
-                    </div>
-                    <div class="card-body" id="recevicedMessageDiv" style="max-height: 100px;overflow-y: auto;">
-                    </div>
-                  </div>
-                </div>
-                <div class="col-6">
-                  <div class="card">
-                    <div class="card-header">
-                      Send
-                    </div>
-                    <div class="card-body">
-                      <textarea id="sendMessageTextArea" class="form-control" aria-label="With textarea"></textarea>
-                      <a class="btn btn-primary" id="sendMessageButton" style="margin-top:10px">Send</a>
-                    </div>
-                  </div>
-                </div>
-              </div> -->
             </div>
           </div>
         </div>

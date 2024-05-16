@@ -27,8 +27,8 @@ SPDX-License-Identifier: Apache-2.0 -->
           <span>Home Page</span>
         </a>
       </li>
-
-      <li class="nav-item mb-2 mx-2">
+       <!-- 隐藏页面 -->
+      <li class="nav-item mb-2 mx-2" style="display: none;">
         {{ $navbarActive := "dashboard" }}
         <a
           href="{{ printf "%s/dashboards" pathPrefix }}"
@@ -57,8 +57,8 @@ SPDX-License-Identifier: Apache-2.0 -->
         <span>Domains</span>
       </a>
     </li>
-
-    <li class="nav-item mb-2 mx-2">
+     <!-- 隐藏页面 -->
+    <li class="nav-item mb-2 mx-2" style="display: none;">
       {{ $navbarActive = "invitations" }}
       <a
         href="{{ printf "%s/invitations" pathPrefix }}"
@@ -115,7 +115,8 @@ SPDX-License-Identifier: Apache-2.0 -->
               <span>Members</span>
             </a>
           </li>
-          <li class="nav-item mb-2 mx-2">
+           <!-- 隐藏页面 -->
+          <li class="nav-item mb-2 mx-2" style="display: none;">
             {{ $navbarActive = "domaininvitations" }}
             <a
               href="{{ printf "%s/invitations?domain=%s" pathPrefix .Session.Domain.ID }}"

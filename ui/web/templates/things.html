@@ -212,6 +212,7 @@ SPDX-License-Identifier: Apache-2.0 -->
                           <!-- <th class="meta-col" scope="col">Metadata</th> -->
                           <th class="created-col" scope="col">Created At</th>
                           <th class="status-col" scope="col">Online</th>
+                          <th class="status-col" scope="col">Status</th>
                           <th class="operation-col" scope="col">Operation</th>
                         </tr>
                       </thead>
@@ -237,8 +238,7 @@ SPDX-License-Identifier: Apache-2.0 -->
                                 <span class="badge rounded-pill disabled-pill">Offline</span>  
                               {{ end }}  
                             </td>
-                            <!-- 隐藏不能使用的字段 -->
-                            <!-- <td>
+                            <td>
                               {{ if eq $t.Status "enabled" }}
                                 <span class="badge rounded-pill enabled-pill">{{ $t.Status }}</span>
                               {{ else if eq $t.Status "disabled" }}
@@ -246,7 +246,7 @@ SPDX-License-Identifier: Apache-2.0 -->
                                   {{ $t.Status }}
                                 </span>
                               {{ end }}
-                            </td> -->
+                            </td>
                             <td class="operation-col">
                               <button class="btn body-button" onclick="viewThing('{{ $t.ID }}')">
                                 <i class="fa-solid fa-info"></i>
