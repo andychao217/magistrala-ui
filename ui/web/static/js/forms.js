@@ -36,7 +36,7 @@ export function submitCreateForm(config) {
       })
       .catch((error) => {
         console.error("error submitting form: ", error);
-        showError(`error submitting form: ${error}`, config.alertDiv);
+        showError(`错误: ${error}`, config.alertDiv);
       });
   });
 }
@@ -67,7 +67,7 @@ export function submitUpdateForm(config) {
     })
     .catch((error) => {
       console.error("error submitting form: ", error);
-      showError(`error submitting form: ${error}`, config.alertDiv);
+      showError(`错误: ${error}`, config.alertDiv);
     });
 }
 

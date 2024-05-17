@@ -11,11 +11,11 @@ SPDX-License-Identifier: Apache-2.0 -->
       {{ $prevPage := sub $currentPage 1 }}
       {{ if le $prevPage 0 }}
         <li class="page-item disabled">
-          <span class="page-link">Previous</span>
+          <span class="page-link">上一页</span>
         </li>
       {{ else }}
         <li class="page-item">
-          <a class="page-link" href="?page={{ $prevPage }}">Previous</a>
+          <a class="page-link" href="?page={{ $prevPage }}">上一页</a>
         </li>
       {{ end }}
       {{ $startPage := max 1 (sub $currentPage 2) }}
@@ -38,11 +38,11 @@ SPDX-License-Identifier: Apache-2.0 -->
         $totalPages
       }}
         <li class="page-item disabled">
-          <span class="page-link">Next</span>
+          <span class="page-link">下一页</span>
         </li>
       {{ else }}
         <li class="page-item">
-          <a class="page-link" href="?page={{ $nextPage }}">Next</a>
+          <a class="page-link" href="?page={{ $nextPage }}">下一页</a>
         </li>
       {{ end }}
     </ul>
@@ -88,7 +88,8 @@ SPDX-License-Identifier: Apache-2.0 -->
 
       updateQueryParameters(newParams, item);
     });
-  </script> {{ if isset "StatusOptions" . }}
+  </script> 
+  {{ if isset "StatusOptions" . }}
     <script>
       selectedStatus = '{{.Status}}';
       var statusOptions = JSON.parse('{{ toSlice .StatusOptions }}');

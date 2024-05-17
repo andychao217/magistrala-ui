@@ -5,7 +5,7 @@ SPDX-License-Identifier: Apache-2.0 -->
   <!doctype html>
   <html lang="en">
     <head>
-      <title>Thing Channels</title>
+      <title>设备关联分区</title>
       {{ template "header" }}
     </head>
     <body>
@@ -22,7 +22,7 @@ SPDX-License-Identifier: Apache-2.0 -->
                     {{ $shareButton = true }}
                   {{ end }}
                   <div class="d-flex flex-row justify-content-between">
-                    <h4>Thing Channels</h4>
+                    <h4>设备关联分区</h4>
                     <button
                       role="button"
                       class="btn body-button"
@@ -42,7 +42,7 @@ SPDX-License-Identifier: Apache-2.0 -->
                       <div class="modal-dialog modal-dialog-centered">
                         <div class="modal-content">
                           <div class="modal-header">
-                            <h1 class="modal-title" id="addChannelModalLabel">Add Channel</h1>
+                            <h1 class="modal-title" id="addChannelModalLabel">添加分区</h1>
                             <button
                               type="button"
                               class="btn-close"
@@ -56,12 +56,12 @@ SPDX-License-Identifier: Apache-2.0 -->
                           >
                             <div class="modal-body">
                               <div class="mb-3">
-                                <label for="infiniteScroll" class="form-label">Channel ID</label>
+                                <label for="infiniteScroll" class="form-label">分区ID</label>
                                 <input
                                   type="text"
                                   name="channelFilter"
                                   id="channelFilter"
-                                  placeholder="Filter by Channel ID"
+                                  placeholder="通过分区ID过滤"
                                 />
                                 <select
                                   class="form-select"
@@ -70,7 +70,7 @@ SPDX-License-Identifier: Apache-2.0 -->
                                   size="5"
                                   required
                                 >
-                                  <option disabled>select a channel</option>
+                                  <option disabled>选择分区</option>
                                 </select>
                               </div>
                             </div>
@@ -80,9 +80,9 @@ SPDX-License-Identifier: Apache-2.0 -->
                                 class="btn btn-secondary"
                                 data-bs-dismiss="modal"
                               >
-                                Cancel
+                                取消
                               </button>
-                              <button type="submit" class="btn body-button">Assign</button>
+                              <button type="submit" class="btn body-button">分配</button>
                             </div>
                           </form>
                         </div>
@@ -94,12 +94,12 @@ SPDX-License-Identifier: Apache-2.0 -->
                     <table id="itemsTable" class="table table-hover">
                       <thead>
                         <tr>
-                          <th scope="col">Name</th>
-                          <th class="desc-col" scope="col">Description</th>
-                          <th class="meta-col" scope="col">Metadata</th>
-                          <th class="created-col" scope="col">Created At</th>
-                          <th class="messaging-col" scope="col">Messaging</th>
-                          <th class="remove-col" scope="col">Remove</th>
+                          <th scope="col">名称</th>
+                          <th class="desc-col" scope="col">描述</th>
+                          <th class="meta-col" scope="col">附加属性</th>
+                          <th class="created-col" scope="col">创建时间</th>
+                          <th class="messaging-col" scope="col">消息</th>
+                          <th class="remove-col" scope="col">移除</th>
                         </tr>
                       </thead>
                       <tbody>
@@ -177,7 +177,8 @@ SPDX-License-Identifier: Apache-2.0 -->
           let pathPrefix = "{{ pathPrefix }}";
           window.location.href = `${pathPrefix}/channels/${id}`;
         }
-      </script>      <script type="module">
+      </script>      
+      <script type="module">
         import { fetchIndividualEntity } from "/js/infinitescroll.js";
 
         fetchIndividualEntity({

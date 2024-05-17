@@ -7,7 +7,7 @@ SPDX-License-Identifier: Apache-2.0 -->
     <head>
       {{ template "header" }}
       <link rel="stylesheet" href="/css/dashboards.css" />
-      <title>Dashboards</title>
+      <title>统计面板</title>
     </head>
     <body>
       {{ template "navbar" . }}
@@ -19,22 +19,22 @@ SPDX-License-Identifier: Apache-2.0 -->
               <div id="dashboard-alert"></div>
               <div class="row-mb-3 mb-3">
                 <button class="btn body-button" type="button" onclick="newDashboard()">
-                  New Dashboard
+                  新增统计面板
                 </button>
               </div>
               <div class="row" id="dashboard-cards-container"></div>
               <div id="dashboard-loader" class="row justify-content-center">
                 <div class="spinner-border text-primary" role="status">
-                  <span class="visually-hidden">Loading...</span>
+                  <span class="visually-hidden">加载中...</span>
                 </div>
               </div>
               <div class="card-actions">
                 <span>
-                  Showing
+                  显示
                   <span id="cards-count"></span>
-                  of
+                  个，共
                   <span id="cards-total"></span>
-                  cards
+                  个
                 </span>
               </div>
             </div>
@@ -53,7 +53,7 @@ SPDX-License-Identifier: Apache-2.0 -->
         <div class="modal-dialog modal-dialog-centered">
           <div class="modal-content">
             <div class="modal-header">
-              <h5 class="modal-title" id="createDashboardModalLabel">Create Dashboard</h5>
+              <h5 class="modal-title" id="createDashboardModalLabel">新增统计面板</h5>
               <button
                 type="button"
                 class="btn-close"
@@ -64,7 +64,7 @@ SPDX-License-Identifier: Apache-2.0 -->
             <form id="create-dashboard-form" method="post">
               <div class="modal-body">
                 <div class="mb-3">
-                  <label for="dashboard-name" class="form-label">Name</label>
+                  <label for="dashboard-name" class="form-label">名称</label>
                   <input
                     type="text"
                     class="form-control"
@@ -75,7 +75,7 @@ SPDX-License-Identifier: Apache-2.0 -->
                   />
                 </div>
                 <div class="mb-3">
-                  <label for="dashboard-description" class="form-label">Description</label>
+                  <label for="dashboard-description" class="form-label">描述</label>
                   <textarea
                     class="form-control"
                     name="description"
@@ -86,10 +86,10 @@ SPDX-License-Identifier: Apache-2.0 -->
               </div>
               <div class="modal-footer">
                 <button type="submit" class="btn body-button" data-bs-dismiss="modal">
-                  Create
+                  确定
                 </button>
                 <button type="button" class="btn body-button" data-bs-dismiss="modal">
-                  Cancel
+                  取消
                 </button>
               </div>
             </form>
@@ -109,7 +109,7 @@ SPDX-License-Identifier: Apache-2.0 -->
         <div class="modal-dialog modal-dialog-centered">
           <div class="modal-content">
             <div class="modal-header">
-              <h5 class="modal-title" id="updateDashboardModalLabel">Update Dashboard</h5>
+              <h5 class="modal-title" id="updateDashboardModalLabel">修改统计面板</h5>
               <button
                 type="button"
                 class="btn-close"
@@ -121,11 +121,11 @@ SPDX-License-Identifier: Apache-2.0 -->
               <div class="modal-body">
                 <input type="hidden" name="id" id="id" />
                 <div class="mb-3">
-                  <label for="dashboard-name" class="form-label">Name</label>
+                  <label for="dashboard-name" class="form-label">名称</label>
                   <input type="text" class="form-control" name="name" id="dashboard-name" />
                 </div>
                 <div class="mb-3">
-                  <label for="dashboard-description" class="form-label">Description</label>
+                  <label for="dashboard-description" class="form-label">描述</label>
                   <textarea
                     class="form-control"
                     name="description"
@@ -135,10 +135,10 @@ SPDX-License-Identifier: Apache-2.0 -->
               </div>
               <div class="modal-footer">
                 <button type="button" class="btn body-button" id="update-dashboard-button">
-                  Update
+                  保存
                 </button>
                 <button type="button" class="btn body-button" data-bs-dismiss="modal">
-                  Cancel
+                  取消
                 </button>
               </div>
             </form>

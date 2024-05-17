@@ -5,7 +5,7 @@ SPDX-License-Identifier: Apache-2.0 -->
   <!doctype html>
   <html lang="en">
     <head>
-      <title>Login</title>
+      <title>登陆</title>
       {{ template "header" }}
     </head>
     <body class="login-body">
@@ -15,11 +15,11 @@ SPDX-License-Identifier: Apache-2.0 -->
             <div class="row text-center mb-4 d-flex flex-column align-items-center">
               <div class="mb-3 border-bottom pb-3">
                 <div class="d-flex justify-content-center mt-2">
-                  <h1 class="mx-3">Magistrala</h1>
+                  <h1 class="mx-3">世邦思拓</h1>
                 </div>
               </div>
               <div class="login-header mb-4">
-                <h2>Login</h2>
+                <h2>登陆</h2>
               </div>
               <form
                 method="post"
@@ -35,7 +35,7 @@ SPDX-License-Identifier: Apache-2.0 -->
                         class="p-3 w-100 me-2"
                         name="email"
                         id="email"
-                        placeholder="Email Address or Phone Number"
+                        placeholder="手机号码或者电子邮箱"
                       />
                     </div>
                     <div id="emailError" class="text-danger"></div>
@@ -48,9 +48,9 @@ SPDX-License-Identifier: Apache-2.0 -->
                         type="password"
                         name="password"
                         id="password"
-                        placeholder="Password"
+                        placeholder="密码"
                       />
-                      <span class="password-toggle-icon"><i class="fa-solid fa-eye"></i></span>
+                      <span class="password-toggle-icon"><i title="显示密码" class="fa-solid fa-eye"></i></span>
                     </div>
                     <div id="passwordError" class="text-danger"></div>
                   </div>
@@ -64,29 +64,30 @@ SPDX-License-Identifier: Apache-2.0 -->
                     data-bs-toggle="modal"
                     data-bs-target="#forgotPasswordModal"
                   >
-                    Forgot Password?
+                    忘记密码?
                   </button>
                 </div>
                 <div class="col-md-12 d-grid py-3">
-                  <button type="submit" class="login-btn py-3" id="login-button">Log In</button>
+                  <button type="submit" class="login-btn py-3" id="login-button">登陆</button>
                 </div>
               </form>
               {{ range $i, $c := .Providers }}
                 {{ if $c.IsEnabled }}
                   <div class="text-center text-light">
-                    <p>or sign in with:</p>
+                    <span>或者使用</span>
                     <button type="button" class="btn btn-link btn-floating mx-1">
                       <a href="{{ printf "%s/signin/%s" pathPrefix $c.Name }}">
                         <i class="fab {{ $c.Icon }}"></i>
                       </a>
                     </button>
+                    <span>登陆</span>
                   </div>
                 {{ end }}
               {{ end }}
               <div class="col-md-12">
                 <p class="text-center text-light">
-                  Don't have an account?
-                  <a href="{{ printf "%s/register" pathPrefix }}" class="text-light">Sign Up</a>
+                  没有账号?
+                  <a href="{{ printf "%s/register" pathPrefix }}" class="text-light">注册</a>
                 </p>
               </div>
             </div>
@@ -103,7 +104,7 @@ SPDX-License-Identifier: Apache-2.0 -->
           <div class="modal-dialog" role="document">
             <div class="modal-content">
               <div class="modal-header">
-                <h5 class="modal-title" id="forgotPasswordModalLabel">Enter email</h5>
+                <h5 class="modal-title" id="forgotPasswordModalLabel">输入电子邮箱</h5>
               </div>
               <div class="modal-body">
                 <form
@@ -112,17 +113,17 @@ SPDX-License-Identifier: Apache-2.0 -->
                   class="reset-pw-form"
                 >
                   <div class="mb-3">
-                    <label for="reset-email" class="form-label">Email</label>
+                    <label for="reset-email" class="form-label" style="display: none;">电子邮箱</label>
                     <input
                       type="email"
                       class="form-control"
                       name="email"
                       id="reset-email"
-                      placeholder="Email"
+                      placeholder="电子邮箱"
                       required
                     />
                   </div>
-                  <button type="submit" class="btn submit-button">Submit</button>
+                  <button type="submit" class="btn submit-button">确定</button>
                 </form>
               </div>
             </div>
@@ -177,7 +178,7 @@ SPDX-License-Identifier: Apache-2.0 -->
                 case 401:
                   passwordField.classList.add("border-red");
                   emailField.classList.add("border-red");
-                  errorMessage = "invalid email or password. Please try again!";
+                  errorMessage = "无效的用户名或密码. 请重试!";
                   showError(errorMessage);
                   break;
                 default:
@@ -195,11 +196,11 @@ SPDX-License-Identifier: Apache-2.0 -->
           if (inputType=== "password")  {
             $("#password").attr("type", "text");
             $('span.password-toggle-icon').empty();
-            $("<i class='fa-solid fa-eye-slash'></i>").appendTo('span.password-toggle-icon');
+            $("<i class='fa-solid fa-eye-slash' title='隐藏密码'></i>").appendTo('span.password-toggle-icon');
           } else {
             $("#password").attr("type", "password");
             $('span.password-toggle-icon').empty();
-            $("<i class='fa-solid fa-eye'></i>").appendTo('span.password-toggle-icon');
+            $("<i class='fa-solid fa-eye' title='显示密码'></i>").appendTo('span.password-toggle-icon');
           }
         });
 

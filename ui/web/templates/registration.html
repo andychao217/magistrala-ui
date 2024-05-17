@@ -5,7 +5,7 @@ SPDX-License-Identifier: Apache-2.0 -->
   <!doctype html>
   <html lang="en">
     <head>
-      <title>Register</title>
+      <title>注册</title>
       {{ template "header" }}
     </head>
     <body class="login-body">
@@ -15,11 +15,11 @@ SPDX-License-Identifier: Apache-2.0 -->
             <div class="row text-center mb-4 d-flex flex-column align-items-center">
               <div class="mb-3 border-bottom pb-3">
                 <div class="d-flex justify-content-center mt-2">
-                  <h1 class="mx-3">Magistrala</h1>
+                  <h1 class="mx-3">世邦思拓</h1>
                 </div>
               </div>
               <div class="login-header mb-4">
-                <h2>Register</h2>
+                <h2>注册</h2>
               </div>
               <form
                 method="post"
@@ -36,7 +36,7 @@ SPDX-License-Identifier: Apache-2.0 -->
                         type="name"
                         name="name"
                         id="name"
-                        placeholder="Name"
+                        placeholder="昵称"
                       />
                     </div>
                     <div id="nameError" class="text-danger"></div>
@@ -48,7 +48,7 @@ SPDX-License-Identifier: Apache-2.0 -->
                         class="p-3 w-100 me-2"
                         name="email"
                         id="email"
-                        placeholder="Email Address or Phone Number"
+                        placeholder="电子邮箱或者手机号码"
                       />
                     </div>
                     <div id="emailError" class="text-danger"></div>
@@ -61,9 +61,9 @@ SPDX-License-Identifier: Apache-2.0 -->
                         type="password"
                         name="password"
                         id="password"
-                        placeholder="Password"
+                        placeholder="密码"
                       />
-                      <span class="password-toggle-icon"><i class="fas fa-eye"></i></span>
+                      <span class="password-toggle-icon"><i class="fas fa-eye" title="显示密码"></i></span>
                     </div>
                     <div id="passwordError" class="text-danger"></div>
                   </div>
@@ -71,26 +71,27 @@ SPDX-License-Identifier: Apache-2.0 -->
                 </div>
                 <div class="col-md-12 d-grid py-3">
                   <button type="submit" class="login-btn py-3" id="register-button">
-                    Register
+                    注册
                   </button>
                 </div>
               </form>
               {{ range $i, $c := .Providers }}
                 {{ if $c.IsEnabled }}
                   <div class="text-center text-light">
-                    <p>or sign up with:</p>
+                    <span>或者使用</span>
                     <button type="button" class="btn btn-link btn-floating mx-1">
                       <a href="{{ printf "%s/signup/%s" pathPrefix $c.Name }}">
                         <i class="fab {{ $c.Icon }}"></i>
                       </a>
                     </button>
+                    <span>登陆</span>
                   </div>
                 {{ end }}
               {{ end }}
               <div class="col-md-12">
                 <p class="text-center text-light">
-                  Already have an account?
-                  <a href="{{ printf "%s/login" pathPrefix }}" class="text-light">Log In</a>
+                  已经有账号?
+                  <a href="{{ printf "%s/login" pathPrefix }}" class="text-light">登陆</a>
                 </p>
               </div>
             </div>
@@ -139,11 +140,11 @@ SPDX-License-Identifier: Apache-2.0 -->
           if (inputType=== "password")  {
             $("#password").attr("type", "text");
             $('span.password-toggle-icon').empty();
-            $("<i class='fa-solid fa-eye-slash'></i>").appendTo('span.password-toggle-icon');
+            $("<i class='fa-solid fa-eye-slash' title='隐藏密码'></i>").appendTo('span.password-toggle-icon');
           } else {
             $("#password").attr("type", "password");
             $('span.password-toggle-icon').empty();
-            $("<i class='fa-solid fa-eye'></i>").appendTo('span.password-toggle-icon');
+            $("<i class='fa-solid fa-eye' title='显示密码'></i>").appendTo('span.password-toggle-icon');
           }
         });
 
@@ -167,7 +168,7 @@ SPDX-License-Identifier: Apache-2.0 -->
               switch (response.status) {
                 case 409:
                   emailField.classList.add("border-red");
-                  errorMessage = "User with this email or phone number already exists";
+                  errorMessage = "用户已存在";
                   showError(errorMessage);
                   break;
                 default:

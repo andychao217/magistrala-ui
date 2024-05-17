@@ -14,7 +14,7 @@ SPDX-License-Identifier: Apache-2.0 -->
     <div class="modal-dialog modal-dialog-centered">
       <div class="modal-content">
         <div class="modal-header">
-          <h5 class="modal-title" id="horizontalBarChartModalLabel">Horizontal Bar Chart</h5>
+          <h5 class="modal-title" id="horizontalBarChartModalLabel">水平柱状图</h5>
           <button
             type="button"
             class="btn-close"
@@ -36,7 +36,7 @@ SPDX-License-Identifier: Apache-2.0 -->
                 aria-controls="data"
                 aria-selected="true"
               >
-                Data
+                数据
               </button>
             </li>
             <li class="nav-item" role="presentation">
@@ -50,7 +50,7 @@ SPDX-License-Identifier: Apache-2.0 -->
                 aria-controls="appearance"
                 aria-selected="false"
               >
-                Appearance
+                样式
               </button>
             </li>
           </ul>
@@ -64,64 +64,64 @@ SPDX-License-Identifier: Apache-2.0 -->
                 aria-labelledby="data-tab"
               >
                 <div class="mb-3">
-                  <label for="channel-id" class="form-label">Channel ID</label>
+                  <label for="channel-id" class="form-label">分区ID</label>
                   <input
                     type="text"
                     pattern="{{ .UUIDPattern }}"
                     class="form-control mb-3"
                     name="channel"
                     id="channel-id"
-                    placeholder="Enter the channel ID"
+                    placeholder="输入分区ID"
                     required
                   />
-                  <div class="invalid-feedback">Please enter a valid uuid</div>
+                  <div class="invalid-feedback">请输入正确的ID</div>
                 </div>
                 <div class="mb-3">
-                  <label for="thing-id" class="form-label">Thing IDs</label>
+                  <label for="thing-id" class="form-label">设备IDs</label>
                   <input
                     type="text"
                     pattern="{{ .UUIDPattern }}"
                     class="form-control mb-3"
                     name="thing"
                     id="thing-id"
-                    placeholder="Enter the thing IDs"
+                    placeholder="输入设备IDs"
                     required
                   />
-                  <div class="invalid-feedback">Please enter a valid uuid</div>
+                  <div class="invalid-feedback">请输入正确的ID</div>
                 </div>
                 <div class="mb-3">
-                  <label for="value-name" class="form-label">Value name</label>
+                  <label for="value-name" class="form-label">值名称</label>
                   <input
                     type="text"
                     class="form-control mb-3"
                     name="valueName"
                     id="value-name"
-                    placeholder="Enter the value name eg. temperature"
+                    placeholder="输入值名称, 比如: 温度"
                     required
                   />
                 </div>
                 <div class="mb-3">
-                  <label for="update-interval" class="form-label">Update interval</label>
+                  <label for="update-interval" class="form-label">更新间隔</label>
                   <input
                     type="text"
                     pattern="{{ .IntervalPattern }}"
                     class="form-control mb-3"
                     name="updateInterval"
                     id="update-interval"
-                    placeholder="Enter the update interval, eg. 5s, 10m, 1h, 1d"
+                    placeholder="输入更新间隔, 例如:  5s, 10m, 1h, 1d"
                     required
                   />
-                  <div class="invalid-feedback">Please enter a valid interval</div>
+                  <div class="invalid-feedback">请输入正确的间隔</div>
                 </div>
                 <div class="mb-3">
-                  <label for="aggregation-type" class="form-label">Aggregation</label>
+                  <label for="aggregation-type" class="form-label">汇总</label>
                   <select class="form-select mb-3" name="aggregationType" id="aggregation-type">
-                    <option value="" disabled>Select an aggregation type</option>
-                    <option value="MAX">Maximum</option>
-                    <option value="MIN">Minimum</option>
-                    <option value="SUM">Sum</option>
-                    <option value="COUNT">Count</option>
-                    <option value="AVG">Average</option>
+                    <option value="" disabled>选择汇总类型</option>
+                    <option value="MAX">最大</option>
+                    <option value="MIN">最小</option>
+                    <option value="SUM">合计</option>
+                    <option value="COUNT">计数</option>
+                    <option value="AVG">平均</option>
                   </select>
                 </div>
               </div>
@@ -133,33 +133,33 @@ SPDX-License-Identifier: Apache-2.0 -->
                 aria-labelledby="appearance-tab"
               >
                 <div class="mb-3">
-                  <label for="title" class="form-label">Title</label>
+                  <label for="title" class="form-label">标题</label>
                   <input
                     type="text"
                     class="form-control"
                     name="title"
                     id="title"
-                    placeholder="Enter the chart title"
+                    placeholder="输入图表标题"
                   />
                 </div>
                 <div class="mb-3">
-                  <label for="y-axis-label" class="form-label">Y axis label</label>
+                  <label for="y-axis-label" class="form-label">Y轴标签</label>
                   <input
                     type="text"
                     class="form-control mb-3"
                     name="yAxisLabel"
                     id="y-axis-label"
-                    placeholder="Enter the y axis label"
+                    placeholder="输入Y轴标签"
                   />
                 </div>
                 <div class="mb-3">
-                  <label for="x-axis-label" class="form-label">X axis label</label>
+                  <label for="x-axis-label" class="form-label">X轴标签</label>
                   <input
                     type="text"
                     class="form-control mb-3"
                     name="xAxisLabel"
                     id="x-axis-label"
-                    placeholder="Enter the x axis label"
+                    placeholder="输入X轴标签"
                   />
                 </div>
               </div>
@@ -173,10 +173,10 @@ SPDX-License-Identifier: Apache-2.0 -->
             id="close-horizontalBarChart-button"
             data-bs-dismiss="modal"
           >
-            Close
+            关闭
           </button>
           <button type="button" class="btn body-button" id="create-horizontalBarChart-button">
-            Create Chart
+           创建图表
           </button>
         </div>
       </div>

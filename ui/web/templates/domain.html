@@ -5,7 +5,7 @@ SPDX-License-Identifier: Apache-2.0 -->
   <!doctype html>
   <html lang="en">
     <head>
-      <title>domain</title>
+      <title>机构</title>
       {{ template "header" }}
     </head>
     <body>
@@ -20,13 +20,12 @@ SPDX-License-Identifier: Apache-2.0 -->
               <div class="row mb-3 p-3">
                 <div class="col-md-12">
                   <p>
-                    Welcome to the Domain details page. You can update your domain details in this
-                    page.
+                    欢迎来到机构页面. 在这里你可以修改机构相关信息.
                   </p>
                 </div>
               </div>
               <div class="row mb-3 p-3">
-                <h4 class="mb-3">Domain Information</h4>
+                <h4 class="mb-3">机构信息</h4>
                 <div class="table-responsive">
                   <table class="table border-top">
                     <tbody>
@@ -35,7 +34,7 @@ SPDX-License-Identifier: Apache-2.0 -->
                         {{ $editButton = true }}
                       {{ end }}
                       <tr>
-                        <th>Domain Name</th>
+                        <th>机构名称</th>
                         <td class="editable name-field" contenteditable="false" data-field="name">
                           {{ .Entity.Name }}
                         </td>
@@ -48,13 +47,13 @@ SPDX-License-Identifier: Apache-2.0 -->
                             <i class="fas fa-pencil-alt"></i>
                           </button>
                           <div class="save-cancel-buttons" style="display: none">
-                            <button class="save-btn" id="save-name">Save</button>
-                            <button class="cancel-btn" id="cancel-name">Cancel</button>
+                            <button class="save-btn" id="save-name">保存</button>
+                            <button class="cancel-btn" id="cancel-name">取消</button>
                           </div>
                         </td>
                       </tr>
                       <tr>
-                        <th>Domain Tags</th>
+                        <th>机构标识</th>
                         <td class="editable tags-field" contenteditable="false" data-field="tags">
                           {{ toSlice .Entity.Tags }}
                         </td>
@@ -67,14 +66,14 @@ SPDX-License-Identifier: Apache-2.0 -->
                             <i class="fas fa-pencil-alt"></i>
                           </button>
                           <div class="save-cancel-buttons" style="display: none">
-                            <button class="save-btn" id="save-tags">Save</button>
-                            <button class="cancel-btn" id="cancel-tags">Cancel</button>
+                            <button class="save-btn" id="save-tags">保存</button>
+                            <button class="cancel-btn" id="cancel-tags">取消</button>
                           </div>
                         </td>
                       </tr>
 
                       <tr>
-                        <th>Domain Alias</th>
+                        <th>机构别名</th>
                         <td class="editable alias-field" contenteditable="false" data-field="alias">
                           {{ .Entity.Alias }}
                         </td>
@@ -87,13 +86,13 @@ SPDX-License-Identifier: Apache-2.0 -->
                             <i class="fas fa-pencil-alt"></i>
                           </button>
                           <div class="save-cancel-buttons" style="display: none">
-                            <button class="save-btn" id="save-alias">Save</button>
-                            <button class="cancel-btn" id="cancel-alias">Cancel</button>
+                            <button class="save-btn" id="save-alias">保存</button>
+                            <button class="cancel-btn" id="cancel-alias">取消</button>
                           </div>
                         </td>
                       </tr>
                       <tr>
-                        <th>Domain Metadata</th>
+                        <th>机构附加属性</th>
                         <td>
                           <div>
                             <pre id="meta-data"></pre>
@@ -112,12 +111,12 @@ SPDX-License-Identifier: Apache-2.0 -->
                         </td>
                       </tr>
                       <tr>
-                        <th class="text-muted">Created By</th>
+                        <th class="text-muted">创建人</th>
                         <td>{{ .Entity.CreatedBy }}</td>
                         <td></td>
                       </tr>
                       <tr>
-                        <th class="text-muted">Created At</th>
+                        <th class="text-muted">创建时间</th>
                         <td>{{ .Entity.CreatedAt }}</td>
                         <td></td>
                       </tr>
@@ -133,7 +132,7 @@ SPDX-License-Identifier: Apache-2.0 -->
                         data-bs-target="#disableEntityModal"
                         {{ if not (hasPermission .Permissions "admin") }}disabled{{ end }}
                       >
-                        Disable Domain
+                        禁用机构
                       </button>
                     {{ else }}
                       <button
@@ -143,7 +142,7 @@ SPDX-License-Identifier: Apache-2.0 -->
                         data-bs-target="#enableEntityModal"
                         {{ if not (hasPermission .Permissions "admin") }}disabled{{ end }}
                       >
-                        Enable Domain
+                        启用机构
                       </button>
                     {{ end }}
                   </div>
@@ -171,8 +170,15 @@ SPDX-License-Identifier: Apache-2.0 -->
           button: "save-metadata",
           value: parsedMetadata,
         });
-      </script>      <script type="module">
-        import { attachEditRowListener, updateName, updateMetadata, updateTags, updateDescription } from "/js/update.js";
+      </script>      
+      <script type="module">
+        import { 
+          attachEditRowListener, 
+          updateName, 
+          updateMetadata, 
+          updateTags, 
+          updateDescription 
+        } from "/js/update.js";
 
         attachEditRowListener(
           {

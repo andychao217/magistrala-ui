@@ -38,7 +38,7 @@ function connectWebSocket(host) {
 }  
 
 function getChannelsAndSendMessage(ip) {
-  fetch(`/ui/channels/channelsInJSON?page=1&limit=100`, {
+  fetch(`/ui/channels/channelsInJSON?page=1&limit=1000`, {
     method: "GET",
   })
   .then(response => {  

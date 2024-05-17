@@ -17,7 +17,7 @@ function validateName(name, errorDiv, fieldName, event) {
   removeErrorMessage(errorDiv, fieldName);
   if (name.trim() === "") {
     event.preventDefault();
-    displayErrorMessage("Name is Required", errorDiv, fieldName);
+    displayErrorMessage("名称是必填项", errorDiv, fieldName);
     return false;
   }
   return true;
@@ -27,7 +27,7 @@ function validateID(id, errorDiv, fieldName, event) {
   removeErrorMessage(errorDiv, fieldName);
   if (id.trim() === "") {
     event.preventDefault();
-    displayErrorMessage("ID is Required", errorDiv, fieldName);
+    displayErrorMessage("ID是必填项", errorDiv, fieldName);
     return false;
   } else if (validateNoSpaces(id)) {
     event.preventDefault();
@@ -41,11 +41,11 @@ function validateEmail(email, errorDiv, fieldName, event) {
   removeErrorMessage(errorDiv, fieldName);
   if (email.trim() === "") {
     event.preventDefault();
-    displayErrorMessage("Email is Required", errorDiv, fieldName);
+    displayErrorMessage("Email是必填项", errorDiv, fieldName);
     return false;
   } else if (!email.match(emailRegex)) {
     event.preventDefault();
-    displayErrorMessage("Invalid email format", errorDiv, fieldName);
+    displayErrorMessage("Email格式错误", errorDiv, fieldName);
     return false;
   }
   return true;
@@ -55,11 +55,11 @@ function validateEmailOrPhone(emailOrPhone, errorDiv, fieldName, event) {
   removeErrorMessage(errorDiv, fieldName);
   if (emailOrPhone.trim() === "") {
     event.preventDefault();
-    displayErrorMessage("Email or phone number is Required", errorDiv, fieldName);
+    displayErrorMessage("Email或者电话号码是必填项", errorDiv, fieldName);
     return false;
   } else if (!(emailOrPhone.match(emailRegex) || emailOrPhone.match(phoneRegex))) {
     event.preventDefault();
-    displayErrorMessage("Invalid email or phone number format", errorDiv, fieldName);
+    displayErrorMessage("Email或者电话号码格式错误", errorDiv, fieldName);
     return false;
   }
   return true;
@@ -69,7 +69,7 @@ function validatePassword(password, errorDiv, fieldName, event) {
   removeErrorMessage(errorDiv, fieldName);
   if (password.trim().length < minLength) {
     event.preventDefault();
-    var errorMessage = `Password must be at least ${minLength} characters long`;
+    var errorMessage = `密码长度至少为${minLength}个字符`;
     displayErrorMessage(errorMessage, errorDiv, fieldName);
     return false;
   }
@@ -84,7 +84,7 @@ function validateJSON(data, errorDiv, fieldName, event) {
     }
   } catch (error) {
     event.preventDefault();
-    displayErrorMessage("not a valid JSON object", errorDiv, fieldName);
+    displayErrorMessage("JSON数据格式错误", errorDiv, fieldName);
     return false;
   }
   return true;
@@ -104,12 +104,12 @@ function validateStringArray(tags, errorDiv, fieldName, event) {
       })
     ) {
       event.preventDefault();
-      displayErrorMessage("must be strings in an array", errorDiv, fieldName);
+      displayErrorMessage("必须是字符串数组", errorDiv, fieldName);
       return false;
     }
   } catch (error) {
     event.preventDefault();
-    displayErrorMessage("must be a string array", errorDiv, fieldName);
+    displayErrorMessage("必须是字符串数组", errorDiv, fieldName);
     return false;
   }
 
@@ -120,14 +120,14 @@ function validateFloat(value, errorDiv, fieldName, event) {
   removeErrorMessage(errorDiv, fieldName);
   if (value.trim() === "") {
     event.preventDefault();
-    displayErrorMessage("Value is required", errorDiv, fieldName);
+    displayErrorMessage("值为必填项", errorDiv, fieldName);
     return false;
   }
 
   const floatValue = parseFloat(value);
   if (isNaN(floatValue)) {
     event.preventDefault();
-    displayErrorMessage("must be a number", errorDiv, fieldName);
+    displayErrorMessage("必须是数字", errorDiv, fieldName);
     return false;
   }
   return true;

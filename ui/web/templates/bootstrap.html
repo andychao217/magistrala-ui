@@ -22,7 +22,7 @@ SPDX-License-Identifier: Apache-2.0 -->
                     class="btn body-button"
                     onclick="location.href= '/bootstraps/{{ .Bootstrap.ThingID }}/terminal'"
                   >
-                    Remote Terminal
+                    远程终端
                   </button>
                 </div>
                 <div class="table-responsive table-container">
@@ -34,7 +34,7 @@ SPDX-License-Identifier: Apache-2.0 -->
                     </thead>
                     <tbody>
                       <tr>
-                        <th>Name</th>
+                        <th>名称</th>
                         <td class="editable name-field" contenteditable="false" data-field="name">
                           {{ .Bootstrap.Name }}
                         </td>
@@ -43,13 +43,13 @@ SPDX-License-Identifier: Apache-2.0 -->
                             <i class="fas fa-pencil-alt"></i>
                           </button>
                           <div class="save-cancel-buttons" style="display: none">
-                            <button class="save-btn" id="save-name">Save</button>
-                            <button class="cancel-btn" id="cancel-name">Cancel</button>
+                            <button class="save-btn" id="save-name">保存</button>
+                            <button class="cancel-btn" id="cancel-name">取消</button>
                           </div>
                         </td>
                       </tr>
                       <tr>
-                        <th>Thing</th>
+                        <th>设备</th>
                         <td>
                           <a href="{{ printf "%s/things/%s" pathPrefix .Bootstrap.ThingID }}">
                             {{ .Thing.Name }}
@@ -58,7 +58,7 @@ SPDX-License-Identifier: Apache-2.0 -->
                         <td></td>
                       </tr>
                       <tr>
-                        <th>Channels</th>
+                        <th>分区</th>
                         <td>
                           {{ range $i, $c := .Bootstrap.Channels }}
                             <span class="badge rounded-pill enabled-pill">
@@ -79,7 +79,7 @@ SPDX-License-Identifier: Apache-2.0 -->
                         </td>
                       </tr>
                       <tr>
-                        <th>Client Cert</th>
+                        <th>设备证书</th>
                         <td
                           class="editable clientCert-field"
                           contenteditable="false"
@@ -92,13 +92,13 @@ SPDX-License-Identifier: Apache-2.0 -->
                             <i class="fas fa-pencil-alt"></i>
                           </button>
                           <div class="save-cancel-buttons" style="display: none">
-                            <button class="save-btn" id="save-clientCert">Save</button>
-                            <button class="cancel-btn" id="cancel-clientCert">Cancel</button>
+                            <button class="save-btn" id="save-clientCert">保存</button>
+                            <button class="cancel-btn" id="cancel-clientCert">取消</button>
                           </div>
                         </td>
                       </tr>
                       <tr>
-                        <th>Client Key</th>
+                        <th>设备Key</th>
                         <td
                           class="editable clientKey-field"
                           contenteditable="false"
@@ -111,13 +111,13 @@ SPDX-License-Identifier: Apache-2.0 -->
                             <i class="fas fa-pencil-alt"></i>
                           </button>
                           <div class="save-cancel-buttons" style="display: none">
-                            <button class="save-btn" id="save-clientKey">Save</button>
-                            <button class="cancel-btn" id="cancel-clientKey">Cancel</button>
+                            <button class="save-btn" id="save-clientKey">保存</button>
+                            <button class="cancel-btn" id="cancel-clientKey">取消</button>
                           </div>
                         </td>
                       </tr>
                       <tr>
-                        <th>CA Cert</th>
+                        <th>CA证书</th>
                         <td
                           class="editable CACert-field"
                           contenteditable="false"
@@ -130,13 +130,13 @@ SPDX-License-Identifier: Apache-2.0 -->
                             <i class="fas fa-pencil-alt"></i>
                           </button>
                           <div class="save-cancel-buttons" style="display: none">
-                            <button class="save-btn" id="save-CACert">Save</button>
-                            <button class="cancel-btn" id="cancel-CACert">Cancel</button>
+                            <button class="save-btn" id="save-CACert">保存</button>
+                            <button class="cancel-btn" id="cancel-CACert">取消</button>
                           </div>
                         </td>
                       </tr>
                       <tr>
-                        <th>Content</th>
+                        <th>内容</th>
                         <td>
                           <div>
                             <pre id="content"></pre>
@@ -154,12 +154,12 @@ SPDX-License-Identifier: Apache-2.0 -->
                         </td>
                       </tr>
                       <tr>
-                        <th>State</th>
+                        <th>状态</th>
                         <td>
                           {{ if eq .Bootstrap.State 0 }}
-                            <span class="badge rounded-pill disabled-pill">Disabled</span>
+                            <span class="badge rounded-pill disabled-pill">禁用</span>
                           {{ else }}
-                            <span class="badge rounded-pill enabled-pill">Enabled</span>
+                            <span class="badge rounded-pill enabled-pill">启用</span>
                           {{ end }}
                         </td>
                         <td></td>
@@ -174,7 +174,7 @@ SPDX-License-Identifier: Apache-2.0 -->
                       data-bs-toggle="modal"
                       data-bs-target="#deleteBootstrapModal"
                     >
-                      Delete Configuration
+                      删除配置
                     </button>
                     <button
                       type="button"
@@ -182,7 +182,7 @@ SPDX-License-Identifier: Apache-2.0 -->
                       data-bs-toggle="modal"
                       data-bs-target="#UpdateBootstrapState"
                     >
-                      Update State
+                      修改状态
                     </button>
                   </div>
                 </div>
@@ -202,7 +202,7 @@ SPDX-License-Identifier: Apache-2.0 -->
             <div class="modal-dialog modal-dialog-centered">
               <div class="modal-content">
                 <div class="modal-header">
-                  <h5 class="modal-title" id="editChannelsModalLabel">Edit Channels</h5>
+                  <h5 class="modal-title" id="editChannelsModalLabel">修改分区</h5>
                   <button
                     type="button"
                     class="btn-close"
@@ -216,7 +216,7 @@ SPDX-License-Identifier: Apache-2.0 -->
                 >
                   <div class="modal-body">
                     <div class="mb-3">
-                      <label for="channels-select" class="form-label">Channels</label>
+                      <label for="channels-select" class="form-label">分区</label>
                       <input
                         type="text"
                         class="itemsFilter"
@@ -231,15 +231,15 @@ SPDX-License-Identifier: Apache-2.0 -->
                         size="5"
                         multiple
                       >
-                        <option disabled>select a channel</option>
+                        <option disabled>选择分区</option>
                       </select>
                     </div>
                   </div>
                   <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
-                      Cancel
+                      取消
                     </button>
-                    <button type="submit" class="btn body-button" id="add-channel">Update</button>
+                    <button type="submit" class="btn body-button" id="add-channel">修改</button>
                   </div>
                 </form>
               </div>
@@ -259,7 +259,7 @@ SPDX-License-Identifier: Apache-2.0 -->
             <div class="modal-dialog modal-dialog-centered">
               <div class="modal-content">
                 <div class="modal-header">
-                  <h5 class="modal-title" id="editContentModalLabel">Edit Content</h5>
+                  <h5 class="modal-title" id="editContentModalLabel">修改内容</h5>
                   <button
                     type="button"
                     class="btn-close"
@@ -276,9 +276,9 @@ SPDX-License-Identifier: Apache-2.0 -->
                   </div>
                   <div class="modal-footer">
                     <button class="btn btn-secondary" type="button" data-bs-dismiss="modal">
-                      Cancel
+                      取消
                     </button>
-                    <button class="btn body-button" id="save-content" type="submit">Update</button>
+                    <button class="btn body-button" id="save-content" type="submit">修改</button>
                   </div>
                 </form>
               </div>
@@ -297,7 +297,7 @@ SPDX-License-Identifier: Apache-2.0 -->
             <div class="modal-dialog modal-dialog-centered">
               <div class="modal-content">
                 <div class="modal-header">
-                  <h5 class="modal-title" id="deleteBootstrapModalLabel">Delete Configuration</h5>
+                  <h5 class="modal-title" id="deleteBootstrapModalLabel">删除配置/h5>
                   <button
                     type="button"
                     class="btn-close"
@@ -311,16 +311,16 @@ SPDX-License-Identifier: Apache-2.0 -->
                 >
                   <div class="modal-body">
                     <p>
-                      Are you sure you want to
-                      <span class="fw-bold text-danger">delete</span>
-                      this configuration?
+                      你确定要
+                      <span class="fw-bold text-danger">删除</span>
+                      这个配置?
                     </p>
                   </div>
                   <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
-                      Cancel
+                      取消
                     </button>
-                    <button type="submit" class="btn btn-danger">Delete</button>
+                    <button type="submit" class="btn btn-danger">删除</button>
                   </div>
                 </form>
               </div>
@@ -340,7 +340,7 @@ SPDX-License-Identifier: Apache-2.0 -->
               <div class="modal-content">
                 <div class="modal-header">
                   <h5 class="modal-title" id="UpdateBootstrapStateLabel">
-                    Update Configuration State
+                    修改配置状态
                   </h5>
                   <button
                     type="button"
@@ -356,32 +356,32 @@ SPDX-License-Identifier: Apache-2.0 -->
                   {{ if eq .Bootstrap.State 0 }}
                     <div class="modal-body">
                       <p>
-                        Are you sure you want to
-                        <span class="fw-bold text-success">enable</span>
-                        this configuration?
+                        你确定要
+                        <span class="fw-bold text-success">启用</span>
+                        这个配置?
                       </p>
                       <input type="hidden" name="state" value="1" />
                     </div>
                     <div class="modal-footer">
                       <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
-                        Cancel
+                        取消
                       </button>
-                      <button type="submit" class="btn btn-success">Enable</button>
+                      <button type="submit" class="btn btn-success">启用</button>
                     </div>
                   {{ else }}
                     <div class="modal-body">
                       <p>
-                        Are you sure you want to
-                        <span class="fw-bold text-danger">disable</span>
-                        this configuration?
+                        你确定要
+                        <span class="fw-bold text-danger">禁用</span>
+                        这个配置?
                       </p>
                       <input type="hidden" name="state" value="0" />
                     </div>
                     <div class="modal-footer">
                       <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
-                        Cancel
+                        取消
                       </button>
-                      <button type="submit" class="btn btn-danger">Disable</button>
+                      <button type="submit" class="btn btn-danger">禁用</button>
                     </div>
                   {{ end }}
                 </form>

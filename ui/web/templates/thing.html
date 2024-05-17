@@ -5,7 +5,7 @@ SPDX-License-Identifier: Apache-2.0 -->
   <!doctype html>
   <html lang="en">
     <head>
-      <title>Thing</title>
+      <title>设备</title>
       {{ template "header" }}
     </head>
     <body>
@@ -22,7 +22,7 @@ SPDX-License-Identifier: Apache-2.0 -->
                     href="{{ printf "%s/things/%s/channels" pathPrefix .Entity.ID }}"
                     role="button"
                   >
-                    Connect
+                    关联
                   </a>
                   <!-- 隐藏按钮 -->
                   <a
@@ -31,14 +31,14 @@ SPDX-License-Identifier: Apache-2.0 -->
                     role="button"
                     style="display: none;"
                   >
-                    Share
+                    共享
                   </a>
                 </div>
                 <div class="table-responsive table-container">
                   <table id="itemsTable" class="table">
                     <thead>
                       <tr>
-                        <th scope="row">THING</th>
+                        <th scope="row">设备</th>
                       </tr>
                     </thead>
                     <tbody>
@@ -47,7 +47,7 @@ SPDX-License-Identifier: Apache-2.0 -->
                         {{ $editButton = true }}
                       {{ end }}
                       <tr>
-                        <th>Name</th>
+                        <th>名称</th>
                         <td class="editable name-field" contenteditable="false" data-field="name">
                           {{ .Entity.Name }}
                         </td>
@@ -60,8 +60,8 @@ SPDX-License-Identifier: Apache-2.0 -->
                             <i class="fas fa-pencil-alt"></i>
                           </button>
                           <div class="save-cancel-buttons" style="display: none">
-                            <button class="save-btn" id="save-name">Save</button>
-                            <button class="cancel-btn" id="cancel-name">Cancel</button>
+                            <button class="save-btn" id="save-name">保存</button>
+                            <button class="cancel-btn" id="cancel-name">取消</button>
                           </div>
                         </td>
                       </tr>
@@ -71,7 +71,7 @@ SPDX-License-Identifier: Apache-2.0 -->
                         <td></td>
                       </tr>
                       <tr>
-                        <th>Secret</th>
+                        <th>密码</th>
                         <td
                           class="editable secret-field"
                           contenteditable="false"
@@ -88,13 +88,13 @@ SPDX-License-Identifier: Apache-2.0 -->
                             <i class="fas fa-pencil-alt"></i>
                           </button>
                           <div class="save-cancel-buttons" style="display: none">
-                            <button class="save-btn" id="save-secret">Save</button>
-                            <button class="cancel-btn" id="cancel-secret">Cancel</button>
+                            <button class="save-btn" id="save-secret">保存</button>
+                            <button class="cancel-btn" id="cancel-secret">取消</button>
                           </div>
                         </td>
                       </tr>
                       <tr>
-                        <th>Tags</th>
+                        <th>标识</th>
                         <td class="editable tags-field" contenteditable="false" data-field="tags">
                           {{ toSlice .Entity.Tags }}
                         </td>
@@ -107,13 +107,13 @@ SPDX-License-Identifier: Apache-2.0 -->
                             <i class="fas fa-pencil-alt"></i>
                           </button>
                           <div class="save-cancel-buttons" style="display: none">
-                            <button class="save-btn" id="save-tags">Save</button>
-                            <button class="cancel-btn" id="cancel-tags">Cancel</button>
+                            <button class="save-btn" id="save-tags">保存</button>
+                            <button class="cancel-btn" id="cancel-tags">取消</button>
                           </div>
                         </td>
                       </tr>
                       <tr>
-                        <th>Metadata</th>
+                        <th>附加属性</th>
                         <td class="entityMeta-col">
                           <div>
                             <pre id="meta-data"></pre>
@@ -143,7 +143,7 @@ SPDX-License-Identifier: Apache-2.0 -->
                         data-bs-target="#disableEntityModal"
                         {{ if not (hasPermission .Permissions "delete") }}disabled{{ end }}
                       >
-                        Disable Thing
+                        禁用设备
                       </button>
                     {{ else }}
                       <button
@@ -153,7 +153,7 @@ SPDX-License-Identifier: Apache-2.0 -->
                         data-bs-target="#enableEntityModal"
                         {{ if not (hasPermission .Permissions "delete") }}disabled{{ end }}
                       >
-                        Enable Thing
+                        启用设备
                       </button>
                     {{ end }}
                   </div>

@@ -297,7 +297,7 @@ function showNoWidgetPlaceholder() {
         onclick="editableCanvas()"
       >
         <i class="fas fa-plus"></i>
-        <span>Add Widgets</span>
+        <span>新增组件</span>
       </button>
     </div>
   </div>  

@@ -5,7 +5,7 @@ SPDX-License-Identifier: Apache-2.0 -->
   <!doctype html>
   <html lang="en">
     <head>
-      <title>User</title>
+      <title>用户</title>
       {{ template "header" }}
     </head>
     <body>
@@ -20,12 +20,12 @@ SPDX-License-Identifier: Apache-2.0 -->
                   <table id="itemsTable" class="table">
                     <thead>
                       <tr>
-                        <th scope="row">USER</th>
+                        <th scope="row">用户</th>
                       </tr>
                     </thead>
                     <tbody>
                       <tr>
-                        <th>Name</th>
+                        <th>用户昵称</th>
                         <td class="editable name-field" contenteditable="false" data-field="name">
                           {{ .Entity.Name }}
                         </td>
@@ -34,8 +34,8 @@ SPDX-License-Identifier: Apache-2.0 -->
                             <i class="fas fa-pencil-alt"></i>
                           </button>
                           <div class="save-cancel-buttons" style="display: none">
-                            <button class="save-btn" id="save-name">Save</button>
-                            <button class="cancel-btn" id="cancel-name">Cancel</button>
+                            <button class="save-btn" id="save-name">保存</button>
+                            <button class="cancel-btn" id="cancel-name">取消</button>
                           </div>
                         </td>
                       </tr>
@@ -45,7 +45,7 @@ SPDX-License-Identifier: Apache-2.0 -->
                         <td></td>
                       </tr>
                       <tr>
-                        <th>Identity</th>
+                        <th>用户名</th>
                         <td
                           class="editable identity-field"
                           contenteditable="false"
@@ -58,13 +58,13 @@ SPDX-License-Identifier: Apache-2.0 -->
                             <i class="fas fa-pencil-alt"></i>
                           </button>
                           <div class="save-cancel-buttons" style="display: none">
-                            <button class="save-btn" id="save-identity">Save</button>
-                            <button class="cancel-btn" id="cancel-identity">Cancel</button>
+                            <button class="save-btn" id="save-identity">保存</button>
+                            <button class="cancel-btn" id="cancel-identity">取消</button>
                           </div>
                         </td>
                       </tr>
                       <tr>
-                        <th>Tags</th>
+                        <th>标识</th>
                         <td class="editable tags-field" contenteditable="false" data-field="tags">
                           {{ toSlice .Entity.Tags }}
                         </td>
@@ -73,13 +73,13 @@ SPDX-License-Identifier: Apache-2.0 -->
                             <i class="fas fa-pencil-alt"></i>
                           </button>
                           <div class="save-cancel-buttons" style="display: none">
-                            <button class="save-btn" id="save-tags">Save</button>
-                            <button class="cancel-btn" id="cancel-tags">Cancel</button>
+                            <button class="save-btn" id="save-tags">保存</button>
+                            <button class="cancel-btn" id="cancel-tags">取消</button>
                           </div>
                         </td>
                       </tr>
                       <tr>
-                        <th>Metadata</th>
+                        <th>附加属性</th>
                         <td class="entityMeta-col">
                           <div>
                             <pre id="meta-data"></pre>
@@ -97,7 +97,7 @@ SPDX-License-Identifier: Apache-2.0 -->
                         </td>
                       </tr>
                       <tr>
-                        <th>Role</th>
+                        <th>角色</th>
                         <td>{{ .Entity.Role }}</td>
                         <td></td>
                       </tr>
@@ -112,7 +112,7 @@ SPDX-License-Identifier: Apache-2.0 -->
                         data-bs-toggle="modal"
                         data-bs-target="#disableEntityModal"
                       >
-                        Disable User
+                        禁用用户
                       </button>
                     {{ else }}
                       <button
@@ -121,7 +121,7 @@ SPDX-License-Identifier: Apache-2.0 -->
                         data-bs-toggle="modal"
                         data-bs-target="#enableEntityModal"
                       >
-                        Enable User
+                        启用用户
                       </button>
                     {{ end }}
                     <button
@@ -130,7 +130,7 @@ SPDX-License-Identifier: Apache-2.0 -->
                       data-bs-toggle="modal"
                       data-bs-target="#updateRoleModal"
                     >
-                      Update Role
+                      更新用户
                     </button>
                   </div>
                 </div>
@@ -155,7 +155,7 @@ SPDX-License-Identifier: Apache-2.0 -->
           <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
               <div class="modal-header">
-                <div class="modal-title" id="updateRoleModalLabel">Update Role</div>
+                <div class="modal-title" id="updateRoleModalLabel">更新角色</div>
                 <button
                   type="button"
                   class="btn-close"
@@ -166,9 +166,9 @@ SPDX-License-Identifier: Apache-2.0 -->
               <form action="{{ printf "%s/users/%s/role" pathPrefix .Entity.ID }}" method="post">
                 <div class="modal-body">
                   <span>
-                    Are you sure you want to update the role of
+                    确定更新用户
                     <span class="badge text-bg-info">{{ .Entity.Name }}</span>
-                    to
+                    的角色为
                   </span>
                   <div class="mb-3 ">
                     {{ if eq .Entity.Role "admin" }}
@@ -182,10 +182,9 @@ SPDX-License-Identifier: Apache-2.0 -->
                           value="user"
                           checked
                         />
-                        <label for="userRole" class="form-check-label">User</label>
+                        <label for="userRole" class="form-check-label">用户</label>
                         <div class="form-text" id="user-roleHelp">
-                          This will revoke all super admin privileges from the user and make the
-                          user a normal user
+                          这会删掉用户所有的管理员权限，成为普通用户
                         </div>
                       </div>
                     {{ else }}
@@ -198,9 +197,9 @@ SPDX-License-Identifier: Apache-2.0 -->
                           value="admin"
                           checked
                         />
-                        <label for="adminRole" class="form-check-label">Admin</label>
+                        <label for="adminRole" class="form-check-label">管理员</label>
                         <div class="form-text" id="adminRoleHelp">
-                          This will make the user a super admin in the system
+                          这会让用户成为系统管理员
                         </div>
                       </div>
                     {{ end }}
@@ -210,9 +209,9 @@ SPDX-License-Identifier: Apache-2.0 -->
                 </div>
                 <div class="modal-footer">
                   <button class="btn btn-secondary" type="button" data-bs-dismiss="modal">
-                    Cancel
+                    取消
                   </button>
-                  <button class="btn body-button" type="submit">Update</button>
+                  <button class="btn body-button" type="submit">更新</button>
                 </div>
               </form>
             </div>
@@ -233,8 +232,15 @@ SPDX-License-Identifier: Apache-2.0 -->
           button: "save-metadata",
           value: parsedMetadata,
         });
-      </script>      <script type="module">
-        import { attachEditRowListener, updateName, updateIdentity, updateTags, updateMetadata} from "/js/update.js";
+      </script>      
+      <script type="module">
+        import { 
+          attachEditRowListener, 
+          updateName, 
+          updateIdentity, 
+          updateTags, 
+          updateMetadata
+        } from "/js/update.js";
 
         attachEditRowListener(
           {
@@ -255,15 +261,15 @@ SPDX-License-Identifier: Apache-2.0 -->
           });
 
           updateMetadata({
-          textArea: "metadataTextArea",
-          field:"metadata",
-          alertDiv: "metadataError",
-          fieldName: "metadata-field",
-          id: "{{ .Entity.ID }}",
-          entity: "users",
-          button: "save-metadata",
-          pathPrefix: "{{ pathPrefix }}",
-        });
+            textArea: "metadataTextArea",
+            field:"metadata",
+            alertDiv: "metadataError",
+            fieldName: "metadata-field",
+            id: "{{ .Entity.ID }}",
+            entity: "users",
+            button: "save-metadata",
+            pathPrefix: "{{ pathPrefix }}",
+          });
       </script>
     </body>
   </html>

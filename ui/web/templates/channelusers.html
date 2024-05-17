@@ -5,7 +5,7 @@ SPDX-License-Identifier: Apache-2.0 -->
   <!doctype html>
   <html lang="en">
     <head>
-      <title>Channel Users</title>
+      <title>分区关联用户</title>
       {{ template "header" }}
     </head>
     <body>
@@ -22,7 +22,7 @@ SPDX-License-Identifier: Apache-2.0 -->
                     {{ $shareButton = true }}
                   {{ end }}
                   <div class="d-flex flex-row justify-content-between">
-                    <h4>Channel Users</h4>
+                    <h4>分区关联用户</h4>
                     <button
                       role="button"
                       class="btn body-button"
@@ -42,7 +42,7 @@ SPDX-License-Identifier: Apache-2.0 -->
                       <div class="modal-dialog modal-dialog-centered">
                         <div class="modal-content">
                           <div class="modal-header">
-                            <h1 class="modal-title" id="addUserModalLabel">Add User</h1>
+                            <h1 class="modal-title" id="addUserModalLabel">添加用户</h1>
                             <button
                               type="button"
                               class="btn-close"
@@ -56,12 +56,12 @@ SPDX-License-Identifier: Apache-2.0 -->
                           >
                             <div class="modal-body">
                               <div class="mb-3">
-                                <label for="infiniteScroll" class="form-label">User ID</label>
+                                <label for="infiniteScroll" class="form-label">用户ID</label>
                                 <input
                                   type="text"
                                   name="userFilter"
                                   id="userFilter"
-                                  placeholder="Filter by User ID"
+                                  placeholder="通过用户ID过滤"
                                 />
                                 <select
                                   class="form-select"
@@ -70,11 +70,11 @@ SPDX-License-Identifier: Apache-2.0 -->
                                   size="5"
                                   required
                                 >
-                                  <option disabled>select a User</option>
+                                  <option disabled>选择用户</option>
                                 </select>
                               </div>
                               <div class="mb-3">
-                                <label for="relation" class="form-label">Relation</label>
+                                <label for="relation" class="form-label">关系</label>
                                 <select
                                   class="form-control"
                                   name="relation"
@@ -89,7 +89,7 @@ SPDX-License-Identifier: Apache-2.0 -->
                                     </option>
                                   {{ end }}
                                 </select>
-                                <div id="relationHelp" class="form-text">Select Relation.</div>
+                                <div id="relationHelp" class="form-text">选择关系.</div>
                               </div>
                               <div class="modal-footer">
                                 <button
@@ -97,9 +97,9 @@ SPDX-License-Identifier: Apache-2.0 -->
                                   class="btn btn-secondary"
                                   data-bs-dismiss="modal"
                                 >
-                                  Cancel
+                                  取消
                                 </button>
-                                <button type="submit" class="btn body-button">Assign</button>
+                                <button type="submit" class="btn body-button">分配</button>
                               </div>
                             </div>
                           </form>
@@ -124,7 +124,7 @@ SPDX-License-Identifier: Apache-2.0 -->
                         aria-selected="true"
                         onclick="openTab('')"
                       >
-                        All
+                        全部
                       </button>
                     </li>
                     <li class="nav-item" role="presentation">
@@ -143,7 +143,7 @@ SPDX-License-Identifier: Apache-2.0 -->
                         onclick="openTab('administrator')"
                         {{ if not (hasPermission .Permissions "admin") }}disabled{{ end }}
                       >
-                        Administrator
+                        管理员
                       </button>
                     </li>
                     <li class="nav-item" role="presentation">
@@ -162,7 +162,7 @@ SPDX-License-Identifier: Apache-2.0 -->
                         onclick="openTab('editor')"
                         {{ if not $shareButton }}disabled{{ end }}
                       >
-                        Editor
+                        修改人
                       </button>
                     </li>
                     <li class="nav-item" role="presentation">
@@ -181,7 +181,7 @@ SPDX-License-Identifier: Apache-2.0 -->
                         onclick="openTab('viewer')"
                         {{ if not $shareButton }}disabled{{ end }}
                       >
-                        Viewer
+                        查看人
                       </button>
                     </li>
                   </ul>
@@ -201,10 +201,10 @@ SPDX-License-Identifier: Apache-2.0 -->
                         <table id="itemsTable" class="table table-hover">
                           <thead>
                             <tr>
-                              <th scope="col">Name</th>
-                              <th class="tags-col" scope="col">Tags</th>
-                              <th class="meta-col" scope="col">Metadata</th>
-                              <th class="created-col" scope="col">Created At</th>
+                              <th scope="col">名称</th>
+                              <th class="tags-col" scope="col">标识</th>
+                              <th class="meta-col" scope="col">附加属性</th>
+                              <th class="created-col" scope="col">创建时间</th>
                             </tr>
                           </thead>
                           <tbody>
@@ -254,10 +254,10 @@ SPDX-License-Identifier: Apache-2.0 -->
                         <table id="itemsTable" class="table table-hover">
                           <thead>
                             <tr>
-                              <th scope="col">Name</th>
-                              <th class="tags-col" scope="col">Tags</th>
-                              <th class="meta-col" scope="col">Metadata</th>
-                              <th class="created-col" scope="col">Created At</th>
+                              <th scope="col">名称</th>
+                              <th class="tags-col" scope="col">标识</th>
+                              <th class="meta-col" scope="col">附加属性</th>
+                              <th class="created-col" scope="col">创建时间</th>
                               <th class="text-center" scope="col"></th>
                             </tr>
                           </thead>
@@ -330,10 +330,10 @@ SPDX-License-Identifier: Apache-2.0 -->
                         <table id="itemsTable" class="table table-hover">
                           <thead>
                             <tr>
-                              <th scope="col">Name</th>
-                              <th class="tags-col" scope="col">Tags</th>
-                              <th class="meta-col" scope="col">Metadata</th>
-                              <th class="created-col" scope="col">Created At</th>
+                              <th scope="col">名称</th>
+                              <th class="tags-col" scope="col">标识</th>
+                              <th class="meta-col" scope="col">附加属性</th>
+                              <th class="created-col" scope="col">创建时间</th>
                               <th class="text-center" scope="col"></th>
                             </tr>
                           </thead>
@@ -406,10 +406,10 @@ SPDX-License-Identifier: Apache-2.0 -->
                         <table id="itemsTable" class="table table-hover">
                           <thead>
                             <tr>
-                              <th scope="col">Name</th>
-                              <th class="tags-col" scope="col">Tags</th>
-                              <th class="meta-col" scope="col">Metadata</th>
-                              <th class="created-col" scope="col">Created At</th>
+                              <th scope="col">名称</th>
+                              <th class="tags-col" scope="col">标识</th>
+                              <th class="meta-col" scope="col">附加属性</th>
+                              <th class="created-col" scope="col">创建时间</th>
                               <th class="text-center" scope="col"></th>
                             </tr>
                           </thead>
@@ -493,7 +493,8 @@ SPDX-License-Identifier: Apache-2.0 -->
         function viewUser(identity) {
           window.location.href = `${pathPrefix}/domains/members?identity=${identity}`;
         }
-			</script>      <script type="module">
+			</script>   
+      <script type="module">
         import { fetchIndividualEntity } from "/js/infinitescroll.js";
 
         fetchIndividualEntity({

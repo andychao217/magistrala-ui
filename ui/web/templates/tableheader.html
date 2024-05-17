@@ -4,6 +4,7 @@ SPDX-License-Identifier: Apache-2.0 -->
 {{ define "tableheader" }}
   <div class="row-mb-3 d-flex flex-row justify-content-between mb-3">
     <div class="d-flex flex-row justify-content-start mb-2">
+      <span class="align-self-center mx-2">每页</span>
       <div class="dropdown border">
         <button
           class="btn btn-light dropdown-toggle"
@@ -27,9 +28,12 @@ SPDX-License-Identifier: Apache-2.0 -->
           <li>
             <a class="dropdown-item" href="?limit=50" id="limit50">50</a>
           </li>
+          <li>
+            <a class="dropdown-item" href="?limit=100" id="limit100">100</a>
+          </li>
         </ul>
       </div>
-      <span class="align-self-center mx-2">Items per page</span>
+      <span class="align-self-center mx-2">条</span>
     </div>
     {{ if isset "StatusOptions" . }}
       <button
@@ -40,12 +44,12 @@ SPDX-License-Identifier: Apache-2.0 -->
         id="statusDropdown"
       >
         <i class="fas fa-filter"></i>
-        Status
+        状态
         {{ if .Status }}
-          :
+          : 禁用
           {{ .Status }}
         {{ else }}
-          : enabled
+          : 启用
         {{ end }}
       </button>
       <ul class="dropdown-menu" aria-labelledby="statusDropdown">

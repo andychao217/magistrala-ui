@@ -6,7 +6,7 @@ SPDX-License-Identifier: Apache-2.0 -->
   <html lang="en">
     <head>
       {{ template "header" }}
-      <title>Dashboard</title>
+      <title>统计面板</title>
       <link rel="stylesheet" href="/css/dashboards.css" />
       <script
         src="https://cdnjs.cloudflare.com/ajax/libs/echarts/5.4.3/echarts.min.js"
@@ -35,21 +35,21 @@ SPDX-License-Identifier: Apache-2.0 -->
                     data-bs-target="#widgetsCanvas"
                     aria-controls="widgetsCanvas"
                   >
-                    Add Widgets
+                    新增组件
                   </button>
                   <button type="button" class="btn body-button" onclick="saveLayout()">
-                    Save Layout
+                    保存布局
                   </button>
                   <button type="button" class="btn body-button" onclick="cancelEdit()">
-                    Cancel
+                    取消
                   </button>
                   <button type="button" class="btn body-button" onclick="clearCanvas()">
-                    Clear Canvas
+                    清除画布
                   </button>
                 </div>
                 <div id="editableCanvasButton">
                   <button type="button" class="btn body-button" onclick="editableCanvas()">
-                    Edit Canvas
+                    修改画布
                   </button>
                 </div>
               </div>
@@ -67,7 +67,7 @@ SPDX-License-Identifier: Apache-2.0 -->
                 aria-labelledby="widgetsCanvasLabel"
               >
                 <div class="offcanvas-header">
-                  <h5 id="widgetsCanvasLabel">Widgets</h5>
+                  <h5 id="widgetsCanvasLabel">组件</h5>
                   <button
                     type="button"
                     class="btn-close"

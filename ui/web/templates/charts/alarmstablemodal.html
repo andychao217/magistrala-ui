@@ -14,7 +14,7 @@ SPDX-License-Identifier: Apache-2.0 -->
     <div class="modal-dialog modal-dialog-centered">
       <div class="modal-content">
         <div class="modal-header">
-          <h5 class="modal-title" id="alarmsTableModalLabel">Alarms Table</h5>
+          <h5 class="modal-title" id="alarmsTableModalLabel">预警表格</h5>
           <button
             type="button"
             class="btn-close"
@@ -25,54 +25,54 @@ SPDX-License-Identifier: Apache-2.0 -->
         <form id="create-alarmsTable-form">
           <div class="modal-body">
             <div class="mb-3">
-              <label for="channel-id" class="form-label">Channel ID</label>
+              <label for="channel-id" class="form-label">分区ID</label>
               <input
                 type="text"
                 pattern="{{ .UUIDPattern }}"
                 class="form-control mb-3"
                 name="channel"
                 id="channel-id"
-                placeholder="Enter the channel ID"
+                placeholder="输入分区ID"
                 required
               />
-              <div class="invalid-feedback">Please enter a valid uuid</div>
+              <div class="invalid-feedback">请输入正确的ID</div>
             </div>
             <div class="mb-3">
-              <label for="thing-id" class="form-label">Thing IDs</label>
+              <label for="thing-id" class="form-label">设备IDs</label>
               <input
                 type="text"
                 pattern="{{ .UUIDPattern }}"
                 class="form-control mb-3"
                 name="thing"
                 id="thing-id"
-                placeholder="Enter the thing IDs"
+                placeholder="输入设备IDs"
                 required
               />
-              <div class="invalid-feedback">Please enter a valid uuid</div>
+              <div class="invalid-feedback">请输入正确的ID</div>
             </div>
             <div class="mb-3">
-              <label for="value-name" class="form-label">Value name</label>
+              <label for="value-name" class="form-label">值名称</label>
               <input
                 type="text"
                 class="form-control mb-3"
                 name="valueName"
                 id="value-name"
-                placeholder="Enter the value name eg. temperature"
+                placeholder="输入值名称, 比如: 温度"
                 required
               />
             </div>
             <div class="mb-3">
-              <label for="update-interval" class="form-label">Update interval</label>
+              <label for="update-interval" class="form-label">更新间隔</label>
               <input
                 type="text"
                 pattern="{{ .IntervalPattern }}"
                 class="form-control mb-3"
                 name="updateInterval"
                 id="update-interval"
-                placeholder="Enter the update interval, eg. 5s, 10m, 1h, 1d"
+                placeholder="输入更新间隔, 例如:  5s, 10m, 1h, 1d"
                 required
               />
-              <div class="invalid-feedback">Please enter a valid interval</div>
+              <div class="invalid-feedback">请输入正确的间隔</div>
             </div>
           </div>
           <div class="modal-footer">
@@ -82,10 +82,10 @@ SPDX-License-Identifier: Apache-2.0 -->
               id="close-alarmsTable-button"
               data-bs-dismiss="modal"
             >
-              Close
+              关闭
             </button>
             <button type="button" class="btn body-button" id="create-alarmsTable-button">
-              Create Chart
+              创建图表
             </button>
           </div>
         </form>

@@ -14,7 +14,7 @@ SPDX-License-Identifier: Apache-2.0 -->
     <div class="modal-dialog modal-dialog-centered">
       <div class="modal-content">
         <div class="modal-header">
-          <h5 class="modal-title" id="tempGaugeModalLabel">Analogue Temperature Gauge</h5>
+          <h5 class="modal-title" id="tempGaugeModalLabel">模拟温度计</h5>
           <button
             type="button"
             class="btn-close"
@@ -36,7 +36,7 @@ SPDX-License-Identifier: Apache-2.0 -->
                 aria-controls="data"
                 aria-selected="true"
               >
-                Data
+                数据
               </button>
             </li>
             <li class="nav-item" role="presentation">
@@ -50,7 +50,7 @@ SPDX-License-Identifier: Apache-2.0 -->
                 aria-controls="appearance"
                 aria-selected="false"
               >
-                Appearance
+                样式
               </button>
             </li>
           </ul>
@@ -64,61 +64,61 @@ SPDX-License-Identifier: Apache-2.0 -->
                 aria-labelledby="data-tab"
               >
                 <div class="mb-3">
-                  <label for="channel-id" class="form-label">Channel ID</label>
+                  <label for="channel-id" class="form-label">分区ID</label>
                   <input
                     type="text"
                     pattern="{{ .UUIDPattern }}"
                     class="form-control mb-3"
                     name="channel"
                     id="channel-id"
-                    placeholder="Enter the channel ID"
+                    placeholder="输入分区ID"
                     required
                   />
-                  <div class="invalid-feedback">Please enter a valid uuid</div>
+                  <div class="invalid-feedback">请输入正确的ID</div>
                 </div>
                 <div class="mb-3">
-                  <label for="thing-id" class="form-label">Thing ID</label>
+                  <label for="thing-id" class="form-label">设备ID</label>
                   <input
                     type="text"
                     pattern="{{ .UUIDPattern }}"
                     class="form-control mb-3"
                     name="thing"
                     id="thing-id"
-                    placeholder="Enter the thing ID"
+                    placeholder="输入设备ID"
                     required
                   />
-                  <div class="invalid-feedback">Please enter a valid uuid</div>
+                  <div class="invalid-feedback">请输入正确的ID</div>
                 </div>
                 <div class="mb-3">
-                  <label for="value-name" class="form-label">Value name</label>
+                  <label for="value-name" class="form-label">值名称</label>
                   <input
                     type="text"
                     class="form-control mb-3"
                     name="valueName"
                     id="value-name"
-                    placeholder="Enter the value name eg. temperature"
+                    placeholder="输入值名称, 比如: 温度"
                     required
                   />
                 </div>
                 <div class="mb-3">
-                  <label for="min-value" class="form-label">Min value</label>
+                  <label for="min-value" class="form-label">最小值
                   <input
                     type="text"
                     class="form-control mb-3"
                     name="minValue"
                     id="min-value"
-                    placeholder="Enter the minimum data value"
+                    placeholder="输入最小值"
                     value="0"
                   />
                 </div>
                 <div class="mb-3">
-                  <label for="max-value" class="form-label">Max value</label>
+                  <label for="max-value" class="form-label">最大值
                   <input
                     type="text"
                     class="form-control mb-3"
                     name="maxValue"
                     id="max-value"
-                    placeholder="Enter the maximum data value"
+                    placeholder="输入最大值"
                     value="100"
                   />
                 </div>
@@ -131,23 +131,23 @@ SPDX-License-Identifier: Apache-2.0 -->
                 aria-labelledby="appearance-tab"
               >
                 <div class="mb-3">
-                  <label for="title" class="form-label">Title</label>
+                  <label for="title" class="form-label">标题</label>
                   <input
                     type="text"
                     class="form-control"
                     name="title"
                     id="title"
-                    placeholder="Enter the chart title"
+                    placeholder="输入图表标题"
                   />
                 </div>
                 <div class="mb-3">
-                  <label for="gauge-label" class="form-label">Gauge Label</label>
+                  <label for="gauge-label" class="form-label">仪表标识</label>
                   <input
                     type="text"
                     class="form-control mb-3"
                     name="gaugeLabel"
                     id="gauge-label"
-                    placeholder="Enter the gauge label"
+                    placeholder="输入仪表标识"
                   />
                 </div>
               </div>
@@ -161,10 +161,10 @@ SPDX-License-Identifier: Apache-2.0 -->
             id="close-tempGauge-button"
             data-bs-dismiss="modal"
           >
-            Close
+            关闭
           </button>
           <button type="button" class="btn body-button" id="create-tempGauge-button">
-            Create Chart
+           创建图表
           </button>
         </div>
       </div>

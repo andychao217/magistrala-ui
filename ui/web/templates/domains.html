@@ -5,7 +5,7 @@ SPDX-License-Identifier: Apache-2.0 -->
   <!doctype html>
   <html lang="en">
     <head>
-      <title>Domains</title>
+      <title>机构</title>
       {{ template "header" }}
     </head>
     <body>
@@ -16,10 +16,10 @@ SPDX-License-Identifier: Apache-2.0 -->
             <div class="col-lg-12 mx-auto py-3">
               {{ template "breadcrumb" . }}
               <div class="row-mb-3 d-flex flex-row justify-content-between mb-3">
-                <h2>Domains</h2>
+                <h2>机构</h2>
                 <button role="button" class="btn body-button" onclick="openCreateDomainModal()">
                   <i class="fa-solid fa-plus me-2"></i>
-                  <span>Create Domain</span>
+                  <span>创建机构</span>
                 </button>
               </div>
 
@@ -28,12 +28,12 @@ SPDX-License-Identifier: Apache-2.0 -->
                 <div class="itemsTable">
                   <table class="table">
                     <thead>
-                      <th scope="col">Name</th>
-                      <th class="tags-col" scope="col">Tags</th>
-                      <th scope="col">Role</th>
-                      <th class="alias-col" scope="col">Alias</th>
-                      <th class="col">Status</th>
-                      <th scope="col">Enter</th>
+                      <th scope="col">名称</th>
+                      <th class="tags-col" scope="col">标识</th>
+                      <th scope="col">角色</th>
+                      <th class="alias-col" scope="col">别名</th>
+                      <th class="col">状态</th>
+                      <th scope="col">进入</th>
                     </thead>
                     <tbody>
                       {{ range $i, $d := .Domains }}
@@ -48,10 +48,10 @@ SPDX-License-Identifier: Apache-2.0 -->
                           <td class="alias-col">{{ $d.Alias }}</td>
                           <td>
                             {{ if eq $d.Status "enabled" }}
-                              <span class="badge rounded-pill enabled-pill">{{ $d.Status }}</span>
+                              <span class="badge rounded-pill enabled-pill">启用</span>
                             {{ else if eq $d.Status "disabled" }}
                               <span class="badge rounded-pill disabled-pill">
-                                {{ $d.Status }}
+                                禁用
                               </span>
                             {{ end }}
                           </td>

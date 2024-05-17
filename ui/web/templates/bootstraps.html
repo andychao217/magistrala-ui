@@ -17,7 +17,7 @@ SPDX-License-Identifier: Apache-2.0 -->
               {{ template "breadcrumb" . }}
               <div class="row">
                 <div class="buttons mb-3">
-                  <button type="button" class="btn body-button" onclick="openModal()">Add</button>
+                  <button type="button" class="btn body-button" onclick="openModal()">新增</button>
 
                   <!-- Add Bootstrap Modal -->
                   <div
@@ -32,7 +32,7 @@ SPDX-License-Identifier: Apache-2.0 -->
                       <div class="modal-content">
                         <div class="modal-header">
                           <h1 class="modal-title" id="addBootstrapModalLabel">
-                            Add Bootstrap Config
+                            新增Bootstrap配置
                           </h1>
                           <button
                             type="button"
@@ -44,7 +44,7 @@ SPDX-License-Identifier: Apache-2.0 -->
                         <form method="post">
                           <div class="modal-body">
                             <div class="mb-3">
-                              <label for="name" class="form-label">Bootstrap Name</label>
+                              <label for="name" class="form-label">Bootstrap名称</label>
                               <input
                                 type="text"
                                 class="form-control"
@@ -56,36 +56,36 @@ SPDX-License-Identifier: Apache-2.0 -->
                             </div>
                             <div class="row mb-3">
                               <div class="col-md-6">
-                                <label for="externalID" class="form-label">External ID</label>
+                                <label for="externalID" class="form-label">外部ID</label>
                                 <input
                                   type="text"
                                   class="form-control"
                                   name="externalID"
                                   id="externalID"
-                                  placeholder="External ID"
+                                  placeholder="外部ID"
                                   required
                                 />
                               </div>
                               <div class="col-md-6">
-                                <label for="externalKey" class="form-label">External Key</label>
+                                <label for="externalKey" class="form-label">外部Key</label>
                                 <input
                                   type="text"
                                   class="form-control"
                                   name="externalKey"
                                   id="externalKey"
-                                  placeholder="External Key"
+                                  placeholder="外部Key"
                                   required
                                 />
                               </div>
                             </div>
                             <div class="mb-3">
-                              <label for="things-select" class="form-label">Thing</label>
+                              <label for="things-select" class="form-label">设备</label>
                               <input
                                 type="text"
                                 class="itemsFilter"
                                 name="thingFilter"
                                 id="thingFilter"
-                                placeholder="Filter by Thing name"
+                                placeholder="通过设备名称过滤"
                               />
                               <select
                                 class="form-select"
@@ -94,17 +94,17 @@ SPDX-License-Identifier: Apache-2.0 -->
                                 size="5"
                                 required
                               >
-                                <option disabled>select a thing</option>
+                                <option disabled>选择设备</option>
                               </select>
                             </div>
                             <div class="mb-3">
-                              <label for="channels-select" class="form-label">Channels</label>
+                              <label for="channels-select" class="form-label">分区</label>
                               <input
                                 type="text"
                                 class="itemsFilter"
                                 name="channelFilter"
                                 id="channelFilter"
-                                placeholder="Filter by channel name"
+                                placeholder="通过分区名称过滤"
                               />
                               <select
                                 class="form-select"
@@ -113,58 +113,58 @@ SPDX-License-Identifier: Apache-2.0 -->
                                 size="5"
                                 multiple
                               >
-                                <option disabled>select a channel</option>
+                                <option disabled>选择分区</option>
                               </select>
                             </div>
                             <div class="row mb-3">
                               <div class="col-md-6">
-                                <label for="clientCert" class="form-label">Client Cert</label>
+                                <label for="clientCert" class="form-label">设备证书</label>
                                 <input
                                   type="text"
                                   class="form-control"
                                   name="clientCert"
                                   id="clientCert"
                                   aria-describedby="tagHelp"
-                                  placeholder="clientCert"
+                                  placeholder="设备证书"
                                 />
                               </div>
                               <div class="col-md-6">
-                                <label for="clientKey" class="form-label">Client Key</label>
+                                <label for="clientKey" class="form-label">设备Key</label>
                                 <input
                                   type="text"
                                   class="form-control"
                                   name="clientKey"
                                   id="clientKey"
                                   aria-describedby="tagHelp"
-                                  placeholder="clientKey"
+                                  placeholder="设备Key"
                                 />
                               </div>
                             </div>
                             <div class="mb-3">
-                              <label for="CACert" class="form-label">CA Cert</label>
+                              <label for="CACert" class="form-label">CA证书</label>
                               <input
                                 type="text"
                                 class="form-control"
                                 name="CACert"
                                 id="CACert"
                                 aria-describedby="tagHelp"
-                                placeholder="CACert"
+                                placeholder="CA证书"
                               />
                             </div>
                             <div class="mb-3">
-                              <label for="content" class="form-label">Content</label>
+                              <label for="content" class="form-label">内容</label>
                               <div class="content-field">
                                 <textarea name="content" id="content"></textarea>
                               </div>
                               <div id="contentHelp" class="form-text">
-                                Enter content in JSON format.
+                                以JSON形式输入内容.
                               </div>
                               <div id="contentError" class="text-danger"></div>
                             </div>
                           </div>
                           <div class="modal-footer">
                             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
-                              Cancel
+                              取消
                             </button>
                             <button
                               type="submit"
@@ -172,7 +172,7 @@ SPDX-License-Identifier: Apache-2.0 -->
                               class="btn body-button"
                               onclick="submitItemList('channels', 'channelsList')"
                             >
-                              Submit
+                              确定
                             </button>
                           </div>
                         </form>
@@ -186,10 +186,10 @@ SPDX-License-Identifier: Apache-2.0 -->
                     <table id="itemsTable" class="table table-hover">
                       <thead>
                         <tr>
-                          <th scope="col">Name</th>
-                          <th scope="col">Thing ID</th>
-                          <th scope="col">External ID</th>
-                          <th scope="col">State</th>
+                          <th scope="col">名称</th>
+                          <th scope="col">设备ID</th>
+                          <th scope="col">外部ID</th>
+                          <th scope="col">状态</th>
                         </tr>
                       </thead>
                       <tbody>
@@ -204,9 +204,9 @@ SPDX-License-Identifier: Apache-2.0 -->
                             <td>{{ $t.ExternalID }}</td>
                             <td>
                               {{ if eq $t.State 0 }}
-                                <span class="badge rounded-pill disabled-pill">Disabled</span>
+                                <span class="badge rounded-pill disabled-pill">禁用</span>
                               {{ else }}
-                                <span class="badge rounded-pill enabled-pill">Enabled</span>
+                                <span class="badge rounded-pill enabled-pill">启用</span>
                               {{ end }}
                             </td>
                           </tr>

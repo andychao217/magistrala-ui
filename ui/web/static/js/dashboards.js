@@ -31,7 +31,7 @@ createDashboardForm.addEventListener("submit", function (event) {
           window.location.href = `/dashboards/${data.dashboard.id}`;
         }, 1000);
       } else {
-        appendAlert("Failed to create dashboard", "danger");
+        appendAlert("创建统计面板失败", "danger");
       }
     })
     .catch((error) => console.error("Error:", error));
@@ -70,7 +70,7 @@ const addCards = (pageIndex) => {
           const newDiv = document.createElement("div");
           newDiv.innerHTML = `
           <div class="col-12 text-center">
-            <h5>No dashboards found</h5>
+            <h5>没有统计面板</h5>
           </div>
         `;
           cardsRow.appendChild(newDiv);
@@ -150,12 +150,12 @@ function deleteDashboard(id) {
   })
     .then((response) => {
       if (response.status === 204) {
-        appendAlert("Dashboard deleted successfully", "success");
+        appendAlert("统计面板删除成功", "success");
         setTimeout(() => {
           window.location.reload();
         }, 1000);
       } else {
-        appendAlert("Failed to delete dashboard", "danger");
+        appendAlert("统计面板删除失败", "danger");
       }
     })
     .catch((error) => console.error("Error:", error));
@@ -202,13 +202,13 @@ updateButton.addEventListener("click", function () {
     .then((response) => {
       if (response.status === 200) {
         updateDashboardModal.hide();
-        appendAlert("Dashboard updated successfully", "success");
+        appendAlert("统计面板修改成功", "success");
         setTimeout(() => {
           window.location.reload();
         }, 1000);
       } else {
         updateDashboardModal.hide();
-        appendAlert("Failed to update dashboard", "danger");
+        appendAlert("统计面板修改失败", "danger");
       }
     })
     .catch((error) => console.error("Error:", error));

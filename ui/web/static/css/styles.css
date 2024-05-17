@@ -4,8 +4,13 @@ SPDX-License-Identifier: Apache-2.0 */
 @import url("https://fonts.googleapis.com/css2?family=Poppins:wght@300&family=Roboto:wght@400&family=Montserrat:wght@700&display=swap");
 @import url("https://fonts.googleapis.com/css2?family=Inconsolata&display=swap");
 
+html {
+  min-width: 1200px;
+  overflow-x: auto;
+}
+
 :root {
-  --main-color: #003366;
+  --main-color: #1c808f;
   --color-dark: #1d2231;
   --text-grey: #8390a2;
   --sidebar-max: 15rem;
@@ -28,7 +33,7 @@ SPDX-License-Identifier: Apache-2.0 */
   box-sizing: border-box;
   list-style-type: none;
   text-decoration: none;
-  font-family: "Roboto", sans-serif;
+  font-family: "PingFang SC", "Helvetica Neue", "Microsoft YaHei", "微软雅黑", "STHeitiSC-Light", "华文细黑", "STXihei", "Arial", "sans-serif";
 }
 
 .sidebar {
@@ -38,7 +43,7 @@ SPDX-License-Identifier: Apache-2.0 */
   height: auto;
   overflow-y: auto;
   z-index: 1200;
-  position: fixed;
+  position: absolute;
   outline: 0;
   left: 0;
   background: var(--main-color);
@@ -55,7 +60,7 @@ SPDX-License-Identifier: Apache-2.0 */
 }
 
 .sidebar-brand {
-  margin-bottom: 1rem;
+  height: 68px;
   color: #fff;
 }
 
@@ -89,7 +94,13 @@ SPDX-License-Identifier: Apache-2.0 */
 }
 
 body {
-  background-color: #f0f0f0 !important;
+  background-color: #c3e4ed;
+}
+
+body, html {
+  height: 100%;
+  margin: 0;
+  padding: 0;
 }
 
 .sidebar a.nav-link.active {
@@ -104,7 +115,7 @@ body {
 }
 
 .topbar {
-  background: #fff !important;
+  background: #e1f2f6;
 }
 
 .user-item {
@@ -313,7 +324,12 @@ body .body-button:hover {
 }
 
 .login-body {
-  background-color: #a799b7;
+  /* background-color: #a799b7; */
+  background: url('../images/login_bg.png') no-repeat center center fixed;
+  -webkit-background-size: cover;
+  -moz-background-size: cover;
+  -o-background-size: cover;
+  background-size: cover;
 }
 
 .login-card {

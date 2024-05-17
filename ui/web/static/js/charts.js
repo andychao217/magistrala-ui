@@ -39,14 +39,14 @@ class AlarmCount extends Chart {
     <div class="item-content" id="${this.ID}" style="width: ${this.Style.width}; height: ${this.Style.height};">
     <div class="card widgetcard">
         <div class="card-header text-center">
-          <h5 class="card-title">Alarm Count</h5>
+          <h5 class="card-title">警告数量</h5>
         </div>
         <div class="card-body text-center">
           <p class="card-text value"> 35</p>
         </div>
         <div class="card-footer text-center w-100 bg-warning">
           <p class="card-text">
-            Warning Level
+            警告等级
           </p>
         </div>
     </div>
@@ -70,28 +70,28 @@ class AlarmsTable extends Chart {
     <div class="item-content" id="${this.ID}" style="width: ${this.Style.width}; height: ${this.Style.height};">
         <div class="card mt-3 widgetcard">
           <div class="card-header text-center">
-            <h5 class="card-title">Alarms Table</h5>
+            <h5 class="card-title">警告表格</h5>
           </div>
           <table class="table table-striped table-hover">
             <thead>
               <tr>
-                <th scope="col">Severity</th>
-                <th scope="col">Originator</th>
-                <th scope="col">Status</th>
-                <th scope="col">Time Started</th>
+                <th scope="col">警告等级</th>
+                <th scope="col">关联设备</th>
+                <th scope="col">状态</th>
+                <th scope="col">开始时间</th>
               </tr>
             </thead>
             <tbody>
               <tr>
-                <td>Warning</td>
-                <td>Thing A</td>
-                <td>Enabled</td>
+                <td>报警</td>
+                <td>设备A</td>
+                <td>启用</td>
                 <td>2024-01-01 12:00</td>
               </tr>
               <tr>
-                <td>Error</td>
-                <td>Thing B</td>
-                <td>Disabled</td>
+                <td>错误</td>
+                <td>设备B</td>
+                <td>禁用</td>
                 <td>2024-01-02 15:30</td>
               </tr>
             </tbody>

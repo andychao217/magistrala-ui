@@ -16,12 +16,12 @@ SPDX-License-Identifier: Apache-2.0 -->
                   <table id="itemsTable" class="table">
                     <thead>
                       <tr>
-                        <th scope="row">Member</th>
+                        <th scope="row">成员</th>
                       </tr>
                     </thead>
                     <tbody>
                       <tr>
-                        <th>Name</th>
+                        <th>用户昵称</th>
                         <td>
                           {{ .User.Name }}
                         </td>
@@ -31,13 +31,13 @@ SPDX-License-Identifier: Apache-2.0 -->
                         <td>{{ .User.ID }}</td>
                       </tr>
                       <tr>
-                        <th>Identity</th>
+                        <th>用户名</th>
                         <td>
                           {{ .User.Credentials.Identity }}
                         </td>
                       </tr>
                       <tr>
-                        <th>Tags</th>
+                        <th>标识</th>
                         <td>
                           {{ range $j, $tag := .User.Tags }}
                             <span class="badge bg-dark">
@@ -47,7 +47,7 @@ SPDX-License-Identifier: Apache-2.0 -->
                         </td>
                       </tr>
                       <tr>
-                        <th>Metadata</th>
+                        <th>附加属性</th>
                         <td>
                           {{ range $k, $v := .User.Metadata }}
                             <span class="badge bg-success">

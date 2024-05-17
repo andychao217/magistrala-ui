@@ -5,7 +5,7 @@ SPDX-License-Identifier: Apache-2.0 -->
   <!doctype html>
   <html lang="en">
     <head>
-      <title>Read Messages</title>
+      <title>读取消息</title>
       {{ template "header" }}
     </head>
     <body>
@@ -23,7 +23,7 @@ SPDX-License-Identifier: Apache-2.0 -->
                   data-bs-target="#sendMessageModal"
                   title="Send a test message across the channel"
                 >
-                  Test Channel
+                  测试通道
                 </button>
               </div>
               <div class="table-responsive table-container">
@@ -31,17 +31,17 @@ SPDX-License-Identifier: Apache-2.0 -->
                 <table id="itemsTable" class="table">
                   <thead>
                     <tr>
-                      <th scope="col">Subtopic</th>
-                      <th scope="col">Publisher</th>
-                      <th scope="col">Protocol</th>
-                      <th scope="col">Name</th>
-                      <th scope="col">Unit</th>
-                      <th scope="col">Value</th>
-                      <th scope="col">StringValue</th>
-                      <th scope="col">BoolValue</th>
-                      <th scope="col">DataValue</th>
-                      <th scope="col">Sum</th>
-                      <th scope="col">Sent At</th>
+                      <th scope="col">子Topic</th>
+                      <th scope="col">发送者</th>
+                      <th scope="col">协议</th>
+                      <th scope="col">名称</th>
+                      <th scope="col">单元</th>
+                      <th scope="col">值</th>
+                      <th scope="col">字符串值</th>
+                      <th scope="col">布尔值</th>
+                      <th scope="col">数据值</th>
+                      <th scope="col">统计</th>
+                      <th scope="col">发送时间</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -98,7 +98,7 @@ SPDX-License-Identifier: Apache-2.0 -->
           <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
               <div class="modal-header">
-                <h1 class="modal-title" id="sendMessageModalLabel">Send Message</h1>
+                <h1 class="modal-title" id="sendMessageModalLabel">发送消息</h1>
                 <button
                   type="button"
                   class="btn-close"
@@ -111,26 +111,26 @@ SPDX-License-Identifier: Apache-2.0 -->
                   <input type="hidden" name="thingKey" value="{{ .ThKey }}" />
                   <input type="hidden" name="channelID" value="{{ .ChID }}" />
                   <div class="mb-3">
-                    <label for="name" class="form-label">Name *</label>
+                    <label for="name" class="form-label">名称 *</label>
                     <input type="text" class="form-control name-field" name="name" id="name" />
                     <div id="nameError" class="text-danger"></div>
                   </div>
                   <div class="mb-3">
-                    <label for="unit" class="form-label">Unit</label>
+                    <label for="unit" class="form-label">单元</label>
                     <input type="text" class="form-control" name="unit" id="unit" />
                   </div>
                   <div class="mb-3">
-                    <label for="value" class="form-label">Value *</label>
+                    <label for="value" class="form-label">值 *</label>
                     <input type="text" class="form-control value-field" name="value" id="value" />
                     <div id="valueError" class="text-danger"></div>
                   </div>
                 </div>
                 <div class="modal-footer">
                   <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
-                    Cancel
+                    取消
                   </button>
                   <button type="submit" class="btn body-button" id="send-message-button">
-                    Send
+                    发送
                   </button>
                 </div>
               </form>

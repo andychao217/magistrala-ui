@@ -14,7 +14,7 @@ SPDX-License-Identifier: Apache-2.0 -->
     <div class="modal-dialog modal-dialog-centered">
       <div class="modal-content">
         <div class="modal-header">
-          <h5 class="modal-title" id="entityCountModalLabel">Entity Count Card</h5>
+          <h5 class="modal-title" id="entityCountModalLabel">实体计数卡</h5>
           <button
             type="button"
             class="btn-close"
@@ -25,20 +25,20 @@ SPDX-License-Identifier: Apache-2.0 -->
         <form id="create-entityCount-form">
           <div class="modal-body">
             <div class="mb-3">
-              <label for="channel-id" class="form-label">Channel ID</label>
+              <label for="channel-id" class="form-label">分区ID</label>
               <input
                 type="text"
                 pattern="{{ .UUIDPattern }}"
                 class="form-control mb-3"
                 name="channel"
                 id="channel-id"
-                placeholder="Enter the channel ID"
+                placeholder="输入分区ID"
                 required
               />
-              <div class="invalid-feedback">Please enter a valid uuid</div>
+              <div class="invalid-feedback">请输入正确的ID</div>
             </div>
             <div class="mb-3">
-              <label for="domain-id" class="form-label">Domain ID</label>
+              <label for="domain-id" class="form-label">机构ID</label>
               <input
                 type="text"
                 pattern="{{ .UUIDPattern }}"
@@ -48,7 +48,7 @@ SPDX-License-Identifier: Apache-2.0 -->
                 placeholder="Enter the domain ID"
                 required
               />
-              <div class="invalid-feedback">Please enter a valid uuid</div>
+              <div class="invalid-feedback">请输入正确的ID</div>
             </div>
           </div>
           <div class="modal-footer">
@@ -58,10 +58,10 @@ SPDX-License-Identifier: Apache-2.0 -->
               id="close-entityCount-button"
               data-bs-dismiss="modal"
             >
-              Close
+              关闭
             </button>
             <button type="button" class="btn body-button" id="create-entityCount-button">
-              Create Chart
+              创建图表
             </button>
           </div>
         </form>

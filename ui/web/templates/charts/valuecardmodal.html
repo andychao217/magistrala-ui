@@ -14,7 +14,7 @@ SPDX-License-Identifier: Apache-2.0 -->
     <div class="modal-dialog modal-dialog-centered">
       <div class="modal-content">
         <div class="modal-header">
-          <h5 class="modal-title" id="valueCardModalLabel">Value card</h5>
+          <h5 class="modal-title" id="valueCardModalLabel">值卡片</h5>
           <button
             type="button"
             class="btn-close"
@@ -36,7 +36,7 @@ SPDX-License-Identifier: Apache-2.0 -->
                 aria-controls="data"
                 aria-selected="true"
               >
-                Data
+                数据
               </button>
             </li>
             <li class="nav-item" role="presentation">
@@ -50,7 +50,7 @@ SPDX-License-Identifier: Apache-2.0 -->
                 aria-controls="appearance"
                 aria-selected="false"
               >
-                Appearance
+                样式
               </button>
             </li>
           </ul>
@@ -64,54 +64,54 @@ SPDX-License-Identifier: Apache-2.0 -->
                 aria-labelledby="data-tab"
               >
                 <div class="mb-3">
-                  <label for="channel-id" class="form-label">Channel ID</label>
+                  <label for="channel-id" class="form-label">分区ID</label>
                   <input
                     type="text"
                     pattern="{{ .UUIDPattern }}"
                     class="form-control mb-3"
                     name="channel"
                     id="channel-id"
-                    placeholder="Enter the channel ID"
+                    placeholder="输入分区ID"
                     required
                   />
-                  <div class="invalid-feedback">Please enter a valid uuid</div>
+                  <div class="invalid-feedback">请输入正确的ID</div>
                 </div>
                 <div class="mb-3">
-                  <label for="thing-id" class="form-label">Thing ID</label>
+                  <label for="thing-id" class="form-label">设备ID</label>
                   <input
                     type="text"
                     pattern="{{ .UUIDPattern }}"
                     class="form-control mb-3"
                     name="thing"
                     id="thing-id"
-                    placeholder="Enter the thing ID"
+                    placeholder="输入设备ID"
                     required
                   />
-                  <div class="invalid-feedback">Please enter a valid uuid</div>
+                  <div class="invalid-feedback">请输入正确的ID</div>
                 </div>
                 <div class="mb-3">
-                  <label for="value-name" class="form-label">Value name</label>
+                  <label for="value-name" class="form-label">值名称</label>
                   <input
                     type="text"
                     class="form-control mb-3"
                     name="valueName"
                     id="value-name"
-                    placeholder="Enter the value name eg. temperature"
+                    placeholder="输入值名称, 比如: 温度"
                     required
                   />
                 </div>
                 <div class="mb-3">
-                  <label for="update-interval" class="form-label">Update interval</label>
+                  <label for="update-interval" class="form-label">更新间隔</label>
                   <input
                     type="text"
                     pattern="^\d+$"
                     class="form-control mb-3"
                     name="updateInterval"
                     id="update-interval"
-                    placeholder="Enter the update interval in milliseconds"
+                    placeholder="使用毫秒输入更新间隔"
                     required
                   />
-                  <div class="invalid-feedback">Please enter a valid interval</div>
+                  <div class="invalid-feedback">请输入更新间隔</div>
                 </div>
               </div>
               <!-- Appearance Tab -->
@@ -122,33 +122,33 @@ SPDX-License-Identifier: Apache-2.0 -->
                 aria-labelledby="appearance-tab"
               >
                 <div class="mb-3">
-                  <label for="title" class="form-label">Title</label>
+                  <label for="title" class="form-label">标题</label>
                   <input
                     type="text"
                     class="form-control"
                     name="title"
                     id="title"
-                    placeholder="Enter the chart title"
+                    placeholder="输入图表标题"
                   />
                 </div>
                 <div class="mb-3">
-                  <label for="thing-name" class="form-label">Thing Name</label>
+                  <label for="thing-name" class="form-label">设备名称</label>
                   <input
                     type="text"
                     class="form-control mb-3"
                     name="thingName"
                     id="thing-name"
-                    placeholder="Enter the thing name"
+                    placeholder="输入设备名称"
                   />
                 </div>
                 <div class="mb-3">
-                  <label for="value-units" class="form-label">Units</label>
+                  <label for="value-units" class="form-label">单位</label>
                   <input
                     type="text"
                     class="form-control mb-3"
                     name="valueUnits"
                     id="value-units"
-                    placeholder="Enter the units"
+                    placeholder="输入单位"
                   />
                 </div>
               </div>
@@ -162,10 +162,10 @@ SPDX-License-Identifier: Apache-2.0 -->
             id="close-valueCard-button"
             data-bs-dismiss="modal"
           >
-            Close
+            关闭
           </button>
           <button type="button" class="btn body-button" id="create-valueCard-button">
-            Create Chart
+           创建图表
           </button>
         </div>
       </div>

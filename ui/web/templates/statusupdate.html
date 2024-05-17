@@ -14,7 +14,7 @@ SPDX-License-Identifier: Apache-2.0 -->
     <div class="modal-dialog modal-dialog-centered">
       <div class="modal-content">
         <div class="modal-header">
-          <div class="modal-title" id="disableEntityModalLabel">Disable {{ .CollapseActive }}</div>
+          <div class="modal-title" id="disableEntityModalLabel">禁用 {{ .CollapseActive }}</div>
           <button
             type="button"
             class="btn-close"
@@ -25,15 +25,15 @@ SPDX-License-Identifier: Apache-2.0 -->
         <form action="{{ printf "%s/%s/disable" pathPrefix .Path }}" method="post">
           <div class="modal-body">
             <span>
-              Are you sure you want to
-              <span class="fw-bold text-danger">disable</span>
-              this {{ .CollapseActive }}?
+              确定
+              <span class="fw-bold text-danger">禁用</span>
+              这个 {{ .CollapseActive }}?
             </span>
             <input type="hidden" name="entityID" id="entityID" value="{{ .Entity.ID }}" />
           </div>
           <div class="modal-footer">
-            <button class="btn btn-secondary" type="button" data-bs-dismiss="modal">Cancel</button>
-            <button class="btn btn-danger" type="submit">Disable</button>
+            <button class="btn btn-secondary" type="button" data-bs-dismiss="modal">取消</button>
+            <button class="btn btn-danger" type="submit">禁用</button>
           </div>
         </form>
       </div>
@@ -52,7 +52,7 @@ SPDX-License-Identifier: Apache-2.0 -->
     <div class="modal-dialog modal-dialog-centered">
       <div class="modal-content">
         <div class="modal-header">
-          <div class="modal-title" id="enableEntityModalLabel">Enable {{ .CollapseActive }}</div>
+          <div class="modal-title" id="enableEntityModalLabel">启用 {{ .CollapseActive }}</div>
           <button
             type="button"
             class="btn-close"
@@ -63,15 +63,15 @@ SPDX-License-Identifier: Apache-2.0 -->
         <form action="{{ printf "%s/%s/enable" pathPrefix .Path }}" method="post">
           <div class="modal-body">
             <span>
-              Are you sure you want to
-              <span class="fw-bold text-success">enable</span>
-              this {{ .CollapseActive }}?
+              确定
+              <span class="fw-bold text-success">启用</span>
+              这个 {{ .CollapseActive }}?
             </span>
             <input type="hidden" name="entityID" id="entityID" value="{{ .Entity.ID }}" />
           </div>
           <div class="modal-footer">
-            <button class="btn btn-secondary" type="button" data-bs-dismiss="modal">Cancel</button>
-            <button class="btn btn-success" type="submit">Enable</button>
+            <button class="btn btn-secondary" type="button" data-bs-dismiss="modal">取消</button>
+            <button class="btn btn-success" type="submit">启用</button>
           </div>
         </form>
       </div>
