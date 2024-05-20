@@ -1,6 +1,13 @@
 var ws = null;
 const hostName = getHostname(window.location); 
-  
+//获取当前domain的ID号
+const domainLinkElement = document.getElementById('domain');
+const domainHrefValue = domainLinkElement.href;   
+const domainID = domainHrefValue.split('/').pop(); 
+//从sessionStorage中获取当前登陆用户信息
+const userInfo = JSON.parse(sessionStorage.getItem("userInfo"))
+const defaultChannelId = userInfo.metadata[domainID];
+
 function getHostname(url) {  
   const parsedUrl = new URL(url);  
   return parsedUrl.hostname;  
@@ -13,7 +20,11 @@ function connectWebSocket(host) {
   ws.onopen = function(event) {  
     console.log('WebSocket is open now.');  
     // 可以在这里发送初始消息等
-    getChannelsAndSendMessage(host)
+    // getChannelsAndSendMessage(host)
+    const channels = [];
+    const topics = channels.map((channel)=> `channels/${defaultChannelId}/messages`);
+    const message = {topics: topics.join(';'), host: hostName, thingSecret: 'platform', message: 'connect'}
+    ws.send(JSON.stringify(message)) 
   };  
   
   ws.onmessage = function(event) {  
@@ -60,7 +71,7 @@ function getChannelsAndSendMessage(ip) {
 
 $(function() {  
     // DOM 加载完成后执行的代码
-    if (!containsLoginInUrl()) {  
+    if (!containsLoginInUrl() && domainID && defaultChannelId) {  
       connectWebSocket(hostName)
     }
 });
