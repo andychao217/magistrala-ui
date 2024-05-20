@@ -189,7 +189,7 @@ SPDX-License-Identifier: Apache-2.0 -->
                           <th scope="col">名称</th>
                           <th scope="col">设备ID</th>
                           <th scope="col">外部ID</th>
-                          <th scope="col">状态</th>
+                          <!-- <th scope="col">状态</th> -->
                         </tr>
                       </thead>
                       <tbody>
@@ -202,13 +202,13 @@ SPDX-License-Identifier: Apache-2.0 -->
                               </a>
                             </td>
                             <td>{{ $t.ExternalID }}</td>
-                            <td>
+                            <!-- <td>
                               {{ if eq $t.State 0 }}
                                 <span class="badge rounded-pill disabled-pill">禁用</span>
                               {{ else }}
                                 <span class="badge rounded-pill enabled-pill">启用</span>
                               {{ end }}
-                            </td>
+                            </td> -->
                           </tr>
                         {{ end }}
                       </tbody>

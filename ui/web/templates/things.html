@@ -212,7 +212,7 @@ SPDX-License-Identifier: Apache-2.0 -->
                           <!-- <th class="meta-col" scope="col">附加属性</th> -->
                           <th class="created-col" scope="col">创建时间</th>
                           <th class="status-col" scope="col">在线状态</th>
-                          <th class="status-col" scope="col">状态</th>
+                          <!-- <th class="status-col" scope="col">状态</th> -->
                           <th class="operation-col" scope="col">操作</th>
                         </tr>
                       </thead>
@@ -238,7 +238,7 @@ SPDX-License-Identifier: Apache-2.0 -->
                                 <span class="badge rounded-pill disabled-pill">离线</span>  
                               {{ end }}  
                             </td>
-                            <td>
+                            <!-- <td>
                               {{ if eq $t.Status "enabled" }}
                                 <span class="badge rounded-pill enabled-pill">启用</span>
                               {{ else if eq $t.Status "disabled" }}
@@ -246,7 +246,7 @@ SPDX-License-Identifier: Apache-2.0 -->
                                   禁用
                                 </span>
                               {{ end }}
-                            </td>
+                            </td> -->
                             <td class="operation-col">
                               <button class="btn body-button" onclick="viewThing('{{ $t.ID }}')" title="查看">
                                 <i class="fa-solid fa-info"></i>

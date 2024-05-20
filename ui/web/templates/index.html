@@ -126,23 +126,23 @@ SPDX-License-Identifier: Apache-2.0 -->
         var dataCategories = {
           users: [
             ["状态", "数量"],
-            ["启用用户", enabledUsers],
-            ["禁用用户", disabledUsers],
+            ["用户", enabledUsers],
+            // ["禁用用户", disabledUsers],
           ],
           things: [
             ["状态", "数量"],
-            ["启用设备", enabledThings],
-            ["禁用设备", disabledThings],
+            ["设备", enabledThings],
+            // ["禁用设备", disabledThings],
           ],
           channels: [
             ["状态", "数量"],
-            ["启用分区", enabledChannels],
-            ["禁用分区", disabledChannels],
+            ["分区", enabledChannels],
+            // ["禁用分区", disabledChannels],
           ],
           groups: [
             ["状态", "数量"],
-            ["启用组", enabledGroups],
-            ["禁用组", disabledGroups],
+            ["组", enabledGroups],
+            // ["禁用组", disabledGroups],
           ],
         };
 
@@ -201,8 +201,8 @@ SPDX-License-Identifier: Apache-2.0 -->
       function drawStacked() {
         var data = new google.visualization.DataTable();
         data.addColumn("string", "项目");
-        data.addColumn("number", "启用");
-        data.addColumn("number", "禁用");
+        data.addColumn("number", "数量");
+        // data.addColumn("number", "禁用");
 
         // Add rows based on the data variables
         data.addRows([
@@ -213,7 +213,7 @@ SPDX-License-Identifier: Apache-2.0 -->
         ]);
 
         var options = {
-          title: "启用或者禁用项目",
+          title: "项目",
           isStacked: true,
           vAxis: {
             title: "数量",

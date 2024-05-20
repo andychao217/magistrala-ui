@@ -32,7 +32,7 @@ SPDX-License-Identifier: Apache-2.0 -->
                       <th class="tags-col" scope="col">标识</th>
                       <th scope="col">角色</th>
                       <th class="alias-col" scope="col">别名</th>
-                      <th class="col">状态</th>
+                      <!-- <th class="col">状态</th> -->
                       <th scope="col">进入</th>
                     </thead>
                     <tbody>
@@ -46,7 +46,7 @@ SPDX-License-Identifier: Apache-2.0 -->
                           </td>
                           <td><span class="badge bg-secondary">{{ $d.Permission }}</span></td>
                           <td class="alias-col">{{ $d.Alias }}</td>
-                          <td>
+                          <!-- <td>
                             {{ if eq $d.Status "enabled" }}
                               <span class="badge rounded-pill enabled-pill">启用</span>
                             {{ else if eq $d.Status "disabled" }}
@@ -54,7 +54,7 @@ SPDX-License-Identifier: Apache-2.0 -->
                                 禁用
                               </span>
                             {{ end }}
-                          </td>
+                          </td> -->
                           <td>
                             <form method="post" action="{{ printf "%s/domains/login" pathPrefix }}">
                               <input type="hidden" name="domainID" value="{{ $d.ID }}" />

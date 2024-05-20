@@ -179,7 +179,7 @@ SPDX-License-Identifier: Apache-2.0 -->
                           <th class="desc-col" scope="col">描述</th>
                           <th class="meta-col" scope="col">附加属性</th>
                           <th class="created-col" scope="col">创建时间</th>
-                          <th class="status-col" scope="col">状态</th>
+                          <!-- <th class="status-col" scope="col">状态</th> -->
                         </tr>
                       </thead>
                       <tbody>
@@ -194,7 +194,7 @@ SPDX-License-Identifier: Apache-2.0 -->
                               </div>
                             </td>
                             <td class="created-col">{{ $g.CreatedAt }}</td>
-                            <td>
+                            <!-- <td>
                               {{ if eq $g.Status "enabled" }}
                                 <span class="badge rounded-pill enabled-pill">启用</span>
                               {{ else if eq $g.Status "disabled" }}
@@ -202,7 +202,7 @@ SPDX-License-Identifier: Apache-2.0 -->
                                   禁用
                                 </span>
                               {{ end }}
-                            </td>
+                            </td> -->
                           </tr>
                           <script>
                             attachFormatJsonWithPrettifyListener({
