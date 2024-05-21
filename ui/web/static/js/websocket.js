@@ -1,19 +1,12 @@
 var ws = null;
 const hostName = getHostname(window.location); 
-//获取当前domain的ID号
-const domainLinkElement = document.getElementById('domain');
-const domainHrefValue = domainLinkElement.href;   
-const domainID = domainHrefValue.split('/').pop(); 
-//从sessionStorage中获取当前登陆用户信息
-const userInfo = JSON.parse(sessionStorage.getItem("userInfo"))
-const defaultChannelId = userInfo.metadata[domainID];
 
 function getHostname(url) {  
   const parsedUrl = new URL(url);  
   return parsedUrl.hostname;  
 } 
 
-function connectWebSocket(host) {  
+function connectWebSocket(host, defaultChannelId) {  
   // 假设WebSocket服务器在ws://your-websocket-server-url  
   ws = new WebSocket(`ws://${host}:63000/websocket`);  
   
@@ -21,8 +14,7 @@ function connectWebSocket(host) {
     console.log('WebSocket is open now.');  
     // 可以在这里发送初始消息等
     // getChannelsAndSendMessage(host)
-    const channels = [];
-    const topics = channels.map((channel)=> `channels/${defaultChannelId}/messages`);
+    const topics = [`channels/${defaultChannelId}/messages`];
     const message = {topics: topics.join(';'), host: hostName, thingSecret: 'platform', message: 'connect'}
     ws.send(JSON.stringify(message)) 
   };  
@@ -35,7 +27,7 @@ function connectWebSocket(host) {
   ws.onclose = function(event) {  
     if (event.wasClean) {  
       console.log('WebSocket closed cleanly, code=' + event.code + ' reason=' + event.reason);  
-    } else {  
+    } else {
       // 例如，服务器进程被终止，代码可能不是1000  
       console.error('WebSocket disconnected unexpectedly (code=' + event.code + ' reason=' + event.reason + ')');  
     }  
@@ -71,7 +63,16 @@ function getChannelsAndSendMessage(ip) {
 
 $(function() {  
     // DOM 加载完成后执行的代码
-    if (!containsLoginInUrl() && domainID && defaultChannelId) {  
-      connectWebSocket(hostName)
+    if (!containsLoginInUrl()) { 
+      //获取当前domain的ID号
+      const domainLinkElement = document.getElementById('domain');
+      const domainHrefValue = domainLinkElement.href;   
+      const domainID = domainHrefValue.split('/').pop(); 
+      //从sessionStorage中获取当前登陆用户信息
+      const userInfo = JSON.parse(sessionStorage.getItem("userInfo"))
+      const defaultChannelId = userInfo.metadata[domainID]; 
+      if (domainID && defaultChannelId) {
+        connectWebSocket(hostName, defaultChannelId)
+      }
     }
 });
