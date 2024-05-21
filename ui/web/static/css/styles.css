@@ -141,7 +141,7 @@ body.sidebar-toggled {
 }
 
 .main-content {
-  margin-left: var(--sidebar-max);
+  margin-left: 12rem;
   margin-top: 4.5rem;
   padding: 1rem;
 }

@@ -4,14 +4,92 @@ SPDX-License-Identifier: Apache-2.0 -->
 {{ define "breadcrumb" }}
   <nav aria-label="breadcrumb">
     <ol class="breadcrumb">
-      <li class="breadcrumb-item"><a href="{{ printf "%s/" pathPrefix }}">主页</a></li>
+      <li class="breadcrumb-item"><a href="{{ printf "%s/" pathPrefix }}">首页</a></li>
       {{ $length := len .Breadcrumbs }}
       {{ range $i, $b:=  .Breadcrumbs }}
         <li class="breadcrumb-item">
           {{ if eq $i (sub $length 1) }}
-            {{ .Name }}
+            {{ if eq .Name "homepage"}}
+              <span>首页</span>
+            {{ else if eq .Name "dashboards" }}
+              <span>统计面板</span>
+            {{ else if eq .Name "dashboard" }}
+              <span>统计面板</span>
+            {{ else if eq .Name "users" }}
+              <span>用户</span>
+            {{ else if eq .Name "user" }}
+              <span>用户</span>
+            {{ else if eq .Name "things" }}
+              <span>设备</span>
+            {{ else if eq .Name "thing" }}
+              <span>设备</span>
+            {{ else if eq .Name "groups" }}
+              <span>组</span>
+            {{ else if eq .Name "group" }}
+              <span>组</span>
+            {{ else if eq .Name "channels" }}
+              <span>分区</span>
+            {{ else if eq .Name "channel" }}
+              <span>分区</span>
+            {{ else if eq .Name "readmessages" }}
+              <span>启用</span>
+            {{ else if eq .Name "bootstraps" }}
+              <span>Bootstraps</span>
+            {{ else if eq .Name "domain" }}
+              <span>机构</span>
+            {{ else if eq .Name "domains" }}
+              <span>机构</span>
+            {{ else if eq .Name "members" }}
+              <span>成员</span>
+            {{ else if eq .Name "invitations" }}
+              <span>邀请</span>
+            {{ else if eq .Name "domaininvitations" }}
+              <span>机构邀请</span>
+            {{ else }}
+              <span>{{ .Name }}</span>
+            {{ end }}
           {{ else }}
-            <a href="{{ .URL }}">{{ .Name }}</a>
+            <a href="{{ .URL }}">
+              {{ if eq .Name "homepage"}}
+                <span>首页</span>
+              {{ else if eq .Name "dashboards" }}
+                <span>统计面板</span>
+              {{ else if eq .Name "dashboard" }}
+                <span>统计面板</span>
+              {{ else if eq .Name "users" }}
+                <span>用户</span>
+              {{ else if eq .Name "user" }}
+                <span>用户</span>
+              {{ else if eq .Name "things" }}
+                <span>设备</span>
+              {{ else if eq .Name "thing" }}
+                <span>设备</span>
+              {{ else if eq .Name "groups" }}
+                <span>组</span>
+              {{ else if eq .Name "group" }}
+                <span>组</span>
+              {{ else if eq .Name "channels" }}
+                <span>分区</span>
+              {{ else if eq .Name "channel" }}
+                <span>分区</span>
+              {{ else if eq .Name "readmessages" }}
+                <span>启用</span>
+              {{ else if eq .Name "bootstraps" }}
+                <span>Bootstraps</span>
+              {{ else if eq .Name "domain" }}
+                <span>机构</span>
+              {{ else if eq .Name "domains" }}
+                <span>机构</span>
+              {{ else if eq .Name "members" }}
+                <span>成员</span>
+              {{ else if eq .Name "invitations" }}
+                <span>邀请</span>
+              {{ else if eq .Name "domaininvitations" }}
+                <span>机构邀请</span>
+              {{ else }}
+                <span>{{ .Name }}</span>
+              {{ end }}
+            </a>
           {{ end }}
         </li>
       {{ end }}
