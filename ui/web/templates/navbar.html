@@ -410,8 +410,8 @@ SPDX-License-Identifier: Apache-2.0 -->
       let domainID, domainName, domainPermissions;
 
       if (role !== "admin") {
-      document.getElementById("users-nav-items").style.display = "none";
-    }
+        document.getElementById("users-nav-items").style.display = "none";
+      }
       if (loginStatus === "domain") {
         domainPermissions = '{{.Session.Domain.Permissions}}';
         domainID = '{{.Session.Domain.ID}}';
