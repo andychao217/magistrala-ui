@@ -11,88 +11,99 @@ SPDX-License-Identifier: Apache-2.0 -->
     <body class="login-body">
       <div class="container-fluid mt-5 pt-5">
         <div class="row p-5">
-          <div class="login-card col-lg-4 col-xxl-3 p-md-5 mx-auto mt-5">
-            <div class="row text-center mb-4 d-flex flex-column align-items-center">
-              <div class="mb-3 border-bottom pb-3">
-                <div class="d-flex justify-content-center mt-2">
-                  <h1 class="mx-3">世邦思拓</h1>
+          <div class="login-card col-lg-6 col-xxl-3 mx-auto mt-5" style="min-width: 650px;">
+            <div class="container text-center">
+              <div class="row align-items-start">
+                <div class="col logo-background">
                 </div>
-              </div>
-              <div class="login-header mb-4">
-                <h2>注册</h2>
-              </div>
-              <form
-                method="post"
-                id="form"
-                class="row border-bottom pb-3 mb-3"
-                onsubmit="submitRegistrationForm()"
-              >
-                <div class="col-md-12">
-                  <div class="row mb-3">
-                    <div class="col-md-12 input-field name-field">
-                      <i class="fas fa-solid fa-user"></i>
-                      <input
-                        class="p-3 w-100"
-                        type="name"
-                        name="name"
-                        id="name"
-                        placeholder="昵称"
-                      />
+                <div class="col">
+                  <div class="row text-center mb-4 d-flex flex-column align-items-center" style="margin-left: 5px;">
+                    <div class="login-header mb-4">
+                      <div class="container text-center">
+                        <div class="row align-items-start">
+                          <div class="col">
+                            <a 
+                              href="{{ printf "%s/login" pathPrefix }}" 
+                              style="font-size: 1.5rem; color: #999999; text-decoration: none;"
+                            >
+                              登陆
+                            </a>
+                          </div>
+                          <div class="col" style="font-size: 1.5rem; color: #09d7d3;">
+                            注册
+                          </div>
+                        </div>
+                      </div>
                     </div>
-                    <div id="nameError" class="text-danger"></div>
+                    <form
+                      method="post"
+                      id="form"
+                      class="row mb-3"
+                      onsubmit="submitRegistrationForm()"
+                    >
+                      <div class="col-md-12">
+                        <div class="row mb-3">
+                          <div class="col-md-12 input-field name-field login-field">
+                            <i class="fas fa-solid fa-user"></i>
+                            <input
+                              class="p-3 w-100"
+                              type="name"
+                              name="name"
+                              id="name"
+                              placeholder="昵称"
+                            />
+                          </div>
+                          <div id="nameError" class="text-danger"></div>
+                        </div>
+                        <div class="row mb-3">
+                          <div class="col-md-12 input-field email-field login-field">
+                            <i class="fas fa-solid fa-envelope me-2"></i>
+                            <input
+                              class="p-3 w-100 me-2"
+                              name="email"
+                              id="email"
+                              placeholder="电子邮箱或者手机号码"
+                            />
+                          </div>
+                          <div id="emailError" class="text-danger"></div>
+                        </div>
+                        <div class="row mb-3">
+                          <div class="col-md-12 input-field password-field login-field">
+                            <i class="fas fa-solid fa-lock me-2"></i>
+                            <input
+                              class="p-3 w-100 me-2"
+                              type="password"
+                              name="password"
+                              id="password"
+                              placeholder="密码"
+                            />
+                            <span class="password-toggle-icon"><i class="fas fa-eye" title="显示密码"></i></span>
+                          </div>
+                          <div id="passwordError" class="text-danger"></div>
+                        </div>
+                        <div id="registrationError" class="text-danger"></div>
+                      </div>
+                      <div class="col-md-12 d-grid py-3">
+                        <button type="submit" class="login-btn py-3" id="register-button">
+                          注册
+                        </button>
+                      </div>
+                    </form>
+                    {{ range $i, $c := .Providers }}
+                      {{ if $c.IsEnabled }}
+                        <div class="text-center text-light">
+                          <span>或者使用</span>
+                          <button type="button" class="btn btn-link btn-floating mx-1">
+                            <a href="{{ printf "%s/signup/%s" pathPrefix $c.Name }}">
+                              <i class="fab {{ $c.Icon }}"></i>
+                            </a>
+                          </button>
+                          <span>登陆</span>
+                        </div>
+                      {{ end }}
+                    {{ end }}
                   </div>
-                  <div class="row mb-3">
-                    <div class="col-md-12 input-field email-field">
-                      <i class="fas fa-solid fa-envelope me-2"></i>
-                      <input
-                        class="p-3 w-100 me-2"
-                        name="email"
-                        id="email"
-                        placeholder="电子邮箱或者手机号码"
-                      />
-                    </div>
-                    <div id="emailError" class="text-danger"></div>
-                  </div>
-                  <div class="row mb-3">
-                    <div class="col-md-12 input-field password-field">
-                      <i class="fas fa-solid fa-lock me-2"></i>
-                      <input
-                        class="p-3 w-100 me-2"
-                        type="password"
-                        name="password"
-                        id="password"
-                        placeholder="密码"
-                      />
-                      <span class="password-toggle-icon"><i class="fas fa-eye" title="显示密码"></i></span>
-                    </div>
-                    <div id="passwordError" class="text-danger"></div>
-                  </div>
-                  <div id="registrationError" class="text-danger"></div>
                 </div>
-                <div class="col-md-12 d-grid py-3">
-                  <button type="submit" class="login-btn py-3" id="register-button">
-                    注册
-                  </button>
-                </div>
-              </form>
-              {{ range $i, $c := .Providers }}
-                {{ if $c.IsEnabled }}
-                  <div class="text-center text-light">
-                    <span>或者使用</span>
-                    <button type="button" class="btn btn-link btn-floating mx-1">
-                      <a href="{{ printf "%s/signup/%s" pathPrefix $c.Name }}">
-                        <i class="fab {{ $c.Icon }}"></i>
-                      </a>
-                    </button>
-                    <span>登陆</span>
-                  </div>
-                {{ end }}
-              {{ end }}
-              <div class="col-md-12">
-                <p class="text-center text-light">
-                  已经有账号?
-                  <a href="{{ printf "%s/login" pathPrefix }}" class="text-light">登陆</a>
-                </p>
               </div>
             </div>
           </div>

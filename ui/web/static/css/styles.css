@@ -1,9 +1,6 @@
 /* Copyright (c) Abstract Machines
 SPDX-License-Identifier: Apache-2.0 */
 
-@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@300&family=Roboto:wght@400&family=Montserrat:wght@700&display=swap");
-@import url("https://fonts.googleapis.com/css2?family=Inconsolata&display=swap");
-
 html {
   min-width: 1200px;
   overflow-x: auto;
@@ -119,7 +116,9 @@ body, html {
 }
 
 .user-item {
-  font-size: 1.5rem !important;
+  font-size: 1.0rem;
+  font-weight: bolder;
+  color: var(--color-dark);
 }
 
 .user-item-button {
@@ -333,7 +332,7 @@ body .body-button:hover {
 }
 
 .login-card {
-  background-color: var(--main-color);
+  background-color: #ffffff;
   border-radius: 1rem;
 }
 
@@ -361,17 +360,41 @@ body .body-button:hover {
   font-family: "Montserrat";
 }
 
+.logo-background{
+  background-image: url("../images/login_logo_tablet@2x_min.png");
+  height: 500px;
+  margin-left: -15px;
+  border-top-left-radius: 15px;
+  border-bottom-left-radius: 15px;
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-color: #1c808f;
+}
+
+.login-field{
+  background: #ffffff;
+  border: solid thin #999999;
+  color: #999999;
+}
+.password-toggle-icon{
+  color: #999999;
+}
+
+.login-header {
+  margin-top: 90px;
+}
+
 .login-card .login-header h2 {
   color: #fff;
   font-weight: 900;
 }
 
 .login-btn {
-  border: 1px solid #fff;
+  border: 1px solid #09d7d3;
   border-radius: 0.5rem;
-  background-color: #fff;
+  background-color: #09d7d3;
   font-weight: 700;
-  color: var(--main-color);
+  color: #ffffff;
 }
 
 .login-btn:hover {

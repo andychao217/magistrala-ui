@@ -11,84 +11,95 @@ SPDX-License-Identifier: Apache-2.0 -->
     <body class="login-body">
       <div class="container-fluid mt-5 pt-5">
         <div class="row p-5">
-          <div class="login-card col-lg-4 col-xxl-3 p-md-5 mx-auto mt-5">
-            <div class="row text-center mb-4 d-flex flex-column align-items-center">
-              <div class="mb-3 border-bottom pb-3">
-                <div class="d-flex justify-content-center mt-2">
-                  <h1 class="mx-3">世邦思拓</h1>
+          <div class="login-card col-lg-6 col-xxl-3 mx-auto mt-5" style="min-width: 650px;">
+            <div class="container text-center">
+              <div class="row align-items-start">
+                <div class="col logo-background">
                 </div>
-              </div>
-              <div class="login-header mb-4">
-                <h2>登陆</h2>
-              </div>
-              <form
-                method="post"
-                id="form"
-                class="row border-bottom pb-3 mb-3"
-                onsubmit="submitLoginForm()"
-              >
-                <div class="col-md-12">
-                  <div class="row mb-3">
-                    <div class="col-md-12 input-field email-field">
-                      <i class="fas fa-solid fa-envelope me-2"></i>
-                      <input
-                        class="p-3 w-100 me-2"
-                        name="email"
-                        id="email"
-                        placeholder="手机号码或者电子邮箱"
-                      />
+                <div class="col">
+                  <div class="row text-center mb-4 d-flex flex-column align-items-center" style="margin-left: 5px;">
+                    <div class="login-header mb-4">
+                      <div class="container text-center">
+                        <div class="row align-items-start">
+                          <div class="col" style="font-size: 1.5rem; color: #09d7d3;">
+                            登陆
+                          </div>
+                          <div class="col">
+                            <a 
+                              href="{{ printf "%s/register" pathPrefix }}" 
+                              style="font-size: 1.5rem; color: #999999; text-decoration: none;"
+                            >
+                              注册
+                            </a>
+                          </div>
+                        </div>
+                      </div>
                     </div>
-                    <div id="emailError" class="text-danger"></div>
+                    <form
+                      method="post"
+                      id="form"
+                      class="row mb-3"
+                      onsubmit="submitLoginForm()"
+                    >
+                      <div class="col-md-12">
+                        <div class="row mb-3">
+                          <div class="col-md-12 input-field email-field login-field">
+                            <i class="fas fa-solid fa-envelope me-2"></i>
+                            <input
+                              class="p-3 w-100 me-2"
+                              name="email"
+                              id="email"
+                              placeholder="手机号码或者电子邮箱"
+                            />
+                          </div>
+                          <div id="emailError" class="text-danger"></div>
+                        </div>
+                        <div class="row mb-3">
+                          <div class="col-md-12 input-field password-field login-field">
+                            <i class="fa-solid fa-lock me-2"></i>
+                            <input
+                              class="p-3 w-100 me-2"
+                              type="password"
+                              name="password"
+                              id="password"
+                              placeholder="密码"
+                            />
+                            <span class="password-toggle-icon"><i title="显示密码" class="fa-solid fa-eye"></i></span>
+                          </div>
+                          <div id="passwordError" class="text-danger"></div>
+                        </div>
+                        <div id="loginError" class="text-danger"></div>
+                      </div>
+                      <div class="forgot-password" style="display: none;">
+                        <button
+                          type="button"
+                          id="fp-button"
+                          class="btn btn-link text-light"
+                          data-bs-toggle="modal"
+                          data-bs-target="#forgotPasswordModal"
+                        >
+                          忘记密码?
+                        </button>
+                      </div>
+                      <div class="col-md-12 d-grid py-3">
+                        <button type="submit" class="login-btn py-3" id="login-button">登陆</button>
+                      </div>
+                    </form>
+                    {{ range $i, $c := .Providers }}
+                      {{ if $c.IsEnabled }}
+                        <div class="text-center text-light">
+                          <span>或者使用</span>
+                          <button type="button" class="btn btn-link btn-floating mx-1">
+                            <a href="{{ printf "%s/signin/%s" pathPrefix $c.Name }}">
+                              <i class="fab {{ $c.Icon }}"></i>
+                            </a>
+                          </button>
+                          <span>登陆</span>
+                        </div>
+                      {{ end }}
+                    {{ end }}
                   </div>
-                  <div class="row mb-3">
-                    <div class="col-md-12 input-field password-field">
-                      <i class="fa-solid fa-lock me-2"></i>
-                      <input
-                        class="p-3 w-100 me-2"
-                        type="password"
-                        name="password"
-                        id="password"
-                        placeholder="密码"
-                      />
-                      <span class="password-toggle-icon"><i title="显示密码" class="fa-solid fa-eye"></i></span>
-                    </div>
-                    <div id="passwordError" class="text-danger"></div>
-                  </div>
-                  <div id="loginError" class="text-danger"></div>
                 </div>
-                <div class="forgot-password" style="display: none;">
-                  <button
-                    type="button"
-                    id="fp-button"
-                    class="btn btn-link text-light"
-                    data-bs-toggle="modal"
-                    data-bs-target="#forgotPasswordModal"
-                  >
-                    忘记密码?
-                  </button>
-                </div>
-                <div class="col-md-12 d-grid py-3">
-                  <button type="submit" class="login-btn py-3" id="login-button">登陆</button>
-                </div>
-              </form>
-              {{ range $i, $c := .Providers }}
-                {{ if $c.IsEnabled }}
-                  <div class="text-center text-light">
-                    <span>或者使用</span>
-                    <button type="button" class="btn btn-link btn-floating mx-1">
-                      <a href="{{ printf "%s/signin/%s" pathPrefix $c.Name }}">
-                        <i class="fab {{ $c.Icon }}"></i>
-                      </a>
-                    </button>
-                    <span>登陆</span>
-                  </div>
-                {{ end }}
-              {{ end }}
-              <div class="col-md-12">
-                <p class="text-center text-light">
-                  没有账号?
-                  <a href="{{ printf "%s/register" pathPrefix }}" class="text-light">注册</a>
-                </p>
               </div>
             </div>
           </div>
