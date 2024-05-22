@@ -20,9 +20,9 @@ SPDX-License-Identifier: Apache-2.0 -->
                   <button class="btn body-button" type="button" onclick="openModal('single')">
                     添加用户
                   </button>
-                  <button class="btn body-button" type="button" onclick="openModal('bulk')" style="display: none;">
+                  <!-- <button class="btn body-button" type="button" onclick="openModal('bulk')" style="display: none;">
                     批量添加用户
-                  </button>
+                  </button> -->
                   <!-- modals -->
                   <!-- add user modal -->
                   <div
@@ -190,7 +190,7 @@ SPDX-License-Identifier: Apache-2.0 -->
                       <thead>
                         <tr>
                           <th scope="col">用户昵称</th>
-                          <!-- <th class="id-col" scope="col">ID</th> -->
+                          <th class="id-col" scope="col">ID</th>
                           <th class="tags-col" scope="col">标识</th>
                           <th class="meta-col" scope="col">附加属性</th>
                           <th class="created-col" scope="col">创建时间</th>
@@ -201,9 +201,9 @@ SPDX-License-Identifier: Apache-2.0 -->
                         {{ range $i, $u := .Users }}
                           <tr>
                             <td>{{ $u.Name }}</td>
-                            <!-- <td class="userID" style="display: none;">
+                            <td class="userID">
                               {{ $u.ID }}
-                            </td> -->
+                            </td>
                             <td class="tags-col">
                               {{ range $j, $tag := $u.Tags }}
                                 <span class="badge bg-dark">{{ $tag }}</span>
