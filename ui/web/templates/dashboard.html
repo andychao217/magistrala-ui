@@ -2,134 +2,104 @@
 SPDX-License-Identifier: Apache-2.0 -->
 
 {{ define "dashboard" }}
-  <!doctype html>
-  <html lang="en">
-    <head>
-      {{ template "header" }}
-      <title>统计面板</title>
-      <link rel="stylesheet" href="/css/dashboards.css" />
-      <script
-        src="https://cdnjs.cloudflare.com/ajax/libs/echarts/5.4.3/echarts.min.js"
-        integrity="sha512-EmNxF3E6bM0Xg1zvmkeYD3HDBeGxtsG92IxFt1myNZhXdCav9MzvuH/zNMBU1DmIPN6njrhX1VTbqdJxQ2wHDg=="
-        crossorigin="anonymous"
-        referrerpolicy="no-referrer"
-      ></script>
-    </head>
-    <body>
-      {{ template "navbar" . }}
-      <div class="main-content pt-3">
-        <div class="container-fluid">
-          <div class="row-mb-3 p-3">
-            <div class="col-lg-12 mx-auto py-3">
-              {{ template "breadcrumb" . }}
-              <div class="row-mb-3 mb-3 d-flex justify-content-between">
-                <div class="dashboard-details">
-                  <span class="fs-2 fw-bold">{{ .Dashboard.Name }}</span>
-                  <span class="fs-6 fw-lighter font-monospace">{{ .Dashboard.ID }}</span>
-                </div>
-                <div class="row-mb-3 display-none" id="CanvasButtons">
-                  <button
-                    type="button"
-                    class="btn body-button"
-                    data-bs-toggle="offcanvas"
-                    data-bs-target="#widgetsCanvas"
-                    aria-controls="widgetsCanvas"
-                  >
-                    新增组件
-                  </button>
-                  <button type="button" class="btn body-button" onclick="saveLayout()">
-                    保存布局
-                  </button>
-                  <button type="button" class="btn body-button" onclick="cancelEdit()">
-                    取消
-                  </button>
-                  <button type="button" class="btn body-button" onclick="clearCanvas()">
-                    清除画布
-                  </button>
-                </div>
-                <div id="editableCanvasButton">
-                  <button type="button" class="btn body-button" onclick="editableCanvas()">
-                    修改画布
-                  </button>
-                </div>
-              </div>
-              <div class="row bg-white dashboard-canvas ">
-                <div class="no-widget-placeholder row align-items-center"></div>
-                <div class="grid"></div>
-              </div>
+    <!doctype html>
+    <html lang="en">
+        <head>
+            {{ template "header" }}
+            <title>统计面板</title>
+            <link rel="stylesheet" href="/css/dashboards.css" />
+            <script
+                src="https://cdnjs.cloudflare.com/ajax/libs/echarts/5.4.3/echarts.min.js"
+                integrity="sha512-EmNxF3E6bM0Xg1zvmkeYD3HDBeGxtsG92IxFt1myNZhXdCav9MzvuH/zNMBU1DmIPN6njrhX1VTbqdJxQ2wHDg=="
+                crossorigin="anonymous"
+                referrerpolicy="no-referrer"
+            ></script>
+        </head>
+        <body>
+            {{ template "navbar" . }}
+            <div class="main-content pt-3">
+                <div class="container-fluid">
+                    <div class="row-mb-3 p-3">
+                        <div class="col-lg-12 mx-auto py-3">
+                            {{ template "breadcrumb" . }}
+                            <div class="row-mb-3 mb-3 d-flex justify-content-between">
+                                <div class="dashboard-details">
+                                    <span class="fs-2 fw-bold">{{ .Dashboard.Name }}</span>
+                                    <span class="fs-6 fw-lighter font-monospace">{{ .Dashboard.ID }}</span>
+                                </div>
+                                <div class="row-mb-3 display-none" id="CanvasButtons">
+                                    <button type="button" class="btn body-button" data-bs-toggle="offcanvas" data-bs-target="#widgetsCanvas" aria-controls="widgetsCanvas">新增组件</button>
+                                    <button type="button" class="btn body-button" onclick="saveLayout()">保存布局</button>
+                                    <button type="button" class="btn body-button" onclick="cancelEdit()">取消</button>
+                                    <button type="button" class="btn body-button" onclick="clearCanvas()">清除画布</button>
+                                </div>
+                                <div id="editableCanvasButton">
+                                    <button type="button" class="btn body-button" onclick="editableCanvas()">修改画布</button>
+                                </div>
+                            </div>
+                            <div class="row bg-white dashboard-canvas ">
+                                <div class="no-widget-placeholder row align-items-center"></div>
+                                <div class="grid"></div>
+                            </div>
 
-              <!-- Off canvas containing the chart widgets -->
-              <div
-                class="offcanvas offcanvas-end"
-                data-bs-backdrop="false"
-                tabindex="-1"
-                id="widgetsCanvas"
-                aria-labelledby="widgetsCanvasLabel"
-              >
-                <div class="offcanvas-header">
-                  <h5 id="widgetsCanvasLabel">组件</h5>
-                  <button
-                    type="button"
-                    class="btn-close"
-                    data-bs-dismiss="offcanvas"
-                    aria-label="Close"
-                  ></button>
-                </div>
-                <div class="offcanvas-body">
-                  {{ range $chart := .Charts }}
-                    <div
-                      class="card widget-card mb-3"
-                      onclick="openWidgetModal('{{ $chart.Widget }}')"
-                    >
-                      <div class="card-body">
-                        <div class="card-title">
-                          {{ $chart.Title }}
+                            <!-- Off canvas containing the chart widgets -->
+                            <div class="offcanvas offcanvas-end" data-bs-backdrop="false" tabindex="-1" id="widgetsCanvas" aria-labelledby="widgetsCanvasLabel">
+                                <div class="offcanvas-header">
+                                    <h5 id="widgetsCanvasLabel">组件</h5>
+                                    <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+                                </div>
+                                <div class="offcanvas-body">
+                                    {{ range $chart := .Charts }}
+                                        <div class="card widget-card mb-3" onclick="openWidgetModal('{{ $chart.Widget }}')">
+                                            <div class="card-body">
+                                                <div class="card-title">
+                                                    {{ $chart.Title }}
+                                                </div>
+                                                <div class="card-text">
+                                                    {{ $chart.Content }}
+                                                </div>
+                                                <img src="{{ $chart.Image }}" class="card-img" alt="" />
+                                            </div>
+                                        </div>
+                                    {{ end }}
+                                </div>
+                            </div>
+
+                            {{ template "gaugemodal" . }}
+                            {{ template "linechartmodal" . }}
+                            {{ template "barchartmodal" . }}
+                            {{ template "piechartmodal" . }}
+                            {{ template "donutmodal" . }}
+                            {{ template "speedgaugemodal" . }}
+                            {{ template "tempgaugemodal" . }}
+                            {{ template "stackedlinechartmodal" . }}
+                            {{ template "horizontalbarchartmodal" . }}
+                            {{ template "dynamicdatachartmodal" . }}
+                            {{ template "doublebarchartmodal" . }}
+                            {{ template "multiplelinechartmodal" . }}
+                            {{ template "stepchartmodal" . }}
+                            {{ template "multigaugemodal" . }}
+                            {{ template "multibarchartmodal" . }}
+                            {{ template "shareddatasetmodal" . }}
+                            {{ template "valuecardmodal" . }}
+                            {{ template "alarmcountmodal" . }}
+                            {{ template "alarmstablemodal" . }}
+                            {{ template "entitiestablemodal" . }}
+                            {{ template "entitycountmodal" . }}
                         </div>
-                        <div class="card-text">
-                          {{ $chart.Content }}
-                        </div>
-                        <img src="{{ $chart.Image }}" class="card-img" alt="" />
-                      </div>
                     </div>
-                  {{ end }}
                 </div>
-              </div>
-
-              {{ template "gaugemodal" . }}
-              {{ template "linechartmodal" . }}
-              {{ template "barchartmodal" . }}
-              {{ template "piechartmodal" . }}
-              {{ template "donutmodal" . }}
-              {{ template "speedgaugemodal" . }}
-              {{ template "tempgaugemodal" . }}
-              {{ template "stackedlinechartmodal" . }}
-              {{ template "horizontalbarchartmodal" . }}
-              {{ template "dynamicdatachartmodal" . }}
-              {{ template "doublebarchartmodal" . }}
-              {{ template "multiplelinechartmodal" . }}
-              {{ template "stepchartmodal" . }}
-              {{ template "multigaugemodal" . }}
-              {{ template "multibarchartmodal" . }}
-              {{ template "shareddatasetmodal" . }}
-              {{ template "valuecardmodal" . }}
-              {{ template "alarmcountmodal" . }}
-              {{ template "alarmstablemodal" . }}
-              {{ template "entitiestablemodal" . }}
-              {{ template "entitycountmodal" . }}
             </div>
-          </div>
-        </div>
-      </div>
-      <script>
-        const layout = '{{ .Dashboard.Layout }}';
-        const dashboardID = '{{ .Dashboard.ID }}';
-        const metadata = '{{ .Dashboard.Metadata }}';
-        let metadataBuffer = {};
-        const pathPrefix = '{{ pathPrefix }}';
-      </script>
-      <script src="https://cdn.jsdelivr.net/npm/muuri@0.9.5/dist/muuri.min.js"></script>
-      <script src="/js/charts.js"></script>
-      <script src="/js/dashboard.js"></script>
-    </body>
-  </html>
+            <script>
+              const layout = '{{ .Dashboard.Layout }}';
+              const dashboardID = '{{ .Dashboard.ID }}';
+              const metadata = '{{ .Dashboard.Metadata }}';
+              let metadataBuffer = {};
+              const pathPrefix = '{{ pathPrefix }}';
+            </script>
+            <script src="https://cdn.jsdelivr.net/npm/muuri@0.9.5/dist/muuri.min.js"></script>
+            <script src="/js/charts.js"></script>
+            <script src="/js/dashboard.js"></script>
+        </body>
+    </html>
 {{ end }}

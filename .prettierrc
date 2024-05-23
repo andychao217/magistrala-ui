@@ -11,7 +11,7 @@
   "goTemplateBracketSpacing": true,
   "printWidth": 100,
   "semi": true,
-  "tabWidth": 2,
+  "tabWidth": 4,
   "jsxSingleQuote": false,
   "endOfLine": "lf",
   "htmlWhitespaceSensitivity": "ignore"

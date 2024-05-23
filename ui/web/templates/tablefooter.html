@@ -2,94 +2,93 @@
 SPDX-License-Identifier: Apache-2.0 -->
 
 {{ define "tablefooter" }}
-  {{ $currentPage := .CurrentPage }}
-  {{ $totalPages :=
-    .Pages
-  }}
-  <nav class="border-top" aria-label="Page navigation example">
-    <ul class="pagination justify-content-end mt-3">
-      {{ $prevPage := sub $currentPage 1 }}
-      {{ if le $prevPage 0 }}
-        <li class="page-item disabled">
-          <span class="page-link">上一页</span>
-        </li>
-      {{ else }}
-        <li class="page-item">
-          <a class="page-link" href="?page={{ $prevPage }}">上一页</a>
-        </li>
-      {{ end }}
-      {{ $startPage := max 1 (sub $currentPage 2) }}
-      {{ $endPage := min
-        $totalPages (add $currentPage 2)
-      }}
-      {{ range fromTo $startPage $endPage }}
-        {{ if eq . $currentPage }}
-          <li class="page-item active">
-            <span class="page-link">{{ . }}</span>
-          </li>
-        {{ else }}
-          <li class="page-item">
-            <a class="page-link" href="?page={{ . }}">{{ . }}</a>
-          </li>
-        {{ end }}
-      {{ end }}
-      {{ $nextPage := add $currentPage 1 }}
-      {{ if ge $nextPage
-        $totalPages
-      }}
-        <li class="page-item disabled">
-          <span class="page-link">下一页</span>
-        </li>
-      {{ else }}
-        <li class="page-item">
-          <a class="page-link" href="?page={{ $nextPage }}">下一页</a>
-        </li>
-      {{ end }}
-    </ul>
-  </nav>
-  <script>
-    var currentPage = '{{ .CurrentPage }}';
-    var selectedLimit = '{{ .Limit }}';
-    var selectedStatus;
-    function updateQueryParameters(newParams, element) {
-      const params = new URLSearchParams(window.location.search);
-      for (const key in newParams) {
-        if (Object.prototype.hasOwnProperty.call(newParams, key)) {
-          params.set(key, newParams[key]);
+    {{ $currentPage := .CurrentPage }}
+    {{ $totalPages :=
+        .Pages
+    }}
+    <nav class="border-top" aria-label="Page navigation example">
+        <ul class="pagination justify-content-end mt-3">
+            {{ $prevPage := sub $currentPage 1 }}
+            {{ if le $prevPage 0 }}
+                <li class="page-item disabled">
+                    <span class="page-link">上一页</span>
+                </li>
+            {{ else }}
+                <li class="page-item">
+                    <a class="page-link" href="?page={{ $prevPage }}">上一页</a>
+                </li>
+            {{ end }}
+            {{ $startPage := max 1 (sub $currentPage 2) }}
+            {{ $endPage := min
+                $totalPages (add $currentPage 2)
+            }}
+            {{ range fromTo $startPage $endPage }}
+                {{ if eq . $currentPage }}
+                    <li class="page-item active">
+                        <span class="page-link">{{ . }}</span>
+                    </li>
+                {{ else }}
+                    <li class="page-item">
+                        <a class="page-link" href="?page={{ . }}">{{ . }}</a>
+                    </li>
+                {{ end }}
+            {{ end }}
+            {{ $nextPage := add $currentPage 1 }}
+            {{ if ge $nextPage
+                $totalPages
+            }}
+                <li class="page-item disabled">
+                    <span class="page-link">下一页</span>
+                </li>
+            {{ else }}
+                <li class="page-item">
+                    <a class="page-link" href="?page={{ $nextPage }}">下一页</a>
+                </li>
+            {{ end }}
+        </ul>
+    </nav>
+    <script>
+      var currentPage = '{{ .CurrentPage }}';
+      var selectedLimit = '{{ .Limit }}';
+      var selectedStatus;
+      function updateQueryParameters(newParams, element) {
+        const params = new URLSearchParams(window.location.search);
+        for (const key in newParams) {
+          if (Object.prototype.hasOwnProperty.call(newParams, key)) {
+            params.set(key, newParams[key]);
+          }
+        }
+        const newQueryStr = params.toString();
+        const href = `?${newQueryStr}`;
+        // 增加判空处理，减少报错
+        if (element) {
+          element.setAttribute("href", href);
         }
       }
-      const newQueryStr = params.toString();
-      const href = `?${newQueryStr}`;
-      // 增加判空处理，减少报错
-      if(element) {
-        element.setAttribute("href", href);
-      }
-    }
 
-    var itemsPerPage = document.querySelectorAll(".itemsPerPage a");
-    itemsPerPage.forEach(item => {
-      const newParams = { page: currentPage, limit: item.textContent };
-      if (selectedStatus) {
-        newParams.status = selectedStatus;
-      }
-      updateQueryParameters(newParams, item);
-    });
+      var itemsPerPage = document.querySelectorAll(".itemsPerPage a");
+      itemsPerPage.forEach(item => {
+        const newParams = { page: currentPage, limit: item.textContent };
+        if (selectedStatus) {
+          newParams.status = selectedStatus;
+        }
+        updateQueryParameters(newParams, item);
+      });
 
-    var paginationLinks = document.querySelectorAll(".pagination a");
-    paginationLinks.forEach(function (item) {
-      const hrefParams = new URLSearchParams(item.getAttribute("href"));
-      let newParams = { page: hrefParams.get("page") };
-      if (selectedLimit) {
-        newParams.limit = selectedLimit;
-      }
-      if (selectedStatus) {
-        newParams.status = selectedStatus;
-      }
+      var paginationLinks = document.querySelectorAll(".pagination a");
+      paginationLinks.forEach(function (item) {
+        const hrefParams = new URLSearchParams(item.getAttribute("href"));
+        let newParams = { page: hrefParams.get("page") };
+        if (selectedLimit) {
+          newParams.limit = selectedLimit;
+        }
+        if (selectedStatus) {
+          newParams.status = selectedStatus;
+        }
 
-      updateQueryParameters(newParams, item);
-    });
-  </script> 
-  {{ if isset "StatusOptions" . }}
+        updateQueryParameters(newParams, item);
+      });
+    </script> {{ if isset "StatusOptions" . }}
     <script>
       selectedStatus = '{{.Status}}';
       var statusOptions = JSON.parse('{{ toSlice .StatusOptions }}');
@@ -99,5 +98,5 @@ SPDX-License-Identifier: Apache-2.0 -->
         updateQueryParameters(newParams, statusElement);
       });
     </script>
-  {{ end }}
+    {{ end }}
 {{ end }}

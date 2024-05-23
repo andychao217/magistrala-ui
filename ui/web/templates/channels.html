@@ -2,350 +2,273 @@
 SPDX-License-Identifier: Apache-2.0 -->
 
 {{ define "channels" }}
-  <!doctype html>
-  <html lang="en">
-    <head>
-      <title>分区</title>
-      {{ template "header" }}
-    </head>
-    <body>
-      {{ template "navbar" . }}
-      <div class="main-content pt-3">
-        <div class="container-fluid">
-          <div class="row-mb-3 p-3">
-            <div class="col-lg-12 mx-auto py-3">
-              {{ template "breadcrumb" . }}
-              <div class="row">
-                <div class="buttons mb-3">
-                  <button type="button" class="btn body-button" onclick="openModal('single')">
-                    添加分区
-                  </button>
+    <!doctype html>
+    <html lang="en">
+        <head>
+            <title>分区</title>
+            {{ template "header" }}
+        </head>
+        <body>
+            {{ template "navbar" . }}
+            <div class="main-content pt-3">
+                <div class="container-fluid">
+                    <div class="row-mb-3 p-3">
+                        <div class="col-lg-12 mx-auto py-3">
+                            {{ template "breadcrumb" . }}
+                            <div class="row">
+                                <div class="buttons mb-3">
+                                    <button type="button" class="btn body-button" onclick="openModal('single')">添加分区</button>
 
-                  <!-- add channel modal -->
-                  <div
-                    class="modal fade"
-                    id="addChannelModal"
-                    tabindex="-1"
-                    role="dialog"
-                    aria-labelledby="addChannelModalLabel"
-                    aria-hidden="true"
-                  >
-                    <div class="modal-dialog" role="document">
-                      <div class="modal-content">
-                        <div class="modal-header">
-                          <h1 class="modal-title" id="addChannelModalLabel">添加分区</h1>
-                          <button
-                            type="button"
-                            class="btn-close"
-                            data-bs-dismiss="modal"
-                            aria-label="Close"
-                          ></button>
+                                    <!-- add channel modal -->
+                                    <div class="modal fade" id="addChannelModal" tabindex="-1" role="dialog" aria-labelledby="addChannelModalLabel" aria-hidden="true">
+                                        <div class="modal-dialog" role="document">
+                                            <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <h1 class="modal-title" id="addChannelModalLabel">添加分区</h1>
+                                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                </div>
+                                                <form method="post" id="channelform">
+                                                    <div class="modal-body">
+                                                        <div id="alertMessage"></div>
+                                                        <div class="mb-3">
+                                                            <label for="name" class="form-label">名称</label>
+                                                            <input type="text" class="form-control name-field" name="name" id="name" placeholder="Channel Name" />
+                                                            <div id="nameError" class="text-danger"></div>
+                                                        </div>
+                                                        <div class="mb-3">
+                                                            <label for="id" class="form-label">ID</label>
+                                                            <input type="text" class="form-control id-field" name="id" id="id" placeholder="分区ID" />
+                                                            <div id="idError" class="text-danger"></div>
+                                                        </div>
+                                                        <div class="mb-3">
+                                                            <label for="description" class="form-label">描述</label>
+                                                            <input type="text" class="form-control" name="description" id="description" placeholder="Channel Description" />
+                                                        </div>
+                                                        <div class="mb-3">
+                                                            <label for="metadata" class="form-label">附加属性</label>
+                                                            <div class="metadata-field">
+                                                                <textarea name="metadata" id="metadata"></textarea>
+                                                            </div>
+                                                            <div id="metadataHelp" class="form-text">以JSON形式输入附加属性.</div>
+                                                            <div id="metadataError" class="text-danger"></div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="modal-footer">
+                                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">取消</button>
+                                                        <button type="submit" class="btn body-button" id="create-channel-button">确定</button>
+                                                    </div>
+                                                </form>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <!-- 隐藏按钮 -->
+                                    <!-- Button trigger modal -->
+                                    <button type="button" class="btn body-button" onclick="openModal('bulk')" style="display: none;">批量添加分区</button>
+
+                                    <!-- add channels modal -->
+                                    <div class="modal fade" id="addChannelsModal" tabindex="-1" role="dialog" aria-labelledby="addChannelsModalLabel" aria-hidden="true">
+                                        <div class="modal-dialog" role="document">
+                                            <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <h1 class="modal-title" id="addChannelsModalLabel">批量添加分区</h1>
+                                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                </div>
+                                                <form method="post" enctype="multipart/form-data" id="bulkchannelsform">
+                                                    <div class="modal-body">
+                                                        <div id="alertBulkMessage"></div>
+                                                        <div class="form-group mb-3">
+                                                            <label for="channelsFile">
+                                                                添加包含分区名称以及附加属性的CSV文件(附加属性可以为空). 在
+                                                                <a href="/samples/channels.csv" download="channels.csv">这里</a>
+                                                                可以下载模版文件
+                                                            </label>
+                                                            <input type="file" class="form-control-file" id="channelsFile" name="channelsFile" required />
+                                                        </div>
+                                                    </div>
+                                                    <div class="modal-footer">
+                                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">取消</button>
+                                                        <button type="submit" value="upload" class="btn body-button">确定</button>
+                                                    </div>
+                                                </form>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="table-responsive table-container">
+                                    {{ template "tableheader" . }}
+                                    <div class="itemsTable">
+                                        <table id="itemsTable" class="table table-hover">
+                                            <thead>
+                                                <tr>
+                                                    <th scope="col">名称</th>
+                                                    <th scope="col">ID</th>
+                                                    <th class="desc-col" scope="col">描述</th>
+                                                    <th class="meta-col" scope="col">附加属性</th>
+                                                    <th class="created-col" scope="col">创建时间</th>
+                                                    <!-- <th class="status-col" scope="col">状态</th> -->
+                                                    <th class="operation-col" scope="col">操作</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                {{ range $i, $c := .Channels }}
+                                                    <tr class="clickable-row">
+                                                        <td>{{ $c.Name }}</td>
+                                                        <td>{{ $c.ID }}</td>
+                                                        <td class="desc-col">{{ $c.Description }}</td>
+                                                        <td class="meta-col">
+                                                            <div class="meta-div">
+                                                                <pre id="meta-{{ $i }}"></pre>
+                                                            </div>
+                                                        </td>
+                                                        <td class="created-col">{{ $c.CreatedAt }}</td>
+                                                        <!-- <td>
+                                                        {{ if eq $c.Status "enabled" }}
+                                                            <span class="badge rounded-pill enabled-pill">启用</span>
+                                                        {{ else if eq $c.Status "disabled" }}
+                                                            <span class="badge rounded-pill disabled-pill">禁用</span>
+                                                        {{ end }}
+                                                        </td> -->
+                                                        <td class="operation-col">
+                                                            <button class="btn body-button" onclick="viewChannels('{{ $c.ID }}')">
+                                                                <i class="fa-solid fa-info"></i>
+                                                            </button>
+                                                            <button id="{{ $c.ID }}-deleteBtn" class="btn body-button" onclick="deleteChannel('{{ $c.ID }}')">
+                                                                <i class="fa-solid fa-trash-can"></i>
+                                                            </button>
+                                                        </td>
+                                                    </tr>
+                                                    <script>
+                                                      attachFormatJsonWithPrettifyListener({
+                                                        data: '{{ toJSON $c.Metadata }}',
+                                                        id: "meta-{{ $i }}",
+                                                      })
+                                                    </script>
+                                                {{ end }}
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                    {{ template "tablefooter" . }}
+                                </div>
+                            </div>
                         </div>
-                        <form method="post" id="channelform">
-                          <div class="modal-body">
-                            <div id="alertMessage"></div>
-                            <div class="mb-3">
-                              <label for="name" class="form-label">名称</label>
-                              <input
-                                type="text"
-                                class="form-control name-field"
-                                name="name"
-                                id="name"
-                                placeholder="Channel Name"
-                              />
-                              <div id="nameError" class="text-danger"></div>
-                            </div>
-                            <div class="mb-3">
-                              <label for="id" class="form-label">ID</label>
-                              <input
-                                type="text"
-                                class="form-control id-field"
-                                name="id"
-                                id="id"
-                                placeholder="分区ID"
-                              />
-                              <div id="idError" class="text-danger"></div>
-                            </div>
-                            <div class="mb-3">
-                              <label for="description" class="form-label">描述</label>
-                              <input
-                                type="text"
-                                class="form-control"
-                                name="description"
-                                id="description"
-                                placeholder="Channel Description"
-                              />
-                            </div>
-                            <div class="mb-3">
-                              <label for="metadata" class="form-label">附加属性</label>
-                              <div class="metadata-field">
-                                <textarea name="metadata" id="metadata"></textarea>
-                              </div>
-                              <div id="metadataHelp" class="form-text">
-                                以JSON形式输入附加属性.
-                              </div>
-                              <div id="metadataError" class="text-danger"></div>
-                            </div>
-                          </div>
-                          <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
-                              取消
-                            </button>
-                            <button
-                              type="submit"
-                              class="btn body-button"
-                              id="create-channel-button"
-                            >
-                              确定
-                            </button>
-                          </div>
-                        </form>
-                      </div>
                     </div>
-                  </div>
-
-                  <!-- 隐藏按钮 -->
-                  <!-- Button trigger modal -->
-                  <button type="button" class="btn body-button" onclick="openModal('bulk')" style="display: none;">
-                    批量添加分区
-                  </button>
-
-                  <!-- add channels modal -->
-                  <div
-                    class="modal fade"
-                    id="addChannelsModal"
-                    tabindex="-1"
-                    role="dialog"
-                    aria-labelledby="addChannelsModalLabel"
-                    aria-hidden="true"
-                  >
-                    <div class="modal-dialog" role="document">
-                      <div class="modal-content">
-                        <div class="modal-header">
-                          <h1 class="modal-title" id="addChannelsModalLabel">批量添加分区</h1>
-                          <button
-                            type="button"
-                            class="btn-close"
-                            data-bs-dismiss="modal"
-                            aria-label="Close"
-                          ></button>
-                        </div>
-                        <form method="post" enctype="multipart/form-data" id="bulkchannelsform">
-                          <div class="modal-body">
-                            <div id="alertBulkMessage"></div>
-                            <div class="form-group mb-3">
-                              <label for="channelsFile">
-                                添加包含分区名称以及附加属性的CSV文件(附加属性可以为空). 在
-                                <a
-                                  href="/samples/channels.csv"
-                                  download="channels.csv"
-                                >
-                                  这里
-                                </a>
-                                可以下载模版文件
-                              </label>
-                              <input
-                                type="file"
-                                class="form-control-file"
-                                id="channelsFile"
-                                name="channelsFile"
-                                required
-                              />
-                            </div>
-                          </div>
-                          <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
-                              取消
-                            </button>
-                            <button type="submit" value="upload" class="btn body-button">
-                              确定
-                            </button>
-                          </div>
-                        </form>
-                      </div>
-                    </div>
-                  </div>
                 </div>
-                <div class="table-responsive table-container">
-                  {{ template "tableheader" . }}
-                  <div class="itemsTable">
-                    <table id="itemsTable" class="table table-hover">
-                      <thead>
-                        <tr>
-                          <th scope="col">名称</th>
-                          <th scope="col">ID</th>
-                          <th class="desc-col" scope="col">描述</th>
-                          <th class="meta-col" scope="col">附加属性</th>
-                          <th class="created-col" scope="col">创建时间</th>
-                          <!-- <th class="status-col" scope="col">状态</th> -->
-                          <th class="operation-col" scope="col">操作</th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        {{ range $i, $c := .Channels }}
-                          <tr class="clickable-row">
-                            <td>{{ $c.Name }}</td>
-                            <td>{{ $c.ID }}</td>
-                            <td class="desc-col">{{ $c.Description }}</td>
-                            <td class="meta-col">
-                              <div class="meta-div">
-                                <pre id="meta-{{ $i }}"></pre>
-                              </div>
-                            </td>
-                            <td class="created-col">{{ $c.CreatedAt }}</td>
-                            <!-- <td>
-                              {{ if eq $c.Status "enabled" }}
-                                <span class="badge rounded-pill enabled-pill">启用</span>
-                              {{ else if eq $c.Status "disabled" }}
-                                <span class="badge rounded-pill disabled-pill">
-                                  禁用
-                                </span>
-                              {{ end }}
-                            </td> -->
-                            <td class="operation-col">
-                              <button class="btn body-button" onclick="viewChannels('{{ $c.ID }}')">
-                                <i class="fa-solid fa-info"></i>
-                              </button>
-                              <button 
-                                  id="{{ $c.ID}}-deleteBtn" 
-                                  class="btn body-button" 
-                                  onclick="deleteChannel('{{ $c.ID}}')" 
-                                >
-                                  <i class="fa-solid fa-trash-can"></i>
-                                </button>
-                            </td>
-                          </tr>
-                          <script>
-                            attachFormatJsonWithPrettifyListener({
-                              data: '{{ toJSON $c.Metadata }}',
-                              id: "meta-{{ $i }}",
-                            })
-                          </script>
-                        {{ end }}
-                      </tbody>
-                    </table>
-                  </div>
-                  {{ template "tablefooter" . }}
-                </div>
-              </div>
             </div>
-          </div>
-        </div>
-      </div>
-      <script>
-        const channelModal = new bootstrap.Modal(document.getElementById("addChannelModal"));
-        const channelsModal = new bootstrap.Modal(document.getElementById("addChannelsModal"));
+            <script>
+              const channelModal = new bootstrap.Modal(document.getElementById("addChannelModal"));
+              const channelsModal = new bootstrap.Modal(document.getElementById("addChannelsModal"));
 
-        function openModal(modal) {
-          if (modal === "single") {
-            channelModal.show();
-          } else if (modal === "bulk") {
-            channelsModal.show();
-          }
-        }
-
-        codeMirrorEditor({
-          textArea: "metadata",
-          button: "create-channel-button",
-          value: {},
-        });
-
-        function viewChannels(id) {
-          window.location.href = "{{ printf "%s/channels/" pathPrefix }}" + id;
-        }
-
-        //删除
-        function deleteChannel(channelID) {
-          // 显示确认对话框
-          const userConfirmed = confirm("你确定要删除所选数据吗？");
-          // 根据用户的选择执行不同的操作
-          if (userConfirmed) {
-            fetch(`/ui/channels/${channelID}/thingsInJSON?page=1&limit=1000`, {
-              method: "GET",
-            })
-            .then(response => {  
-                if (!response.ok) {  
-                    throw new Error('Network response was not ok');  
-                }  
-                return response.json(); // 直接将流转换为JSON对象  
-            })  
-            .then(json => {  
-              const data = json.data;
-              const thingsData = JSON.parse(data).thingsData;
-              const things = thingsData.things;
-              const fetchPromises = things.map((thing)=>disconnectThingsAndChannels(thing.id, channelID)); 
-              Promise.all(fetchPromises).then(responses => {})
-                .then(jsonData => {handleDelete(channelID)})
-                .catch(error => {  
-                  // 如果有任何错误发生，这里会捕获到  
-                  console.error('An error occurred:', error);  
-                });
-            })
-          } else {
-              console.log("用户点击了取消。");
-          }
-        }
-
-        function handleDelete(channelID) {
-          fetch(`/ui/channels/${channelID}`, {
-            method: "DELETE",
-          })
-          .then(function (response) {
-            if (!response.ok) {
-              const errorMessage = response.headers.get("X-Error-Message");
-              if (errorMessage) {
-                console.log(errorMessage);
-              } else {
-                console.log(`Error: ${response.status}`);
+              function openModal(modal) {
+                if (modal === "single") {
+                  channelModal.show();
+                } else if (modal === "bulk") {
+                  channelsModal.show();
+                }
               }
-            } else {
-              window.location.reload();
-            }
-          })
-          .catch((error) => {
-            window.location.reload();
-            console.error("error submitting form: ", error);
-          });
-        }
-      </script>
-      <script type="module">
-        import { attachValidationListener, validateName, validateID, validateJSON } from "/js/validation.js";
-        import { submitCreateForm } from "/js/forms.js";
-        import { fetchIndividualEntity } from "/js/infinitescroll.js";
 
-        attachValidationListener({
-          buttonId: "create-channel-button",
-          errorDivs: {
-            name: "nameError",
-            id: "idError",
-            metadata: "metadataError",
-          },
-          validations: {
-            name: validateName,
-            id: validateID,
-            metadata: validateJSON,
-          },
-          fields: {
-            name: "name-field",
-            id: "id-field",
-            metadata: "metadata-field",
-          },
-        });
+              codeMirrorEditor({
+                textArea: "metadata",
+                button: "create-channel-button",
+                value: {},
+              });
 
-        submitCreateForm({
-          url: '{{ printf "%s/channels" pathPrefix }}',
-          formId: "channelform",
-          alertDiv: "alertMessage",
-          modal: channelModal,
-        });
+              function viewChannels(id) {
+                window.location.href = "{{ printf "%s/channels/" pathPrefix }}" + id;
+              }
 
-        submitCreateForm({
-          url: '{{ printf "%s/channels/bulk" pathPrefix }}',
-          formId: "bulkchannelsform",
-          alertDiv: "alertBulkMessage",
-          modal: channelsModal,
-        });
-      </script>
-    </body>
-  </html>
+              //删除
+              function deleteChannel(channelID) {
+                // 显示确认对话框
+                const userConfirmed = confirm("你确定要删除所选数据吗？");
+                // 根据用户的选择执行不同的操作
+                if (userConfirmed) {
+                  fetch(`/ui/channels/${channelID}/thingsInJSON?page=1&limit=1000`, {
+                    method: "GET",
+                  })
+                  .then(response => {
+                      if (!response.ok) {
+                          throw new Error('Network response was not ok');
+                      }
+                      return response.json(); // 直接将流转换为JSON对象
+                  })
+                  .then(json => {
+                    const data = json.data;
+                    const thingsData = JSON.parse(data).thingsData;
+                    const things = thingsData.things;
+                    const fetchPromises = things.map((thing)=>disconnectThingsAndChannels(thing.id, channelID));
+                    Promise.all(fetchPromises).then(responses => {})
+                      .then(jsonData => {handleDelete(channelID)})
+                      .catch(error => {
+                        // 如果有任何错误发生，这里会捕获到
+                        console.error('An error occurred:', error);
+                      });
+                  })
+                } else {
+                    console.log("用户点击了取消。");
+                }
+              }
+
+              function handleDelete(channelID) {
+                fetch(`/ui/channels/${channelID}`, {
+                  method: "DELETE",
+                })
+                .then(function (response) {
+                  if (!response.ok) {
+                    const errorMessage = response.headers.get("X-Error-Message");
+                    if (errorMessage) {
+                      console.log(errorMessage);
+                    } else {
+                      console.log(`Error: ${response.status}`);
+                    }
+                  } else {
+                    window.location.reload();
+                  }
+                })
+                .catch((error) => {
+                  window.location.reload();
+                  console.error("error submitting form: ", error);
+                });
+              }
+            </script>     
+            <script type="module">
+              import { attachValidationListener, validateName, validateID, validateJSON } from "/js/validation.js";
+              import { submitCreateForm } from "/js/forms.js";
+              import { fetchIndividualEntity } from "/js/infinitescroll.js";
+
+              attachValidationListener({
+                buttonId: "create-channel-button",
+                errorDivs: {
+                  name: "nameError",
+                  id: "idError",
+                  metadata: "metadataError",
+                },
+                validations: {
+                  name: validateName,
+                  id: validateID,
+                  metadata: validateJSON,
+                },
+                fields: {
+                  name: "name-field",
+                  id: "id-field",
+                  metadata: "metadata-field",
+                },
+              });
+
+              submitCreateForm({
+                url: '{{ printf "%s/channels" pathPrefix }}',
+                formId: "channelform",
+                alertDiv: "alertMessage",
+                modal: channelModal,
+              });
+
+              submitCreateForm({
+                url: '{{ printf "%s/channels/bulk" pathPrefix }}',
+                formId: "bulkchannelsform",
+                alertDiv: "alertBulkMessage",
+                modal: channelsModal,
+              });
+            </script>
+        </body>
+    </html>
 {{ end }}

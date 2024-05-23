@@ -2,93 +2,92 @@
 // SPDX-License-Identifier: Apache-2.0
 
 export function fetchIndividualEntity(config) {
-  if (config.item === "members") {
-    config.permission = "member";
-  } else {
-    config.permission = "";
-  }
-  document.addEventListener("DOMContentLoaded", function () {
-    getEntities(config, "");
-    infiniteScroll(config);
-  });
-
-  const input = document.getElementById(config.input);
-
-  input.addEventListener("input", function (event) {
-    const itemSelect = document.getElementById(config.itemSelect);
-    if (event.target.value === "") {
-      itemSelect.innerHTML = `<option disabled>select a ${config.type}</option>`;
-      getEntities(config, "");
-      infiniteScroll(config);
+    if (config.item === "members") {
+        config.permission = "member";
     } else {
-      itemSelect.innerHTML = "";
-      getEntities(config, event.target.value);
+        config.permission = "";
     }
-  });
+    document.addEventListener("DOMContentLoaded", function () {
+        getEntities(config, "");
+        infiniteScroll(config);
+    });
+
+    const input = document.getElementById(config.input);
+
+    input.addEventListener("input", function (event) {
+        const itemSelect = document.getElementById(config.itemSelect);
+        if (event.target.value === "") {
+            itemSelect.innerHTML = `<option disabled>select a ${config.type}</option>`;
+            getEntities(config, "");
+            infiniteScroll(config);
+        } else {
+            itemSelect.innerHTML = "";
+            getEntities(config, event.target.value);
+        }
+    });
 }
 
 function getEntities(config, name) {
-  fetchData({
-    item: config.item,
-    domain: config.domain,
-    permission: config.permission,
-    itemSelect: config.itemSelect,
-    name: name,
-    page: 1,
-    pathPrefix: config.pathPrefix,
-  });
+    fetchData({
+        item: config.item,
+        domain: config.domain,
+        permission: config.permission,
+        itemSelect: config.itemSelect,
+        name: name,
+        page: 1,
+        pathPrefix: config.pathPrefix,
+    });
 }
 
 function infiniteScroll(config) {
-  var selectElement = document.getElementById(config.itemSelect);
-  var singleOptionHeight = selectElement.querySelector("option").offsetHeight;
-  var selectBoxHeight = selectElement.offsetHeight;
-  var numOptionsBeforeLoad = 2;
-  var lastScrollTop = 0;
-  var currentPageNo = 1;
-  var currentScroll = 0;
+    var selectElement = document.getElementById(config.itemSelect);
+    var singleOptionHeight = selectElement.querySelector("option").offsetHeight;
+    var selectBoxHeight = selectElement.offsetHeight;
+    var numOptionsBeforeLoad = 2;
+    var lastScrollTop = 0;
+    var currentPageNo = 1;
+    var currentScroll = 0;
 
-  selectElement.addEventListener("scroll", function () {
-    var st = selectElement.scrollTop;
-    var totalHeight = selectElement.querySelectorAll("option").length * singleOptionHeight;
+    selectElement.addEventListener("scroll", function () {
+        var st = selectElement.scrollTop;
+        var totalHeight = selectElement.querySelectorAll("option").length * singleOptionHeight;
 
-    if (st > lastScrollTop) {
-      currentScroll = st + selectBoxHeight;
-      if (currentScroll + numOptionsBeforeLoad * singleOptionHeight >= totalHeight) {
-        currentPageNo++;
-        fetchData({
-          item: config.item,
-          itemSelect: config.itemSelect,
-          name: "",
-          domain: config.domain,
-          permission: config.permission,
-          page: currentPageNo,
-          pathPrefix: config.pathPrefix,
-        });
-      }
-    }
+        if (st > lastScrollTop) {
+            currentScroll = st + selectBoxHeight;
+            if (currentScroll + numOptionsBeforeLoad * singleOptionHeight >= totalHeight) {
+                currentPageNo++;
+                fetchData({
+                    item: config.item,
+                    itemSelect: config.itemSelect,
+                    name: "",
+                    domain: config.domain,
+                    permission: config.permission,
+                    page: currentPageNo,
+                    pathPrefix: config.pathPrefix,
+                });
+            }
+        }
 
-    lastScrollTop = st;
-  });
+        lastScrollTop = st;
+    });
 }
 
 let limit = 5;
 function fetchData(config) {
-  fetch(
-    `${config.pathPrefix}/entities?item=${config.item}&limit=${limit}&name=${config.name}&page=${config.page}&domain=${config.domain}&permission=${config.permission}`,
-    {
-      method: "GET",
-    },
-  )
-    .then((response) => response.json())
-    .then((data) => {
-      var selectElement = document.getElementById(config.itemSelect);
-      data.data.forEach((entity) => {
-        const option = document.createElement("option");
-        option.value = entity.id;
-        option.text = entity.name;
-        selectElement.appendChild(option);
-      });
-    })
-    .catch((error) => console.error("Error:", error));
+    fetch(
+        `${config.pathPrefix}/entities?item=${config.item}&limit=${limit}&name=${config.name}&page=${config.page}&domain=${config.domain}&permission=${config.permission}`,
+        {
+            method: "GET",
+        },
+    ).then((response) => response.json())
+	.then((data) => {
+		var selectElement = document.getElementById(config.itemSelect);
+		data.data.forEach((entity) => {
+			const option = document.createElement("option");
+			option.value = entity.id;
+			option.text = entity.name;
+			selectElement.appendChild(option);
+		});
+	})
+	.catch((error) => console.error("Error:", error));
 }

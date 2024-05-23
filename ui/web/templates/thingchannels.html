@@ -2,192 +2,140 @@
 SPDX-License-Identifier: Apache-2.0 -->
 
 {{ define "thingchannels" }}
-  <!doctype html>
-  <html lang="en">
-    <head>
-      <title>设备关联分区</title>
-      {{ template "header" }}
-    </head>
-    <body>
-      {{ template "navbar" . }}
-      <div class="main-content pt-3">
-        <div class="container-fluid">
-          <div class="row-mb-3 p-3">
-            <div class="col-lg-12 mx-auto py-3">
-              {{ template "breadcrumb" . }}
-              <div class="row">
-                <div class="table-responsive table-container">
-                  {{ $shareButton := false }}
-                  {{ if (hasPermission .Permissions "share") }}
-                    {{ $shareButton = true }}
-                  {{ end }}
-                  <div class="d-flex flex-row justify-content-between">
-                    <h4>设备关联分区</h4>
-                    <button
-                      role="button"
-                      class="btn body-button"
-                      onclick="openChannelModal()"
-                      {{ if not $shareButton }}disabled{{ end }}
-                    >
-                      <i class="fa-solid fa-plus fs-4"></i>
-                    </button>
-                    <!-- add channel modal -->
-                    <div
-                      class="modal fade"
-                      id="addChannelModal"
-                      tabindex="-1"
-                      aria-labelledby="addChannelModalLabel"
-                      aria-hidden="true"
-                    >
-                      <div class="modal-dialog modal-dialog-centered">
-                        <div class="modal-content">
-                          <div class="modal-header">
-                            <h1 class="modal-title" id="addChannelModalLabel">添加分区</h1>
-                            <button
-                              type="button"
-                              class="btn-close"
-                              data-bs-dismiss="modal"
-                              aria-label="Close"
-                            ></button>
-                          </div>
-                          <form
-                            action="{{ printf "%s/things/%s/channels/connect?item=things" pathPrefix .Thing.ID }}"
-                            method="post"
-                          >
-                            <div class="modal-body">
-                              <div class="mb-3">
-                                <label for="infiniteScroll" class="form-label">分区ID</label>
-                                <input
-                                  type="text"
-                                  name="channelFilter"
-                                  id="channelFilter"
-                                  placeholder="通过分区ID过滤"
-                                />
-                                <select
-                                  class="form-select"
-                                  name="channelID"
-                                  id="infiniteScroll"
-                                  size="5"
-                                  required
-                                >
-                                  <option disabled>选择分区</option>
-                                </select>
-                              </div>
+    <!doctype html>
+    <html lang="en">
+        <head>
+            <title>设备关联分区</title>
+            {{ template "header" }}
+        </head>
+
+        <body>
+            {{ template "navbar" . }}
+            <div class="main-content pt-3">
+                <div class="container-fluid">
+                    <div class="row-mb-3 p-3">
+                        <div class="col-lg-12 mx-auto py-3">
+                            {{ template "breadcrumb" . }}
+                            <div class="row">
+                                <div class="table-responsive table-container">
+                                    {{ $shareButton := false }}
+                                    {{ if (hasPermission .Permissions "share") }}
+                                        {{ $shareButton = true }}
+                                    {{ end }}
+                                    <div class="d-flex flex-row justify-content-between">
+                                        <h4>设备关联分区</h4>
+                                        <button role="button" class="btn body-button" onclick="openChannelModal()" {{ if not $shareButton }}disabled{{ end }}>
+                                            <i class="fa-solid fa-plus fs-4"></i>
+                                        </button>
+                                        <!-- add channel modal -->
+                                        <div class="modal fade" id="addChannelModal" tabindex="-1" aria-labelledby="addChannelModalLabel" aria-hidden="true">
+                                            <div class="modal-dialog modal-dialog-centered">
+                                                <div class="modal-content">
+                                                    <div class="modal-header">
+                                                        <h1 class="modal-title" id="addChannelModalLabel">添加分区</h1>
+                                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                    </div>
+                                                    <form action="{{ printf " %s/things/%s/channels/connect?item=things" pathPrefix .Thing.ID }}" method="post">
+                                                        <div class="modal-body">
+                                                            <div class="mb-3">
+                                                                <label for="infiniteScroll" class="form-label">分区ID</label>
+                                                                <input type="text" name="channelFilter" id="channelFilter" placeholder="通过分区ID过滤" />
+                                                                <select class="form-select" name="channelID" id="infiniteScroll" size="5" required>
+                                                                    <option disabled>选择分区</option>
+                                                                </select>
+                                                            </div>
+                                                        </div>
+                                                        <div class="modal-footer">
+                                                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">取消</button>
+                                                            <button type="submit" class="btn body-button">分配</button>
+                                                        </div>
+                                                    </form>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    {{ template "tableheader" . }}
+                                    <div class="itemsTable">
+                                        <table id="itemsTable" class="table table-hover">
+                                            <thead>
+                                                <tr>
+                                                    <th scope="col">名称</th>
+                                                    <th class="desc-col" scope="col">描述</th>
+                                                    <th class="meta-col" scope="col">附加属性</th>
+                                                    <th class="created-col" scope="col">创建时间</th>
+                                                    <th class="messaging-col" scope="col">消息</th>
+                                                    <th class="remove-col" scope="col">移除</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                {{ $thingID := .Thing.ID }}
+                                                {{ $thingKey := .Thing.Credentials.Secret }}
+                                                {{ range $i, $c := .Channels }}
+                                                    <tr onclick="viewChannel('{{ $c.ID }}')" class="clickable-row">
+                                                        <td>{{ $c.Name }}</td>
+                                                        <td class="desc-col">{{ $c.Description }}</td>
+                                                        <td class="meta-col">
+                                                            <div class="meta-div">
+                                                                <pre id="meta-{{ $i }}"></pre>
+                                                            </div>
+                                                        </td>
+                                                        <td class="created-col">{{ $c.CreatedAt }}</td>
+                                                        <td class="messaging-col">
+                                                            <form action="{{ printf " %s/messages" pathPrefix }}" method="get">
+                                                                <input type="hidden" name="thing" value="{{ $thingKey }}" />
+                                                                <input type="hidden" name="channel" value="{{ $c.ID }}" />
+                                                                <button type="submit" class="btn {{ if (serviceUnavailable " reader") }}disabled-item{{ end }}">
+                                                                    <i class="fas fa-envelope-open"></i>
+                                                                </button>
+                                                            </form>
+                                                        </td>
+                                                        <td class="remove-col">
+                                                            <form action="{{ printf " %s/things/%s/channels/disconnect?item=things" pathPrefix $thingID }}" method="post">
+                                                                <input type="hidden" name="channelID" id="channelID" value="{{ $c.ID }}" />
+                                                                <button type="submit" class="btn" {{ if not $shareButton }}disabled{{ end }}>
+                                                                    <i class="fas fa-trash-alt"></i>
+                                                                </button>
+                                                            </form>
+                                                        </td>
+                                                    </tr>
+                    <script>
+                      attachFormatJsonWithPrettifyListener({
+                        data: '{{ toJSON $c.Metadata }}',
+                        id: "meta-{{ $i }}",
+                      })
+                    </script>
+                                                {{ end }}
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                    {{ template "tablefooter" . }}
+                                </div>
                             </div>
-                            <div class="modal-footer">
-                              <button
-                                type="button"
-                                class="btn btn-secondary"
-                                data-bs-dismiss="modal"
-                              >
-                                取消
-                              </button>
-                              <button type="submit" class="btn body-button">分配</button>
-                            </div>
-                          </form>
                         </div>
-                      </div>
                     </div>
-                  </div>
-                  {{ template "tableheader" . }}
-                  <div class="itemsTable">
-                    <table id="itemsTable" class="table table-hover">
-                      <thead>
-                        <tr>
-                          <th scope="col">名称</th>
-                          <th class="desc-col" scope="col">描述</th>
-                          <th class="meta-col" scope="col">附加属性</th>
-                          <th class="created-col" scope="col">创建时间</th>
-                          <th class="messaging-col" scope="col">消息</th>
-                          <th class="remove-col" scope="col">移除</th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        {{ $thingID := .Thing.ID }}
-                        {{ $thingKey := .Thing.Credentials.Secret }}
-                        {{ range $i, $c := .Channels }}
-                          <tr onclick="viewChannel('{{ $c.ID }}')" class="clickable-row">
-                            <td>{{ $c.Name }}</td>
-                            <td class="desc-col">{{ $c.Description }}</td>
-                            <td class="meta-col">
-                              <div class="meta-div">
-                                <pre id="meta-{{ $i }}"></pre>
-                              </div>
-                            </td>
-                            <td class="created-col">{{ $c.CreatedAt }}</td>
-                            <td class="messaging-col">
-                              <form action="{{ printf "%s/messages" pathPrefix }}" method="get">
-                                <input type="hidden" name="thing" value="{{ $thingKey }}" />
-                                <input type="hidden" name="channel" value="{{ $c.ID }}" />
-                                <button
-                                  type="submit"
-                                  class="btn {{ if (serviceUnavailable "reader") }}
-                                    disabled-item
-                                  {{ end }}"
-                                >
-                                  <i class="fas fa-envelope-open"></i>
-                                </button>
-                              </form>
-                            </td>
-                            <td class="remove-col">
-                              <form
-                                action="{{ printf "%s/things/%s/channels/disconnect?item=things" pathPrefix $thingID }}"
-                                method="post"
-                              >
-                                <input
-                                  type="hidden"
-                                  name="channelID"
-                                  id="channelID"
-                                  value="{{ $c.ID }}"
-                                />
-                                <button
-                                  type="submit"
-                                  class="btn"
-                                  {{ if not $shareButton }}disabled{{ end }}
-                                >
-                                  <i class="fas fa-trash-alt"></i>
-                                </button>
-                              </form>
-                            </td>
-                          </tr>
-                          <script>
-                            attachFormatJsonWithPrettifyListener({
-                              data: '{{ toJSON $c.Metadata }}',
-                              id: "meta-{{ $i }}",
-                            })
-                          </script>
-                        {{ end }}
-                      </tbody>
-                    </table>
-                  </div>
-                  {{ template "tablefooter" . }}
                 </div>
-              </div>
             </div>
-          </div>
-        </div>
-      </div>
-      <script>
-        const channelModal = new bootstrap.Modal(document.getElementById("addChannelModal"));
-        function openChannelModal() {
-          channelModal.show();
-        }
+            <script>
+              const channelModal = new bootstrap.Modal(document.getElementById("addChannelModal"));
+              function openChannelModal() {
+                channelModal.show();
+              }
 
-        function viewChannel(id) {
-          let pathPrefix = "{{ pathPrefix }}";
-          window.location.href = `${pathPrefix}/channels/${id}`;
-        }
-      </script>      
-      <script type="module">
-        import { fetchIndividualEntity } from "/js/infinitescroll.js";
+              function viewChannel(id) {
+                let pathPrefix = "{{ pathPrefix }}";
+                window.location.href = `${pathPrefix}/channels/${id}`;
+              }
+            </script>  
+            <script type="module">
+              import { fetchIndividualEntity } from "/js/infinitescroll.js";
 
-        fetchIndividualEntity({
-          input: "channelFilter",
-          itemSelect: "infiniteScroll",
-          item: "channels",
-          pathPrefix: "{{ pathPrefix }}",
-        });
-      </script>
-    </body>
-  </html>
+              fetchIndividualEntity({
+                input: "channelFilter",
+                itemSelect: "infiniteScroll",
+                item: "channels",
+                pathPrefix: "{{ pathPrefix }}",
+              });
+            </script>
+        </body>
+    </html>
 {{ end }}

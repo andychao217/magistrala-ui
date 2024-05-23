@@ -2,510 +2,420 @@
 SPDX-License-Identifier: Apache-2.0 -->
 
 {{ define "groupusers" }}
-  <!doctype html>
-  <html lang="en">
-    <head>
-      <title>组用户</title>
-      {{ template "header" }}
-    </head>
-    <body>
-      {{ template "navbar" . }}
-      <div class="main-content pt-3">
-        <div class="container-fluid">
-          <div class="row-mb-3 p-3">
-            <div class="col-lg-12 mx-auto py-3">
-              {{ template "breadcrumb" . }}
-              <div class="row">
-                <div class="table-responsive table-container">
-                  {{ $shareButton := false }}
-                  {{ if (hasPermission .Permissions "share") }}
-                    {{ $shareButton = true }}
-                  {{ end }}
-                  <div class="d-flex flex-row justify-content-between">
-                    <h4>组用户</h4>
-                    <button
-                      role="button"
-                      class="btn body-button"
-                      onclick="openUserModal()"
-                      {{ if not $shareButton }}disabled{{ end }}
-                    >
-                      <i class="fa-solid fa-plus fs-4"></i>
-                    </button>
-                    <!-- modal -->
-                    <div
-                      class="modal fade"
-                      id="addUserModal"
-                      tabindex="-1"
-                      aria-labelledby="addUserModalLabel"
-                      aria-hidden="true"
-                    >
-                      <div class="modal-dialog modal-dialog-centered">
-                        <div class="modal-content">
-                          <div class="modal-header">
-                            <h1 class="modal-title fs-5" id="addUserModalLabel">添加用户</h1>
-                            <button
-                              type="button"
-                              class="btn-close"
-                              data-bs-dismiss="modal"
-                              aria-label="Close"
-                            ></button>
-                          </div>
-                          <form
-                            action="{{ printf "%s/groups/%s/users/assign?item=groups" pathPrefix .GroupID }}"
-                            method="post"
-                          >
-                            <div class="modal-body">
-                              <div class="mb-3">
-                                <label for="infiniteScroll" class="form-label">用户ID</label>
-                                <input
-                                  type="text"
-                                  name="userFilter"
-                                  id="userFilter"
-                                  placeholder="通过用户ID过滤"
-                                />
-                                <select
-                                  class="form-select"
-                                  name="userID"
-                                  id="infiniteScroll"
-                                  size="5"
-                                  required
-                                >
-                                  <option disabled>选择用户</option>
-                                </select>
-                              </div>
-                              <div class="mb-3">
-                                <label for="relation" class="form-label">关系</label>
-                                <select
-                                  class="form-control"
-                                  name="relation"
-                                  id="relation"
-                                  aria-describedby="relationHelp"
-                                  multiple
-                                  required
-                                >
-                                  {{ range $i, $r := .Relations }}
-                                    <option value="{{ $r }}">
-                                      {{ $r }}
-                                    </option>
-                                  {{ end }}
-                                </select>
-                                <div id="relationHelp" class="form-text">选择关系.</div>
-                              </div>
+    <!doctype html>
+    <html lang="en">
+        <head>
+            <title>组用户</title>
+            {{ template "header" }}
+        </head>
+        <body>
+            {{ template "navbar" . }}
+            <div class="main-content pt-3">
+                <div class="container-fluid">
+                    <div class="row-mb-3 p-3">
+                        <div class="col-lg-12 mx-auto py-3">
+                            {{ template "breadcrumb" . }}
+                            <div class="row">
+                                <div class="table-responsive table-container">
+                                    {{ $shareButton := false }}
+                                    {{ if (hasPermission .Permissions "share") }}
+                                        {{ $shareButton = true }}
+                                    {{ end }}
+                                    <div class="d-flex flex-row justify-content-between">
+                                        <h4>组用户</h4>
+                                        <button
+                                            role="button"
+                                            class="btn body-button"
+                                            onclick="openUserModal()"
+                                            {{ if not $shareButton }}disabled{{ end }}
+                                        >
+                                            <i class="fa-solid fa-plus fs-4"></i>
+                                        </button>
+                                        <!-- modal -->
+                                        <div class="modal fade" id="addUserModal" tabindex="-1" aria-labelledby="addUserModalLabel" aria-hidden="true">
+                                            <div class="modal-dialog modal-dialog-centered">
+                                                <div class="modal-content">
+                                                    <div class="modal-header">
+                                                        <h1 class="modal-title fs-5" id="addUserModalLabel">添加用户</h1>
+                                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                    </div>
+                                                    <form action="{{ printf "%s/groups/%s/users/assign?item=groups" pathPrefix .GroupID }}" method="post">
+                                                        <div class="modal-body">
+                                                            <div class="mb-3">
+                                                                <label for="infiniteScroll" class="form-label">用户ID</label>
+                                                                <input type="text" name="userFilter" id="userFilter" placeholder="通过用户ID过滤" />
+                                                                <select class="form-select" name="userID" id="infiniteScroll" size="5" required>
+                                                                    <option disabled>选择用户</option>
+                                                                </select>
+                                                            </div>
+                                                            <div class="mb-3">
+                                                                <label for="relation" class="form-label">关系</label>
+                                                                <select class="form-control" name="relation" id="relation" aria-describedby="relationHelp" multiple required>
+                                                                    {{ range $i, $r := .Relations }}
+                                                                        <option value="{{ $r }}">
+                                                                            {{ $r }}
+                                                                        </option>
+                                                                    {{ end }}
+                                                                </select>
+                                                                <div id="relationHelp" class="form-text">选择关系.</div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="modal-footer">
+                                                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">取消</button>
+                                                            <button type="submit" class="btn body-button">分配</button>
+                                                        </div>
+                                                    </form>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <ul class="nav nav-tabs" id="roleTab" role="tablist">
+                                        <li class="nav-item" role="presentation">
+                                            {{ $tabActive := "" }}
+                                            <button
+                                                class="nav-link {{ if eq .TabActive $tabActive }}
+                                                    active
+                                                {{ end }}"
+                                                id="view-tab"
+                                                data-bs-toggle="tab"
+                                                data-bs-target="#view-tab-pane"
+                                                type="button"
+                                                role="tab"
+                                                aria-controls="view-tab-pane"
+                                                aria-selected="true"
+                                                onclick="openTab('')"
+                                            >
+                                                全部
+                                            </button>
+                                        </li>
+                                        <li class="nav-item" role="presentation">
+                                            {{ $tabActive = "administrator" }}
+                                            <button
+                                                class="nav-link {{ if eq .TabActive $tabActive }}
+                                                    active
+                                                {{ end }}"
+                                                id="admin-tab"
+                                                data-bs-toggle="tab"
+                                                data-bs-target="#admin-tab-pane"
+                                                type="button"
+                                                role="tab"
+                                                aria-controls="admin-tab-pane"
+                                                aria-selected="true"
+                                                onclick="openTab('administrator')"
+                                                {{ if not (hasPermission .Permissions "admin") }}disabled{{ end }}
+                                            >
+                                                管理员
+                                            </button>
+                                        </li>
+                                        <li class="nav-item" role="presentation">
+                                            {{ $tabActive = "editor" }}
+                                            <button
+                                                class="nav-link {{ if eq .TabActive $tabActive }}
+                                                    active
+                                                {{ end }}"
+                                                id="editor-tab"
+                                                data-bs-toggle="tab"
+                                                data-bs-target="#editor-tab-pane"
+                                                type="button"
+                                                role="tab"
+                                                aria-controls="editor-tab-pane"
+                                                aria-selected="false"
+                                                onclick="openTab('editor')"
+                                                {{ if not $shareButton }}disabled{{ end }}
+                                            >
+                                                修改人
+                                            </button>
+                                        </li>
+                                        <li class="nav-item" role="presentation">
+                                            {{ $tabActive = "viewer" }}
+                                            <button
+                                                class="nav-link {{ if eq .TabActive $tabActive }}
+                                                    active
+                                                {{ end }}"
+                                                id="viewer-tab"
+                                                data-bs-toggle="tab"
+                                                data-bs-target="#viewer-tab-pane"
+                                                type="button"
+                                                role="tab"
+                                                aria-controls="viewer-tab-pane"
+                                                aria-selected="false"
+                                                onclick="openTab('viewer')"
+                                                {{ if not $shareButton }}disabled{{ end }}
+                                            >
+                                                查看人
+                                            </button>
+                                        </li>
+                                    </ul>
+                                    <div class="tab-content mt-3" id="roleTabContent">
+                                        {{ $groupID:= .GroupID }}
+                                        <div
+                                            class="tab-pane {{ if eq .TabActive "" }}
+                                                show active
+                                            {{ end }}"
+                                            id="view-tab-pane"
+                                            role="tabpanel"
+                                            aria-labelledby="view-tab"
+                                            tabindex="0"
+                                        >
+                                            {{ template "tableheader" . }}
+                                            <div class="itemsTable">
+                                                <table id="itemsTable" class="table table-hover">
+                                                    <thead>
+                                                        <tr>
+                                                            <th scope="col">名称</th>
+                                                            <th class="tags-col" scope="col">标识</th>
+                                                            <th class="meta-col" scope="col">附加属性</th>
+                                                            <th class="created-col" scope="col">创建时间</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        {{ $groupID:= .GroupID }}
+                                                        {{ range $i, $u := .Users }}
+                                                            <tr onclick="viewUser('{{ $u.Credentials.Identity }}')" class="clickable-row">
+                                                                <td>{{ $u.Name }}</td>
+
+                                                                <td class="tags-col">
+                                                                    {{ range $j, $tag := $u.Tags }}
+                                                                        <span class="badge bg-dark">
+                                                                            {{ $tag }}
+                                                                        </span>
+                                                                    {{ end }}
+                                                                </td>
+                                                                <td class="meta-col">
+                                                                    <div class="meta-div">
+                                                                        <pre id="all-meta-{{ $i }}"></pre>
+                                                                    </div>
+                                                                </td>
+                                                                <td class="created-col">{{ $u.CreatedAt }}</td>
+                                                            </tr>
+                                                            <script>
+                                                              attachFormatJsonWithPrettifyListener({
+                                                                data: '{{ toJSON $u.Metadata }}',
+                                                                id: "all-meta-{{ $i }}",
+                                                              })
+                                                            </script>
+                                                        {{ end }}
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                            {{ template "tablefooter" . }}
+                                        </div>
+                                        <div
+                                            class="tab-pane fade {{ if eq .TabActive "administrator" }}
+                                                show active
+                                            {{ end }}"
+                                            id="admin-tab-pane"
+                                            role="tabpanel"
+                                            aria-labelledby="admin-tab"
+                                            tabindex="0"
+                                        >
+                                            {{ template "tableheader" . }}
+                                            <div class="itemsTable">
+                                                <table id="itemsTable" class="table table-hover">
+                                                    <thead>
+                                                        <tr>
+                                                            <th scope="col">名称</th>
+                                                            <th class="tags-col" scope="col">标识</th>
+                                                            <th class="meta-col" scope="col">附加属性</th>
+                                                            <th class="created-col" scope="col">创建时间</th>
+                                                            <th class="text-center" scope="col"></th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        {{ range $i, $u := .Users }}
+                                                            <tr onclick="viewUser('{{ $u.Credentials.Identity }}')" class="clickable-row">
+                                                                <td>{{ $u.Name }}</td>
+                                                                <td class="tags-col">
+                                                                    {{ range $j, $tag := $u.Tags }}
+                                                                        <span class="badge bg-dark">
+                                                                            {{ $tag }}
+                                                                        </span>
+                                                                    {{ end }}
+                                                                </td>
+                                                                <td class="meta-col">
+                                                                    <div class="meta-div">
+                                                                        <pre id="admin-meta-{{ $i }}"></pre>
+                                                                    </div>
+                                                                </td>
+                                                                <td class="created-col">{{ $u.CreatedAt }}</td>
+                                                                <td class="text-center">
+                                                                    <form action="{{ printf "%s/groups/%s/users/unassign?item=groups" pathPrefix $groupID }}" method="post">
+                                                                        <input type="hidden" name="userID" id="userID" value="{{ $u.ID }}" />
+                                                                        <input type="hidden" name="relation" id="relation" value="admin" />
+                                                                        <button type="submit" class="btn btn-sm">
+                                                                            <i class="fas fa-trash-alt"></i>
+                                                                        </button>
+                                                                    </form>
+                                                                </td>
+                                                            </tr>
+                                                            <script>
+                                                              attachFormatJsonWithPrettifyListener({
+                                                                data: '{{ toJSON $u.Metadata }}',
+                                                                id: "admin-meta-{{ $i }}",
+                                                              })
+                                                            </script>
+                                                        {{ end }}
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                            {{ template "tablefooter" . }}
+                                        </div>
+                                        <div
+                                            class="tab-pane fade {{ if eq .TabActive "editor" }}
+                                                show active
+                                            {{ end }}"
+                                            id="editor-tab-pane"
+                                            role="tabpanel"
+                                            aria-labelledby="editor-tab"
+                                            tabindex="0"
+                                        >
+                                            {{ template "tableheader" . }}
+                                            <div class="itemsTable">
+                                                <table id="itemsTable" class="table table-hover">
+                                                    <thead>
+                                                        <tr>
+                                                            <th scope="col">名称</th>
+                                                            <th class="tags-col" scope="col">标识</th>
+                                                            <th class="meta-col" scope="col">附加属性</th>
+                                                            <th class="created-col" scope="col">创建时间</th>
+                                                            <th class="text-center" scope="col"></th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        {{ range $i, $u := .Users }}
+                                                            <tr onclick="viewUser('{{ $u.Credentials.Identity }}')" class="clickable-row">
+                                                                <td>{{ $u.Name }}</td>
+                                                                <td class="tags-col">
+                                                                    {{ range $j, $tag := $u.Tags }}
+                                                                        <span class="badge bg-dark">
+                                                                            {{ $tag }}
+                                                                        </span>
+                                                                    {{ end }}
+                                                                </td>
+                                                                <td class="meta-col">
+                                                                    <div class="meta-div">
+                                                                        <pre id="editor-meta-{{ $i }}"></pre>
+                                                                    </div>
+                                                                </td>
+                                                                <td class="created-col">{{ $u.CreatedAt }}</td>
+                                                                <td class="text-center">
+                                                                    <form action="{{ printf "%s/groups/%s/users/unassign?item=groups" pathPrefix $groupID }}" method="post">
+                                                                        <input type="hidden" name="userID" id="userID" value="{{ $u.ID }}" />
+                                                                        <input type="hidden" name="relation" id="relation" value="editor" />
+                                                                        <button type="submit" class="btn btn-sm">
+                                                                            <i class="fas fa-trash-alt"></i>
+                                                                        </button>
+                                                                    </form>
+                                                                </td>
+                                                            </tr>
+                                                            <script>
+                                                              attachFormatJsonWithPrettifyListener({
+                                                                data: '{{ toJSON $u.Metadata }}',
+                                                                id: "editor-meta-{{ $i }}",
+                                                              })
+                                                            </script>
+                                                        {{ end }}
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                            {{ template "tablefooter" . }}
+                                        </div>
+                                        <div
+                                            class="tab-pane fade {{ if eq .TabActive "viewer" }}
+                                                show active
+                                            {{ end }}"
+                                            id="viewer-tab-pane"
+                                            role="tabpanel"
+                                            aria-labelledby="viewer-tab"
+                                            tabindex="0"
+                                        >
+                                            {{ template "tableheader" . }}
+                                            <div class="itemsTable">
+                                                <table id="itemsTable" class="table table-hover">
+                                                    <thead>
+                                                        <tr>
+                                                            <th scope="col">名称</th>
+                                                            <th class="tags-col" scope="col">标识</th>
+                                                            <th class="meta-col" scope="col">附加属性</th>
+                                                            <th class="created-col" scope="col">创建时间</th>
+                                                            <th class="text-center" scope="col"></th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        {{ range $i, $u := .Users }}
+                                                            <tr onclick="viewUser('{{ $u.Credentials.Identity }}')" class="clickable-row">
+                                                                <td>{{ $u.Name }}</td>
+                                                                <td class="tags-col">
+                                                                    {{ range $j, $tag := $u.Tags }}
+                                                                        <span class="badge bg-dark">
+                                                                            {{ $tag }}
+                                                                        </span>
+                                                                    {{ end }}
+                                                                </td>
+                                                                <td class="meta-col">
+                                                                    <div class="meta-div">
+                                                                        <pre id="viewer-meta-{{ $i }}"></pre>
+                                                                    </div>
+                                                                </td>
+                                                                <td class="created-col">{{ $u.CreatedAt }}</td>
+                                                                <td class="text-center">
+                                                                    <form action="{{ printf "%s/groups/%s/users/unassign?item=groups" pathPrefix $groupID }}" method="post">
+                                                                        <input type="hidden" name="userID" id="userID" value="{{ $u.ID }}" />
+                                                                        <input type="hidden" name="relation" id="relation" value="viewer" />
+                                                                        <button type="submit" class="btn btn-sm">
+                                                                            <i class="fas fa-trash-alt"></i>
+                                                                        </button>
+                                                                    </form>
+                                                                </td>
+                                                            </tr>
+                                                            <script>
+                                                              attachFormatJsonWithPrettifyListener({
+                                                                data: '{{ toJSON $u.Metadata }}',
+                                                                id: "viewer-meta-{{ $i }}",
+                                                              })
+                                                            </script>
+                                                        {{ end }}
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                            {{ template "tablefooter" . }}
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
-                            <div class="modal-footer">
-                              <button
-                                type="button"
-                                class="btn btn-secondary"
-                                data-bs-dismiss="modal"
-                              >
-                                取消
-                              </button>
-                              <button type="submit" class="btn body-button">分配</button>
-                            </div>
-                          </form>
                         </div>
-                      </div>
                     </div>
-                  </div>
-
-                  <ul class="nav nav-tabs" id="roleTab" role="tablist">
-                    <li class="nav-item" role="presentation">
-                      {{ $tabActive := "" }}
-                      <button
-                        class="nav-link {{ if eq .TabActive $tabActive }}
-                          active
-                        {{ end }}"
-                        id="view-tab"
-                        data-bs-toggle="tab"
-                        data-bs-target="#view-tab-pane"
-                        type="button"
-                        role="tab"
-                        aria-controls="view-tab-pane"
-                        aria-selected="true"
-                        onclick="openTab('')"
-                      >
-                        全部
-                      </button>
-                    </li>
-                    <li class="nav-item" role="presentation">
-                      {{ $tabActive = "administrator" }}
-                      <button
-                        class="nav-link {{ if eq .TabActive $tabActive }}
-                          active
-                        {{ end }}"
-                        id="admin-tab"
-                        data-bs-toggle="tab"
-                        data-bs-target="#admin-tab-pane"
-                        type="button"
-                        role="tab"
-                        aria-controls="admin-tab-pane"
-                        aria-selected="true"
-                        onclick="openTab('administrator')"
-                        {{ if not (hasPermission .Permissions "admin") }}disabled{{ end }}
-                      >
-                        管理员
-                      </button>
-                    </li>
-                    <li class="nav-item" role="presentation">
-                      {{ $tabActive = "editor" }}
-                      <button
-                        class="nav-link {{ if eq .TabActive $tabActive }}
-                          active
-                        {{ end }}"
-                        id="editor-tab"
-                        data-bs-toggle="tab"
-                        data-bs-target="#editor-tab-pane"
-                        type="button"
-                        role="tab"
-                        aria-controls="editor-tab-pane"
-                        aria-selected="false"
-                        onclick="openTab('editor')"
-                        {{ if not $shareButton }}disabled{{ end }}
-                      >
-                        修改人
-                      </button>
-                    </li>
-                    <li class="nav-item" role="presentation">
-                      {{ $tabActive = "viewer" }}
-                      <button
-                        class="nav-link {{ if eq .TabActive $tabActive }}
-                          active
-                        {{ end }}"
-                        id="viewer-tab"
-                        data-bs-toggle="tab"
-                        data-bs-target="#viewer-tab-pane"
-                        type="button"
-                        role="tab"
-                        aria-controls="viewer-tab-pane"
-                        aria-selected="false"
-                        onclick="openTab('viewer')"
-                        {{ if not $shareButton }}disabled{{ end }}
-                      >
-                        查看人
-                      </button>
-                    </li>
-                  </ul>
-                  <div class="tab-content mt-3" id="roleTabContent">
-                    {{ $groupID:= .GroupID }}
-                    <div
-                      class="tab-pane {{ if eq .TabActive "" }}
-                        show active
-                      {{ end }}"
-                      id="view-tab-pane"
-                      role="tabpanel"
-                      aria-labelledby="view-tab"
-                      tabindex="0"
-                    >
-                      {{ template "tableheader" . }}
-                      <div class="itemsTable">
-                        <table id="itemsTable" class="table table-hover">
-                          <thead>
-                            <tr>
-                              <th scope="col">名称</th>
-                              <th class="tags-col" scope="col">标识</th>
-                              <th class="meta-col" scope="col">附加属性</th>
-                              <th class="created-col" scope="col">创建时间</th>
-                            </tr>
-                          </thead>
-                          <tbody>
-                            {{ $groupID:= .GroupID }}
-                            {{ range $i, $u := .Users }}
-                              <tr
-                                onclick="viewUser('{{ $u.Credentials.Identity }}')"
-                                class="clickable-row"
-                              >
-                                <td>{{ $u.Name }}</td>
-
-                                <td class="tags-col">
-                                  {{ range $j, $tag := $u.Tags }}
-                                    <span class="badge bg-dark">
-                                      {{ $tag }}
-                                    </span>
-                                  {{ end }}
-                                </td>
-                                <td class="meta-col">
-                                  <div class="meta-div">
-                                    <pre id="all-meta-{{ $i }}"></pre>
-                                  </div>
-                                </td>
-                                <td class="created-col">{{ $u.CreatedAt }}</td>
-                              </tr>
-                              <script>
-                                attachFormatJsonWithPrettifyListener({
-                                  data: '{{ toJSON $u.Metadata }}',
-                                  id: "all-meta-{{ $i }}",
-                                })
-                              </script>
-                            {{ end }}
-                          </tbody>
-                        </table>
-                      </div>
-                      {{ template "tablefooter" . }}
-                    </div>
-                    <div
-                      class="tab-pane fade {{ if eq .TabActive "administrator" }}
-                        show active
-                      {{ end }}"
-                      id="admin-tab-pane"
-                      role="tabpanel"
-                      aria-labelledby="admin-tab"
-                      tabindex="0"
-                    >
-                      {{ template "tableheader" . }}
-                      <div class="itemsTable">
-                        <table id="itemsTable" class="table table-hover">
-                          <thead>
-                            <tr>
-                              <th scope="col">名称</th>
-                              <th class="tags-col" scope="col">标识</th>
-                              <th class="meta-col" scope="col">附加属性</th>
-                              <th class="created-col" scope="col">创建时间</th>
-                              <th class="text-center" scope="col"></th>
-                            </tr>
-                          </thead>
-                          <tbody>
-                            {{ range $i, $u := .Users }}
-                              <tr
-                                onclick="viewUser('{{ $u.Credentials.Identity }}')"
-                                class="clickable-row"
-                              >
-                                <td>{{ $u.Name }}</td>
-                                <td class="tags-col">
-                                  {{ range $j, $tag := $u.Tags }}
-                                    <span class="badge bg-dark">
-                                      {{ $tag }}
-                                    </span>
-                                  {{ end }}
-                                </td>
-                                <td class="meta-col">
-                                  <div class="meta-div">
-                                    <pre id="admin-meta-{{ $i }}"></pre>
-                                  </div>
-                                </td>
-                                <td class="created-col">{{ $u.CreatedAt }}</td>
-                                <td class="text-center">
-                                  <form
-                                    action="{{ printf "%s/groups/%s/users/unassign?item=groups" pathPrefix $groupID }}"
-                                    method="post"
-                                  >
-                                    <input
-                                      type="hidden"
-                                      name="userID"
-                                      id="userID"
-                                      value="{{ $u.ID }}"
-                                    />
-                                    <input
-                                      type="hidden"
-                                      name="relation"
-                                      id="relation"
-                                      value="admin"
-                                    />
-                                    <button type="submit" class="btn btn-sm">
-                                      <i class="fas fa-trash-alt"></i>
-                                    </button>
-                                  </form>
-                                </td>
-                              </tr>
-                              <script>
-                                attachFormatJsonWithPrettifyListener({
-                                  data: '{{ toJSON $u.Metadata }}',
-                                  id: "admin-meta-{{ $i }}",
-                                })
-                              </script>
-                            {{ end }}
-                          </tbody>
-                        </table>
-                      </div>
-                      {{ template "tablefooter" . }}
-                    </div>
-                    <div
-                      class="tab-pane fade {{ if eq .TabActive "editor" }}
-                        show active
-                      {{ end }}"
-                      id="editor-tab-pane"
-                      role="tabpanel"
-                      aria-labelledby="editor-tab"
-                      tabindex="0"
-                    >
-                      {{ template "tableheader" . }}
-                      <div class="itemsTable">
-                        <table id="itemsTable" class="table table-hover">
-                          <thead>
-                            <tr>
-                              <th scope="col">名称</th>
-                              <th class="tags-col" scope="col">标识</th>
-                              <th class="meta-col" scope="col">附加属性</th>
-                              <th class="created-col" scope="col">创建时间</th>
-                              <th class="text-center" scope="col"></th>
-                            </tr>
-                          </thead>
-                          <tbody>
-                            {{ range $i, $u := .Users }}
-                              <tr
-                                onclick="viewUser('{{ $u.Credentials.Identity }}')"
-                                class="clickable-row"
-                              >
-                                <td>{{ $u.Name }}</td>
-                                <td class="tags-col">
-                                  {{ range $j, $tag := $u.Tags }}
-                                    <span class="badge bg-dark">
-                                      {{ $tag }}
-                                    </span>
-                                  {{ end }}
-                                </td>
-                                <td class="meta-col">
-                                  <div class="meta-div">
-                                    <pre id="editor-meta-{{ $i }}"></pre>
-                                  </div>
-                                </td>
-                                <td class="created-col">{{ $u.CreatedAt }}</td>
-                                <td class="text-center">
-                                  <form
-                                    action="{{ printf "%s/groups/%s/users/unassign?item=groups" pathPrefix $groupID }}"
-                                    method="post"
-                                  >
-                                    <input
-                                      type="hidden"
-                                      name="userID"
-                                      id="userID"
-                                      value="{{ $u.ID }}"
-                                    />
-                                    <input
-                                      type="hidden"
-                                      name="relation"
-                                      id="relation"
-                                      value="editor"
-                                    />
-                                    <button type="submit" class="btn btn-sm">
-                                      <i class="fas fa-trash-alt"></i>
-                                    </button>
-                                  </form>
-                                </td>
-                              </tr>
-                              <script>
-                                attachFormatJsonWithPrettifyListener({
-                                  data: '{{ toJSON $u.Metadata }}',
-                                  id: "editor-meta-{{ $i }}",
-                                })
-                              </script>
-                            {{ end }}
-                          </tbody>
-                        </table>
-                      </div>
-                      {{ template "tablefooter" . }}
-                    </div>
-                    <div
-                      class="tab-pane fade {{ if eq .TabActive "viewer" }}
-                        show active
-                      {{ end }}"
-                      id="viewer-tab-pane"
-                      role="tabpanel"
-                      aria-labelledby="viewer-tab"
-                      tabindex="0"
-                    >
-                      {{ template "tableheader" . }}
-                      <div class="itemsTable">
-                        <table id="itemsTable" class="table table-hover">
-                          <thead>
-                            <tr>
-                              <th scope="col">名称</th>
-                              <th class="tags-col" scope="col">标识</th>
-                              <th class="meta-col" scope="col">附加属性</th>
-                              <th class="created-col" scope="col">创建时间</th>
-                              <th class="text-center" scope="col"></th>
-                            </tr>
-                          </thead>
-                          <tbody>
-                            {{ range $i, $u := .Users }}
-                              <tr
-                                onclick="viewUser('{{ $u.Credentials.Identity }}')"
-                                class="clickable-row"
-                              >
-                                <td>{{ $u.Name }}</td>
-                                <td class="tags-col">
-                                  {{ range $j, $tag := $u.Tags }}
-                                    <span class="badge bg-dark">
-                                      {{ $tag }}
-                                    </span>
-                                  {{ end }}
-                                </td>
-                                <td class="meta-col">
-                                  <div class="meta-div">
-                                    <pre id="viewer-meta-{{ $i }}"></pre>
-                                  </div>
-                                </td>
-                                <td class="created-col">{{ $u.CreatedAt }}</td>
-                                <td class="text-center">
-                                  <form
-                                    action="{{ printf "%s/groups/%s/users/unassign?item=groups" pathPrefix $groupID }}"
-                                    method="post"
-                                  >
-                                    <input
-                                      type="hidden"
-                                      name="userID"
-                                      id="userID"
-                                      value="{{ $u.ID }}"
-                                    />
-                                    <input
-                                      type="hidden"
-                                      name="relation"
-                                      id="relation"
-                                      value="viewer"
-                                    />
-                                    <button type="submit" class="btn btn-sm">
-                                      <i class="fas fa-trash-alt"></i>
-                                    </button>
-                                  </form>
-                                </td>
-                              </tr>
-                              <script>
-                                attachFormatJsonWithPrettifyListener({
-                                  data: '{{ toJSON $u.Metadata }}',
-                                  id: "viewer-meta-{{ $i }}",
-                                })
-                              </script>
-                            {{ end }}
-                          </tbody>
-                        </table>
-                      </div>
-                      {{ template "tablefooter" . }}
-                    </div>
-                  </div>
                 </div>
-              </div>
             </div>
-          </div>
-        </div>
-      </div>
-			<script>
-        let pathPrefix = "{{ pathPrefix }}";
-				const userModal = new bootstrap.Modal(
-					document.getElementById("addUserModal"),
-				);
-				function openUserModal() {
-					userModal.show();
-				}
-				function openTab(relation) {
-					let groupID = "{{ .GroupID }}";
-					event.preventDefault();
-					window.location.href = `${pathPrefix}/groups/${groupID}/users?relation=${relation}`;
-				}
+            <script>
+                let pathPrefix = "{{ pathPrefix }}";
+                const userModal = new bootstrap.Modal(
+                document.getElementById("addUserModal"),
+                );
+                function openUserModal() {
+                userModal.show();
+                }
+                function openTab(relation) {
+                let groupID = "{{ .GroupID }}";
+                event.preventDefault();
+                window.location.href = `${pathPrefix}/groups/${groupID}/users?relation=${relation}`;
+                }
 
-        function viewUser(identity) {
-          window.location.href = `${pathPrefix}/domains/members?identity=${identity}`;
-        }
-			</script>      
-      <script type="module">
-        import { fetchIndividualEntity } from "/js/infinitescroll.js";
+                function viewUser(identity) {
+                window.location.href = `${pathPrefix}/domains/members?identity=${identity}`;
+                }
+            </script>      <script type="module">
+                import { fetchIndividualEntity } from "/js/infinitescroll.js";
 
-        fetchIndividualEntity({
-          input: "userFilter",
-          itemSelect: "infiniteScroll",
-          item: "members",
-          domain: '{{.Session.Domain.ID}}',
-          pathPrefix: pathPrefix,
-        });
-      </script>
-    </body>
-  </html>
+                fetchIndividualEntity({
+                input: "userFilter",
+                itemSelect: "infiniteScroll",
+                item: "members",
+                domain: '{{.Session.Domain.ID}}',
+                pathPrefix: pathPrefix,
+                });
+            </script>
+        </body>
+    </html>
 {{ end }}

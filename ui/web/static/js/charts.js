@@ -2,217 +2,217 @@
 // SPDX-License-Identifier: Apache-2.0
 
 class Chart {
-  constructor(widgetID, chartData) {
-    this.ID = widgetID;
-    this.chartData = chartData;
-  }
+    constructor(widgetID, chartData) {
+        this.ID = widgetID;
+        this.chartData = chartData;
+    }
 }
 
 class Echart extends Chart {
-  constructor(widgetID, chartData) {
-    super(widgetID, chartData);
-    this.Style = {
-      width: "400px",
-      height: "400px",
-    };
-    this.Content = this.#generateContent();
-  }
-  #generateContent() {
-    return `
-      <div class="item-content" id="${this.ID}" style="width: ${this.Style.width}; height: ${this.Style.height};">
-      </div>
-      `;
-  }
+    constructor(widgetID, chartData) {
+        super(widgetID, chartData);
+        this.Style = {
+            width: "400px",
+            height: "400px",
+        };
+        this.Content = this.#generateContent();
+    }
+    #generateContent() {
+        return `
+			<div class="item-content" id="${this.ID}" style="width: ${this.Style.width}; height: ${this.Style.height};">
+			</div>
+      	`;
+    }
 }
 class AlarmCount extends Chart {
-  constructor(chartData, widgetID) {
-    super(widgetID, chartData);
-    this.Style = {
-      width: "400px",
-      height: "175px",
-    };
-    this.Content = this.#generateContent();
-  }
+    constructor(chartData, widgetID) {
+        super(widgetID, chartData);
+        this.Style = {
+            width: "400px",
+            height: "175px",
+        };
+        this.Content = this.#generateContent();
+    }
 
-  #generateContent() {
-    return `
-    <div class="item-content" id="${this.ID}" style="width: ${this.Style.width}; height: ${this.Style.height};">
-    <div class="card widgetcard">
-        <div class="card-header text-center">
-          <h5 class="card-title">警告数量</h5>
-        </div>
-        <div class="card-body text-center">
-          <p class="card-text value"> 35</p>
-        </div>
-        <div class="card-footer text-center w-100 bg-warning">
-          <p class="card-text">
-            警告等级
-          </p>
-        </div>
-    </div>
-    </div>
-  `;
-  }
+    #generateContent() {
+        return `
+			<div class="item-content" id="${this.ID}" style="width: ${this.Style.width}; height: ${this.Style.height};">
+				<div class="card widgetcard">
+					<div class="card-header text-center">
+						<h5 class="card-title">警告数量</h5>
+					</div>
+					<div class="card-body text-center">
+						<p class="card-text value"> 35</p>
+					</div>
+					<div class="card-footer text-center w-100 bg-warning">
+						<p class="card-text">
+							警告等级
+						</p>
+					</div>
+				</div>
+			</div>
+		`;
+    }
 }
 
 class AlarmsTable extends Chart {
-  constructor(chartData, widgetID) {
-    super(widgetID, chartData);
-    this.Style = {
-      width: "400px",
-      height: "200px",
-    };
-    this.Content = this.#generateContent();
-  }
+    constructor(chartData, widgetID) {
+        super(widgetID, chartData);
+        this.Style = {
+            width: "400px",
+            height: "200px",
+        };
+        this.Content = this.#generateContent();
+    }
 
-  #generateContent() {
-    return `
-    <div class="item-content" id="${this.ID}" style="width: ${this.Style.width}; height: ${this.Style.height};">
-        <div class="card mt-3 widgetcard">
-          <div class="card-header text-center">
-            <h5 class="card-title">警告表格</h5>
-          </div>
-          <table class="table table-striped table-hover">
-            <thead>
-              <tr>
-                <th scope="col">警告等级</th>
-                <th scope="col">关联设备</th>
-                <th scope="col">状态</th>
-                <th scope="col">开始时间</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td>报警</td>
-                <td>设备A</td>
-                <td>启用</td>
-                <td>2024-01-01 12:00</td>
-              </tr>
-              <tr>
-                <td>错误</td>
-                <td>设备B</td>
-                <td>禁用</td>
-                <td>2024-01-02 15:30</td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-    </div>
-      `;
-  }
+    #generateContent() {
+        return `
+			<div class="item-content" id="${this.ID}" style="width: ${this.Style.width}; height: ${this.Style.height};">
+				<div class="card mt-3 widgetcard">
+					<div class="card-header text-center">
+						<h5 class="card-title">警告表格</h5>
+					</div>
+					<table class="table table-striped table-hover">
+						<thead>
+							<tr>
+								<th scope="col">警告等级</th>
+								<th scope="col">关联设备</th>
+								<th scope="col">状态</th>
+								<th scope="col">开始时间</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr>
+								<td>报警</td>
+								<td>设备A</td>
+								<td>启用</td>
+								<td>2024-01-01 12:00</td>
+							</tr>
+							<tr>
+								<td>错误</td>
+								<td>设备B</td>
+								<td>禁用</td>
+								<td>2024-01-02 15:30</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+			</div>
+      	`;
+    }
 }
 
 class TimeSeriesBarChart extends Echart {
-  constructor(chartData, widgetID) {
-    super(widgetID, chartData);
-    this.Script = this.#generateScript();
-  }
-
-  #generateScript() {
-    return `
-    var barChart = echarts.init(document.getElementById("${this.ID}"));
-    var option = {
-      title: {
-        text: '${this.chartData.title}',
-        left: 'center',
-        show: true
-      },
-      tooltip: {
-        trigger: 'axis',
-      },
-      xAxis: {
-        type: 'category',
-        data: [],
-        name: '${this.chartData.xAxisLabel}',
-        nameLocation: 'middle',
-        min: '${new Date(this.chartData.startTime)}',
-        max: '${new Date(this.chartData.stopTime)}',
-        nameGap: 35
-      },
-      yAxis: {
-        type: 'value',
-        name: '${this.chartData.yAxisLabel}',
-        nameLocation: 'middle',
-        nameGap: 25
-      },
-      legend: {
-        show: true,
-        left: 'right',
-      },
-      series: [
-        {
-          data:  [],
-          type: 'bar',
-          name: '${this.chartData.seriesName}'
-        }
-      ]
-    };
-
-    barChart.setOption(option);
-    
-    var chartData = {
-      channel: '${this.chartData.channel}',
-      publisher: '${this.chartData.thing}',
-      name: '${this.chartData.valueName}',
-      from: ${this.chartData.startTime},
-      to: ${this.chartData.stopTime},
-      aggregation: '${this.chartData.aggregationType}',
-      limit: 100,
-      interval : '${this.chartData.updateInterval}'
+    constructor(chartData, widgetID) {
+        super(widgetID, chartData);
+        this.Script = this.#generateScript();
     }
-    getData(barChart, chartData);
 
-    async function getData(barChart, chartData) {
-        try {
-          const apiEndpoint = "${pathPrefix}/data?channel=" + chartData.channel +
-          "&publisher=" + chartData.publisher +
-          "&name=" + chartData.name +
-          "&from=" + chartData.from +
-          "&to=" + chartData.to +
-          "&aggregation=" + chartData.aggregation +
-          "&limit=" + chartData.limit +
-          "&interval=" + chartData.interval;
+    #generateScript() {
+        return `
+    		var barChart = echarts.init(document.getElementById("${this.ID}"));
+			var option = {
+				title: {
+					text: '${this.chartData.title}',
+					left: 'center',
+					show: true
+				},
+				tooltip: {
+					trigger: 'axis',
+				},
+				xAxis: {
+					type: 'category',
+					data: [],
+					name: '${this.chartData.xAxisLabel}',
+					nameLocation: 'middle',
+					min: '${new Date(this.chartData.startTime)}',
+					max: '${new Date(this.chartData.stopTime)}',
+					nameGap: 35
+				},
+				yAxis: {
+					type: 'value',
+					name: '${this.chartData.yAxisLabel}',
+					nameLocation: 'middle',
+					nameGap: 25
+				},
+				legend: {
+					show: true,
+					left: 'right',
+				},
+				series: [
+					{
+						data:  [],
+						type: 'bar',
+						name: '${this.chartData.seriesName}'
+					}
+				]
+			};
 
-          const response = await fetch(apiEndpoint);
-          if (!response.ok) {
-            throw new Error("HTTP request failed with status: " + response.status);
-          }
-          const data = await response.json();
-          const xAxisArray = [];
-          const yAxisArray = [];
-          if (data.messages != undefined && data.messages.length > 0) {
-            data.messages.forEach((message) => {
-              xAxisArray.push(new Date(message.time).toLocaleTimeString());
-              yAxisArray.push(message.value);
-            });
-          }
-          updateChart(barChart, xAxisArray, yAxisArray);
-        } catch (error) {
-          console.error("Error fetching data:", error);
-          setTimeout(function () {
-            getData(barChart, chartData);
-          }, 20000);
-        } 
-      }
+    		barChart.setOption(option);
+    
+			var chartData = {
+				channel: '${this.chartData.channel}',
+				publisher: '${this.chartData.thing}',
+				name: '${this.chartData.valueName}',
+				from: ${this.chartData.startTime},
+				to: ${this.chartData.stopTime},
+				aggregation: '${this.chartData.aggregationType}',
+				limit: 100,
+				interval : '${this.chartData.updateInterval}'
+			}
+    		getData(barChart, chartData);
+
+			async function getData(barChart, chartData) {
+				try {
+					const apiEndpoint = "${pathPrefix}/data?channel=" + chartData.channel +
+						"&publisher=" + chartData.publisher +
+						"&name=" + chartData.name +
+						"&from=" + chartData.from +
+						"&to=" + chartData.to +
+						"&aggregation=" + chartData.aggregation +
+						"&limit=" + chartData.limit +
+						"&interval=" + chartData.interval;
+
+					const response = await fetch(apiEndpoint);
+					if (!response.ok) {
+						throw new Error("HTTP request failed with status: " + response.status);
+					}
+					const data = await response.json();
+					const xAxisArray = [];
+					const yAxisArray = [];
+					if (data.messages != undefined && data.messages.length > 0) {
+						data.messages.forEach((message) => {
+							xAxisArray.push(new Date(message.time).toLocaleTimeString());
+							yAxisArray.push(message.value);
+						});
+					}
+					updateChart(barChart, xAxisArray, yAxisArray);
+				} catch (error) {
+					console.error("Error fetching data:", error);
+					setTimeout(function () {
+						getData(barChart, chartData);
+					}, 20000);
+				} 
+			}
   
-      function updateChart(barChart, xAxisArray, yAxisArray) {
-        const option = barChart.getOption();
-        option.series[0].data = yAxisArray.reverse();
-        option.xAxis[0].data = xAxisArray.reverse();
-        barChart.setOption(option);
-     }
-    `;
-  }
+			function updateChart(barChart, xAxisArray, yAxisArray) {
+				const option = barChart.getOption();
+				option.series[0].data = yAxisArray.reverse();
+				option.xAxis[0].data = xAxisArray.reverse();
+				barChart.setOption(option);
+			}
+    	`;
+    }
 }
 
 class DonutChart extends Echart {
-  constructor(chartData, widgetID) {
-    super(widgetID, chartData);
-    this.Script = this.#generateScript();
-  }
+    constructor(chartData, widgetID) {
+        super(widgetID, chartData);
+        this.Script = this.#generateScript();
+    }
 
-  #generateScript() {
-    return `
+    #generateScript() {
+        return `
     var donut = echarts.init(document.getElementById("${this.ID}"));
     var option = {
         title:{
@@ -258,18 +258,18 @@ class DonutChart extends Echart {
     };
 
     donut.setOption(option);`;
-  }
+    }
 }
 
 class DoubleBarChart extends Echart {
-  constructor(chartData, widgetID) {
-    super(widgetID, chartData);
-    this.Script = this.#generateScript();
-  }
+    constructor(chartData, widgetID) {
+        super(widgetID, chartData);
+        this.Script = this.#generateScript();
+    }
 
-  #generateScript() {
-    let seriesName = this.chartData.seriesName.split(",");
-    return `
+    #generateScript() {
+        let seriesName = this.chartData.seriesName.split(",");
+        return `
     var doubleBarChart = echarts.init(document.getElementById("${this.ID}"));
     var option = {
       title: {
@@ -349,17 +349,17 @@ class DoubleBarChart extends Echart {
 
     doubleBarChart.setOption(option);
   `;
-  }
+    }
 }
 
 class DynamicDataChart extends Echart {
-  constructor(chartData, widgetID) {
-    super(widgetID, chartData);
-    this.Script = this.#generateScript();
-  }
+    constructor(chartData, widgetID) {
+        super(widgetID, chartData);
+        this.Script = this.#generateScript();
+    }
 
-  #generateScript() {
-    return `
+    #generateScript() {
+        return `
     var dynamicDataChart = echarts.init(document.getElementById("${this.ID}"));
     var app = {};
     var categories = (function () {
@@ -511,21 +511,21 @@ class DynamicDataChart extends Echart {
 
     dynamicDataChart.setOption(option);
   `;
-  }
+    }
 }
 
 class EntitiesTable extends Chart {
-  constructor(chartData, widgetID) {
-    super(widgetID, chartData);
-    this.Style = {
-      width: "400px",
-      height: "200px",
-    };
-    this.Content = this.#generateContent();
-  }
+    constructor(chartData, widgetID) {
+        super(widgetID, chartData);
+        this.Style = {
+            width: "400px",
+            height: "200px",
+        };
+        this.Content = this.#generateContent();
+    }
 
-  #generateContent() {
-    return `
+    #generateContent() {
+        return `
     <div class="item-content" id="${this.ID}" style="width: ${this.Style.width}; height: ${this.Style.height};">
   <div class="card mt-3 widgetcard">
     <div class="card-header text-center">
@@ -557,21 +557,21 @@ class EntitiesTable extends Chart {
     </table>
   </div>
   `;
-  }
+    }
 }
 
 class EntityCount extends Chart {
-  constructor(chartData, widgetID) {
-    super(widgetID, chartData);
-    this.Style = {
-      width: "400px",
-      height: "220px",
-    };
-    this.Content = this.#generateContent();
-  }
+    constructor(chartData, widgetID) {
+        super(widgetID, chartData);
+        this.Style = {
+            width: "400px",
+            height: "220px",
+        };
+        this.Content = this.#generateContent();
+    }
 
-  #generateContent() {
-    return `
+    #generateContent() {
+        return `
     <div class="item-content" id="${this.ID}" style="width: ${this.Style.width}; height: ${this.Style.height};">
         <div class="card widgetcard">
           <div class="card-header text-center">
@@ -586,17 +586,17 @@ class EntityCount extends Chart {
         </div>
     </div>
     `;
-  }
+    }
 }
 
 class GaugeChart extends Echart {
-  constructor(chartData, widgetID) {
-    super(widgetID, chartData);
-    this.Script = this.#generateScript();
-  }
+    constructor(chartData, widgetID) {
+        super(widgetID, chartData);
+        this.Script = this.#generateScript();
+    }
 
-  #generateScript() {
-    return `
+    #generateScript() {
+        return `
   (function() {
     var gaugeChart = echarts.init(document.getElementById("${this.ID}"));
     var option = {
@@ -646,17 +646,17 @@ class GaugeChart extends Echart {
     }
     setInterval(updateGauge, 2000);
   })();`;
-  }
+    }
 }
 
 class HorizontalBarChart extends Echart {
-  constructor(chartData, widgetID) {
-    super(widgetID, chartData);
-    this.Script = this.#generateScript();
-  }
+    constructor(chartData, widgetID) {
+        super(widgetID, chartData);
+        this.Script = this.#generateScript();
+    }
 
-  #generateScript() {
-    return `
+    #generateScript() {
+        return `
       var horizontalBarChart = echarts.init(document.getElementById("${this.ID}"));
       var option = {
           title:{
@@ -711,17 +711,17 @@ class HorizontalBarChart extends Echart {
         };
 
       horizontalBarChart.setOption(option);`;
-  }
+    }
 }
 
 class TimeSeriesLineChart extends Echart {
-  constructor(chartData, widgetID) {
-    super(widgetID, chartData);
-    this.Script = this.#generateScript();
-  }
+    constructor(chartData, widgetID) {
+        super(widgetID, chartData);
+        this.Script = this.#generateScript();
+    }
 
-  #generateScript() {
-    return `
+    #generateScript() {
+        return `
     var lineChart = echarts.init(document.getElementById("${this.ID}")); 
     var option = {
       title: {
@@ -838,18 +838,18 @@ class TimeSeriesLineChart extends Echart {
         }, 20000);
       }
     }`;
-  }
+    }
 }
 
 class MultiBarChart extends Echart {
-  constructor(chartData, widgetID) {
-    super(widgetID, chartData);
-    this.Script = this.#generateScript();
-  }
+    constructor(chartData, widgetID) {
+        super(widgetID, chartData);
+        this.Script = this.#generateScript();
+    }
 
-  #generateScript() {
-    let seriesName = this.chartData.seriesName.split(",");
-    return `
+    #generateScript() {
+        let seriesName = this.chartData.seriesName.split(",");
+        return `
     var multiBarChart = echarts.init(document.getElementById("${this.ID}"));
     var app = {}
     var posList = [
@@ -1030,18 +1030,18 @@ class MultiBarChart extends Echart {
     };
     multiBarChart.setOption(option);
   `;
-  }
+    }
 }
 
 class MultiGaugeChart extends Echart {
-  constructor(chartData, widgetID) {
-    super(widgetID, chartData);
-    this.Script = this.#generateScript();
-  }
+    constructor(chartData, widgetID) {
+        super(widgetID, chartData);
+        this.Script = this.#generateScript();
+    }
 
-  #generateScript() {
-    let gaugeLabel = this.chartData.gaugeLabel.split(",");
-    return `
+    #generateScript() {
+        let gaugeLabel = this.chartData.gaugeLabel.split(",");
+        return `
     var multiGaugeChart = echarts.init(document.getElementById("${this.ID}"));
     var gaugeData = [
     {
@@ -1137,18 +1137,18 @@ class MultiGaugeChart extends Echart {
   };
   multiGaugeChart.setOption(option);
   `;
-  }
+    }
 }
 
 class MultipleLineChart extends Echart {
-  constructor(chartData, widgetID) {
-    super(widgetID, chartData);
-    this.Script = this.#generateScript();
-  }
+    constructor(chartData, widgetID) {
+        super(widgetID, chartData);
+        this.Script = this.#generateScript();
+    }
 
-  #generateScript() {
-    let seriesName = this.chartData.seriesName.split(",");
-    return `
+    #generateScript() {
+        let seriesName = this.chartData.seriesName.split(",");
+        return `
     var multipleLineChart = echarts.init(document.getElementById("${this.ID}"));
     var option = {
       title: {
@@ -1192,17 +1192,17 @@ class MultipleLineChart extends Echart {
     };
 
     multipleLineChart.setOption(option);`;
-  }
+    }
 }
 
 class PieChart extends Echart {
-  constructor(chartData, widgetID) {
-    super(widgetID, chartData);
-    this.Script = this.#generateScript();
-  }
+    constructor(chartData, widgetID) {
+        super(widgetID, chartData);
+        this.Script = this.#generateScript();
+    }
 
-  #generateScript() {
-    return `
+    #generateScript() {
+        return `
     var pieChart = echarts.init(document.getElementById("${this.ID}"));
     var option = {
         title: {
@@ -1240,18 +1240,18 @@ class PieChart extends Echart {
     };
 
     pieChart.setOption(option);`;
-  }
+    }
 }
 
 class SharedDatasetChart extends Echart {
-  constructor(chartData, widgetID) {
-    super(widgetID, chartData);
-    this.Script = this.#generateScript();
-  }
+    constructor(chartData, widgetID) {
+        super(widgetID, chartData);
+        this.Script = this.#generateScript();
+    }
 
-  #generateScript() {
-    let seriesName = this.chartData.seriesName.split(",");
-    return `
+    #generateScript() {
+        let seriesName = this.chartData.seriesName.split(",");
+        return `
     var sharedDataset = echarts.init(document.getElementById("${this.ID}"));
     var option = {
       title: {
@@ -1356,17 +1356,17 @@ class SharedDatasetChart extends Echart {
     });
     sharedDataset.setOption(option);
   `;
-  }
+    }
 }
 
 class SpeedGaugeChart extends Echart {
-  constructor(chartData, widgetID) {
-    super(widgetID, chartData);
-    this.Script = this.#generateScript();
-  }
+    constructor(chartData, widgetID) {
+        super(widgetID, chartData);
+        this.Script = this.#generateScript();
+    }
 
-  #generateScript() {
-    return `
+    #generateScript() {
+        return `
     var speedGaugeChart = echarts.init(document.getElementById("${this.ID}"));
     var option = {
         title: {
@@ -1444,18 +1444,18 @@ class SpeedGaugeChart extends Echart {
       }, 2000);
 
     speedGaugeChart.setOption(option);`;
-  }
+    }
 }
 
 class StackedLineChart extends Echart {
-  constructor(chartData, widgetID) {
-    super(widgetID, chartData);
-    this.Script = this.#generateScript();
-  }
+    constructor(chartData, widgetID) {
+        super(widgetID, chartData);
+        this.Script = this.#generateScript();
+    }
 
-  #generateScript() {
-    let seriesName = this.chartData.seriesName.split(",");
-    return `
+    #generateScript() {
+        let seriesName = this.chartData.seriesName.split(",");
+        return `
     var stackedLineChart = echarts.init(document.getElementById("${this.ID}"));
     var option = {
         title: {
@@ -1517,18 +1517,18 @@ class StackedLineChart extends Echart {
       };
 
     stackedLineChart.setOption(option);`;
-  }
+    }
 }
 
 class StepChart extends Echart {
-  constructor(chartData, widgetID) {
-    super(widgetID, chartData);
-    this.Script = this.#generateScript();
-  }
+    constructor(chartData, widgetID) {
+        super(widgetID, chartData);
+        this.Script = this.#generateScript();
+    }
 
-  #generateScript() {
-    let seriesName = this.chartData.seriesName.split(",");
-    return `
+    #generateScript() {
+        let seriesName = this.chartData.seriesName.split(",");
+        return `
     var stepChart = echarts.init(document.getElementById("${this.ID}"));
     var option = {
       title: {
@@ -1588,259 +1588,257 @@ class StepChart extends Echart {
       ]
     };
     stepChart.setOption(option);`;
-  }
+    }
 }
 
 class TempGaugeChart extends Echart {
-  constructor(chartData, widgetID) {
-    super(widgetID, chartData);
-    this.Script = this.#generateScript();
-  }
+    constructor(chartData, widgetID) {
+        super(widgetID, chartData);
+        this.Script = this.#generateScript();
+    }
 
-  #generateScript() {
-    return `
-    var tempGaugeChart = echarts.init(document.getElementById("${this.ID}"));
-    var option = {
-        title: {
-          text: '${this.chartData.title}',
-          left: 'center',
-          textStyle: {
-            color: '#FFAB91'
-          }
-        },
-        series: [
-          {
-            type: 'gauge',
-            center: ['50%', '80%'],
-            startAngle: 200,
-            endAngle: -20,
-            min: 0,
-            max: 60,
-            splitNumber: 12,
-            itemStyle: {
-              color: '#FFAB91'
-            },
-            progress: {
-              show: true,
-              width: 30
-            },
-            pointer: {
-              show: false
-            },
-            axisLine: {
-              lineStyle: {
-                width: 30
-              }
-            },
-            axisTick: {
-              distance: -44,
-              splitNumber: 5,
-              lineStyle: {
-                width: 2,
-                color: '#999'
-              }
-            },
-            splitLine: {
-              distance: -52,
-              length: 7,
-              lineStyle: {
-                width: 2,
-                color: '#999'
-              }
-            },
-            axisLabel: {
-              distance: -20,
-              color: '#999',
-              fontSize: 20
-            },
-            anchor: {
-              show: false
-            },
-            title: {
-              show: false
-            },
-            detail: {
-              valueAnimation: true,
-              width: '60%',
-              lineHeight: 40,
-              borderRadius: 1,
-              offsetCenter: [0, '-5%'],
-              fontSize: 30,
-              fontWeight: 'bolder',
-              formatter: '{value} °C',
-              color: 'inherit'
-            },
-            data: [
-              {
-                value: 20
-              }
-            ]
-          },
-          {
-            type: 'gauge',
-            center: ['50%', '80%'],
-            startAngle: 200,
-            endAngle: -20,
-            min: 0,
-            max: 60,
-            itemStyle: {
-              color: '#FD7347'
-            },
-            progress: {
-              show: true,
-              width: 8
-            },
-            pointer: {
-              show: false
-            },
-            axisLine: {
-              show: false
-            },
-            axisTick: {
-              show: false
-            },
-            splitLine: {
-              show: false
-            },
-            axisLabel: {
-              show: false
-            },
-            detail: {
-              show: false
-            },
-            data: [
-              {
-                value: 37,
-                name: '${this.chartData.gaugeLabel}'
-              }
-            ]
-          }
-        ]
-      };
-      setInterval(function () {
-        const random = +(Math.random() * 60).toFixed(2);
-        tempGaugeChart.setOption({
-          series: [
-            {
-              data: [
-                {
-                  value: random
-                }
-              ]
-            },
-            {
-              data: [
-                {
-                  value: random,
-                  name: '${this.chartData.gaugeLabel}'
-                }
-              ]
-            }
-          ]
-        });
-      }, 2000);
+    #generateScript() {
+        return `
+			var tempGaugeChart = echarts.init(document.getElementById("${this.ID}"));
+			var option = {
+				title: {
+					text: '${this.chartData.title}',
+					left: 'center',
+					textStyle: {
+						color: '#FFAB91'
+					}
+				},
+				series: [
+				{
+					type: 'gauge',
+					center: ['50%', '80%'],
+					startAngle: 200,
+					endAngle: -20,
+					min: 0,
+					max: 60,
+					splitNumber: 12,
+					itemStyle: {
+					color: '#FFAB91'
+					},
+					progress: {
+					show: true,
+					width: 30
+					},
+					pointer: {
+					show: false
+					},
+					axisLine: {
+					lineStyle: {
+						width: 30
+					}
+					},
+					axisTick: {
+					distance: -44,
+					splitNumber: 5,
+					lineStyle: {
+						width: 2,
+						color: '#999'
+					}
+					},
+					splitLine: {
+					distance: -52,
+					length: 7,
+					lineStyle: {
+						width: 2,
+						color: '#999'
+					}
+					},
+					axisLabel: {
+					distance: -20,
+					color: '#999',
+					fontSize: 20
+					},
+					anchor: {
+						show: false
+					},
+					title: {
+						show: false
+					},
+					detail: {
+						valueAnimation: true,
+						width: '60%',
+						lineHeight: 40,
+						borderRadius: 1,
+						offsetCenter: [0, '-5%'],
+						fontSize: 30,
+						fontWeight: 'bolder',
+						formatter: '{value} °C',
+						color: 'inherit'
+						},
+					data: [
+						{
+							value: 20
+						}
+					]
+				},
+				{
+					type: 'gauge',
+					center: ['50%', '80%'],
+					startAngle: 200,
+					endAngle: -20,
+					min: 0,
+					max: 60,
+					itemStyle: {
+						color: '#FD7347'
+					},
+					progress: {
+						show: true,
+						width: 8
+					},
+					pointer: {
+						show: false
+					},
+					axisLine: {
+						show: false
+					},
+					axisTick: {
+						show: false
+					},
+					splitLine: {
+						show: false
+					},
+					axisLabel: {
+						show: false
+					},
+					detail: {
+						show: false
+					},
+					data: [
+						{
+							value: 37,
+							name: '${this.chartData.gaugeLabel}'
+						}
+					]
+				}
+				]
+			};
+			setInterval(function () {
+				const random = +(Math.random() * 60).toFixed(2);
+				tempGaugeChart.setOption({
+				series: [
+					{
+						data: [
+							{
+								value: random
+							}
+						]
+					},
+					{
+						data: [
+							{
+								value: random,
+								name: '${this.chartData.gaugeLabel}'
+							}
+						]
+					}
+				]
+				});
+			}, 2000);
 
-    tempGaugeChart.setOption(option);`;
-  }
+			tempGaugeChart.setOption(option);`;
+    }
 }
 
 class ValueCard extends Chart {
-  constructor(chartData, widgetID) {
-    super(widgetID, chartData);
-    this.Style = {
-      width: "400px",
-      height: "220px",
-    };
-    this.Content = this.#generateContent();
-    this.Script = this.#generateScript();
-  }
+    constructor(chartData, widgetID) {
+        super(widgetID, chartData);
+        this.Style = {
+            width: "400px",
+            height: "220px",
+        };
+        this.Content = this.#generateContent();
+        this.Script = this.#generateScript();
+    }
 
-  #generateContent() {
-    return `
-    <div class="item-content" id="${this.ID}" style="width: ${this.Style.width}; height: ${this.Style.height};">
-    <div class="card mt-3 widgetcard" >
-      <div class="card-header text-center">
-        <h5 class="card-title">${this.chartData.title}</h5>
-      </div>
-      <div class="card-body text-center">
-        <p class="card-text value"> 35</p>
-      </div>
-      <div class="card-footer">
-        <p class="card-text"> Units: ${this.chartData.valueUnits}</p>
-        <p class="card-text text"> ThingName: ${this.chartData.thingName}</p>
-      </div>
-    </div>
-    </div>
-  `;
-  }
+    #generateContent() {
+        return `
+			<div class="item-content" id="${this.ID}" style="width: ${this.Style.width}; height: ${this.Style.height};">
+				<div class="card mt-3 widgetcard" >
+					<div class="card-header text-center">
+						<h5 class="card-title">${this.chartData.title}</h5>
+					</div>
+					<div class="card-body text-center">
+						<p class="card-text value"> 35</p>
+					</div>
+					<div class="card-footer">
+						<p class="card-text"> Units: ${this.chartData.valueUnits}</p>
+						<p class="card-text text"> ThingName: ${this.chartData.thingName}</p>
+					</div>
+				</div>
+			</div>`;
+    }
 
-  #generateScript() {
-    return `
-    (function() {
-      var valueCard = document.getElementById("${this.ID}");
+    #generateScript() {
+        return `
+			(function() {
+				var valueCard = document.getElementById("${this.ID}");
 
-      async function getData() {
-        try {
-          const response = await fetch(
-            "${pathPrefix}/data?channel=${this.chartData.channel}"+
-            "&publisher=${this.chartData.thing}" +
-            "&name=${this.chartData.valueName}" +
-            "&limit=1",
-          );
-          if (response.ok) {
-            const data = await response.json();
-            valueCard.querySelector(".value").textContent = data.messages[0].value;
-          } else {
-            console.error("HTTP request failed with status: ", response.status);
-          }
-        } catch (error) {
-          console.error("Failed to fetch card data: ", error);
-        }
-      }
+				async function getData() {
+					try {
+						const response = await fetch(
+							"${pathPrefix}/data?channel=${this.chartData.channel}"+
+							"&publisher=${this.chartData.thing}" +
+							"&name=${this.chartData.valueName}" +
+							"&limit=1",
+						);
+						if (response.ok) {
+							const data = await response.json();
+							valueCard.querySelector(".value").textContent = data.messages[0].value;
+						} else {
+							console.error("HTTP request failed with status: ", response.status);
+						}
+					} catch (error) {
+						console.error("Failed to fetch card data: ", error);
+					}
+				}
 
-      getData();
-      setInterval(getData, "${this.chartData.updateInterval}");
-    })();
-    `;
-  }
+				getData();
+				setInterval(getData, "${this.chartData.updateInterval}");
+			})();`;
+    }
 }
 
 const chartTypes = {
-  alarmCount: AlarmCount,
-  alarmsTable: AlarmsTable,
-  timeSeriesBarChart: TimeSeriesBarChart,
-  donutChart: DonutChart,
-  doubleBarChart: DoubleBarChart,
-  dynamicDataChart: DynamicDataChart,
-  entitiesTable: EntitiesTable,
-  entityCount: EntityCount,
-  gaugeChart: GaugeChart,
-  horizontalBarChart: HorizontalBarChart,
-  lineChart: TimeSeriesLineChart,
-  multiBarChart: MultiBarChart,
-  multiGaugeChart: MultiGaugeChart,
-  multipleLineChart: MultipleLineChart,
-  pieChart: PieChart,
-  sharedDatasetChart: SharedDatasetChart,
-  speedGaugeChart: SpeedGaugeChart,
-  stackedLineChart: StackedLineChart,
-  stepChart: StepChart,
-  tempGaugeChart: TempGaugeChart,
-  valueCard: ValueCard,
+    alarmCount: AlarmCount,
+    alarmsTable: AlarmsTable,
+    timeSeriesBarChart: TimeSeriesBarChart,
+    donutChart: DonutChart,
+    doubleBarChart: DoubleBarChart,
+    dynamicDataChart: DynamicDataChart,
+    entitiesTable: EntitiesTable,
+    entityCount: EntityCount,
+    gaugeChart: GaugeChart,
+    horizontalBarChart: HorizontalBarChart,
+    lineChart: TimeSeriesLineChart,
+    multiBarChart: MultiBarChart,
+    multiGaugeChart: MultiGaugeChart,
+    multipleLineChart: MultipleLineChart,
+    pieChart: PieChart,
+    sharedDatasetChart: SharedDatasetChart,
+    speedGaugeChart: SpeedGaugeChart,
+    stackedLineChart: StackedLineChart,
+    stepChart: StepChart,
+    tempGaugeChart: TempGaugeChart,
+    valueCard: ValueCard,
 };
 
 class Widget {
-  constructor(chartData, widgetID) {
-    this.chartData = chartData;
-    this.widgetID = widgetID;
-    this.config = new chartTypes[this.chartData.Type](chartData, widgetID);
-    this.element = this.#createWidgetElement();
-  }
+    constructor(chartData, widgetID) {
+        this.chartData = chartData;
+        this.widgetID = widgetID;
+        this.config = new chartTypes[this.chartData.Type](chartData, widgetID);
+        this.element = this.#createWidgetElement();
+    }
 
-  #createWidgetElement() {
-    const newItem = document.createElement("div");
-    newItem.className = "item item-editable";
-    newItem.innerHTML = `
+    #createWidgetElement() {
+        const newItem = document.createElement("div");
+        newItem.className = "item item-editable";
+        newItem.innerHTML = `
         <div class="item-border">
           <button type="button" class="btn btn-sm" id="removeItem" onclick="removeGridItem(this.parentNode.parentNode);">
             <i class="fas fa-trash-can"></i>
@@ -1848,17 +1846,17 @@ class Widget {
           ${this.config.Content}
           </div>
         `;
-    if (this.config.Script) {
-      let scriptTag = document.createElement("script");
-      scriptTag.type = "text/javascript";
-      scriptTag.defer = true;
-      scriptTag.innerHTML = this.config.Script;
-      newItem.appendChild(scriptTag);
+        if (this.config.Script) {
+            let scriptTag = document.createElement("script");
+            scriptTag.type = "text/javascript";
+            scriptTag.defer = true;
+            scriptTag.innerHTML = this.config.Script;
+            newItem.appendChild(scriptTag);
+        }
+        Object.assign(newItem.style, {
+            minWidth: this.config.Style.width,
+            minHeight: this.config.Style.height,
+        });
+        return newItem;
     }
-    Object.assign(newItem.style, {
-      minWidth: this.config.Style.width,
-      minHeight: this.config.Style.height,
-    });
-    return newItem;
-  }
 }

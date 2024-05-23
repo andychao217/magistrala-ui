@@ -2,158 +2,138 @@
 SPDX-License-Identifier: Apache-2.0 -->
 
 {{ define "bootstrap" }}
-  <!doctype html>
-  <html lang="en">
-    <head>
-      <title>Bootstrap</title>
-      {{ template "header" }}
-    </head>
-    <body>
-      {{ template "navbar" . }}
-      <div class="main-content pt-3">
-        <div class="container-fluid">
-          <div class="row-mb-3 p-3">
-            <div class="col-lg-12 mx-auto py-3">
-              {{ template "breadcrumb" . }}
-              <div class="row">
-                <div class="buttons mb-3">
-                  <button
-                    type="button"
-                    class="btn body-button"
-                    onclick="location.href= '/bootstraps/{{ .Bootstrap.ThingID }}/terminal'"
-                  >
-                    远程终端
-                  </button>
-                </div>
-                <div class="table-responsive table-container">
-                  <table id="itemsTable" class="table">
-                    <thead>
-                      <tr>
-                        <th scope="row">Bootstrap</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      <tr>
-                        <th>名称</th>
-                        <td class="editable name-field" contenteditable="false" data-field="name">
-                          {{ .Bootstrap.Name }}
-                        </td>
-                        <td>
-                          <button class="edit-btn" id="edit-name">
-                            <i class="fas fa-pencil-alt"></i>
-                          </button>
-                          <div class="save-cancel-buttons" style="display: none">
-                            <button class="save-btn" id="save-name">保存</button>
-                            <button class="cancel-btn" id="cancel-name">取消</button>
-                          </div>
-                        </td>
-                      </tr>
-                      <tr>
-                        <th>设备</th>
-                        <td>
-                          <a href="{{ printf "%s/things/%s" pathPrefix .Bootstrap.ThingID }}">
-                            {{ .Thing.Name }}
-                          </a>
-                        </td>
-                        <td></td>
-                      </tr>
-                      <tr>
-                        <th>分区</th>
-                        <td>
-                          {{ range $i, $c := .Bootstrap.Channels }}
-                            <span class="badge rounded-pill enabled-pill">
-                              <a href="{{ printf "%s/channels/%s" pathPrefix $c }}">{{ $c }}</a>
-                            </span>
-                          {{ end }}
-                        </td>
-                        <td>
-                          <button
-                            type="button"
-                            id="edit-channels"
-                            class="edit-btn"
-                            data-bs-toggle="modal"
-                            data-bs-target="#editChannelsModal"
-                          >
-                            <i class="fas fa-pencil-alt"></i>
-                          </button>
-                        </td>
-                      </tr>
-                      <tr>
-                        <th>设备证书</th>
-                        <td
-                          class="editable clientCert-field"
-                          contenteditable="false"
-                          data-field="clientCert"
-                        >
-                          {{ .Bootstrap.ClientCert }}
-                        </td>
-                        <td>
-                          <button class="edit-btn" id="edit-clientCert">
-                            <i class="fas fa-pencil-alt"></i>
-                          </button>
-                          <div class="save-cancel-buttons" style="display: none">
-                            <button class="save-btn" id="save-clientCert">保存</button>
-                            <button class="cancel-btn" id="cancel-clientCert">取消</button>
-                          </div>
-                        </td>
-                      </tr>
-                      <tr>
-                        <th>设备Key</th>
-                        <td
-                          class="editable clientKey-field"
-                          contenteditable="false"
-                          data-field="clientKey"
-                        >
-                          {{ .Bootstrap.ClientKey }}
-                        </td>
-                        <td>
-                          <button class="edit-btn" id="edit-clientKey">
-                            <i class="fas fa-pencil-alt"></i>
-                          </button>
-                          <div class="save-cancel-buttons" style="display: none">
-                            <button class="save-btn" id="save-clientKey">保存</button>
-                            <button class="cancel-btn" id="cancel-clientKey">取消</button>
-                          </div>
-                        </td>
-                      </tr>
-                      <tr>
-                        <th>CA证书</th>
-                        <td
-                          class="editable CACert-field"
-                          contenteditable="false"
-                          data-field="CACert"
-                        >
-                          {{ .Bootstrap.CACert }}
-                        </td>
-                        <td>
-                          <button class="edit-btn" id="edit-CACert">
-                            <i class="fas fa-pencil-alt"></i>
-                          </button>
-                          <div class="save-cancel-buttons" style="display: none">
-                            <button class="save-btn" id="save-CACert">保存</button>
-                            <button class="cancel-btn" id="cancel-CACert">取消</button>
-                          </div>
-                        </td>
-                      </tr>
-                      <tr>
-                        <th>内容</th>
-                        <td>
-                          <div>
-                            <pre id="content"></pre>
-                          </div>
-                        </td>
-                        <td>
-                          <button
-                            type="button"
-                            class="edit-btn"
-                            data-bs-toggle="modal"
-                            data-bs-target="#editContentModal"
-                          >
-                            <i class="fas fa-pencil-alt"></i>
-                          </button>
-                        </td>
-                      </tr>
-                      <!-- <tr>
+<!doctype html>
+<html lang="en">
+
+<head>
+	<title>Bootstrap</title>
+	{{ template "header" }}
+</head>
+
+<body>
+	{{ template "navbar" . }}
+	<div class="main-content pt-3">
+		<div class="container-fluid">
+			<div class="row-mb-3 p-3">
+				<div class="col-lg-12 mx-auto py-3">
+					{{ template "breadcrumb" . }}
+					<div class="row">
+						<div class="buttons mb-3">
+							<button type="button" class="btn body-button"
+								onclick="location.href= '/bootstraps/{{ .Bootstrap.ThingID }}/terminal'">
+								远程终端
+							</button>
+						</div>
+						<div class="table-responsive table-container">
+							<table id="itemsTable" class="table">
+								<thead>
+									<tr>
+										<th scope="row">Bootstrap</th>
+									</tr>
+								</thead>
+								<tbody>
+									<tr>
+										<th>名称</th>
+										<td class="editable name-field" contenteditable="false" data-field="name">
+											{{ .Bootstrap.Name }}
+										</td>
+										<td>
+											<button class="edit-btn" id="edit-name">
+												<i class="fas fa-pencil-alt"></i>
+											</button>
+											<div class="save-cancel-buttons" style="display: none">
+												<button class="save-btn" id="save-name">保存</button>
+												<button class="cancel-btn" id="cancel-name">取消</button>
+											</div>
+										</td>
+									</tr>
+									<tr>
+										<th>设备</th>
+										<td>
+											<a href="{{ printf " %s/things/%s" pathPrefix .Bootstrap.ThingID }}">
+												{{ .Thing.Name }}
+											</a>
+										</td>
+										<td></td>
+									</tr>
+									<tr>
+										<th>分区</th>
+										<td>
+											{{ range $i, $c := .Bootstrap.Channels }}
+											<span class="badge rounded-pill enabled-pill">
+												<a href="{{ printf " %s/channels/%s" pathPrefix $c }}">{{ $c }}</a>
+											</span>
+											{{ end }}
+										</td>
+										<td>
+											<button type="button" id="edit-channels" class="edit-btn"
+												data-bs-toggle="modal" data-bs-target="#editChannelsModal">
+												<i class="fas fa-pencil-alt"></i>
+											</button>
+										</td>
+									</tr>
+									<tr>
+										<th>设备证书</th>
+										<td class="editable clientCert-field" contenteditable="false"
+											data-field="clientCert">
+											{{ .Bootstrap.ClientCert }}
+										</td>
+										<td>
+											<button class="edit-btn" id="edit-clientCert">
+												<i class="fas fa-pencil-alt"></i>
+											</button>
+											<div class="save-cancel-buttons" style="display: none">
+												<button class="save-btn" id="save-clientCert">保存</button>
+												<button class="cancel-btn" id="cancel-clientCert">取消</button>
+											</div>
+										</td>
+									</tr>
+									<tr>
+										<th>设备Key</th>
+										<td class="editable clientKey-field" contenteditable="false"
+											data-field="clientKey">
+											{{ .Bootstrap.ClientKey }}
+										</td>
+										<td>
+											<button class="edit-btn" id="edit-clientKey">
+												<i class="fas fa-pencil-alt"></i>
+											</button>
+											<div class="save-cancel-buttons" style="display: none">
+												<button class="save-btn" id="save-clientKey">保存</button>
+												<button class="cancel-btn" id="cancel-clientKey">取消</button>
+											</div>
+										</td>
+									</tr>
+									<tr>
+										<th>CA证书</th>
+										<td class="editable CACert-field" contenteditable="false" data-field="CACert">
+											{{ .Bootstrap.CACert }}
+										</td>
+										<td>
+											<button class="edit-btn" id="edit-CACert">
+												<i class="fas fa-pencil-alt"></i>
+											</button>
+											<div class="save-cancel-buttons" style="display: none">
+												<button class="save-btn" id="save-CACert">保存</button>
+												<button class="cancel-btn" id="cancel-CACert">取消</button>
+											</div>
+										</td>
+									</tr>
+									<tr>
+										<th>内容</th>
+										<td>
+											<div>
+												<pre id="content"></pre>
+											</div>
+										</td>
+										<td>
+											<button type="button" class="edit-btn" data-bs-toggle="modal"
+												data-bs-target="#editContentModal">
+												<i class="fas fa-pencil-alt"></i>
+											</button>
+										</td>
+									</tr>
+									<!-- <tr>
                         <th>状态</th>
                         <td>
                           {{ if eq .Bootstrap.State 0 }}
@@ -164,301 +144,235 @@ SPDX-License-Identifier: Apache-2.0 -->
                         </td>
                         <td></td>
                       </tr> -->
-                    </tbody>
-                  </table>
-                  <div id="error-message" class="text-danger"></div>
-                  <div class="row-mb-3 mt-3">
-                    <button
-                      type="button"
-                      class="btn body-button"
-                      data-bs-toggle="modal"
-                      data-bs-target="#deleteBootstrapModal"
-                    >
-                      删除配置
-                    </button>
-                    <button
-                      type="button"
-                      class="btn body-button"
-                      data-bs-toggle="modal"
-                      data-bs-target="#UpdateBootstrapState"
-                    >
-                      修改状态
-                    </button>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
+								</tbody>
+							</table>
+							<div id="error-message" class="text-danger"></div>
+							<div class="row-mb-3 mt-3">
+								<button type="button" class="btn body-button" data-bs-toggle="modal"
+									data-bs-target="#deleteBootstrapModal">
+									删除配置
+								</button>
+								<button type="button" class="btn body-button" data-bs-toggle="modal"
+									data-bs-target="#UpdateBootstrapState">
+									修改状态
+								</button>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
 
-          <!-- Edit Channels Modal -->
-          <div
-            class="modal fade"
-            id="editChannelsModal"
-            tabindex="-1"
-            role="dialog"
-            aria-labelledby="editChannelsModalLabel"
-            aria-hidden="true"
-          >
-            <div class="modal-dialog modal-dialog-centered">
-              <div class="modal-content">
-                <div class="modal-header">
-                  <h5 class="modal-title" id="editChannelsModalLabel">修改分区</h5>
-                  <button
-                    type="button"
-                    class="btn-close"
-                    data-bs-dismiss="modal"
-                    aria-label="Close"
-                  ></button>
-                </div>
-                <form
-                  action="{{ printf "%s/bootstraps/%s/connections" pathPrefix .Bootstrap.ThingID }}"
-                  method="post"
-                >
-                  <div class="modal-body">
-                    <div class="mb-3">
-                      <label for="channels-select" class="form-label">分区</label>
-                      <input
-                        type="text"
-                        class="itemsFilter"
-                        name="channelFilter"
-                        id="channelFilter"
-                        placeholder="Filter by channel name"
-                      />
-                      <select
-                        class="form-select"
-                        name="channelID"
-                        id="channels-select"
-                        size="5"
-                        multiple
-                      >
-                        <option disabled>选择分区</option>
-                      </select>
-                    </div>
-                  </div>
-                  <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
-                      取消
-                    </button>
-                    <button type="submit" class="btn body-button" id="add-channel">修改</button>
-                  </div>
-                </form>
-              </div>
-            </div>
-          </div>
+			<!-- Edit Channels Modal -->
+			<div class="modal fade" id="editChannelsModal" tabindex="-1" role="dialog"
+				aria-labelledby="editChannelsModalLabel" aria-hidden="true">
+				<div class="modal-dialog modal-dialog-centered">
+					<div class="modal-content">
+						<div class="modal-header">
+							<h5 class="modal-title" id="editChannelsModalLabel">修改分区</h5>
+							<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+						</div>
+						<form action="{{ printf " %s/bootstraps/%s/connections" pathPrefix .Bootstrap.ThingID }}"
+							method="post">
+							<div class="modal-body">
+								<div class="mb-3">
+									<label for="channels-select" class="form-label">分区</label>
+									<input type="text" class="itemsFilter" name="channelFilter" id="channelFilter"
+										placeholder="Filter by channel name" />
+									<select class="form-select" name="channelID" id="channels-select" size="5" multiple>
+										<option disabled>选择分区</option>
+									</select>
+								</div>
+							</div>
+							<div class="modal-footer">
+								<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+									取消
+								</button>
+								<button type="submit" class="btn body-button" id="add-channel">修改</button>
+							</div>
+						</form>
+					</div>
+				</div>
+			</div>
 
-          <!-- Edit Content Modal -->
-          `
-          <div
-            class="modal fade"
-            id="editContentModal"
-            tabindex="-1"
-            role="dialog"
-            aria-labelledby="editContentModalLabel"
-            aria-hidden="true"
-          >
-            <div class="modal-dialog modal-dialog-centered">
-              <div class="modal-content">
-                <div class="modal-header">
-                  <h5 class="modal-title" id="editContentModalLabel">修改内容</h5>
-                  <button
-                    type="button"
-                    class="btn-close"
-                    data-bs-dismiss="modal"
-                    aria-label="Close"
-                  ></button>
-                </div>
-                <form action="">
-                  <div class="modal-body">
-                    <div class="content-field">
-                      <textarea name="content" id="contentTextArea"></textarea>
-                    </div>
-                    <div id="contentError" class="text-danger"></div>
-                  </div>
-                  <div class="modal-footer">
-                    <button class="btn btn-secondary" type="button" data-bs-dismiss="modal">
-                      取消
-                    </button>
-                    <button class="btn body-button" id="save-content" type="submit">修改</button>
-                  </div>
-                </form>
-              </div>
-            </div>
-          </div>
+			<!-- Edit Content Modal -->
+			`
+			<div class="modal fade" id="editContentModal" tabindex="-1" role="dialog"
+				aria-labelledby="editContentModalLabel" aria-hidden="true">
+				<div class="modal-dialog modal-dialog-centered">
+					<div class="modal-content">
+						<div class="modal-header">
+							<h5 class="modal-title" id="editContentModalLabel">修改内容</h5>
+							<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+						</div>
+						<form action="">
+							<div class="modal-body">
+								<div class="content-field">
+									<textarea name="content" id="contentTextArea"></textarea>
+								</div>
+								<div id="contentError" class="text-danger"></div>
+							</div>
+							<div class="modal-footer">
+								<button class="btn btn-secondary" type="button" data-bs-dismiss="modal">
+									取消
+								</button>
+								<button class="btn body-button" id="save-content" type="submit">修改</button>
+							</div>
+						</form>
+					</div>
+				</div>
+			</div>
 
-          <!-- Delete Bootstrap Modal -->
-          <div
-            class="modal fade"
-            id="deleteBootstrapModal"
-            tabindex="-1"
-            role="dialog"
-            aria-labelledby="deleteBootstrapModalLabel"
-            aria-hidden="true"
-          >
-            <div class="modal-dialog modal-dialog-centered">
-              <div class="modal-content">
-                <div class="modal-header">
-                  <h5 class="modal-title" id="deleteBootstrapModalLabel">删除配置/h5>
-                  <button
-                    type="button"
-                    class="btn-close"
-                    data-bs-dismiss="modal"
-                    aria-label="Close"
-                  ></button>
-                </div>
-                <form
-                  action="{{ printf "%s/bootstraps/%s/delete" pathPrefix .Bootstrap.ThingID }}"
-                  method="post"
-                >
-                  <div class="modal-body">
-                    <p>
-                      你确定要
-                      <span class="fw-bold text-danger">删除</span>
-                      这个配置?
-                    </p>
-                  </div>
-                  <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
-                      取消
-                    </button>
-                    <button type="submit" class="btn btn-danger">删除</button>
-                  </div>
-                </form>
-              </div>
-            </div>
-          </div>
+			<!-- Delete Bootstrap Modal -->
+			<div class="modal fade" id="deleteBootstrapModal" tabindex="-1" role="dialog"
+				aria-labelledby="deleteBootstrapModalLabel" aria-hidden="true">
+				<div class="modal-dialog modal-dialog-centered">
+					<div class="modal-content">
+						<div class="modal-header">
+							<h5 class="modal-title" id="deleteBootstrapModalLabel">删除配置/h5>
+								<button type="button" class="btn-close" data-bs-dismiss="modal"
+									aria-label="Close"></button>
+						</div>
+						<form action="{{ printf " %s/bootstraps/%s/delete" pathPrefix .Bootstrap.ThingID }}"
+							method="post">
+							<div class="modal-body">
+								<p>
+									你确定要
+									<span class="fw-bold text-danger">删除</span>
+									这个配置?
+								</p>
+							</div>
+							<div class="modal-footer">
+								<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+									取消
+								</button>
+								<button type="submit" class="btn btn-danger">删除</button>
+							</div>
+						</form>
+					</div>
+				</div>
+			</div>
 
-          <!-- Update Bootstrap State Modal -->
-          <div
-            class="modal fade"
-            id="UpdateBootstrapState"
-            tabindex="-1"
-            role="dialog"
-            aria-labelledby="UpdateBootstrapStateLabel"
-            aria-hidden="true"
-          >
-            <div class="modal-dialog modal-dialog-centered">
-              <div class="modal-content">
-                <div class="modal-header">
-                  <h5 class="modal-title" id="UpdateBootstrapStateLabel">
-                    修改配置状态
-                  </h5>
-                  <button
-                    type="button"
-                    class="btn-close"
-                    data-bs-dismiss="modal"
-                    aria-label="Close"
-                  ></button>
-                </div>
-                <form
-                  action="{{ printf "%s/bootstraps/%s/state" pathPrefix .Bootstrap.ThingID }}"
-                  method="post"
-                >
-                  {{ if eq .Bootstrap.State 0 }}
-                    <div class="modal-body">
-                      <p>
-                        你确定要
-                        <span class="fw-bold text-success">启用</span>
-                        这个配置?
-                      </p>
-                      <input type="hidden" name="state" value="1" />
-                    </div>
-                    <div class="modal-footer">
-                      <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
-                        取消
-                      </button>
-                      <button type="submit" class="btn btn-success">启用</button>
-                    </div>
-                  {{ else }}
-                    <div class="modal-body">
-                      <p>
-                        你确定要
-                        <span class="fw-bold text-danger">禁用</span>
-                        这个配置?
-                      </p>
-                      <input type="hidden" name="state" value="0" />
-                    </div>
-                    <div class="modal-footer">
-                      <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
-                        取消
-                      </button>
-                      <button type="submit" class="btn btn-danger">禁用</button>
-                    </div>
-                  {{ end }}
-                </form>
-              </div>
-            </div>
-          </div>
-          <!-- Modals End -->
-        </div>
-      </div>
-      <script>
-        var editChannelButton = document.getElementById("edit-channels");
-        editChannelButton.addEventListener("click", () => {
-          var selectElement = document.getElementById("channels-select");
-          var channelsOptions = selectElement.querySelectorAll("option");
-          var channels = JSON.parse("{{ toSlice .Bootstrap.Channels }}");
-          channelsOptions.forEach((option) => {
-            if (channels.includes(option.value)) {
-              option.selected = true;
-            }
-          });
-        })
+			<!-- Update Bootstrap State Modal -->
+			<div class="modal fade" id="UpdateBootstrapState" tabindex="-1" role="dialog"
+				aria-labelledby="UpdateBootstrapStateLabel" aria-hidden="true">
+				<div class="modal-dialog modal-dialog-centered">
+					<div class="modal-content">
+						<div class="modal-header">
+							<h5 class="modal-title" id="UpdateBootstrapStateLabel">
+								修改配置状态
+							</h5>
+							<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+						</div>
+						<form action="{{ printf " %s/bootstraps/%s/state" pathPrefix .Bootstrap.ThingID }}"
+							method="post">
+							{{ if eq .Bootstrap.State 0 }}
+							<div class="modal-body">
+								<p>
+									你确定要
+									<span class="fw-bold text-success">启用</span>
+									这个配置?
+								</p>
+								<input type="hidden" name="state" value="1" />
+							</div>
+							<div class="modal-footer">
+								<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+									取消
+								</button>
+								<button type="submit" class="btn btn-success">启用</button>
+							</div>
+							{{ else }}
+							<div class="modal-body">
+								<p>
+									你确定要
+									<span class="fw-bold text-danger">禁用</span>
+									这个配置?
+								</p>
+								<input type="hidden" name="state" value="0" />
+							</div>
+							<div class="modal-footer">
+								<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+									取消
+								</button>
+								<button type="submit" class="btn btn-danger">禁用</button>
+							</div>
+							{{ end }}
+						</form>
+					</div>
+				</div>
+			</div>
+			<!-- Modals End -->
+		</div>
+	</div>
+	<script>
+		var editChannelButton = document.getElementById("edit-channels");
+		editChannelButton.addEventListener("click", () => {
+			var selectElement = document.getElementById("channels-select");
+			var channelsOptions = selectElement.querySelectorAll("option");
+			var channels = JSON.parse("{{ toSlice .Bootstrap.Channels }}");
+			channelsOptions.forEach((option) => {
+				if (channels.includes(option.value)) {
+					option.selected = true;
+				}
+			});
+		})
 
-        var content = "{{ .Bootstrap.Content }}";
-        var parsedContent = JSON.parse(content);
+		var content = "{{ .Bootstrap.Content }}";
+		var parsedContent = JSON.parse(content);
 
-        attachFormatJsonWithPrettifyListener({
-          id: "content",
-          data: content,
-        });
+		attachFormatJsonWithPrettifyListener({
+			id: "content",
+			data: content,
+		});
 
-        codeMirrorEditor({
-          textArea: "contentTextArea",
-          button: "save-content",
-          value: parsedContent,
-        });
+		codeMirrorEditor({
+			textArea: "contentTextArea",
+			button: "save-content",
+			value: parsedContent,
+		});
 
-      </script>    <script type="module">
-      import { attachEditRowListener, updateName, updateContent, updateClientCerts } from "/js/update.js";
-      import { fetchIndividualEntity } from "/js/infinitescroll.js";
+	</script>
+	<script type="module">
+		import { attachEditRowListener, updateName, updateContent, updateClientCerts } from "/js/update.js";
+		import { fetchIndividualEntity } from "/js/infinitescroll.js";
 
-      attachEditRowListener({
-        entity: "bootstraps",
-        id: "{{ .Bootstrap.ThingID }}",
-        rows: {
-          name:updateName,
-          clientCert:updateClientCerts,
-          clientKey:updateClientCerts,
-          CACert:updateClientCerts,
-        },
-        errorDiv: "error-message",
-        fields: {
-          name: "name-field",
-          clientCert: "clientCert-field",
-          clientKey: "clientKey-field",
-          CACert: "CACert-field",
-        },
-        pathPrefix: "{{ pathPrefix }}",
-      });
+		attachEditRowListener({
+			entity: "bootstraps",
+			id: "{{ .Bootstrap.ThingID }}",
+			rows: {
+				name: updateName,
+				clientCert: updateClientCerts,
+				clientKey: updateClientCerts,
+				CACert: updateClientCerts,
+			},
+			errorDiv: "error-message",
+			fields: {
+				name: "name-field",
+				clientCert: "clientCert-field",
+				clientKey: "clientKey-field",
+				CACert: "CACert-field",
+			},
+			pathPrefix: "{{ pathPrefix }}",
+		});
 
-      updateContent({
-        textArea: "contentTextArea",
-        field:"content",
-        alertDiv: "contentError",
-        fieldName: "content-field",
-        id: "{{ .Bootstrap.ThingID }}",
-        entity: "bootstraps",
-        button: "save-content",
-        pathPrefix: "{{ pathPrefix }}",
-      });
+		updateContent({
+			textArea: "contentTextArea",
+			field: "content",
+			alertDiv: "contentError",
+			fieldName: "content-field",
+			id: "{{ .Bootstrap.ThingID }}",
+			entity: "bootstraps",
+			button: "save-content",
+			pathPrefix: "{{ pathPrefix }}",
+		});
 
-      fetchIndividualEntity({
-          input: "channelFilter",
-          itemSelect: "channels-select",
-          item: "channels",
-          pathPrefix: "{{ pathPrefix }}",
-        });
-    </script>
-    </body>
-  </html>
+		fetchIndividualEntity({
+			input: "channelFilter",
+			itemSelect: "channels-select",
+			item: "channels",
+			pathPrefix: "{{ pathPrefix }}",
+		});
+	</script>
+</body>
+
+</html>
 {{ end }}

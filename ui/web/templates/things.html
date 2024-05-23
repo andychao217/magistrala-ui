@@ -2,523 +2,427 @@
 SPDX-License-Identifier: Apache-2.0 -->
 
 {{ define "things" }}
-  <!doctype html>
-  <html lang="en">
-    <head>
-      <title>设备</title>
-      {{ template "header" }}
-    </head>
-    <body>
-      {{ template "navbar" . }}
-      <div class="main-content pt-3">
-        <div class="container-fluid">
-          <div class="row-mb-3 p-3">
-            <div class="col-lg-12 mx-auto py-3">
-              {{ template "breadcrumb" . }}
-              <div class="row">
-                <div class="buttons mb-3">
-                  <!-- Button trigger modal -->
-                  <button type="button" class="btn body-button" onclick="openModal('single')">
-                    添加设备
-                  </button>
+    <!doctype html>
+    <html lang="en">
+        <head>
+            <title>设备</title>
+            {{ template "header" }}
+        </head>
 
-                  <!-- add thing modal -->
-                  <div
-                    class="modal fade"
-                    id="addThingModal"
-                    tabindex="-1"
-                    role="dialog"
-                    aria-labelledby="addThingModalLabel"
-                    aria-hidden="true"
-                  >
-                    <div class="modal-dialog" role="document">
-                      <div class="modal-content">
-                        <div class="modal-header">
-                          <h1 class="modal-title" id="addThingModalLabel">添加设备</h1>
-                          <button
-                            type="button"
-                            class="btn-close"
-                            data-bs-dismiss="modal"
-                            aria-label="Close"
-                          ></button>
-                        </div>
-                        <form id="thingform">
-                          <div class="modal-body">
-                            <div id="alertMessage"></div>
+        <body>
+            {{ template "navbar" . }}
+            <div class="main-content pt-3">
+                <div class="container-fluid">
+                    <div class="row-mb-3 p-3">
+                        <div class="col-lg-12 mx-auto py-3">
+                            {{ template "breadcrumb" . }}
+                            <div class="row">
+                                <div class="buttons mb-3">
+                                    <!-- Button trigger modal -->
+                                    <button type="button" class="btn body-button" onclick="openModal('single')">添加设备</button>
 
-                            <div class="mb-3">
-                              <label for="name" class="form-label">名称</label>
-                              <input
-                                type="text"
-                                class="form-control name-field"
-                                name="name"
-                                id="name"
-                                placeholder="设备名称"
-                              />
-                              <div id="nameError" class="text-danger"></div>
-                            </div>
-                            <!-- 隐藏不能使用的字段 -->
-                            <div class="mb-3" style="display: none;">
-                              <label for="thingID" class="form-label">设备ID</label>
-                              <input
-                                type="text"
-                                class="form-control"
-                                name="thingID"
-                                id="thingID"
-                                placeholder="设备ID"
-                              />
-                            </div>
-                            <div class="mb-3">
-                              <label for="identity" class="form-label">设备身份识别码</label>
-                              <input
-                                type="text"
-                                class="form-control"
-                                name="identity"
-                                id="identity"
-                                placeholder="设备身份识别码"
-                              />
-                            </div>
-                            <div class="mb-3">
-                              <label for="secret" class="form-label">密码</label>
-                              <input
-                                type="text"
-                                class="form-control"
-                                name="secret"
-                                id="secret"
-                                placeholder="设备密码"
-                              />
-                              <div id="secretError" class="error-message"></div>
-                            </div>
-                            <div class="mb-3">
-                              <label for="thingsTags" class="form-label">标识</label>
-                              <div id="thingsTagsList" onclick="deleteItem(event)"></div>
-                              <input
-                                type="text"
-                                class="form-control tags-field"
-                                name="tags"
-                                id="thingTags"
-                                aria-describedby="tagHelp"
-                                onkeydown="addItem(event, 'thingTags', 'thingsTagsList')"
-                                placeholder="Add a tag"
-                              />
-                              <div id="tagHelp" class="form-text">
-                                以字符串数组形式输入标识.
-                              </div>
-                              <div id="tagsError" class="text-danger"></div>
-                            </div>
-                            <div class="mb-3">
-                              <label for="metadata" class="form-label">附加属性</label>
-                              <div class="metadata-field">
-                                <textarea name="metadata" id="metadata"></textarea>
-                              </div>
-                              <div id="metadataHelp" class="form-text">
-                                以JSON形式输入附加属性.
-                              </div>
-                              <div id="metadataError" class="text-danger"></div>
-                            </div>
-                          </div>
-                          <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
-                              取消
-                            </button>
-                            <button
-                              type="submit"
-                              class="btn body-button"
-                              id="create-thing-button"
-                              onclick="submitItemList('thingTags', 'thingsTagsList')"
-                            >
-                              确定
-                            </button>
-                          </div>
-                        </form>
-                      </div>
-                    </div>
-                  </div>
+                                    <!-- add thing modal -->
+                                    <div class="modal fade" id="addThingModal" tabindex="-1" role="dialog" aria-labelledby="addThingModalLabel" aria-hidden="true">
+                                        <div class="modal-dialog" role="document">
+                                            <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <h1 class="modal-title" id="addThingModalLabel">添加设备</h1>
+                                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                </div>
+                                                <form id="thingform">
+                                                    <div class="modal-body">
+                                                        <div id="alertMessage"></div>
 
-                  <!-- Button trigger modal -->
-                  <button type="button" class="btn body-button" onclick="openModal('bulk')" style="display: none;">
-                    批量添加设备
-                  </button>
+                                                        <div class="mb-3">
+                                                            <label for="name" class="form-label">名称</label>
+                                                            <input type="text" class="form-control name-field" name="name" id="name" placeholder="设备名称" />
+                                                            <div id="nameError" class="text-danger"></div>
+                                                        </div>
+                                                        <!-- 隐藏不能使用的字段 -->
+                                                        <div class="mb-3" style="display: none;">
+                                                            <label for="thingID" class="form-label">设备ID</label>
+                                                            <input type="text" class="form-control" name="thingID" id="thingID" placeholder="设备ID" />
+                                                        </div>
+                                                        <div class="mb-3">
+                                                            <label for="identity" class="form-label">设备身份识别码</label>
+                                                            <input type="text" class="form-control" name="identity" id="identity" placeholder="设备身份识别码" />
+                                                        </div>
+                                                        <div class="mb-3">
+                                                            <label for="secret" class="form-label">密码</label>
+                                                            <input type="text" class="form-control" name="secret" id="secret" placeholder="设备密码" />
+                                                            <div id="secretError" class="error-message"></div>
+                                                        </div>
+                                                        <div class="mb-3">
+                                                            <label for="thingsTags" class="form-label">标识</label>
+                                                            <div id="thingsTagsList" onclick="deleteItem(event)"></div>
+                                                            <input
+                                                                type="text"
+                                                                class="form-control tags-field"
+                                                                name="tags"
+                                                                id="thingTags"
+                                                                aria-describedby="tagHelp"
+                                                                onkeydown="addItem(event, 'thingTags', 'thingsTagsList')"
+                                                                placeholder="Add a tag"
+                                                            />
+                                                            <div id="tagHelp" class="form-text">以字符串数组形式输入标识.</div>
+                                                            <div id="tagsError" class="text-danger"></div>
+                                                        </div>
+                                                        <div class="mb-3">
+                                                            <label for="metadata" class="form-label">附加属性</label>
+                                                            <div class="metadata-field">
+                                                                <textarea name="metadata" id="metadata"></textarea>
+                                                            </div>
+                                                            <div id="metadataHelp" class="form-text">以JSON形式输入附加属性.</div>
+                                                            <div id="metadataError" class="text-danger"></div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="modal-footer">
+                                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">取消</button>
+                                                        <button type="submit" class="btn body-button" id="create-thing-button" onclick="submitItemList('thingTags', 'thingsTagsList')">确定</button>
+                                                    </div>
+                                                </form>
+                                            </div>
+                                        </div>
+                                    </div>
 
-                  <!-- add things modal -->
-                  <div
-                    class="modal fade"
-                    id="addThingsModal"
-                    tabindex="-1"
-                    role="dialog"
-                    aria-labelledby="addThingsModalLabel"
-                    aria-hidden="true"
-                  >
-                    <div class="modal-dialog" role="document">
-                      <div class="modal-content">
-                        <div class="modal-header">
-                          <h1 class="modal-title" id="addThingsModalLabel">批量添加设备</h1>
-                          <button
-                            type="button"
-                            class="btn-close"
-                            data-bs-dismiss="modal"
-                            aria-label="Close"
-                          ></button>
-                        </div>
-                        <form method="post" enctype="multipart/form-data" id="bulkThingsForm">
-                          <div class="modal-body">
-                            <div id="alertBulkMessage"></div>
+                                    <!-- Button trigger modal -->
+                                    <button type="button" class="btn body-button" onclick="openModal('bulk')" style="display: none;">批量添加设备</button>
 
-                            <div class="form-group mb-3">
-                              <label for="thingsFile">
-                                添加包含设备名称以及附加属性的CSV文件(附加属性可以为空). 在
-                                <a
-                                  href="/samples/things.csv"
-                                  download="things.csv"
-                                >
-                                  这里
-                                </a>
-                                可以下载模版文件
-                              </label>
-                              <input
-                                type="file"
-                                class="form-control-file"
-                                id="thingsFile"
-                                name="thingsFile"
-                                required
-                              />
-                            </div>
-                            <div class="modal-footer">
-                              <button
-                                type="button"
-                                class="btn btn-secondary"
-                                data-bs-dismiss="modal"
-                              >
-                                取消
-                              </button>
-                              <button type="submit" value="upload" class="btn body-button">
-                                确定
-                              </button>
-                            </div>
-                          </div>
-                        </form>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                <div class="table-responsive table-container">
-                  {{ template "tableheader" . }}
-                  <div class="itemsTable">
-                    <table id="itemsTable" class="table table-hover">
-                      <thead>
-                        <tr>
-                          <th scope="col">名称</th>
-                          <th class="tags-col" scope="col">标识</th>
-                          <!-- <th class="meta-col" scope="col">附加属性</th> -->
-                          <th class="created-col" scope="col">创建时间</th>
-                          <th class="status-col" scope="col">在线状态</th>
-                          <!-- <th class="status-col" scope="col">状态</th> -->
-                          <th class="operation-col" scope="col">操作</th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        {{ range $i, $t := .Things }}
-                          <tr class="clickable-row">
-                            <td>{{ $t.Name }}</td>
-                            <td class="tags-col">
-                              {{ range $j, $tag := $t.Tags }}
-                                <span class="badge bg-dark">{{ $tag }}</span>
-                              {{ end }}
-                            </td>
-                            <!-- <td class="meta-col">
+                                    <!-- add things modal -->
+                                    <div class="modal fade" id="addThingsModal" tabindex="-1" role="dialog" aria-labelledby="addThingsModalLabel" aria-hidden="true">
+                                        <div class="modal-dialog" role="document">
+                                            <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <h1 class="modal-title" id="addThingsModalLabel">批量添加设备</h1>
+                                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                </div>
+                                                <form method="post" enctype="multipart/form-data" id="bulkThingsForm">
+                                                    <div class="modal-body">
+                                                        <div id="alertBulkMessage"></div>
+
+                                                        <div class="form-group mb-3">
+                                                            <label for="thingsFile">
+                                                                添加包含设备名称以及附加属性的CSV文件(附加属性可以为空). 在
+                                                                <a href="/samples/things.csv" download="things.csv">这里</a>
+                                                                可以下载模版文件
+                                                            </label>
+                                                            <input type="file" class="form-control-file" id="thingsFile" name="thingsFile" required />
+                                                        </div>
+                                                        <div class="modal-footer">
+                                                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">取消</button>
+                                                            <button type="submit" value="upload" class="btn body-button">确定</button>
+                                                        </div>
+                                                    </div>
+                                                </form>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="table-responsive table-container">
+                                    {{ template "tableheader" . }}
+                                    <div class="itemsTable">
+                                        <table id="itemsTable" class="table table-hover">
+                                            <thead>
+                                                <tr>
+                                                    <th scope="col">名称</th>
+                                                    <th class="tags-col" scope="col">标识</th>
+                                                    <!-- <th class="meta-col" scope="col">附加属性</th> -->
+                                                    <th class="created-col" scope="col">创建时间</th>
+                                                    <th class="status-col" scope="col">在线状态</th>
+                                                    <!-- <th class="status-col" scope="col">状态</th> -->
+                                                    <th class="operation-col" scope="col">操作</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                {{ range $i, $t := .Things }}
+                                                    <tr class="clickable-row">
+                                                        <td>{{ $t.Name }}</td>
+                                                        <td class="tags-col">
+                                                            {{ range $j, $tag := $t.Tags }}
+                                                                <span class="badge bg-dark">{{ $tag }}</span>
+                                                            {{ end }}
+                                                        </td>
+                                                        <!-- <td class="meta-col">
                               <div class="meta-div">
                                 <pre id="meta-{{ $i }}"></pre>
                               </div>
                             </td> -->
-                            <td class="created-col">{{ $t.CreatedAt }}</td>
-                            <td id="{{ $t.ID}}-onlineStatusTD">
-                              {{ if eq $t.Metadata.isOnline "1" }}  
-                                <span class="badge rounded-pill enabled-pill">在线</span>  
-                              {{ else }}  
-                                <span class="badge rounded-pill disabled-pill">离线</span>  
-                              {{ end }}  
-                            </td>
-                            <!-- <td>
+                                                        <td class="created-col">{{ $t.CreatedAt }}</td>
+                                                        <td id="{{ $t.ID }}-onlineStatusTD">
+                                                            {{ if eq $t.Metadata.isOnline "1" }}
+                                                                <span class="badge rounded-pill enabled-pill">在线</span>
+                                                            {{ else }}
+                                                                <span class="badge rounded-pill disabled-pill">离线</span>
+                                                            {{ end }}
+                                                        </td>
+                                                        <!-- <td>
                               {{ if eq $t.Status "enabled" }}
-                                <span class="badge rounded-pill enabled-pill">启用</span>
-                              {{ else if eq $t.Status "disabled" }}
-                                <span class="badge rounded-pill disabled-pill">
-                                  禁用
-                                </span>
-                              {{ end }}
+                                                            <span class="badge rounded-pill enabled-pill">启用</span>
+                                                        {{ else if eq $t.Status "disabled" }}
+                                                            <span class="badge rounded-pill disabled-pill">禁用</span>
+                                                        {{ end }}
                             </td> -->
-                            <td class="operation-col">
-                              <button class="btn body-button" onclick="viewThing('{{ $t.ID }}')" title="查看">
-                                <i class="fa-solid fa-info"></i>
-                              </button>
-                              {{ if eq $t.Metadata.isOnline "1" }}  
-                                <button 
-                                  id="{{ $t.ID}}-rebootBtn" 
-                                  class="btn body-button" 
-                                  onclick="conntrolThing('{{ $t.ID}}', '{{ $t.Credentials.Identity }}', 'reboot')" 
-                                  title="重启"
-                                >
-                                  <i class="fa-solid fa-arrows-rotate"></i>
-                                </button>
-                                <button
-                                  id="{{ $t.ID}}-deleteBtn" 
-                                  class="btn body-button" 
-                                  onclick="deleteThing('{{ $t.ID }}')" 
-                                  title="删除"
-                                  disabled
-                                >
-                                  <i class="fa-solid fa-trash-can"></i>
-                                </button>
-                              {{ else }}  
-                                <button 
-                                  id="{{ $t.ID}}-rebootBtn" 
-                                  class="btn body-button" 
-                                  onclick="conntrolThing('{{ $t.ID}}', '{{ $t.Credentials.Identity }}', 'reboot')" 
-                                  title="重启"
-                                  disabled
-                                >
-                                  <i class="fa-solid fa-arrows-rotate"></i>
-                                </button>
-                                <button
-                                  id="{{ $t.ID}}-deleteBtn" 
-                                  class="btn body-button" 
-                                  onclick="deleteThing('{{ $t.ID }}')" 
-                                  title="删除"
-                                >
-                                  <i class="fa-solid fa-trash-can"></i>
-                                </button>
-                              {{ end }}  
-                            </td>
-                          </tr>
-                          <script>
-                            // attachFormatJsonWithPrettifyListener({
-                            //   data: '{{ toJSON $t.Metadata }}',
-                            //   id: "meta-{{ $i }}",
-                            // })
-                          </script>
-                        {{ end }}
-                      </tbody>
-                    </table>
-                  </div>
-                  {{ template "tablefooter" . }}
+                                                        <td class="operation-col">
+                                                            <button class="btn body-button" onclick="viewThing('{{ $t.ID }}')" title="查看">
+                                                                <i class="fa-solid fa-info"></i>
+                                                            </button>
+                                                            {{ if eq $t.Metadata.isOnline "1" }}
+                                                                <button
+                                                                    id="{{ $t.ID }}-rebootBtn"
+                                                                    class="btn body-button"
+                                                                    onclick="conntrolThing('{{ $t.ID }}', '{{ $t.Credentials.Identity }}', 'reboot')"
+                                                                    title="重启"
+                                                                >
+                                                                    <i class="fa-solid fa-arrows-rotate"></i>
+                                                                </button>
+                                                                <button id="{{ $t.ID }}-deleteBtn" class="btn body-button" onclick="deleteThing('{{ $t.ID }}')" title="删除" disabled>
+                                                                    <i class="fa-solid fa-trash-can"></i>
+                                                                </button>
+                                                            {{ else }}
+                                                                <button
+                                                                    id="{{ $t.ID }}-rebootBtn"
+                                                                    class="btn body-button"
+                                                                    onclick="conntrolThing('{{ $t.ID }}', '{{ $t.Credentials.Identity }}', 'reboot')"
+                                                                    title="重启"
+                                                                    disabled
+                                                                >
+                                                                    <i class="fa-solid fa-arrows-rotate"></i>
+                                                                </button>
+                                                                <button id="{{ $t.ID }}-deleteBtn" class="btn body-button" onclick="deleteThing('{{ $t.ID }}')" title="删除">
+                                                                    <i class="fa-solid fa-trash-can"></i>
+                                                                </button>
+                                                            {{ end }}
+                                                        </td>
+                                                    </tr>
+                    <script>
+                      // attachFormatJsonWithPrettifyListener({
+                      //   data: '{{ toJSON $t.Metadata }}',
+                      //   id: "meta-{{ $i }}",
+                      // })
+                    </script>
+                                                {{ end }}
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                    {{ template "tablefooter" . }}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-              </div>
             </div>
-          </div>
-        </div>
-      </div>
-      <script>
-        const thingModal = new bootstrap.Modal(document.getElementById("addThingModal"));
-        const thingsModal = new bootstrap.Modal(document.getElementById("addThingsModal"));
+            <script>
+              const thingModal = new bootstrap.Modal(document.getElementById("addThingModal"));
+              const thingsModal = new bootstrap.Modal(document.getElementById("addThingsModal"));
 
-        function openModal(modal) {
-          if (modal === "single") {
-            thingModal.show();
-          } else if (modal === "bulk") {
-            thingsModal.show();
-          }
-        }
-
-        codeMirrorEditor({
-          textArea: "metadata",
-          button: "create-thing-button",
-          value: {},
-        });
-        
-        //查看详情
-        function viewThing(id) {
-          window.location.href = '{{printf "%s/things/" pathPrefix}}' + id;
-        }
-
-        //删除
-        function deleteThing(thingID) {
-          // 显示确认对话框
-          const userConfirmed = confirm("你确定要删除所选数据吗？");
-          
-          // 根据用户的选择执行不同的操作
-          if (userConfirmed) {
-            fetch(`/ui/things/${thingID}/channelsInJSON?page=1&limit=1000`, {
-              method: "GET",
-            })
-            .then(response => {  
-                if (!response.ok) {  
-                    throw new Error('Network response was not ok');  
-                }  
-                return response.json(); // 直接将流转换为JSON对象  
-            })  
-            .then(json => {  
-              const data = json.data;
-              const channelsData = JSON.parse(data).channelsData;
-              const channels = channelsData.groups;
-              const fetchPromises = channels.map((channel)=>disconnectThingsAndChannels(thingID, channel.id)); 
-              Promise.all(fetchPromises).then(responses => {})
-                .then(jsonData => {handleDelete(thingID)})
-                .catch(error => {  
-                  // 如果有任何错误发生，这里会捕获到  
-                  console.error('An error occurred:', error);  
-                });
-            })
-          } else {
-              console.log("用户点击了取消。");
-              // 执行取消后的操作
-          }
-        }
-
-        function handleDelete(thingID) {
-          fetch(`/ui/things/${thingID}`, {
-            method: "DELETE",
-          })
-          .then(function (response) {
-            if (!response.ok) {
-              const errorMessage = response.headers.get("X-Error-Message");
-              if (errorMessage) {
-                console.log(errorMessage);
-              } else {
-                console.log(`Error: ${response.status}`);
+              function openModal(modal) {
+                if (modal === "single") {
+                  thingModal.show();
+                } else if (modal === "bulk") {
+                  thingsModal.show();
+                }
               }
-            } else {
-              window.location.reload();
-            }
-          })
-          .catch((error) => {
-            window.location.reload();
-            console.error("error submitting form: ", error);
-          });
-        }
 
-        //控制设备
-        function conntrolThing(thingID, thingIdentity, controlType) {
-          fetch(`/ui/things/${thingID}/channelsInJSON?page=1&limit=1000`, {
-            method: "GET",
-          })
-          .then(response => {  
-              if (!response.ok) {  
-                  throw new Error('Network response was not ok');  
-              }  
-              return response.json(); // 直接将流转换为JSON对象  
-          })  
-          .then(json => {  
-            const data = json.data;
-            const channelsData = JSON.parse(data).channelsData;
-            const channels = channelsData.groups;
-            const message = `${controlType} ${thingIdentity}`;
-              const fetchPromises = channels.map((channel)=>postMessage(channel.id, message)); 
-              Promise.all(fetchPromises).then(responses => {}).then(jsonData => {})
-              .catch(error => {console.error('An error occurred:', error); });
-          })
-        }
+              codeMirrorEditor({
+                textArea: "metadata",
+                button: "create-thing-button",
+                value: {},
+              });
 
-        //轮询刷新thingslist，以实现监听things在线状态的
-        function refreshThingsData() {
-          // 获取当前页面的完整URL  
-          var currentUrl = window.location.href;  
-          // 创建URL对象  
-          var urlObj = new URL(currentUrl);  
-          // 使用URL对象的searchParams属性获取URLSearchParams对象  
-          var searchParams = urlObj.searchParams;  
-          // 使用get方法从URLSearchParams对象中获取page和limit的值  
-          var page = searchParams.get('page') || 1;  
-          var limit = searchParams.get('limit') || 10; 
-          fetch(`/ui/things/thingsInJSON?page=${page}&limit=${limit}`, {
-            method: "GET",
-          })
-          .then(response => {  
-              if (!response.ok) {  
-                  throw new Error('Network response was not ok');  
-              }  
-              return response.json(); // 直接将流转换为JSON对象  
-          })  
-          .then(json => {  
-            const data = json.data;
-            const thingsData = JSON.parse(data).thingsData
-            // console.log("thingsData: ", thingsData);
-
-            const things = thingsData.things;
-            things.forEach((thing)=>{
-              const onlineStatus = thing.metadata && thing.metadata.isOnline === "1";
-              $(`#${thing.id}-onlineStatusTD`).empty();
-              if(onlineStatus) {
-                $('<span class="badge rounded-pill enabled-pill">在线</span>').appendTo(`#${thing.id}-onlineStatusTD`);
-                $(`#${thing.id}-rebootBtn`).prop('disabled', false);
-                $(`#${thing.id}-deleteBtn`).prop('disabled', true);
-              }else{
-                $('<span class="badge rounded-pill disabled-pill">离线</span>').appendTo(`#${thing.id}-onlineStatusTD`);
-                $(`#${thing.id}-rebootBtn`).prop('disabled', true);
-                $(`#${thing.id}-deleteBtn`).prop('disabled', false);
+              //查看详情
+              function viewThing(id) {
+                window.location.href = '{{printf "%s/things/" pathPrefix}}' + id;
               }
-            })
-          })  
-          .catch(error => {  
-              // console.error('处理fetch或JSON时出错:', error);  
-          });
-        }
-        var intervalRefreshData = setInterval(refreshThingsData, 2000); 
 
-        function postMessage(channelID, message){
-          let formData = new FormData();
-          formData.append("channelID", channelID);
-          formData.append("message", message);
-          formData.append("thingSecret","platform");
-          fetch(`/ui/channels/messages`, {
-              method: "POST",
-              body: formData,
-            })
-            .then(response => {  
-                if (!response.ok) {  
-                    throw new Error('Network response was not ok');  
-                }  
-                return response.json(); // 直接将流转换为JSON对象  
-            })  
-            .then(json => {  
-              //
-            })  
-            .catch(error => {  
-                console.error('处理fetch或JSON时出错:', error);  
-            });
-        }
-      </script>  
-      <script type="module">
-        import {
-          attachValidationListener,
-          validateName,
-          validateJSON,
-          validateStringArray,
-        } from "/js/validation.js";
-        import { submitCreateForm } from "/js/forms.js";
+              //删除
+              function deleteThing(thingID) {
+                // 显示确认对话框
+                const userConfirmed = confirm("你确定要删除所选数据吗？");
 
-        attachValidationListener({
-          buttonId: "create-thing-button",
-          errorDivs: {
-            name: "nameError",
-            metadata: "metadataError",
-            thingsTags: "tagsError",
-          },
-          validations: {
-            name: validateName,
-            metadata: validateJSON,
-            thingsTags: validateStringArray,
-          },
-          fields: {
-            name: "name-field",
-            metadata: "metadata-field",
-            thingsTags: "tags-field",
-          },
-        });
+                // 根据用户的选择执行不同的操作
+                if (userConfirmed) {
+                  fetch(`/ui/things/${thingID}/channelsInJSON?page=1&limit=1000`, {
+                    method: "GET",
+                  })
+                    .then(response => {
+                      if (!response.ok) {
+                        throw new Error('Network response was not ok');
+                      }
+                      return response.json(); // 直接将流转换为JSON对象
+                    })
+                    .then(json => {
+                      const data = json.data;
+                      const channelsData = JSON.parse(data).channelsData;
+                      const channels = channelsData.groups;
+                      const fetchPromises = channels.map((channel) => disconnectThingsAndChannels(thingID, channel.id));
+                      Promise.all(fetchPromises).then(responses => { })
+                        .then(jsonData => { handleDelete(thingID) })
+                        .catch(error => {
+                          // 如果有任何错误发生，这里会捕获到
+                          console.error('An error occurred:', error);
+                        });
+                    })
+                } else {
+                  console.log("用户点击了取消。");
+                  // 执行取消后的操作
+                }
+              }
 
-        submitCreateForm({
-          url: '{{printf "%s/things" pathPrefix}}',
-          formId: "thingform",
-          alertDiv: "alertMessage",
-          modal: thingModal,
-        });
+              function handleDelete(thingID) {
+                fetch(`/ui/things/${thingID}`, {
+                  method: "DELETE",
+                })
+                  .then(function (response) {
+                    if (!response.ok) {
+                      const errorMessage = response.headers.get("X-Error-Message");
+                      if (errorMessage) {
+                        console.log(errorMessage);
+                      } else {
+                        console.log(`Error: ${response.status}`);
+                      }
+                    } else {
+                      window.location.reload();
+                    }
+                  })
+                  .catch((error) => {
+                    window.location.reload();
+                    console.error("error submitting form: ", error);
+                  });
+              }
 
-        submitCreateForm({
-          url: '{{printf "%s/things/bulk" pathPrefix}}',
-          formId: "bulkThingsForm",
-          alertDiv: "alertBulkMessage",
-          modal: thingsModal,
-        });
-      </script>
-    </body>
-  </html>
+              //控制设备
+              function conntrolThing(thingID, thingIdentity, controlType) {
+                fetch(`/ui/things/${thingID}/channelsInJSON?page=1&limit=1000`, {
+                  method: "GET",
+                })
+                  .then(response => {
+                    if (!response.ok) {
+                      throw new Error('Network response was not ok');
+                    }
+                    return response.json(); // 直接将流转换为JSON对象
+                  })
+                  .then(json => {
+                    const data = json.data;
+                    const channelsData = JSON.parse(data).channelsData;
+                    const channels = channelsData.groups;
+                    const message = `${controlType} ${thingIdentity}`;
+                    const fetchPromises = channels.map((channel) => postMessage(channel.id, message));
+                    Promise.all(fetchPromises).then(responses => { }).then(jsonData => { })
+                      .catch(error => { console.error('An error occurred:', error); });
+                  })
+              }
+
+              //轮询刷新thingslist，以实现监听things在线状态的
+              function refreshThingsData() {
+                // 获取当前页面的完整URL
+                var currentUrl = window.location.href;
+                // 创建URL对象
+                var urlObj = new URL(currentUrl);
+                // 使用URL对象的searchParams属性获取URLSearchParams对象
+                var searchParams = urlObj.searchParams;
+                // 使用get方法从URLSearchParams对象中获取page和limit的值
+                var page = searchParams.get('page') || 1;
+                var limit = searchParams.get('limit') || 10;
+                fetch(`/ui/things/thingsInJSON?page=${page}&limit=${limit}`, {
+                  method: "GET",
+                })
+                  .then(response => {
+                    if (!response.ok) {
+                      throw new Error('Network response was not ok');
+                    }
+                    return response.json(); // 直接将流转换为JSON对象
+                  })
+                  .then(json => {
+                    const data = json.data;
+                    const thingsData = JSON.parse(data).thingsData
+                    // console.log("thingsData: ", thingsData);
+
+                    const things = thingsData.things;
+                    things.forEach((thing) => {
+                      const onlineStatus = thing.metadata && thing.metadata.isOnline === "1";
+                      $(`#${thing.id}-onlineStatusTD`).empty();
+                      if (onlineStatus) {
+                        $('<span class="badge rounded-pill enabled-pill">在线</span>').appendTo(`#${thing.id}-onlineStatusTD`);
+                        $(`#${thing.id}-rebootBtn`).prop('disabled', false);
+                        $(`#${thing.id}-deleteBtn`).prop('disabled', true);
+                      } else {
+                        $('<span class="badge rounded-pill disabled-pill">离线</span>').appendTo(`#${thing.id}-onlineStatusTD`);
+                        $(`#${thing.id}-rebootBtn`).prop('disabled', true);
+                        $(`#${thing.id}-deleteBtn`).prop('disabled', false);
+                      }
+                    })
+                  })
+                  .catch(error => {
+                    // console.error('处理fetch或JSON时出错:', error);
+                  });
+              }
+              var intervalRefreshData = setInterval(refreshThingsData, 2000);
+
+              function postMessage(channelID, message) {
+                let formData = new FormData();
+                formData.append("channelID", channelID);
+                formData.append("message", message);
+                formData.append("thingSecret", "platform");
+                fetch(`/ui/channels/messages`, {
+                  method: "POST",
+                  body: formData,
+                })
+                  .then(response => {
+                    if (!response.ok) {
+                      throw new Error('Network response was not ok');
+                    }
+                    return response.json(); // 直接将流转换为JSON对象
+                  })
+                  .then(json => {
+                    //
+                  })
+                  .catch(error => {
+                    console.error('处理fetch或JSON时出错:', error);
+                  });
+              }
+            </script> 
+            <script type="module">
+              import {
+                attachValidationListener,
+                validateName,
+                validateJSON,
+                validateStringArray,
+              } from "/js/validation.js";
+              import { submitCreateForm } from "/js/forms.js";
+
+              attachValidationListener({
+                buttonId: "create-thing-button",
+                errorDivs: {
+                  name: "nameError",
+                  metadata: "metadataError",
+                  thingsTags: "tagsError",
+                },
+                validations: {
+                  name: validateName,
+                  metadata: validateJSON,
+                  thingsTags: validateStringArray,
+                },
+                fields: {
+                  name: "name-field",
+                  metadata: "metadata-field",
+                  thingsTags: "tags-field",
+                },
+              });
+
+              submitCreateForm({
+                url: '{{printf "%s/things" pathPrefix}}',
+                formId: "thingform",
+                alertDiv: "alertMessage",
+                modal: thingModal,
+              });
+
+              submitCreateForm({
+                url: '{{printf "%s/things/bulk" pathPrefix}}',
+                formId: "bulkThingsForm",
+                alertDiv: "alertBulkMessage",
+                modal: thingsModal,
+              });
+            </script>
+        </body>
+    </html>
 {{ end }}

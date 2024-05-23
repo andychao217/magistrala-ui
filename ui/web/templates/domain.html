@@ -2,215 +2,212 @@
 SPDX-License-Identifier: Apache-2.0 -->
 
 {{ define "domain" }}
-  <!doctype html>
-  <html lang="en">
-    <head>
-      <title>机构</title>
-      {{ template "header" }}
-    </head>
-    <body>
-      {{ template "navbar" . }}
-      <div class="main-content pt-3">
-        <div class="container-fluid">
-          <div class="row-mb-3 p-3">
-            <div class="col-lg-12 pt-3">
-              {{ template "breadcrumb" . }}
-            </div>
-            <div class="col-lg-12 mx-auto py-3 org-col mt-5">
-              <div class="row mb-3 p-3">
-                <div class="col-md-12">
-                  <p>
-                    欢迎来到机构页面. 在这里你可以修改机构相关信息.
-                  </p>
+    <!doctype html>
+    <html lang="en">
+        <head>
+            <title>机构</title>
+            {{ template "header" }}
+        </head>
+        <body>
+            {{ template "navbar" . }}
+            <div class="main-content pt-3">
+                <div class="container-fluid">
+                    <div class="row-mb-3 p-3">
+                        <div class="col-lg-12 pt-3">
+                            {{ template "breadcrumb" . }}
+                        </div>
+                        <div class="col-lg-12 mx-auto py-3 org-col mt-5">
+                            <div class="row mb-3 p-3">
+                                <div class="col-md-12">
+                                    <p>欢迎来到机构页面. 在这里你可以修改机构相关信息.</p>
+                                </div>
+                            </div>
+                            <div class="row mb-3 p-3">
+                                <h4 class="mb-3">机构信息</h4>
+                                <div class="table-responsive">
+                                    <table class="table border-top">
+                                        <tbody>
+                                            {{ $editButton := false }}
+                                            {{ if (hasPermission .Permissions "edit") }}
+                                                {{ $editButton = true }}
+                                            {{ end }}
+                                            <tr>
+                                                <th>机构名称</th>
+                                                <td class="editable name-field" contenteditable="false" data-field="name">
+                                                    {{ .Entity.Name }}
+                                                </td>
+                                                <td>
+                                                    <button
+                                                        class="edit-btn"
+                                                        id="edit-name"
+                                                        {{ if not $editButton }}disabled{{ end }}
+                                                    >
+                                                        <i class="fas fa-pencil-alt"></i>
+                                                    </button>
+                                                    <div class="save-cancel-buttons" style="display: none">
+                                                        <button class="save-btn" id="save-name">保存</button>
+                                                        <button class="cancel-btn" id="cancel-name">取消</button>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <th>机构标识</th>
+                                                <td class="editable tags-field" contenteditable="false" data-field="tags">
+                                                    {{ toSlice .Entity.Tags }}
+                                                </td>
+                                                <td>
+                                                    <button
+                                                        class="edit-btn"
+                                                        id="edit-tags"
+                                                        {{ if not $editButton }}disabled{{ end }}
+                                                    >
+                                                        <i class="fas fa-pencil-alt"></i>
+                                                    </button>
+                                                    <div class="save-cancel-buttons" style="display: none">
+                                                        <button class="save-btn" id="save-tags">保存</button>
+                                                        <button class="cancel-btn" id="cancel-tags">取消</button>
+                                                    </div>
+                                                </td>
+                                            </tr>
+
+                                            <tr>
+                                                <th>机构别名</th>
+                                                <td class="editable alias-field" contenteditable="false" data-field="alias">
+                                                    {{ .Entity.Alias }}
+                                                </td>
+                                                <td>
+                                                    <button
+                                                        class="edit-btn"
+                                                        id="edit-alias"
+                                                        {{ if not $editButton }}disabled{{ end }}
+                                                    >
+                                                        <i class="fas fa-pencil-alt"></i>
+                                                    </button>
+                                                    <div class="save-cancel-buttons" style="display: none">
+                                                        <button class="save-btn" id="save-alias">保存</button>
+                                                        <button class="cancel-btn" id="cancel-alias">取消</button>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <th>机构附加属性</th>
+                                                <td>
+                                                    <div>
+                                                        <pre id="meta-data"></pre>
+                                                    </div>
+                                                </td>
+                                                <td>
+                                                    <button
+                                                        type="button"
+                                                        class="edit-btn"
+                                                        data-bs-toggle="modal"
+                                                        data-bs-target="#editMetadataModal"
+                                                        style="display: none;"
+                                                        {{ if not $editButton }}disabled{{ end }}
+                                                    >
+                                                        <i class="fas fa-pencil-alt"></i>
+                                                    </button>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <th class="text-muted">创建人</th>
+                                                <td>{{ .Entity.CreatedBy }}</td>
+                                                <td></td>
+                                            </tr>
+                                            <tr>
+                                                <th class="text-muted">创建时间</th>
+                                                <td>{{ .Entity.CreatedAt }}</td>
+                                                <td></td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                    <div id="error-message" class="text-danger"></div>
+                                    <div class="row-mb-3 mt-3" style="display: none;">
+                                        {{ if eq .Entity.Status "enabled" }}
+                                            <button
+                                                type="button"
+                                                class="btn body-button"
+                                                data-bs-toggle="modal"
+                                                data-bs-target="#disableEntityModal"
+                                                {{ if not (hasPermission .Permissions "admin") }}disabled{{ end }}
+                                            >
+                                                禁用机构
+                                            </button>
+                                        {{ else }}
+                                            <button
+                                                type="button"
+                                                class="btn body-button"
+                                                data-bs-toggle="modal"
+                                                data-bs-target="#enableEntityModal"
+                                                {{ if not (hasPermission .Permissions "admin") }}disabled{{ end }}
+                                            >
+                                                启用机构
+                                            </button>
+                                        {{ end }}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-              </div>
-              <div class="row mb-3 p-3">
-                <h4 class="mb-3">机构信息</h4>
-                <div class="table-responsive">
-                  <table class="table border-top">
-                    <tbody>
-                      {{ $editButton := false }}
-                      {{ if (hasPermission .Permissions "edit") }}
-                        {{ $editButton = true }}
-                      {{ end }}
-                      <tr>
-                        <th>机构名称</th>
-                        <td class="editable name-field" contenteditable="false" data-field="name">
-                          {{ .Entity.Name }}
-                        </td>
-                        <td>
-                          <button
-                            class="edit-btn"
-                            id="edit-name"
-                            {{ if not $editButton }}disabled{{ end }}
-                          >
-                            <i class="fas fa-pencil-alt"></i>
-                          </button>
-                          <div class="save-cancel-buttons" style="display: none">
-                            <button class="save-btn" id="save-name">保存</button>
-                            <button class="cancel-btn" id="cancel-name">取消</button>
-                          </div>
-                        </td>
-                      </tr>
-                      <tr>
-                        <th>机构标识</th>
-                        <td class="editable tags-field" contenteditable="false" data-field="tags">
-                          {{ toSlice .Entity.Tags }}
-                        </td>
-                        <td>
-                          <button
-                            class="edit-btn"
-                            id="edit-tags"
-                            {{ if not $editButton }}disabled{{ end }}
-                          >
-                            <i class="fas fa-pencil-alt"></i>
-                          </button>
-                          <div class="save-cancel-buttons" style="display: none">
-                            <button class="save-btn" id="save-tags">保存</button>
-                            <button class="cancel-btn" id="cancel-tags">取消</button>
-                          </div>
-                        </td>
-                      </tr>
 
-                      <tr>
-                        <th>机构别名</th>
-                        <td class="editable alias-field" contenteditable="false" data-field="alias">
-                          {{ .Entity.Alias }}
-                        </td>
-                        <td>
-                          <button
-                            class="edit-btn"
-                            id="edit-alias"
-                            {{ if not $editButton }}disabled{{ end }}
-                          >
-                            <i class="fas fa-pencil-alt"></i>
-                          </button>
-                          <div class="save-cancel-buttons" style="display: none">
-                            <button class="save-btn" id="save-alias">保存</button>
-                            <button class="cancel-btn" id="cancel-alias">取消</button>
-                          </div>
-                        </td>
-                      </tr>
-                      <tr>
-                        <th>机构附加属性</th>
-                        <td>
-                          <div>
-                            <pre id="meta-data"></pre>
-                          </div>
-                        </td>
-                        <td>
-                          <button
-                            type="button"
-                            class="edit-btn"
-                            data-bs-toggle="modal"
-                            data-bs-target="#editMetadataModal"
-                            style="display: none;"
-                            {{ if not $editButton }}disabled{{ end }}
-                          >
-                            <i class="fas fa-pencil-alt"></i>
-                          </button>
-                        </td>
-                      </tr>
-                      <tr>
-                        <th class="text-muted">创建人</th>
-                        <td>{{ .Entity.CreatedBy }}</td>
-                        <td></td>
-                      </tr>
-                      <tr>
-                        <th class="text-muted">创建时间</th>
-                        <td>{{ .Entity.CreatedAt }}</td>
-                        <td></td>
-                      </tr>
-                    </tbody>
-                  </table>
-                  <div id="error-message" class="text-danger"></div>
-                  <div class="row-mb-3 mt-3" style="display: none;">
-                    {{ if eq .Entity.Status "enabled" }}
-                      <button
-                        type="button"
-                        class="btn body-button"
-                        data-bs-toggle="modal"
-                        data-bs-target="#disableEntityModal"
-                        {{ if not (hasPermission .Permissions "admin") }}disabled{{ end }}
-                      >
-                        禁用机构
-                      </button>
-                    {{ else }}
-                      <button
-                        type="button"
-                        class="btn body-button"
-                        data-bs-toggle="modal"
-                        data-bs-target="#enableEntityModal"
-                        {{ if not (hasPermission .Permissions "admin") }}disabled{{ end }}
-                      >
-                        启用机构
-                      </button>
-                    {{ end }}
-                  </div>
-                </div>
-              </div>
+                <!-- status update modals -->
+                {{ template "statusupdate" . }}
             </div>
-          </div>
-        </div>
+            <script>
+              var metadata = "{{ toJSON .Entity.Metadata }}";
+              var parsedMetadata = JSON.parse(metadata);
 
-        <!-- status update modals -->
-        {{ template "statusupdate" . }}
+              attachFormatJsonWithPrettifyListener({
+                id: "meta-data",
+                data: metadata,
+              });
 
-      </div>
-      <script>
-        var metadata = "{{ toJSON .Entity.Metadata }}";
-        var parsedMetadata = JSON.parse(metadata);
+              codeMirrorEditor({
+                textArea: "metadataTextArea",
+                button: "save-metadata",
+                value: parsedMetadata,
+              });
+            </script>      
+            <script type="module">
+              import {
+                attachEditRowListener,
+                updateName,
+                updateMetadata,
+                updateTags,
+                updateDescription
+              } from "/js/update.js";
 
-        attachFormatJsonWithPrettifyListener({
-          id: "meta-data",
-          data: metadata,
-        });
+              attachEditRowListener(
+                {
+                  entity: "domains",
+                  id: "{{ .Entity.ID }}",
+                  rows: {
+                    name:updateName,
+                    tags:updateTags,
+                    alias:updateDescription,
+                  },
+                  errorDiv: "error-message",
+                  fields: {
+                    name: "name-field",
+                    alias: "alias-field",
+                    tags: "tags-field",
+                  },
+                  pathPrefix: "{{ pathPrefix }}",
+                }
+              );
 
-        codeMirrorEditor({
-          textArea: "metadataTextArea",
-          button: "save-metadata",
-          value: parsedMetadata,
-        });
-      </script>      
-      <script type="module">
-        import { 
-          attachEditRowListener, 
-          updateName, 
-          updateMetadata, 
-          updateTags, 
-          updateDescription 
-        } from "/js/update.js";
-
-        attachEditRowListener(
-          {
-            entity: "domains",
-            id: "{{ .Entity.ID }}",
-            rows: {
-              name:updateName,
-              tags:updateTags,
-              alias:updateDescription,
-            },
-            errorDiv: "error-message",
-            fields: {
-              name: "name-field",
-              alias: "alias-field",
-              tags: "tags-field",
-            },
-            pathPrefix: "{{ pathPrefix }}",
-          }
-        );
-
-        updateMetadata({
-          textArea: "metadataTextArea",
-          field:"metadata",
-          alertDiv: "metadataError",
-          fieldName: "metadata-field",
-          id: "{{ .Entity.ID }}",
-          entity: "domains",
-          button: "save-metadata",
-          pathPrefix: "{{ pathPrefix }}",
-        });
-      </script>
-    </body>
-  </html>
+              updateMetadata({
+                textArea: "metadataTextArea",
+                field:"metadata",
+                alertDiv: "metadataError",
+                fieldName: "metadata-field",
+                id: "{{ .Entity.ID }}",
+                entity: "domains",
+                button: "save-metadata",
+                pathPrefix: "{{ pathPrefix }}",
+              });
+            </script>
+        </body>
+    </html>
 {{ end }}

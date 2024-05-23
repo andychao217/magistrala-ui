@@ -2,86 +2,84 @@
 SPDX-License-Identifier: Apache-2.0 -->
 
 {{ define "domains" }}
-  <!doctype html>
-  <html lang="en">
-    <head>
-      <title>机构</title>
-      {{ template "header" }}
-    </head>
-    <body>
-      {{ template "navbar" . }}
-      <div class="main-content pt-3">
-        <div class="container-fluid">
-          <div class="row-mb-3 p-3">
-            <div class="col-lg-12 mx-auto py-3">
-              {{ template "breadcrumb" . }}
-              <div class="row-mb-3 d-flex flex-row justify-content-between mb-3">
-                <h2>机构</h2>
-                <button role="button" class="btn body-button" onclick="openCreateDomainModal()">
-                  <i class="fa-solid fa-plus me-2"></i>
-                  <span>创建机构</span>
-                </button>
-              </div>
+    <!doctype html>
+    <html lang="en">
+        <head>
+            <title>机构</title>
+            {{ template "header" }}
+        </head>
+        <body>
+            {{ template "navbar" . }}
+            <div class="main-content pt-3">
+                <div class="container-fluid">
+                    <div class="row-mb-3 p-3">
+                        <div class="col-lg-12 mx-auto py-3">
+                            {{ template "breadcrumb" . }}
+                            <div class="row-mb-3 d-flex flex-row justify-content-between mb-3">
+                                <h2>机构</h2>
+                                <button role="button" class="btn body-button" onclick="openCreateDomainModal()">
+                                    <i class="fa-solid fa-plus me-2"></i>
+                                    <span>创建机构</span>
+                                </button>
+                            </div>
 
-              <div class="table-responsive table-container">
-                {{ template "tableheader" . }}
-                <div class="itemsTable">
-                  <table class="table">
-                    <thead>
-                      <th scope="col">名称</th>
-                      <th class="tags-col" scope="col">标识</th>
-                      <th scope="col">角色</th>
-                      <th class="alias-col" scope="col">别名</th>
-                      <!-- <th class="col">状态</th> -->
-                      <th scope="col">进入</th>
-                    </thead>
-                    <tbody>
-                      {{ range $i, $d := .Domains }}
-                        <tr>
-                          <td>{{ $d.Name }}</td>
-                          <td class="tags-col">
-                            {{ range $j, $tag := $d.Tags }}
-                              <span class="badge bg-dark">{{ $tag }}</span>
-                            {{ end }}
-                          </td>
-                          <td><span class="badge bg-secondary">{{ $d.Permission }}</span></td>
-                          <td class="alias-col">{{ $d.Alias }}</td>
-                          <!-- <td>
-                            {{ if eq $d.Status "enabled" }}
-                              <span class="badge rounded-pill enabled-pill">启用</span>
-                            {{ else if eq $d.Status "disabled" }}
-                              <span class="badge rounded-pill disabled-pill">
-                                禁用
-                              </span>
-                            {{ end }}
-                          </td> -->
-                          <td>
-                            <form method="post" action="{{ printf "%s/domains/login" pathPrefix }}">
-                              <input type="hidden" name="domainID" value="{{ $d.ID }}" />
-                              <button
-                                type="submit"
-                                class="btn body-button"
-                                {{ if ne $d.Permission "administrator" }}
-                                  {{ if eq $d.Status "disabled" }}
-                                    disabled
-                                  {{ end }}
-                                {{ end }}
-                              >
-                                <i class="fa-solid fa-right-to-bracket"></i>
-                              </button>
-                            </form>
-                          </td>
-                        </tr>
-                      {{ end }}
-                    </tbody>
-                  </table>
+                            <div class="table-responsive table-container">
+                                {{ template "tableheader" . }}
+                                <div class="itemsTable">
+                                    <table class="table">
+                                        <thead>
+                                            <th scope="col">名称</th>
+                                            <th class="tags-col" scope="col">标识</th>
+                                            <th scope="col">角色</th>
+                                            <th class="alias-col" scope="col">别名</th>
+                                            <!-- <th class="col">状态</th> -->
+                                            <th scope="col">进入</th>
+                                        </thead>
+                                        <tbody>
+                                            {{ range $i, $d := .Domains }}
+                                                <tr>
+                                                    <td>{{ $d.Name }}</td>
+                                                    <td class="tags-col">
+                                                        {{ range $j, $tag := $d.Tags }}
+                                                            <span class="badge bg-dark">{{ $tag }}</span>
+                                                        {{ end }}
+                                                    </td>
+                                                    <td><span class="badge bg-secondary">{{ $d.Permission }}</span></td>
+                                                    <td class="alias-col">{{ $d.Alias }}</td>
+                                                    <!-- <td>
+                                                    {{ if eq $d.Status "enabled" }}
+                                                        <span class="badge rounded-pill enabled-pill">启用</span>
+                                                    {{ else if eq $d.Status "disabled" }}
+                                                        <span class="badge rounded-pill disabled-pill">禁用</span>
+                                                    {{ end }}
+                                                    </td> -->
+                                                    <td>
+                                                        <form method="post" action="{{ printf "%s/domains/login" pathPrefix }}">
+                                                            <input type="hidden" name="domainID" value="{{ $d.ID }}" />
+                                                            <button
+                                                                type="submit"
+                                                                class="btn body-button"
+                                                                {{ if ne $d.Permission "administrator" }}
+                                                                    {{ if eq $d.Status "disabled" }}
+                                                                        disabled
+                                                                    {{ end }}
+                                                                {{ end }}
+                                                            >
+                                                                <i class="fa-solid fa-right-to-bracket"></i>
+                                                            </button>
+                                                        </form>
+                                                    </td>
+                                                </tr>
+                                            {{ end }}
+                                        </tbody>
+                                    </table>
+                                </div>
+                                {{ template "tablefooter" . }}
+                            </div>
+                        </div>
+                    </div>
                 </div>
-                {{ template "tablefooter" . }}
-              </div>
             </div>
-          </div>
-        </div>
-      </div>
-    </body>
-  </html>
+        </body>
+    </html>
 {{ end }}

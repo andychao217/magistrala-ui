@@ -2,31 +2,29 @@
 SPDX-License-Identifier: Apache-2.0 -->
 
 {{ define "error" }}
-  <!doctype html>
-  <html lang="en">
-    <head>
-      <title>错误</title>
-      {{ template "header" }}
-    </head>
-    <body>
-      {{ template "navbar" }}
-      <div class="main-content">
-        <div class="main">
-          <div class="row">
-            <div class="col-lg-8 mx-auto py-5">
-              <div class="row">
-                <div class="error-header py-5">
-                  <h1 class="error-header">抱歉, 你的请求发生了一个错误</h1>
+    <!doctype html>
+    <html lang="en">
+        <head>
+            <title>错误</title>
+            {{ template "header" }}
+        </head>
+        <body>
+            {{ template "navbar" }}
+            <div class="main-content">
+                <div class="main">
+                    <div class="row">
+                        <div class="col-lg-8 mx-auto py-5">
+                            <div class="row">
+                                <div class="error-header py-5">
+                                    <h1 class="error-header">抱歉, 你的请求发生了一个错误</h1>
+                                </div>
+                                <div class="alert alert-danger alert-dismissible">{{ .Error }}</div>
+                                <a type="button" href="javascript:window. history. back();" class="btn body-button">返回</a>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-                <div class="alert alert-danger alert-dismissible">{{ .Error }}</div>
-                <a type="button" href="javascript:window. history. back();" class="btn body-button">
-                  返回
-                </a>
-              </div>
             </div>
-          </div>
-        </div>
-      </div>
-    </body>
-  </html>
+        </body>
+    </html>
 {{ end }}

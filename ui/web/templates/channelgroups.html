@@ -2,175 +2,136 @@
 SPDX-License-Identifier: Apache-2.0 -->
 
 {{ define "channelgroups" }}
-  <!doctype html>
-  <html lang="en">
-    <head>
-      <title>分区关联组</title>
-      {{ template "header" }}
-    </head>
-    <body>
-      {{ template "navbar" . }}
-      <div class="main-content pt-3">
-        <div class="container-fluid">
-          <div class="row-mb-3 p-3">
-            <div class="col-lg-12 mx-auto py-3">
-              {{ template "breadcrumb" . }}
-              <div class="row">
-                <div class="table-responsive table-container">
-                  {{ $shareButton := false }}
-                  {{ if (hasPermission .Permissions "share") }}
-                    {{ $shareButton = true }}
-                  {{ end }}
-                  <div class="d-flex flex-row justify-content-between">
-                    <h4>分区关联组</h4>
-                    <button
-                      role="button"
-                      class="btn body-button"
-                      onclick="openGroupModal()"
-                      {{ if not $shareButton }}disabled{{ end }}
-                    >
-                      <i class="fa-solid fa-plus fs-4"></i>
-                    </button>
-                    <!-- add group modal -->
-                    <div
-                      class="modal fade"
-                      id="addGroupModal"
-                      tabindex="-1"
-                      aria-labelledby="addGroupModalLabel"
-                      aria-hidden="true"
-                    >
-                      <div class="modal-dialog modal-dialog-centered">
-                        <div class="modal-content">
-                          <div class="modal-header">
-                            <h1 class="modal-title" id="addGroupModalLabel">添加组</h1>
-                            <button
-                              type="button"
-                              class="btn-close"
-                              data-bs-dismiss="modal"
-                              aria-label="Close"
-                            ></button>
-                          </div>
-                          <form
-                            action="{{ printf "%s/channels/%s/groups/assign?item=channels" pathPrefix .ChannelID }}"
-                            method="post"
-                          >
-                            <div class="modal-body">
-                              <div class="mb-3">
-                                <label for="infiniteScroll" class="form-label">组ID</label>
-                                <input
-                                  type="text"
-                                  name="groupFilter"
-                                  id="groupFilter"
-                                  placeholder="通过组ID过滤"
-                                />
-                                <select
-                                  class="form-select"
-                                  name="groupID"
-                                  id="infiniteScroll"
-                                  size="5"
-                                  required
-                                >
-                                  <option disabled>选择组</option>
-                                </select>
-                              </div>
+    <!doctype html>
+    <html lang="en">
+        <head>
+            <title>分区关联组</title>
+            {{ template "header" }}
+        </head>
+        <body>
+            {{ template "navbar" . }}
+            <div class="main-content pt-3">
+                <div class="container-fluid">
+                    <div class="row-mb-3 p-3">
+                        <div class="col-lg-12 mx-auto py-3">
+                            {{ template "breadcrumb" . }}
+                            <div class="row">
+                                <div class="table-responsive table-container">
+                                    {{ $shareButton := false }}
+                                    {{ if (hasPermission .Permissions "share") }}
+                                        {{ $shareButton = true }}
+                                    {{ end }}
+                                    <div class="d-flex flex-row justify-content-between">
+                                        <h4>分区关联组</h4>
+                                        <button
+                                            role="button"
+                                            class="btn body-button"
+                                            onclick="openGroupModal()"
+                                            {{ if not $shareButton }}disabled{{ end }}
+                                        >
+                                            <i class="fa-solid fa-plus fs-4"></i>
+                                        </button>
+                                        <!-- add group modal -->
+                                        <div class="modal fade" id="addGroupModal" tabindex="-1" aria-labelledby="addGroupModalLabel" aria-hidden="true">
+                                            <div class="modal-dialog modal-dialog-centered">
+                                                <div class="modal-content">
+                                                    <div class="modal-header">
+                                                        <h1 class="modal-title" id="addGroupModalLabel">添加组</h1>
+                                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                    </div>
+                                                    <form action="{{ printf "%s/channels/%s/groups/assign?item=channels" pathPrefix .ChannelID }}" method="post">
+                                                        <div class="modal-body">
+                                                            <div class="mb-3">
+                                                                <label for="infiniteScroll" class="form-label">组ID</label>
+                                                                <input type="text" name="groupFilter" id="groupFilter" placeholder="通过组ID过滤" />
+                                                                <select class="form-select" name="groupID" id="infiniteScroll" size="5" required>
+                                                                    <option disabled>选择组</option>
+                                                                </select>
+                                                            </div>
+                                                        </div>
+                                                        <div class="modal-footer">
+                                                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">取消</button>
+                                                            <button type="submit" class="btn body-button">分配</button>
+                                                        </div>
+                                                    </form>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    {{ template "tableheader" . }}
+                                    <div class="itemsTable">
+                                        <table id="itemsTable" class="table table-hover">
+                                            <thead>
+                                                <tr>
+                                                    <th scope="col">名称</th>
+                                                    <th class="desc-col" scope="col">描述</th>
+                                                    <th class="meta-col" scope="col">附加属性</th>
+                                                    <th class="created-col" scope="col">创建时间</th>
+                                                    <th class="text-center" scope="col"></th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                {{ $channelID := .ChannelID }}
+                                                {{ range $i, $g := .Groups }}
+                                                    <tr onclick="viewGroups('{{ $g.ID }}')" class="clickable-row">
+                                                        <td>{{ $g.Name }}</td>
+                                                        <td class="desc-col">{{ $g.Description }}</td>
+                                                        <td class="meta-col">
+                                                            <div class="meta-div">
+                                                                <pre id="meta-{{ $i }}"></pre>
+                                                            </div>
+                                                        </td>
+                                                        <td class="created-col">{{ $g.CreatedAt }}</td>
+                                                        <td class="text-center">
+                                                            <form action="{{ printf "%s/channels/%s/groups/unassign?item=channels" pathPrefix $channelID }}" method="post">
+                                                                <input type="hidden" name="groupID" id="groupID" value="{{ $g.ID }}" />
+                                                                <button
+                                                                    type="submit"
+                                                                    class="btn btn-sm"
+                                                                    {{ if not $shareButton }}disabled{{ end }}
+                                                                >
+                                                                    <i class="fas fa-trash-alt"></i>
+                                                                </button>
+                                                            </form>
+                                                        </td>
+                                                    </tr>
+                                                    <script>
+                                                      attachFormatJsonWithPrettifyListener({
+                                                        data: '{{ toJSON $g.Metadata }}',
+                                                        id: "meta-{{ $i }}",
+                                                      })
+                                                    </script>
+                                                {{ end }}
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                    {{ template "tablefooter" . }}
+                                </div>
                             </div>
-                            <div class="modal-footer">
-                              <button
-                                type="button"
-                                class="btn btn-secondary"
-                                data-bs-dismiss="modal"
-                              >
-                                取消
-                              </button>
-                              <button type="submit" class="btn body-button">分配</button>
-                            </div>
-                          </form>
                         </div>
-                      </div>
                     </div>
-                  </div>
-                  {{ template "tableheader" . }}
-                  <div class="itemsTable">
-                    <table id="itemsTable" class="table table-hover">
-                      <thead>
-                        <tr>
-                          <th scope="col">名称</th>
-                          <th class="desc-col" scope="col">描述</th>
-                          <th class="meta-col" scope="col">附加属性</th>
-                          <th class="created-col" scope="col">创建时间</th>
-                          <th class="text-center" scope="col"></th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        {{ $channelID := .ChannelID }}
-                        {{ range $i, $g := .Groups }}
-                          <tr onclick="viewGroups('{{ $g.ID }}')" class="clickable-row">
-                            <td>{{ $g.Name }}</td>
-                            <td class="desc-col">{{ $g.Description }}</td>
-                            <td class="meta-col">
-                              <div class="meta-div">
-                                <pre id="meta-{{ $i }}"></pre>
-                              </div>
-                            </td>
-                            <td class="created-col">{{ $g.CreatedAt }}</td>
-                            <td class="text-center">
-                              <form
-                                action="{{ printf "%s/channels/%s/groups/unassign?item=channels" pathPrefix $channelID }}"
-                                method="post"
-                              >
-                                <input
-                                  type="hidden"
-                                  name="groupID"
-                                  id="groupID"
-                                  value="{{ $g.ID }}"
-                                />
-                                <button
-                                  type="submit"
-                                  class="btn btn-sm"
-                                  {{ if not $shareButton }}disabled{{ end }}
-                                >
-                                  <i class="fas fa-trash-alt"></i>
-                                </button>
-                              </form>
-                            </td>
-                          </tr>
-                          <script>
-                            attachFormatJsonWithPrettifyListener({
-                              data: '{{ toJSON $g.Metadata }}',
-                              id: "meta-{{ $i }}",
-                            })
-                          </script>
-                        {{ end }}
-                      </tbody>
-                    </table>
-                  </div>
-                  {{ template "tablefooter" . }}
                 </div>
-              </div>
             </div>
-          </div>
-        </div>
-      </div>
-      <script>
-        const groupModal = new bootstrap.Modal(document.getElementById("addGroupModal"));
-        function openGroupModal() {
-          groupModal.show();
-        }
+            <script>
+              const groupModal = new bootstrap.Modal(document.getElementById("addGroupModal"));
+              function openGroupModal() {
+                groupModal.show();
+              }
 
-        function viewGroups(id){
-          window.location.href = '{{ printf "%s/groups/" pathPrefix}}' + id;
-        };
-      </script>      
-      <script type="module">
-        import { fetchIndividualEntity } from "/js/infinitescroll.js";
+              function viewGroups(id){
+                window.location.href = '{{ printf "%s/groups/" pathPrefix}}' + id;
+              };
+            </script>      
+            <script type="module">
+              import { fetchIndividualEntity } from "/js/infinitescroll.js";
 
-        fetchIndividualEntity({
-          input: "groupFilter",
-          itemSelect: "infiniteScroll",
-          item: "groups",
-          pathPrefix: "{{ pathPrefix }}",
-        });
-      </script>
-    </body>
-  </html>
+              fetchIndividualEntity({
+                input: "groupFilter",
+                itemSelect: "infiniteScroll",
+                item: "groups",
+                pathPrefix: "{{ pathPrefix }}",
+              });
+            </script>
+        </body>
+    </html>
 {{ end }}

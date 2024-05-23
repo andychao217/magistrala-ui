@@ -2,180 +2,140 @@
 SPDX-License-Identifier: Apache-2.0 -->
 
 {{ define "channelthings" }}
-  <!doctype html>
-  <html lang="en">
-    <head>
-      <title>分区关联设备</title>
-      {{ template "header" }}
-    </head>
-    <body>
-      {{ template "navbar" . }}
-      <div class="main-content pt-3">
-        <div class="container-fluid">
-          <div class="row-mb-3 p-3">
-            <div class="col-lg-12 mx-auto py-3">
-              {{ template "breadcrumb" . }}
-              <div class="row">
-                <div class="table-responsive table-container">
-                  {{ $shareButton := false }}
-                  {{ if (hasPermission .Permissions "share") }}
-                    {{ $shareButton = true }}
-                  {{ end }}
-                  <div class="d-flex flex-row justify-content-between">
-                    <h4>分区关联设备</h4>
-                    <button
-                      role="button"
-                      class="btn body-button"
-                      onclick="openThingModal()"
-                      {{ if not $shareButton }}disabled{{ end }}
-                    >
-                      <i class="fa-solid fa-plus fs-4"></i>
-                    </button>
-                    <!-- add thing modal -->
-                    <div
-                      class="modal fade"
-                      id="addThingModal"
-                      tabindex="-1"
-                      aria-labelledby="addThingModalLabel"
-                      aria-hidden="true"
-                    >
-                      <div class="modal-dialog modal-dialog-centered">
-                        <div class="modal-content">
-                          <div class="modal-header">
-                            <h1 class="modal-title" id="addThingModalLabel">添加设备</h1>
-                            <button
-                              type="button"
-                              class="btn-close"
-                              data-bs-dismiss="modal"
-                              aria-label="Close"
-                            ></button>
-                          </div>
-                          <form
-                            action="{{ printf "%s/channels/%s/things/connect?item=channels" pathPrefix .ChannelID }}"
-                            method="post"
-                          >
-                            <div class="modal-body">
-                              <div class="mb-3">
-                                <label for="infiniteScroll" class="form-label">设备ID</label>
-                                <input
-                                  type="text"
-                                  name="thingFilter"
-                                  id="thingFilter"
-                                  placeholder="通过设备ID过滤"
-                                />
-                                <select
-                                  class="form-select"
-                                  name="thingID"
-                                  id="infiniteScroll"
-                                  size="5"
-                                  required
-                                >
-                                  <option disabled>选择设备</option>
-                                </select>
-                              </div>
+    <!doctype html>
+    <html lang="en">
+        <head>
+            <title>分区关联设备</title>
+            {{ template "header" }}
+        </head>
+        <body>
+            {{ template "navbar" . }}
+            <div class="main-content pt-3">
+                <div class="container-fluid">
+                    <div class="row-mb-3 p-3">
+                        <div class="col-lg-12 mx-auto py-3">
+                            {{ template "breadcrumb" . }}
+                            <div class="row">
+                                <div class="table-responsive table-container">
+                                    {{ $shareButton := false }}
+                                    {{ if (hasPermission .Permissions "share") }}
+                                        {{ $shareButton = true }}
+                                    {{ end }}
+                                    <div class="d-flex flex-row justify-content-between">
+                                        <h4>分区关联设备</h4>
+                                        <button
+                                            role="button"
+                                            class="btn body-button"
+                                            onclick="openThingModal()"
+                                            {{ if not $shareButton }}disabled{{ end }}
+                                        >
+                                            <i class="fa-solid fa-plus fs-4"></i>
+                                        </button>
+                                        <!-- add thing modal -->
+                                        <div class="modal fade" id="addThingModal" tabindex="-1" aria-labelledby="addThingModalLabel" aria-hidden="true">
+                                            <div class="modal-dialog modal-dialog-centered">
+                                                <div class="modal-content">
+                                                    <div class="modal-header">
+                                                        <h1 class="modal-title" id="addThingModalLabel">添加设备</h1>
+                                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                    </div>
+                                                    <form action="{{ printf "%s/channels/%s/things/connect?item=channels" pathPrefix .ChannelID }}" method="post">
+                                                        <div class="modal-body">
+                                                            <div class="mb-3">
+                                                                <label for="infiniteScroll" class="form-label">设备ID</label>
+                                                                <input type="text" name="thingFilter" id="thingFilter" placeholder="通过设备ID过滤" />
+                                                                <select class="form-select" name="thingID" id="infiniteScroll" size="5" required>
+                                                                    <option disabled>选择设备</option>
+                                                                </select>
+                                                            </div>
+                                                        </div>
+                                                        <div class="modal-footer">
+                                                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">取消</button>
+                                                            <button type="submit" class="btn body-button">关联</button>
+                                                        </div>
+                                                    </form>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    {{ template "tableheader" . }}
+                                    <div class="itemsTable">
+                                        <table id="itemsTable" class="table table-hover">
+                                            <thead>
+                                                <tr>
+                                                    <th scope="col">名称</th>
+                                                    <th class="tags-col" scope="col">标识</th>
+                                                    <th class="meta-col" scope="col">附加属性</th>
+                                                    <th class="created-col" scope="col">创建时间</th>
+                                                    <th class="text-center" scope="col"></th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                {{ $channelID := .ChannelID }}
+                                                {{ range $i, $t := .Things }}
+                                                    <tr onclick="viewThing('{{ $t.ID }}')" class="clickable-row">
+                                                        <td>{{ $t.Name }}</td>
+                                                        <td class="tags-col">
+                                                            {{ range $j, $tag := $t.Tags }}
+                                                                <span class="badge bg-dark">{{ $tag }}</span>
+                                                            {{ end }}
+                                                        </td>
+                                                        <td class="meta-col">
+                                                            <div class="meta-div">
+                                                                <pre id="meta-{{ $i }}"></pre>
+                                                            </div>
+                                                        </td>
+                                                        <td class="created-col">{{ $t.CreatedAt }}</td>
+                                                        <td class="text-center">
+                                                            <form action="{{ printf "%s/channels/%s/things/disconnect?item=channels" pathPrefix $channelID }}" method="post">
+                                                                <input type="hidden" name="thingID" id="thingID" value="{{ $t.ID }}" />
+                                                                <button
+                                                                    type="submit"
+                                                                    class="btn btn-sm"
+                                                                    {{ if not $shareButton }}disabled{{ end }}
+                                                                >
+                                                                    <i class="fas fa-trash-alt"></i>
+                                                                </button>
+                                                            </form>
+                                                        </td>
+                                                    </tr>
+                                                    <script>
+                                                      attachFormatJsonWithPrettifyListener({
+                                                        data: '{{ toJSON $t.Metadata }}',
+                                                        id: "meta-{{ $i }}",
+                                                      })
+                                                    </script>
+                                                {{ end }}
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                    {{ template "tablefooter" . }}
+                                </div>
                             </div>
-                            <div class="modal-footer">
-                              <button
-                                type="button"
-                                class="btn btn-secondary"
-                                data-bs-dismiss="modal"
-                              >
-                                取消
-                              </button>
-                              <button type="submit" class="btn body-button">关联</button>
-                            </div>
-                          </form>
                         </div>
-                      </div>
                     </div>
-                  </div>
-                  {{ template "tableheader" . }}
-                  <div class="itemsTable">
-                    <table id="itemsTable" class="table table-hover">
-                      <thead>
-                        <tr>
-                          <th scope="col">名称</th>
-                          <th class="tags-col" scope="col">标识</th>
-                          <th class="meta-col" scope="col">附加属性</th>
-                          <th class="created-col" scope="col">创建时间</th>
-                          <th class="text-center" scope="col"></th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        {{ $channelID := .ChannelID }}
-                        {{ range $i, $t := .Things }}
-                          <tr onclick="viewThing('{{ $t.ID }}')" class="clickable-row">
-                            <td>{{ $t.Name }}</td>
-                            <td class="tags-col">
-                              {{ range $j, $tag := $t.Tags }}
-                                <span class="badge bg-dark">{{ $tag }}</span>
-                              {{ end }}
-                            </td>
-                            <td class="meta-col">
-                              <div class="meta-div">
-                                <pre id="meta-{{ $i }}"></pre>
-                              </div>
-                            </td>
-                            <td class="created-col">{{ $t.CreatedAt }}</td>
-                            <td class="text-center">
-                              <form
-                                action="{{ printf "%s/channels/%s/things/disconnect?item=channels" pathPrefix $channelID }}"
-                                method="post"
-                              >
-                                <input
-                                  type="hidden"
-                                  name="thingID"
-                                  id="thingID"
-                                  value="{{ $t.ID }}"
-                                />
-                                <button
-                                  type="submit"
-                                  class="btn btn-sm"
-                                  {{ if not $shareButton }}disabled{{ end }}
-                                >
-                                  <i class="fas fa-trash-alt"></i>
-                                </button>
-                              </form>
-                            </td>
-                          </tr>
-                          <script>
-                            attachFormatJsonWithPrettifyListener({
-                              data: '{{ toJSON $t.Metadata }}',
-                              id: "meta-{{ $i }}",
-                            })
-                          </script>
-                        {{ end }}
-                      </tbody>
-                    </table>
-                  </div>
-                  {{ template "tablefooter" . }}
                 </div>
-              </div>
             </div>
-          </div>
-        </div>
-      </div>
-      <script>
-        const thingModal = new bootstrap.Modal(document.getElementById("addThingModal"));
-        function openThingModal() {
-          thingModal.show();
-        }
+            <script>
+              const thingModal = new bootstrap.Modal(document.getElementById("addThingModal"));
+              function openThingModal() {
+                thingModal.show();
+              }
 
-        function viewThing(id) {
-          let pathPrefix = "{{ pathPrefix }}";
-          window.location.href = `${pathPrefix}/things/${id}`;
-        }
-      </script>      
-      <script type="module">
-        import { fetchIndividualEntity } from "/js/infinitescroll.js";
+              function viewThing(id) {
+                let pathPrefix = "{{ pathPrefix }}";
+                window.location.href = `${pathPrefix}/things/${id}`;
+              }
+            </script>      <script type="module">
+              import { fetchIndividualEntity } from "/js/infinitescroll.js";
 
-        fetchIndividualEntity({
-          input: "thingFilter",
-          itemSelect: "infiniteScroll",
-          item: "things",
-          pathPrefix: "{{ pathPrefix }}",
-        });
-      </script>
-    </body>
-  </html>
+              fetchIndividualEntity({
+                input: "thingFilter",
+                itemSelect: "infiniteScroll",
+                item: "things",
+                pathPrefix: "{{ pathPrefix }}",
+              });
+            </script>
+        </body>
+    </html>
 {{ end }}

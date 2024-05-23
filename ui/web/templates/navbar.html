@@ -2,481 +2,407 @@
 SPDX-License-Identifier: Apache-2.0 -->
 
 {{ define "navbar" }}
-  <!-- Sidebbar -->
-  <ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark" id="accordionSidebar">
-    <!-- Sidebar Brand -->
-    <a
-      class="sidebar-brand d-flex justify-content-center pt-2"
-      href="{{ printf "%s/" pathPrefix }}"
-    >
-      <h1 class="mx-3">世邦思拓</h1>
-    </a>
-
-    <!-- Divider -->
-    <hr class="sidebar-divider my-0 text-light mb-3" />
-
-    <div id="index-nav-items">
-      <li class="nav-item mb-2 mx-2">
-        {{ $navbarActive := "homepage" }}
-        <a
-          href="{{ printf "%s/" pathPrefix }}"
-          id="index"
-          class="nav-link sidebar-link {{ if eq .NavbarActive $navbarActive }}active{{ end }}"
-        >
-          <i class="fas fa-home"></i>
-          <span>首页</span>
+    <!-- Sidebbar -->
+    <ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark" id="accordionSidebar">
+        <!-- Sidebar Brand -->
+        <a class="sidebar-brand d-flex justify-content-center pt-2" href="{{ printf "%s/" pathPrefix }}">
+            <h1 class="mx-3">世邦思拓</h1>
         </a>
-      </li>
-       <!-- 隐藏页面 -->
-      <li class="nav-item mb-2 mx-2" style="display: none;">
-        {{ $navbarActive := "dashboard" }}
-        <a
-          href="{{ printf "%s/dashboards" pathPrefix }}"
-          id="dashboard"
-          class="nav-link sidebar-link {{ if eq .NavbarActive $navbarActive }}active{{ end }}"
-        >
-          <i class="fas fa-chart-line"></i>
-          <span>统计信息</span>
-        </a>
-      </li>
 
-      <!-- Divider -->
-      <hr class="sidebar-divider my-0 text-light mb-3" />
-    </div>
+        <!-- Divider -->
+        <hr class="sidebar-divider my-0 text-light mb-3" />
 
-    <!-- Heading -->
-    <div class="sidebar-heading mb-3">机构管理</div>
-
-    <li class="nav-item mb-2 mx-2" id="domains-sidebar-link">
-      {{ $navbarActive := "domains" }}
-      <a
-        class="nav-link sidebar-link {{ if eq .NavbarActive $navbarActive }}active{{ end }}"
-        href="{{ printf "%s/domains" pathPrefix }}"
-      >
-        <i class="fa-solid fa-building"></i>
-        <span>机构</span>
-      </a>
-    </li>
-     <!-- 隐藏页面 -->
-    <li class="nav-item mb-2 mx-2" style="display: none;">
-      {{ $navbarActive = "invitations" }}
-      <a
-        href="{{ printf "%s/invitations" pathPrefix }}"
-        class="nav-link sidebar-link {{ if eq .NavbarActive $navbarActive }}
-          active
-        {{ end }}"
-        id="invitations"
-      >
-        <i class="fa-solid fa-envelope"></i>
-        <span>邀请</span>
-      </a>
-    </li>
-
-    <li class="nav-item mb-2 mx-2" id="domain-nav-item">
-      {{ $collapseActive := "domain" }}
-      <a
-        href="#domain-collapse"
-        data-bs-toggle="collapse"
-        aria-expanded="false"
-        aria-controls="domain-collapse"
-        class="dropdown-toggle nav-link sidebar-link {{ if eq .CollapseActive $collapseActive }}
-          active
-        {{ end }}"
-        style="margin-right: 20px;"
-      >
-        <i class="fa-solid fa-building"></i>
-        <span id="domainName">{{ .Session.Domain.Name }}</span>
-      </a>
-      <div
-        class="collapse {{ if eq .CollapseActive $collapseActive }}
-          show
-        {{ end }}"
-        id="domain-collapse"
-      >
-        <ul class="collapse-list">
-          <li class="nav-item mb-2 mx-2">
-            {{ $navbarActive = "domain" }}
-            <a
-              class="nav-link {{ if eq .NavbarActive $navbarActive }}active{{ end }}"
-              id="domain"
-              href="{{ printf "%s/domains/%s" pathPrefix .Session.Domain.ID }}"
-            >
-              <i class="fa-solid fa-building"></i>
-              <span>机构</span>
-            </a>
-          </li>
-          <li class="nav-item mb-2 mx-2">
-            {{ $navbarActive = "members" }}
-            <a
-              href="{{ printf "%s/domains/%s/members" pathPrefix .Session.Domain.ID }}"
-              id="members"
-              class="nav-link  {{ if eq .NavbarActive $navbarActive }}active{{ end }}"
-            >
-              <i class="fa-solid fa-users"></i>
-              <span>成员</span>
-            </a>
-          </li>
-           <!-- 隐藏页面 -->
-          <li class="nav-item mb-2 mx-2" style="display: none;">
-            {{ $navbarActive = "domaininvitations" }}
-            <a
-              href="{{ printf "%s/invitations?domain=%s" pathPrefix .Session.Domain.ID }}"
-              class="nav-link {{ if eq .NavbarActive $navbarActive }}active{{ end }}"
-              id="domainInvitations"
-            >
-              <i class="fa-solid fa-envelope"></i>
-              <span>机构邀请</span>
-            </a>
-          </li>
-        </ul>
-      </div>
-    </li>
-
-    <li id="users-nav-items" class="nav-item mb-2 mx-2">
-      {{ $navbarActive = "users" }}
-      <a
-        href="{{ printf "%s/users" pathPrefix }}"
-        class=" nav-link sidebar-link {{ if (serviceUnavailable "users") }}
-          disabled-item
-        {{ end }} {{ if eq .NavbarActive $navbarActive }}active{{ end }}"
-      >
-        <i class="fas fa-users"></i>
-        <span>用户</span>
-      </a>
-    </li>
-
-    <div id="things-nav-items">
-      <!-- Divider -->
-      <hr class="sidebar-divider my-0 text-light mb-3" />
-
-      <!-- Heading -->
-      <div class="sidebar-heading mb-3">设备管理</div>
-      <!-- 隐藏页面 -->
-      <li class="nav-item mb-2 mx-2" style="display: none;">
-        {{ $navbarActive = "groups" }}
-        <a
-          href="{{ printf "%s/groups" pathPrefix }}"
-          id="groups"
-          class="nav-link sidebar-link {{ if (serviceUnavailable "users") }}
-            disabled-item
-          {{ end }} {{ if eq .NavbarActive $navbarActive }}active{{ end }}"
-        >
-          <i class="fas fa-layer-group"></i>
-          <span>组</span>
-        </a>
-      </li>
-      <li class="nav-item mb-2 mx-2">
-        {{ $navbarActive = "things" }}
-        <a
-          href="{{ printf "%s/things" pathPrefix }}"
-          id="things"
-          class="nav-link sidebar-link {{ if (serviceUnavailable "things") }}
-            disabled-item
-          {{ end }} {{ if eq .NavbarActive $navbarActive }}active{{ end }}"
-        >
-          <i class="fas fa-microchip"></i>
-          <span>设备</span>
-        </a>
-      </li>
-      <li class="nav-item mb-2 mx-2">
-        {{ $navbarActive = "channels" }}
-        <a
-          href="{{ printf "%s/channels" pathPrefix }}"
-          id="channels"
-          class="nav-link sidebar-link {{ if (serviceUnavailable "things") }}
-            disabled-item
-          {{ end }} {{ if eq .NavbarActive $navbarActive }}active{{ end }}"
-        >
-          <i class="fas fa-exchange-alt"></i>
-          <span>分区</span>
-        </a>
-      </li>
-      <!-- 隐藏页面 -->
-      <li class="nav-item mb-2 mx-2" style="display: none;">
-        {{ $navbarActive = "bootstraps" }}
-        <a
-          href="{{ printf "%s/bootstraps" pathPrefix }}"
-          id="bootstraps"
-          class="nav-link sidebar-link {{ if (serviceUnavailable "bootstrap") }}
-            disabled-item
-          {{ end }} {{ if eq .NavbarActive $navbarActive }}active{{ end }}"
-        >
-          <i class="fas fa-solid fa-broadcast-tower"></i>
-          <span>Bootstrap</span>
-        </a>
-      </li>
-    </div>
-
-    <!-- Sidebar Toggler (Sidebar) -->
-    <!-- <div class="d-flex justify-content-center">
-      <button class="rounded-circle border-0" id="sidebarToggle"></button>
-    </div> -->
-  </ul>
-
-  <!-- End of sidebar -->
-
-  <!-- Header navbar -->
-  <nav class="navbar navbar-expand topbar fixed-top">
-    <div class="container-fluid">
-      <div class="sidebar-toggle">
-        <!-- Sidebar Toggle (Topbar) -->
-        <button id="sidebarToggleTop" class="btn btn-link d-md-none rounded-circle mr-3 user-item">
-          <i class="fa fa-bars"></i>
-        </button>
-      </div>
-
-      <div class="navbarSupportedContent">
-        <ul class="navbar-nav ms-auto d-flex align-items-center">
-          <li class="nav-item me-2" style="display: none;">
-            <a
-              href="https://docs.magistrala.abstractmachines.fr/"
-              target="_blank"
-              class="doc-button btn"
-              role="button"
-            >
-              <span>文档</span>
-            </a>
-          </li>
-          <li class="nav-item dropdown me-3" id="domain-header-dropdown">
-            <a
-              class="nav-link dropdown-toggle"
-              href="#"
-              role="button"
-              data-bs-toggle="dropdown"
-              data-bs-display="static"
-              aria-expanded="false"
-              id="domainName"
-            >
-              {{ .Session.Domain.Name }}
-            </a>
-            <ul class="dropdown-menu dropdown-menu-md-end mt-2 p-3">
-              <li class="text-center fw-bold">
-                <span class="drop-item" id="domainName">{{ .Session.Domain.Name }}</span>
-              </li>
-              <li><hr class="dropdown-divider" /></li>
-              <li>
-                <a
-                  class="dropdown-item user-item-button p-2 mb-2"
-                  href="#"
-                  role="button"
-                  onclick="openCreateDomainModal()"
-                >
-                  <i class="fa-solid fa-square-plus"></i>
-                  新建机构
+        <div id="index-nav-items">
+            <li class="nav-item mb-2 mx-2">
+                {{ $navbarActive := "homepage" }}
+                <a href="{{ printf "%s/" pathPrefix }}" id="index" class="nav-link sidebar-link {{ if eq .NavbarActive $navbarActive }}active{{ end }}">
+                    <i class="fas fa-home"></i>
+                    <span>首页</span>
                 </a>
-              </li>
-              <li><hr class="dropdown-divider" /></li>
-              <li>
-                <a
-                  class="dropdown-item user-item-button p-2 mb-2"
-                  href="{{ printf "%s/domains" pathPrefix }}"
-                >
-                  <i class="fa-solid fa-repeat"></i>
-                  切换机构
+            </li>
+            <!-- 隐藏页面 -->
+            <li class="nav-item mb-2 mx-2" style="display: none;">
+                {{ $navbarActive := "dashboard" }}
+                <a href="{{ printf "%s/dashboards" pathPrefix }}" id="dashboard" class="nav-link sidebar-link {{ if eq .NavbarActive $navbarActive }}active{{ end }}">
+                    <i class="fas fa-chart-line"></i>
+                    <span>统计信息</span>
                 </a>
-              </li>
-            </ul>
-          </li>
-          <li class="nav-item dropstart me-3">
-            <a
-              class="user-item nav-link"
-              href="#"
-              role="button"
-              data-bs-toggle="dropdown"
-              aria-expanded="false"
-            >
-              <i class="fa-solid fa-user" style="margin-right: 5px;"></i>
-              <span>{{ .Session.User.Name }}</span>
-            </a>
-            <ul class="dropdown-menu mt-5 position-absolute end-0 p-3">
-              <li class="d-flex justify-content-start mb-2">
-                <div class="align-self-center">
-                  <i class="fa-regular fa-user fs-2"></i>
-                </div>
-                <div>
-                  <span class="dropdown-item" id="username">{{ .Session.User.Name }}</span>
-                  <span class="dropdown-item text-muted" id="identity">
-                    {{ .Session.User.Identity }}
-                  </span>
-                </div>
-              </li>
-              <li class="mb-2"><hr class="dropdown-divider" /></li>
-              <li class="mb-2">
-                <a
-                  href="{{ printf "%s/password" pathPrefix }}"
-                  class="dropdown-item user-item-button p-2 mb-2"
-                >
-                  <i class="fas fa-solid fa-lock me-2"></i>
-                  <span>修改密码</span>
-                </a>
-                <a class="dropdown-item user-item-button p-2 mb-2" onclick="logout();">
-                  <i class="fa-solid fa-right-from-bracket me-2"></i>
-                  <span>登出</span>
-                </a>
-              </li>
-            </ul>
-          </li>
-        </ul>
-      </div>
-    </div>
-  </nav>
+            </li>
 
-  {{ template "metadatamodal" }}
-
-
-  <!-- Modal -->
-  <div
-    class="modal fade"
-    id="createDomainModal"
-    tabindex="-1"
-    aria-labelledby="createDomainModalLabel"
-    aria-hidden="true"
-  >
-    <div class="modal-dialog modal-dialog-centered">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h1 class="modal-title" id="createDomainModalLabel">新建机构</h1>
-          <button
-            type="button"
-            class="btn-close"
-            data-bs-dismiss="modal"
-            aria-label="Close"
-          ></button>
+            <!-- Divider -->
+            <hr class="sidebar-divider my-0 text-light mb-3" />
         </div>
-        <form action="{{ printf "%s/domains" pathPrefix }}" method="post">
-          <div class="modal-body">
-            <div class="row mb-3">
-              <div class="col-md-12">
-                <label for="domain-name" class="form-label">名称 *</label>
-                <input type="text" class="form-control p-2" name="name" id="domain-name" required />
-              </div>
-            </div>
-            <div class="row mb-3">
-              <div class="col-md-12">
-                <label for="domain-alias" class="form-label">别名</label>
-                <input type="text" class="form-control p-2" name="alias" id="domain-alias" />
-              </div>
-            </div>
-            <div class="row mb-3">
-              <div class="col-md-12">
-                <label for="domain-tags" class="form-label">标识</label>
-                <div id="tagsList" onclick="deleteItem(event)"></div>
-                <input
-                  type="text"
-                  class="form-control"
-                  name="tags"
-                  id="domain-tags"
-                  aria-describedby="tagHelp"
-                  onkeydown="addItem(event, 'domain-tags', 'tagsList')"
-                  placeholder="Add a tag"
-                />
-                <div id="tagHelp" class="form-text">以字符串数组形式输入标识.</div>
-                <div id="domainTagsError" class="error-message text-danger"></div>
-              </div>
-            </div>
-            <div class="row mb-3">
-              <div class="col-md-12">
-                <label for="domain-metadata" class="form-label">附加属性</label>
-                <div class="metadata-field">
-                  <textarea name="metadata" id="domain-metadata"></textarea>
-                </div>
-                <div id="metadataHelp" class="form-text">以JSON形式输入附加属性</div>
-                <div id="domainMetadataError" class="error-message text-danger"></div>
-              </div>
-            </div>
-          </div>
-          <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">取消</button>
-            <button
-              type="submit"
-              id="create-domain-button"
-              class="btn body-button"
-              onclick="submitItemList('domain-tags', 'tagsList')"
+
+        <!-- Heading -->
+        <div class="sidebar-heading mb-3">机构管理</div>
+
+        <li class="nav-item mb-2 mx-2" id="domains-sidebar-link">
+            {{ $navbarActive := "domains" }}
+            <a class="nav-link sidebar-link {{ if eq .NavbarActive $navbarActive }}active{{ end }}" href="{{ printf "%s/domains" pathPrefix }}">
+                <i class="fa-solid fa-building"></i>
+                <span>机构</span>
+            </a>
+        </li>
+        <!-- 隐藏页面 -->
+        <li class="nav-item mb-2 mx-2" style="display: none;">
+            {{ $navbarActive = "invitations" }}
+            <a
+                href="{{ printf "%s/invitations" pathPrefix }}"
+                class="nav-link sidebar-link {{ if eq .NavbarActive $navbarActive }}
+                    active
+                {{ end }}"
+                id="invitations"
             >
-              确定
-            </button>
-          </div>
-        </form>
-      </div>
+                <i class="fa-solid fa-envelope"></i>
+                <span>邀请</span>
+            </a>
+        </li>
+
+        <li class="nav-item mb-2 mx-2" id="domain-nav-item">
+            {{ $collapseActive := "domain" }}
+            <a
+                href="#domain-collapse"
+                data-bs-toggle="collapse"
+                aria-expanded="false"
+                aria-controls="domain-collapse"
+                class="dropdown-toggle nav-link sidebar-link {{ if eq .CollapseActive $collapseActive }}
+                    active
+                {{ end }}"
+                style="margin-right: 20px;"
+            >
+                <i class="fa-solid fa-building"></i>
+                <span id="domainName">{{ .Session.Domain.Name }}</span>
+            </a>
+            <div
+                class="collapse {{ if eq .CollapseActive $collapseActive }}
+                    show
+                {{ end }}"
+                id="domain-collapse"
+            >
+                <ul class="collapse-list">
+                    <li class="nav-item mb-2 mx-2">
+                        {{ $navbarActive = "domain" }}
+                        <a class="nav-link {{ if eq .NavbarActive $navbarActive }}active{{ end }}" id="domain" href="{{ printf "%s/domains/%s" pathPrefix .Session.Domain.ID }}">
+                            <i class="fa-solid fa-building"></i>
+                            <span>机构</span>
+                        </a>
+                    </li>
+                    <li class="nav-item mb-2 mx-2">
+                        {{ $navbarActive = "members" }}
+                        <a href="{{ printf "%s/domains/%s/members" pathPrefix .Session.Domain.ID }}" id="members" class="nav-link  {{ if eq .NavbarActive $navbarActive }}active{{ end }}">
+                            <i class="fa-solid fa-users"></i>
+                            <span>成员</span>
+                        </a>
+                    </li>
+                    <!-- 隐藏页面 -->
+                    <li class="nav-item mb-2 mx-2" style="display: none;">
+                        {{ $navbarActive = "domaininvitations" }}
+                        <a href="{{ printf "%s/invitations?domain=%s" pathPrefix .Session.Domain.ID }}" class="nav-link {{ if eq .NavbarActive $navbarActive }}active{{ end }}" id="domainInvitations">
+                            <i class="fa-solid fa-envelope"></i>
+                            <span>机构邀请</span>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </li>
+
+        <li id="users-nav-items" class="nav-item mb-2 mx-2">
+            {{ $navbarActive = "users" }}
+            <a
+                href="{{ printf "%s/users" pathPrefix }}"
+                class=" nav-link sidebar-link {{ if (serviceUnavailable "users") }}
+                    disabled-item
+                {{ end }} {{ if eq .NavbarActive $navbarActive }}active{{ end }}"
+            >
+                <i class="fas fa-users"></i>
+                <span>用户</span>
+            </a>
+        </li>
+
+        <div id="things-nav-items">
+            <!-- Divider -->
+            <hr class="sidebar-divider my-0 text-light mb-3" />
+
+            <!-- Heading -->
+            <div class="sidebar-heading mb-3">设备管理</div>
+            <!-- 隐藏页面 -->
+            <li class="nav-item mb-2 mx-2" style="display: none;">
+                {{ $navbarActive = "groups" }}
+                <a
+                    href="{{ printf "%s/groups" pathPrefix }}"
+                    id="groups"
+                    class="nav-link sidebar-link {{ if (serviceUnavailable "users") }}
+                        disabled-item
+                    {{ end }} {{ if eq .NavbarActive $navbarActive }}active{{ end }}"
+                >
+                    <i class="fas fa-layer-group"></i>
+                    <span>组</span>
+                </a>
+            </li>
+            <li class="nav-item mb-2 mx-2">
+                {{ $navbarActive = "things" }}
+                <a
+                    href="{{ printf "%s/things" pathPrefix }}"
+                    id="things"
+                    class="nav-link sidebar-link {{ if (serviceUnavailable "things") }}
+                        disabled-item
+                    {{ end }} {{ if eq .NavbarActive $navbarActive }}active{{ end }}"
+                >
+                    <i class="fas fa-microchip"></i>
+                    <span>设备</span>
+                </a>
+            </li>
+            <li class="nav-item mb-2 mx-2">
+                {{ $navbarActive = "channels" }}
+                <a
+                    href="{{ printf "%s/channels" pathPrefix }}"
+                    id="channels"
+                    class="nav-link sidebar-link {{ if (serviceUnavailable "things") }}
+                        disabled-item
+                    {{ end }} {{ if eq .NavbarActive $navbarActive }}active{{ end }}"
+                >
+                    <i class="fas fa-exchange-alt"></i>
+                    <span>分区</span>
+                </a>
+            </li>
+            <!-- 隐藏页面 -->
+            <li class="nav-item mb-2 mx-2" style="display: none;">
+                {{ $navbarActive = "bootstraps" }}
+                <a
+                    href="{{ printf "%s/bootstraps" pathPrefix }}"
+                    id="bootstraps"
+                    class="nav-link sidebar-link {{ if (serviceUnavailable "bootstrap") }}
+                        disabled-item
+                    {{ end }} {{ if eq .NavbarActive $navbarActive }}active{{ end }}"
+                >
+                    <i class="fas fa-solid fa-broadcast-tower"></i>
+                    <span>Bootstrap</span>
+                </a>
+            </li>
+        </div>
+
+        <!-- Sidebar Toggler (Sidebar) -->
+        <!-- <div class="d-flex justify-content-center">
+          <button class="rounded-circle border-0" id="sidebarToggle"></button>
+        </div> -->
+    </ul>
+
+    <!-- End of sidebar -->
+
+    <!-- Header navbar -->
+    <nav class="navbar navbar-expand topbar fixed-top">
+        <div class="container-fluid">
+            <div class="sidebar-toggle">
+                <!-- Sidebar Toggle (Topbar) -->
+                <button id="sidebarToggleTop" class="btn btn-link d-md-none rounded-circle mr-3 user-item">
+                    <i class="fa fa-bars"></i>
+                </button>
+            </div>
+
+            <div class="navbarSupportedContent">
+                <ul class="navbar-nav ms-auto d-flex align-items-center">
+                    <li class="nav-item me-2" style="display: none;">
+                        <a href="https://docs.magistrala.abstractmachines.fr/" target="_blank" class="doc-button btn" role="button">
+                            <span>文档</span>
+                        </a>
+                    </li>
+                    <li class="nav-item dropdown me-3" id="domain-header-dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" data-bs-display="static" aria-expanded="false" id="domainName">
+                            {{ .Session.Domain.Name }}
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-md-end mt-2 p-3">
+                            <li class="text-center fw-bold">
+                                <span class="drop-item" id="domainName">{{ .Session.Domain.Name }}</span>
+                            </li>
+                            <li><hr class="dropdown-divider" /></li>
+                            <li>
+                                <a class="dropdown-item user-item-button p-2 mb-2" href="#" role="button" onclick="openCreateDomainModal()">
+                                    <i class="fa-solid fa-square-plus"></i>
+                                    新建机构
+                                </a>
+                            </li>
+                            <li><hr class="dropdown-divider" /></li>
+                            <li>
+                                <a class="dropdown-item user-item-button p-2 mb-2" href="{{ printf "%s/domains" pathPrefix }}">
+                                    <i class="fa-solid fa-repeat"></i>
+                                    切换机构
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+                    <li class="nav-item dropstart me-3">
+                        <a class="user-item nav-link" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            <i class="fa-solid fa-user" style="margin-right: 5px;"></i>
+                            <span>{{ .Session.User.Name }}</span>
+                        </a>
+                        <ul class="dropdown-menu mt-5 position-absolute end-0 p-3">
+                            <li class="d-flex justify-content-start mb-2">
+                                <div class="align-self-center">
+                                    <i class="fa-regular fa-user fs-2"></i>
+                                </div>
+                                <div>
+                                    <span class="dropdown-item" id="username">{{ .Session.User.Name }}</span>
+                                    <span class="dropdown-item text-muted" id="identity">
+                                        {{ .Session.User.Identity }}
+                                    </span>
+                                </div>
+                            </li>
+                            <li class="mb-2"><hr class="dropdown-divider" /></li>
+                            <li class="mb-2">
+                                <a href="{{ printf "%s/password" pathPrefix }}" class="dropdown-item user-item-button p-2 mb-2">
+                                    <i class="fas fa-solid fa-lock me-2"></i>
+                                    <span>修改密码</span>
+                                </a>
+                                <a class="dropdown-item user-item-button p-2 mb-2" onclick="logout();">
+                                    <i class="fa-solid fa-right-from-bracket me-2"></i>
+                                    <span>登出</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    {{ template "metadatamodal" }}
+
+
+    <!-- Modal -->
+    <div class="modal fade" id="createDomainModal" tabindex="-1" aria-labelledby="createDomainModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title" id="createDomainModalLabel">新建机构</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <form action="{{ printf "%s/domains" pathPrefix }}" method="post">
+                    <div class="modal-body">
+                        <div class="row mb-3">
+                            <div class="col-md-12">
+                                <label for="domain-name" class="form-label">名称 *</label>
+                                <input type="text" class="form-control p-2" name="name" id="domain-name" required />
+                            </div>
+                        </div>
+                        <div class="row mb-3">
+                            <div class="col-md-12">
+                                <label for="domain-alias" class="form-label">别名</label>
+                                <input type="text" class="form-control p-2" name="alias" id="domain-alias" />
+                            </div>
+                        </div>
+                        <div class="row mb-3">
+                            <div class="col-md-12">
+                                <label for="domain-tags" class="form-label">标识</label>
+                                <div id="tagsList" onclick="deleteItem(event)"></div>
+                                <input
+                                    type="text"
+                                    class="form-control"
+                                    name="tags"
+                                    id="domain-tags"
+                                    aria-describedby="tagHelp"
+                                    onkeydown="addItem(event, 'domain-tags', 'tagsList')"
+                                    placeholder="Add a tag"
+                                />
+                                <div id="tagHelp" class="form-text">以字符串数组形式输入标识.</div>
+                                <div id="domainTagsError" class="error-message text-danger"></div>
+                            </div>
+                        </div>
+                        <div class="row mb-3">
+                            <div class="col-md-12">
+                                <label for="domain-metadata" class="form-label">附加属性</label>
+                                <div class="metadata-field">
+                                    <textarea name="metadata" id="domain-metadata"></textarea>
+                                </div>
+                                <div id="metadataHelp" class="form-text">以JSON形式输入附加属性</div>
+                                <div id="domainMetadataError" class="error-message text-danger"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">取消</button>
+                        <button type="submit" id="create-domain-button" class="btn body-button" onclick="submitItemList('domain-tags', 'tagsList')">确定</button>
+                    </div>
+                </form>
+            </div>
+        </div>
     </div>
-  </div>
 
-  <script src="/js/listUtils.js"></script>
-  <script src="/js/cookie.js"></script>
-  <script defer>
-    try {
-      let userID = '{{.Session.User.ID}}';
-      let role = '{{.Session.User.Role}}';
-      let loginStatus = '{{.Session.LoginStatus}}';
-      let domainID, domainName, domainPermissions;
+    <script src="/js/listUtils.js"></script>
+    <script src="/js/cookie.js"></script>
+    <script defer>
+      try {
+        let userID = '{{.Session.User.ID}}';
+        let role = '{{.Session.User.Role}}';
+        let loginStatus = '{{.Session.LoginStatus}}';
+        let domainID, domainName, domainPermissions;
 
-      if (role !== "admin") {
-        document.getElementById("users-nav-items").style.display = "none";
-      }
-      if (loginStatus === "domain") {
-        domainPermissions = '{{.Session.Domain.Permissions}}';
-        domainID = '{{.Session.Domain.ID}}';
-      }
-
-      if (loginStatus !== "domain") {
-        document.getElementById("domain-nav-item").style.display = "none";
-        document.getElementById("things-nav-items").style.display = "none";
-        document.getElementById("index-nav-items").style.display = "none";
-        document.getElementById("domain-header-dropdown").style.display = "none";
-      } else {
-        document.getElementById("domains-sidebar-link").style.display = "none";
-        if (!domainPermissions.includes("admin")) {
-          document.getElementById("domainInvitations").style.display = "none";
+        if (role !== "admin") {
+          document.getElementById("users-nav-items").style.display = "none";
         }
-      }
-    } catch (error) {
-      console.error("Error loading session details:", error);
-    }
+        if (loginStatus === "domain") {
+          domainPermissions = '{{.Session.Domain.Permissions}}';
+          domainID = '{{.Session.Domain.ID}}';
+        }
 
-    const createDomainModal = new bootstrap.Modal(document.getElementById("createDomainModal"));
-    function openCreateDomainModal() {
-      createDomainModal.show();
-    }
-    // Toggle the side navigation
-    // document.querySelectorAll("#sidebarToggle, #sidebarToggleTop")
-    document.querySelectorAll("#sidebarToggleTop").forEach(function (element) {
-      element.addEventListener("click", function (e) {
-        document.body.classList.toggle("sidebar-toggled");
-        document.querySelector(".sidebar").classList.toggle("toggled");
-      });
-    });
-
-    // Close any open menu accordions when window is resized below 768px
-    window.addEventListener("resize", function () {
-      // Toggle the side navigation when window is resized below 480px
-      if (
-        window.innerWidth < 480 &&
-        !document.querySelector(".sidebar").classList.contains("toggled")
-      ) {
-        document.body.classList.add("sidebar-toggled");
-        document.querySelector(".sidebar").classList.add("toggled");
-      }
-    });
-
-    function logout() {
-      fetch('{{ printf "%s/logout" pathPrefix }}', {
-        method: "GET",
-      })
-        .then((response) => {
-          if (response.status === 200) {
-            clearAllCookies();
-            window.location.href = '{{ printf "%s/login" pathPrefix }}';
+        if (loginStatus !== "domain") {
+          document.getElementById("domain-nav-item").style.display = "none";
+          document.getElementById("things-nav-items").style.display = "none";
+          document.getElementById("index-nav-items").style.display = "none";
+          document.getElementById("domain-header-dropdown").style.display = "none";
+        } else {
+          document.getElementById("domains-sidebar-link").style.display = "none";
+          if (!domainPermissions.includes("admin")) {
+            document.getElementById("domainInvitations").style.display = "none";
           }
-        })
-        .catch((error) => {
-          console.error("error logging out: ", error);
-        });
-    }
+        }
+      } catch (error) {
+        console.error("Error loading session details:", error);
+      }
 
-    codeMirrorEditor({
-      textArea: "domain-metadata",
-      button: "create-domain-button",
-      value: {},
-    });
-  </script>
+      const createDomainModal = new bootstrap.Modal(document.getElementById("createDomainModal"));
+      function openCreateDomainModal() {
+        createDomainModal.show();
+      }
+      // Toggle the side navigation
+      // document.querySelectorAll("#sidebarToggle, #sidebarToggleTop")
+      document.querySelectorAll("#sidebarToggleTop").forEach(function (element) {
+        element.addEventListener("click", function (e) {
+          document.body.classList.toggle("sidebar-toggled");
+          document.querySelector(".sidebar").classList.toggle("toggled");
+        });
+      });
+
+      // Close any open menu accordions when window is resized below 768px
+      window.addEventListener("resize", function () {
+        // Toggle the side navigation when window is resized below 480px
+        if (
+          window.innerWidth < 480 &&
+          !document.querySelector(".sidebar").classList.contains("toggled")
+        ) {
+          document.body.classList.add("sidebar-toggled");
+          document.querySelector(".sidebar").classList.add("toggled");
+        }
+      });
+
+      function logout() {
+        fetch('{{ printf "%s/logout" pathPrefix }}', {
+          method: "GET",
+        })
+          .then((response) => {
+            if (response.status === 200) {
+              clearAllCookies();
+              window.location.href = '{{ printf "%s/login" pathPrefix }}';
+            }
+          })
+          .catch((error) => {
+            console.error("error logging out: ", error);
+          });
+      }
+
+      codeMirrorEditor({
+        textArea: "domain-metadata",
+        button: "create-domain-button",
+        value: {},
+      });
+    </script>
 {{ end }}

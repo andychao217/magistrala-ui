@@ -2,258 +2,246 @@
 SPDX-License-Identifier: Apache-2.0 -->
 
 {{ define "index" }}
-  <!doctype html>
-  <html lang="en">
-    <head>
-      <title>世邦思拓</title>
-      {{ template "header" }}
-    </head>
-    <body>
-      {{ template "navbar" . }}
-      <div class="main-content mt-5 pt-5">
-        <div class="container">
-          <div class="row">
-            <div class="col-lg-12 mx-auto py-3">
-              <div class="row mb-5">
-                <div class="col-lg-4 col-md-6 mb-4">
-                  <div class="card text-bg-light mb-3">
-                    <div
-                      class="card-single card-body d-flex justify-content-between p-5"
-                      data-card="users"
-                    >
-                      <div>
-                        <h1>{{ .Summary.TotalUsers }}</h1>
-                        <span>用户</span>
-                      </div>
-                      <div>
-                        <span class="fas fa-users"></span>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                <div class="col-lg-4 col-md-6 mb-4">
-                  <div class="card text-bg-light mb-3">
-                    <div
-                      class="card-single card-body d-flex justify-content-between p-5"
-                      data-card="things"
-                    >
-                      <div>
-                        <h1>{{ .Summary.TotalThings }}</h1>
-                        <span>设备</span>
-                      </div>
-                      <div>
-                        <span class="fas fa-microchip"></span>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                <div class="col-lg-3 col-md-6 mb-4" style="display: none;">
-                  <div class="card text-bg-light mb-3">
-                    <div
-                      class="card-single card-body d-flex justify-content-between p-5"
-                      data-card="groups"
-                    >
-                      <div>
-                        <h1>{{ .Summary.TotalGroups }}</h1>
-                        <span>组</span>
-                      </div>
-                      <div>
-                        <span class="fas fa-layer-group"></span>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                <div class="col-lg-4 col-md-6 mb-4">
-                  <div class="card text-bg-light mb-3">
-                    <div
-                      class="card-single card-body d-flex justify-content-between p-5"
-                      data-card="channels"
-                    >
-                      <div>
-                        <h1>{{ .Summary.TotalChannels }}</h1>
-                        <span>分区</span>
-                      </div>
-                      <div>
-                        <span class="fas fa-microchip"></span>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div class="row">
-                <div class="card selected-grid">
-                  <div class="default-content"></div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    <script>
-      //获取当前登陆用户信息，并保存到sessionStorage中
-      fetch('{{ printf "%s/userProfile" pathPrefix }}', {
-            method: "GET",
-          })
-          .then(response => {  
-              if (!response.ok) {  
-                  throw new Error('Network response was not ok');  
-              }  
-              return response.json(); // 直接将流转换为JSON对象  
-          })  
-          .then(json => {  
-            const data = json.data;
-            const userInfo = JSON.parse(data).user
-            console.log("userInfo: ", userInfo);
-            sessionStorage.setItem("userInfo", JSON.stringify(userInfo))
-          })  
-          .catch(error => {  
-              console.error('处理fetch或JSON时出错:', error);  
-          });
-
-      var enabledUsers = parseInt("{{.Summary.EnabledUsers}}");
-      var disabledUsers = parseInt("{{.Summary.DisabledUsers}}");
-      var enabledThings = parseInt("{{.Summary.EnabledThings}}");
-      var disabledThings = parseInt("{{.Summary.DisabledThings}}");
-      var enabledChannels = parseInt("{{.Summary.EnabledChannels}}");
-      var disabledChannels = parseInt("{{.Summary.DisabledChannels}}");
-      var enabledGroups = parseInt("{{.Summary.EnabledGroups}}");
-      var disabledGroups = parseInt("{{.Summary.DisabledGroups}}");
-
-      document.addEventListener("DOMContentLoaded", function () {
-        google.charts.load("current", { packages: ["corechart", "bar"] });
-        var cardDivs = document.querySelectorAll(".card-single");
-        var defaultContent = document.querySelector(".default-content");
-        var dataCategories = {
-          users: [
-            ["状态", "数量"],
-            ["用户", enabledUsers],
-            // ["禁用用户", disabledUsers],
-          ],
-          things: [
-            ["状态", "数量"],
-            ["设备", enabledThings],
-            // ["禁用设备", disabledThings],
-          ],
-          channels: [
-            ["状态", "数量"],
-            ["分区", enabledChannels],
-            // ["禁用分区", disabledChannels],
-          ],
-          groups: [
-            ["状态", "数量"],
-            ["组", enabledGroups],
-            // ["禁用组", disabledGroups],
-          ],
-        };
-
-        cardDivs.forEach(function (cardDiv) {
-          cardDiv.addEventListener("click", function () {
-            // Remove "selected" class from all cards before adding to the clicked card
-            cardDivs.forEach(function (card) {
-              card.classList.remove("selected");
-            });
-
-            // Add "selected" class to the clicked card
-            cardDiv.classList.add("selected");
-
-            var selectedGrid = document.querySelector(".selected-grid");
-            var cardType = cardDiv.getAttribute("data-card");
-            var selectedContent = "";
-            var chartData = dataCategories[cardType];
-
-            // Customize the content based on the card type
-            if (cardType === "users") {
-              selectedContent = `
-                        <div class="piechart-div d-flex justify-content-center users">
-                            <div id="piechart" class="piechart"></div>
+    <!doctype html>
+    <html lang="en">
+        <head>
+            <title>世邦思拓</title>
+            {{ template "header" }}
+        </head>
+        <body>
+            {{ template "navbar" . }}
+            <div class="main-content mt-5 pt-5">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-lg-12 mx-auto py-3">
+                            <div class="row mb-5">
+                                <div class="col-lg-4 col-md-6 mb-4">
+                                    <div class="card text-bg-light mb-3">
+                                        <div class="card-single card-body d-flex justify-content-between p-5" data-card="users">
+                                            <div>
+                                                <h1>{{ .Summary.TotalUsers }}</h1>
+                                                <span>用户</span>
+                                            </div>
+                                            <div>
+                                                <span class="fas fa-users"></span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-lg-4 col-md-6 mb-4">
+                                    <div class="card text-bg-light mb-3">
+                                        <div class="card-single card-body d-flex justify-content-between p-5" data-card="things">
+                                            <div>
+                                                <h1>{{ .Summary.TotalThings }}</h1>
+                                                <span>设备</span>
+                                            </div>
+                                            <div>
+                                                <span class="fas fa-microchip"></span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-lg-3 col-md-6 mb-4" style="display: none;">
+                                    <div class="card text-bg-light mb-3">
+                                        <div class="card-single card-body d-flex justify-content-between p-5" data-card="groups">
+                                            <div>
+                                                <h1>{{ .Summary.TotalGroups }}</h1>
+                                                <span>组</span>
+                                            </div>
+                                            <div>
+                                                <span class="fas fa-layer-group"></span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-lg-4 col-md-6 mb-4">
+                                    <div class="card text-bg-light mb-3">
+                                        <div class="card-single card-body d-flex justify-content-between p-5" data-card="channels">
+                                            <div>
+                                                <h1>{{ .Summary.TotalChannels }}</h1>
+                                                <span>分区</span>
+                                            </div>
+                                            <div>
+                                                <span class="fas fa-microchip"></span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="card selected-grid">
+                                    <div class="default-content"></div>
+                                </div>
+                            </div>
                         </div>
-                    `;
-            } else if (cardType === "things") {
-              selectedContent = `
-                    <div class="piechart-div d-flex justify-content-center Things">
-                        <div id="piechart" class="piechart"></div>
-                    </div> `;
-            } else if (cardType === "channels") {
-              selectedContent = `
-                    <div class="piechart-div d-flex justify-content-center Channels">
-                        <div id="piechart" class="piechart"></div>
-                    </div> `;
-            } else if (cardType === "groups") {
-              selectedContent = `
-                    <div class="piechart-div d-flex justify-content-center Groups">
-                        <div id="piechart" class="piechart"></div>
-                    </div> `;
-            }
-            // Populate the selected grid with the selected content
-            selectedGrid.innerHTML = selectedContent;
-            google.charts.setOnLoadCallback(drawChart(chartData));
-          });
-        });
-        // Show default content (users data) on page load
-        defaultContent.innerHTML = `
-            <div class="overall d-flex justify-content-center">
-                <div id="chart_div" class="chart_div"></div>
+                    </div>
+                </div>
             </div>
-        `;
-        google.charts.setOnLoadCallback(drawStacked);
-      });
+            <script>
+              //获取当前登录用户信息，并保存到sessionStorage中
+              fetch('{{ printf "%s/userProfile" pathPrefix }}', {
+                    method: "GET",
+                  })
+                  .then(response => {
+                      if (!response.ok) {
+                          throw new Error('Network response was not ok');
+                      }
+                      return response.json(); // 直接将流转换为JSON对象
+                  })
+                  .then(json => {
+                    const data = json.data;
+                    const userInfo = JSON.parse(data).user
+                    console.log("userInfo: ", userInfo);
+                    sessionStorage.setItem("userInfo", JSON.stringify(userInfo))
+                  })
+                  .catch(error => {
+                      console.error('处理fetch或JSON时出错:', error);
+                  });
 
-      function drawStacked() {
-        var data = new google.visualization.DataTable();
-        data.addColumn("string", "项目");
-        data.addColumn("number", "数量");
-        // data.addColumn("number", "禁用");
+              var enabledUsers = parseInt("{{.Summary.EnabledUsers}}");
+              var disabledUsers = parseInt("{{.Summary.DisabledUsers}}");
+              var enabledThings = parseInt("{{.Summary.EnabledThings}}");
+              var disabledThings = parseInt("{{.Summary.DisabledThings}}");
+              var enabledChannels = parseInt("{{.Summary.EnabledChannels}}");
+              var disabledChannels = parseInt("{{.Summary.DisabledChannels}}");
+              var enabledGroups = parseInt("{{.Summary.EnabledGroups}}");
+              var disabledGroups = parseInt("{{.Summary.DisabledGroups}}");
 
-        // Add rows based on the data variables
-        data.addRows([
-          ["用户", enabledUsers, disabledUsers],
-          ["设备", enabledThings, disabledThings],
-          ["分区", enabledChannels, disabledChannels],
-          // ["组", enabledGroups, disabledGroups],
-        ]);
+              document.addEventListener("DOMContentLoaded", function () {
+                google.charts.load("current", { packages: ["corechart", "bar"] });
+                var cardDivs = document.querySelectorAll(".card-single");
+                var defaultContent = document.querySelector(".default-content");
+                var dataCategories = {
+                  users: [
+                    ["状态", "数量"],
+                    ["用户", enabledUsers],
+                    // ["禁用用户", disabledUsers],
+                  ],
+                  things: [
+                    ["状态", "数量"],
+                    ["设备", enabledThings],
+                    // ["禁用设备", disabledThings],
+                  ],
+                  channels: [
+                    ["状态", "数量"],
+                    ["分区", enabledChannels],
+                    // ["禁用分区", disabledChannels],
+                  ],
+                  groups: [
+                    ["状态", "数量"],
+                    ["组", enabledGroups],
+                    // ["禁用组", disabledGroups],
+                  ],
+                };
 
-        var options = {
-          title: "项目",
-          isStacked: true,
-          vAxis: {
-            title: "数量",
-          },
-          hAxis: {
-            title: "Entity",
-          },
-          series: {
-            0: { color: "#1c808f" }, // Color for Enabled
-            1: { color: "#d95f02" }, // Color for Disabled
-          },
-        };
+                cardDivs.forEach(function (cardDiv) {
+                  cardDiv.addEventListener("click", function () {
+                    // Remove "selected" class from all cards before adding to the clicked card
+                    cardDivs.forEach(function (card) {
+                      card.classList.remove("selected");
+                    });
 
-        var chart = new google.visualization.ColumnChart(
-          document.getElementById("chart_div"),
-        );
-        chart.draw(data, options);
-      }
+                    // Add "selected" class to the clicked card
+                    cardDiv.classList.add("selected");
 
-      function drawChart(data) {
-        var chartData = google.visualization.arrayToDataTable(data);
+                    var selectedGrid = document.querySelector(".selected-grid");
+                    var cardType = cardDiv.getAttribute("data-card");
+                    var selectedContent = "";
+                    var chartData = dataCategories[cardType];
 
-        var options = {
-          title: "状态",
-          slices: {
-            0: { color: "#1c808f" },
-            1: { color: "#d95f02" },
-          },
-          fontName: "Poppins",
-          fontSize: 16,
-          pieHole: 0.4,
-        };
+                    // Customize the content based on the card type
+                    if (cardType === "users") {
+                      selectedContent = `
+                                <div class="piechart-div d-flex justify-content-center users">
+                                    <div id="piechart" class="piechart"></div>
+                                </div>
+                            `;
+                    } else if (cardType === "things") {
+                      selectedContent = `
+                            <div class="piechart-div d-flex justify-content-center Things">
+                                <div id="piechart" class="piechart"></div>
+                            </div> `;
+                    } else if (cardType === "channels") {
+                      selectedContent = `
+                            <div class="piechart-div d-flex justify-content-center Channels">
+                                <div id="piechart" class="piechart"></div>
+                            </div> `;
+                    } else if (cardType === "groups") {
+                      selectedContent = `
+                            <div class="piechart-div d-flex justify-content-center Groups">
+                                <div id="piechart" class="piechart"></div>
+                            </div> `;
+                    }
+                    // Populate the selected grid with the selected content
+                    selectedGrid.innerHTML = selectedContent;
+                    google.charts.setOnLoadCallback(drawChart(chartData));
+                  });
+                });
+                // Show default content (users data) on page load
+                defaultContent.innerHTML = `
+                    <div class="overall d-flex justify-content-center">
+                        <div id="chart_div" class="chart_div"></div>
+                    </div>
+                `;
+                google.charts.setOnLoadCallback(drawStacked);
+              });
 
-        var chart = new google.visualization.PieChart(
-          document.getElementById("piechart"),
-        );
+              function drawStacked() {
+                var data = new google.visualization.DataTable();
+                data.addColumn("string", "项目");
+                data.addColumn("number", "数量");
+                // data.addColumn("number", "禁用");
 
-        chart.draw(chartData, options);
-      }
-    </script>
-    </body>
-  </html>
+                // Add rows based on the data variables
+                data.addRows([
+                  ["用户", enabledUsers, disabledUsers],
+                  ["设备", enabledThings, disabledThings],
+                  ["分区", enabledChannels, disabledChannels],
+                  // ["组", enabledGroups, disabledGroups],
+                ]);
+
+                var options = {
+                  title: "项目",
+                  isStacked: true,
+                  vAxis: {
+                    title: "数量",
+                  },
+                  hAxis: {
+                    title: "Entity",
+                  },
+                  series: {
+                    0: { color: "#1c808f" }, // Color for Enabled
+                    1: { color: "#d95f02" }, // Color for Disabled
+                  },
+                };
+
+                var chart = new google.visualization.ColumnChart(
+                  document.getElementById("chart_div"),
+                );
+                chart.draw(data, options);
+              }
+
+              function drawChart(data) {
+                var chartData = google.visualization.arrayToDataTable(data);
+
+                var options = {
+                  title: "状态",
+                  slices: {
+                    0: { color: "#1c808f" },
+                    1: { color: "#d95f02" },
+                  },
+                  fontName: "Poppins",
+                  fontSize: 16,
+                  pieHole: 0.4,
+                };
+
+                var chart = new google.visualization.PieChart(
+                  document.getElementById("piechart"),
+                );
+
+                chart.draw(chartData, options);
+              }
+            </script>
+        </body>
+    </html>
 {{ end }}

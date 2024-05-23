@@ -2,179 +2,138 @@
 SPDX-License-Identifier: Apache-2.0 -->
 
 {{ define "members" }}
-  <!doctype html>
-  <html lang="en">
-    <head>
-      <title>成员</title>
-      {{ template "header" }}
-    </head>
-    <body>
-      {{ template "navbar" . }}
-      <div class="main-content pt-3">
-        <div class="container-fluid">
-          <div class="row-mb-3 p-3">
-            <div class="col-lg-12 mx-auto py-3">
-              {{ template "breadcrumb" . }}
-              <div class="row-mb-3 d-flex flex-row justify-content-between mb-3">
-                <h2>成员</h2>
-                <button
-                  class="btn body-button"
-                  role="button"
-                  id="add-member-button"
-                  onclick="openMemberModal()"
-                >
-                  <i class="fa-solid fa-plus me-2"></i>
-                  添加用户
-                </button>
-                <!-- add member modal -->
-                <div
-                  class="modal fade"
-                  id="addMemberModal"
-                  tabindex="-1"
-                  aria-labelledby="addMemberModalLabel"
-                  aria-hidden="true"
-                >
-                  <div class="modal-dialog modal-dialog-centered">
-                    <div class="modal-content">
-                      <div class="modal-header">
-                        <h1 class="modal-title" id="addMemberModalLabel">添加用户</h1>
-                        <button
-                          type="button"
-                          class="btn-close"
-                          data-bs-dismiss="modal"
-                          aria-label="Close"
-                        ></button>
-                      </div>
-                      <form
-                        action="{{ printf "%s/domains/%s/assign" pathPrefix .Session.Domain.ID }}"
-                        method="post"
-                      >
-                        <div class="modal-body">
-                          <div class="mb-3">
-                            <label for="users-scroll" class="form-label">用户名</label>
-                            <input
-                              type="text"
-                              name="userFilter"
-                              id="userFilter"
-                              placeholder="通过用户名过滤"
-                            />
-                            <select
-                              class="form-select"
-                              name="userID"
-                              id="users-scroll"
-                              size="5"
-                              required
-                            >
-                              <option disabled>选择用户</option>
-                            </select>
-                          </div>
-                          <div class="mb-3">
-                            <label for="relation" class="form-label">关系</label>
-                            <select
-                              class="form-control"
-                              name="relation"
-                              id="relation"
-                              aria-describedby="relationHelp"
-                              required
-                            >
-                              {{ range $r := .Relations }}
-                                <option value="{{ $r }}">
-                                  {{ $r }}
-                                </option>
-                              {{ end }}
-                            </select>
-                            <div id="relationHelp" class="form-text">选择关系.</div>
-                          </div>
-                        </div>
-                        <div class="modal-footer">
-                          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
-                            取消
-                          </button>
-                          <button type="submit" class="btn body-button">添加成员</button>
-                        </div>
-                      </form>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div class="table-responsive table-container">
-                {{ template "tableheader" . }}
-                <div class="itemsTable">
-                  <table class="table table-hover" id="itemsTable">
-                    <thead>
-                      <tr>
-                        <th scope="col">名称</th>
-                        <th class="tags-col" scope="col">标识</th>
-                        <th class="meta-col" scope="col">附加属性</th>
-                        <th class="created-col" scope="col">创建时间</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {{ range $i, $m := .Members }}
-                        <tr
-                          onclick="viewMember('{{ $m.Credentials.Identity }}')"
-                          class="clickable-row"
-                        >
-                          <td>{{ $m.Name }}</td>
-                          <td class="tags-col">
-                            {{ range $j, $tag := $m.Tags }}
-                              <span class="badge bg-dark">
-                                {{ $tag }}
-                              </span>
-                            {{ end }}
-                          </td>
-                          <td class="meta-col">
-                            <div class="meta-div">
-                              <pre id="meta-{{ $i }}"></pre>
+    <!doctype html>
+    <html lang="en">
+        <head>
+            <title>成员</title>
+            {{ template "header" }}
+        </head>
+        <body>
+            {{ template "navbar" . }}
+            <div class="main-content pt-3">
+                <div class="container-fluid">
+                    <div class="row-mb-3 p-3">
+                        <div class="col-lg-12 mx-auto py-3">
+                            {{ template "breadcrumb" . }}
+                            <div class="row-mb-3 d-flex flex-row justify-content-between mb-3">
+                                <h2>成员</h2>
+                                <button class="btn body-button" role="button" id="add-member-button" onclick="openMemberModal()">
+                                    <i class="fa-solid fa-plus me-2"></i>
+                                    添加用户
+                                </button>
+                                <!-- add member modal -->
+                                <div class="modal fade" id="addMemberModal" tabindex="-1" aria-labelledby="addMemberModalLabel" aria-hidden="true">
+                                    <div class="modal-dialog modal-dialog-centered">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h1 class="modal-title" id="addMemberModalLabel">添加用户</h1>
+                                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                            </div>
+                                            <form action="{{ printf "%s/domains/%s/assign" pathPrefix .Session.Domain.ID }}" method="post">
+                                                <div class="modal-body">
+                                                    <div class="mb-3">
+                                                        <label for="users-scroll" class="form-label">用户名</label>
+                                                        <input type="text" name="userFilter" id="userFilter" placeholder="通过用户名过滤" />
+                                                        <select class="form-select" name="userID" id="users-scroll" size="5" required>
+                                                            <option disabled>选择用户</option>
+                                                        </select>
+                                                    </div>
+                                                    <div class="mb-3">
+                                                        <label for="relation" class="form-label">关系</label>
+                                                        <select class="form-control" name="relation" id="relation" aria-describedby="relationHelp" required>
+                                                            {{ range $r := .Relations }}
+                                                                <option value="{{ $r }}">
+                                                                    {{ $r }}
+                                                                </option>
+                                                            {{ end }}
+                                                        </select>
+                                                        <div id="relationHelp" class="form-text">选择关系.</div>
+                                                    </div>
+                                                </div>
+                                                <div class="modal-footer">
+                                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">取消</button>
+                                                    <button type="submit" class="btn body-button">添加成员</button>
+                                                </div>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
-                          </td>
-                          <td class="created-col">
-                            {{ $m.CreatedAt }}
-                          </td>
-                        </tr>
+                            <div class="table-responsive table-container">
+                                {{ template "tableheader" . }}
+                                <div class="itemsTable">
+                                    <table class="table table-hover" id="itemsTable">
+                                        <thead>
+                                            <tr>
+                                                <th scope="col">名称</th>
+                                                <th class="tags-col" scope="col">标识</th>
+                                                <th class="meta-col" scope="col">附加属性</th>
+                                                <th class="created-col" scope="col">创建时间</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            {{ range $i, $m := .Members }}
+                                                <tr onclick="viewMember('{{ $m.Credentials.Identity }}')" class="clickable-row">
+                                                    <td>{{ $m.Name }}</td>
+                                                    <td class="tags-col">
+                                                        {{ range $j, $tag := $m.Tags }}
+                                                            <span class="badge bg-dark">
+                                                                {{ $tag }}
+                                                            </span>
+                                                        {{ end }}
+                                                    </td>
+                                                    <td class="meta-col">
+                                                        <div class="meta-div">
+                                                            <pre id="meta-{{ $i }}"></pre>
+                                                        </div>
+                                                    </td>
+                                                    <td class="created-col">
+                                                        {{ $m.CreatedAt }}
+                                                    </td>
+                                                </tr>
                         <script>
                           attachFormatJsonWithPrettifyListener({
                             data: '{{ toJSON $m.Metadata }}',
                             id: "meta-{{ $i }}",
                           })
                         </script>
-                      {{ end }}
-                    </tbody>
-                  </table>
+                                            {{ end }}
+                                        </tbody>
+                                    </table>
+                                </div>
+                                {{ template "tablefooter" . }}
+                            </div>
+                        </div>
+                    </div>
                 </div>
-                {{ template "tablefooter" . }}
-              </div>
             </div>
-          </div>
-        </div>
-      </div>
-      <script>
-        const memberModal = new bootstrap.Modal(document.getElementById("addMemberModal"));
+            <script>
+              const memberModal = new bootstrap.Modal(document.getElementById("addMemberModal"));
 
-        function openMemberModal() {
-          memberModal.show();
-        }
-        let userRole = '{{.Session.User.Role}}';
-        if (userRole == "admin") {
-          document.getElementById("add-member-button").style.display = "block";
-        } else {
-          document.getElementById("add-member-button").style.display = "none";
-        }
+              function openMemberModal() {
+                memberModal.show();
+              }
+              let userRole = '{{.Session.User.Role}}';
+              if (userRole == "admin") {
+                document.getElementById("add-member-button").style.display = "block";
+              } else {
+                document.getElementById("add-member-button").style.display = "none";
+              }
 
-        function viewMember(identity) {
-          window.location.href = '{{ printf "%s/domains/members?identity=" pathPrefix }}' + identity;
-        }
-      </script>     
-      <script type="module">
-        import { fetchIndividualEntity } from "/js/infinitescroll.js";
+              function viewMember(identity) {
+                window.location.href = '{{ printf "%s/domains/members?identity=" pathPrefix }}' + identity;
+              }
+            </script>      
+            <script type="module">
+              import { fetchIndividualEntity } from "/js/infinitescroll.js";
 
-        fetchIndividualEntity({
-          input: "userFilter",
-          itemSelect: "users-scroll",
-          item: "users",
-          pathPrefix: "{{ pathPrefix }}",
-        });
-      </script>
-    </body>
-  </html>
+              fetchIndividualEntity({
+                input: "userFilter",
+                itemSelect: "users-scroll",
+                item: "users",
+                pathPrefix: "{{ pathPrefix }}",
+              });
+            </script>
+        </body>
+    </html>
 {{ end }}
