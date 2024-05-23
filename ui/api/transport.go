@@ -894,6 +894,13 @@ func MakeHandler(svc ui.Service, r *chi.Mux, instanceID, prefix string, secureCo
 					opts...,
 				).ServeHTTP)
 
+				r.Get("/{id}/domainInJSON", kithttp.NewServer(
+					domainInJSONEndpoint(svc),
+					decodeListEntityByIDRequest,
+					encodeJSONResponse,
+					opts...,
+				).ServeHTTP)
+
 				r.Post("/{id}", kithttp.NewServer(
 					updateDomainEndpoint(svc),
 					decodeUpdateDomainRequest,

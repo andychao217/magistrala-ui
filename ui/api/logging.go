@@ -1668,6 +1668,23 @@ func (lm *loggingMiddleware) Domain(s ui.Session) (b []byte, err error) {
 	return lm.svc.Domain(s)
 }
 
+// Domain adds logging middleware to domain method.
+func (lm *loggingMiddleware) DomainInJSON(s ui.Session) (b sdk.Domain, err error) {
+	defer func(begin time.Time) {
+		args := []any{
+			slog.String("duration", time.Since(begin).String()),
+			slog.Any("domain", s.Domain),
+		}
+		if err != nil {
+			args = append(args, slog.Any("error", err))
+			lm.logger.Warn("View domain failed to complete successfully", args...)
+		}
+		lm.logger.Info("View domain completed successfully", args...)
+	}(time.Now())
+
+	return lm.svc.DomainInJSON(s)
+}
+
 // EnableDomain adds logging middleware to enable domain method.
 func (lm *loggingMiddleware) EnableDomain(token, id string) (err error) {
 	defer func(begin time.Time) {

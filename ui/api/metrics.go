@@ -943,6 +943,15 @@ func (mm *metricsMiddleware) Domain(s ui.Session) ([]byte, error) {
 	return mm.svc.Domain(s)
 }
 
+func (mm *metricsMiddleware) DomainInJSON(s ui.Session) (sdk.Domain, error) {
+	defer func(begin time.Time) {
+		mm.counter.With("method", "domain").Add(1)
+		mm.latency.With("method", "domain").Observe(time.Since(begin).Seconds())
+	}(time.Now())
+
+	return mm.svc.DomainInJSON(s)
+}
+
 // EnableDomain adds metrics middleware to enable domain method.
 func (mm *metricsMiddleware) EnableDomain(token, id string) error {
 	defer func(begin time.Time) {

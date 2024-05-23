@@ -353,6 +353,7 @@ type Service interface {
 	UpdateDomain(token string, domain sdk.Domain) error
 	// Domain displays the domain page.
 	Domain(s Session) ([]byte, error)
+	DomainInJSON(s Session) (sdk.Domain, error)
 	// EnableDomain updates the status of the domain to enabled.
 	EnableDomain(token, id string) error
 	// DisableDomain updates the status of the domain to disabled.
@@ -2382,6 +2383,20 @@ func (us *uiService) Domain(s Session) ([]byte, error) {
 	}
 
 	return btpl.Bytes(), nil
+}
+
+func (us *uiService) DomainInJSON(s Session) (sdk.Domain, error) {
+	domain, err := us.sdk.Domain(s.Domain.ID, s.Token)
+	if err != nil {
+		return sdk.Domain{}, errors.Wrap(ErrFailedRetreive, err)
+	}
+
+	_, _ = us.sdk.DomainPermissions(s.Domain.ID, s.Token)
+	if err != nil {
+		return sdk.Domain{}, errors.Wrap(ErrFailedRetreive, err)
+	}
+
+	return domain, nil
 }
 
 func (us *uiService) EnableDomain(token, id string) error {

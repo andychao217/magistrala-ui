@@ -67,11 +67,23 @@ $(function () {
         const domainLinkElement = document.getElementById("domain");
         const domainHrefValue = domainLinkElement.href;
         const domainID = domainHrefValue.split("/").pop();
-        //从sessionStorage中获取当前登录用户信息
-        const userInfo = JSON.parse(sessionStorage.getItem("userInfo"));
-        const defaultChannelId = userInfo.metadata[domainID];
-        if (domainID && defaultChannelId) {
-            connectWebSocket(hostName, defaultChannelId);
-        }
+
+        fetch(`/ui/domains/${domainID}/domainInJSON`, {
+            method: "GET",
+          })
+            .then(response => {
+              if (!response.ok) {
+                throw new Error('Network response was not ok');
+              }
+              return response.json(); // 直接将流转换为JSON对象
+            })
+            .then(json => {
+              const data = json.data;
+              const domainData = JSON.parse(data).domainData;
+              const defaultChannelId = domainData.metadata["comID"];
+              if (domainID && defaultChannelId) {
+                connectWebSocket(hostName, defaultChannelId);
+              }
+            })
     }
 });

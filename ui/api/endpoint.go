@@ -2052,6 +2052,35 @@ func domainEndpoint(svc ui.Service) endpoint.Endpoint {
 	}
 }
 
+func domainInJSONEndpoint(svc ui.Service) endpoint.Endpoint {
+	return func(_ context.Context, request interface{}) (interface{}, error) {
+		req := request.(listEntityByIDReq)
+		if err := req.validate(); err != nil {
+			return nil, err
+		}
+
+		res, err := svc.DomainInJSON(req.Session)
+		if err != nil {
+			return nil, err
+		}
+
+		data := map[string]interface{}{
+			"domainData": res,
+		}
+
+		// 将map编码为JSON字符串
+		jsonData, err := json.Marshal(data)
+		if err != nil {
+			fmt.Println("domainData Marshal 123: ", err)
+			return nil, err
+		}
+
+		return jsonResponse{
+			Data: string(jsonData),
+		}, nil
+	}
+}
+
 func enableDomainEndpoint(svc ui.Service, prefix string) endpoint.Endpoint {
 	return func(_ context.Context, request interface{}) (interface{}, error) {
 		req := request.(updateDomainStatusReq)

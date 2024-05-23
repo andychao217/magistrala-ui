@@ -143,10 +143,10 @@ SPDX-License-Identifier: Apache-2.0 -->
                                                             {{ end }}
                                                         </td>
                                                         <!-- <td class="meta-col">
-                              <div class="meta-div">
-                                <pre id="meta-{{ $i }}"></pre>
-                              </div>
-                            </td> -->
+                                                          <div class="meta-div">
+                                                            <pre id="meta-{{ $i }}"></pre>
+                                                          </div>
+                                                        </td> -->
                                                         <td class="created-col">{{ $t.CreatedAt }}</td>
                                                         <td id="{{ $t.ID }}-onlineStatusTD">
                                                             {{ if eq $t.Metadata.isOnline "1" }}
@@ -156,12 +156,12 @@ SPDX-License-Identifier: Apache-2.0 -->
                                                             {{ end }}
                                                         </td>
                                                         <!-- <td>
-                              {{ if eq $t.Status "enabled" }}
+                                                        {{ if eq $t.Status "enabled" }}
                                                             <span class="badge rounded-pill enabled-pill">启用</span>
                                                         {{ else if eq $t.Status "disabled" }}
                                                             <span class="badge rounded-pill disabled-pill">禁用</span>
                                                         {{ end }}
-                            </td> -->
+                                                        </td> -->
                                                         <td class="operation-col">
                                                             <button class="btn body-button" onclick="viewThing('{{ $t.ID }}')" title="查看">
                                                                 <i class="fa-solid fa-info"></i>
@@ -194,12 +194,12 @@ SPDX-License-Identifier: Apache-2.0 -->
                                                             {{ end }}
                                                         </td>
                                                     </tr>
-                    <script>
-                      // attachFormatJsonWithPrettifyListener({
-                      //   data: '{{ toJSON $t.Metadata }}',
-                      //   id: "meta-{{ $i }}",
-                      // })
-                    </script>
+                                                    <script>
+                                                      // attachFormatJsonWithPrettifyListener({
+                                                      //   data: '{{ toJSON $t.Metadata }}',
+                                                      //   id: "meta-{{ $i }}",
+                                                      // })
+                                                    </script>
                                                 {{ end }}
                                             </tbody>
                                         </table>
@@ -292,7 +292,12 @@ SPDX-License-Identifier: Apache-2.0 -->
 
               //控制设备
               function conntrolThing(thingID, thingIdentity, controlType) {
-                fetch(`/ui/things/${thingID}/channelsInJSON?page=1&limit=1000`, {
+                 //获取当前domain的ID号
+                const domainLinkElement = document.getElementById("domain");
+                const domainHrefValue = domainLinkElement.href;
+                const domainID = domainHrefValue.split("/").pop();
+
+                fetch(`/ui/domains/${domainID}/domainInJSON`, {
                   method: "GET",
                 })
                   .then(response => {
@@ -303,12 +308,13 @@ SPDX-License-Identifier: Apache-2.0 -->
                   })
                   .then(json => {
                     const data = json.data;
-                    const channelsData = JSON.parse(data).channelsData;
-                    const channels = channelsData.groups;
+                    const domainData = JSON.parse(data).domainData;
+                    const defaultChannelId = domainData.metadata["comID"];
                     const message = `${controlType} ${thingIdentity}`;
-                    const fetchPromises = channels.map((channel) => postMessage(channel.id, message));
-                    Promise.all(fetchPromises).then(responses => { }).then(jsonData => { })
-                      .catch(error => { console.error('An error occurred:', error); });
+                    if (domainID && defaultChannelId) {
+                      const message = `${controlType} ${thingIdentity}`;
+                      postMessage(defaultChannelId, message)
+                    }
                   })
               }
 
