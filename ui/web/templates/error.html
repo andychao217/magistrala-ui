@@ -18,13 +18,23 @@ SPDX-License-Identifier: Apache-2.0 -->
                                 <div class="error-header py-5">
                                     <h1 class="error-header">抱歉, 你的请求发生了一个错误</h1>
                                 </div>
-                                <div class="alert alert-danger alert-dismissible">{{ .Error }}</div>
-                                <a type="button" href="javascript:window. history. back();" class="btn body-button">返回</a>
+                                <div class="alert alert-danger alert-dismissible">
+                                   <p>{{ .Error }}</p>
+                                   <p>页面将在 5 秒后自动跳转到登录页面。</p>
+                                </div>
+                                <a type="button" onclick="window.location.href = '/ui/login'" class="btn body-button">返回登录</a>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
+            <script>
+                $(document).ready(function () {
+                    setTimeout(function() {
+                        window.location.href = '/ui/login';
+                    }, 5000);
+                });
+            </script>
         </body>
     </html>
 {{ end }}

@@ -7,11 +7,11 @@ html {
 }
 
 :root {
-    --main-color: #1c808f;
+    --main-color: #20afbf;
     --color-dark: #1d2231;
     --text-grey: #8390a2;
     --sidebar-max: 15rem;
-    --sidebar-min: 7rem;
+    --sidebar-min: 12rem;
     --border-radius: 5px;
 
     /* pills */
@@ -45,6 +45,7 @@ html {
     left: 0;
     background: var(--main-color);
     max-width: var(--sidebar-max);
+    min-width: var(--sidebar-min);
 }
 
 .sidebar a {
@@ -57,12 +58,14 @@ html {
 }
 
 .sidebar-brand {
-    height: 68px;
+    height: 56px;
     color: #fff;
 }
 
-.sidebar-brand h1 {
+.sidebar-brand h2 {
     font-family: "Montserrat";
+    line-height: 56px;
+    height: 56px;
 }
 
 .sidebar .nav-item .nav-link i {
