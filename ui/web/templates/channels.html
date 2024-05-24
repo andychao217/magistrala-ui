@@ -134,13 +134,15 @@ SPDX-License-Identifier: Apache-2.0 -->
                                     <div class="itemsTable">
                                       {{ range $i, $c := .Channels }}
                                         <div class="col-sm-3 mb-3 mb-sm-0">
-                                          <div class="channel-card card">
+                                          <div class="channel-thing-card card">
                                             <div class="card-body">
                                               <h5 class="card-title">{{ $c.Name }}</h5>
                                               <p class="card-text">{{ $c.ID }}</p>
                                               <p class="card-text">{{ $c.Description }}</p>
-                                              <button title="查看" class="btn body-button"onclick="viewChannels('{{ $c.ID }}')">
-                                                <i class="fa-solid fa-info"></i>
+                                              <button title="查看" class="btn body-button">
+                                                <a href="{{ printf "%s/channels/%s/things?limit=1000" pathPrefix $c.ID }}" style="color: white;">
+                                                  <i class="fa-solid fa-info"></i>
+                                                </a>
                                               </button>
                                               <button title="删除" class="btn body-button" onclick="deleteChannel('{{ $c.ID }}')">
                                                   <i class="fa-solid fa-trash-can"></i>
@@ -172,12 +174,6 @@ SPDX-License-Identifier: Apache-2.0 -->
                   channelsModal.show();
                 }
               }
-
-              codeMirrorEditor({
-                textArea: "metadata",
-                button: "create-channel-button",
-                value: {},
-              });
 
               function editChannel(id, name, description) {
                 editChannelModal.show();
@@ -299,6 +295,7 @@ SPDX-License-Identifier: Apache-2.0 -->
                   editName: "name-field",
                 },
               });
+              
               submitCreateForm({
                 url: '{{ printf "%s/channels" pathPrefix }}',
                 formId: "editChannelForm",

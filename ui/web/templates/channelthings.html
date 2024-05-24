@@ -58,58 +58,61 @@ SPDX-License-Identifier: Apache-2.0 -->
                                             </div>
                                         </div>
                                     </div>
-                                    {{ template "tableheader" . }}
+                                    <!-- {{ template "tableheader" . }} -->
                                     <div class="itemsTable">
-                                        <table id="itemsTable" class="table table-hover">
-                                            <thead>
-                                                <tr>
-                                                    <th scope="col">名称</th>
-                                                    <th class="tags-col" scope="col">标识</th>
-                                                    <th class="meta-col" scope="col">附加属性</th>
-                                                    <th class="created-col" scope="col">创建时间</th>
-                                                    <th class="text-center" scope="col"></th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                {{ $channelID := .ChannelID }}
-                                                {{ range $i, $t := .Things }}
-                                                    <tr onclick="viewThing('{{ $t.ID }}')" class="clickable-row">
-                                                        <td>{{ $t.Name }}</td>
-                                                        <td class="tags-col">
-                                                            {{ range $j, $tag := $t.Tags }}
-                                                                <span class="badge bg-dark">{{ $tag }}</span>
-                                                            {{ end }}
-                                                        </td>
-                                                        <td class="meta-col">
-                                                            <div class="meta-div">
-                                                                <pre id="meta-{{ $i }}"></pre>
-                                                            </div>
-                                                        </td>
-                                                        <td class="created-col">{{ $t.CreatedAt }}</td>
-                                                        <td class="text-center">
-                                                            <form action="{{ printf "%s/channels/%s/things/disconnect?item=channels" pathPrefix $channelID }}" method="post">
-                                                                <input type="hidden" name="thingID" id="thingID" value="{{ $t.ID }}" />
-                                                                <button
-                                                                    type="submit"
-                                                                    class="btn btn-sm"
-                                                                    {{ if not $shareButton }}disabled{{ end }}
-                                                                >
-                                                                    <i class="fas fa-trash-alt"></i>
-                                                                </button>
-                                                            </form>
-                                                        </td>
-                                                    </tr>
-                                                    <script>
-                                                      attachFormatJsonWithPrettifyListener({
-                                                        data: '{{ toJSON $t.Metadata }}',
-                                                        id: "meta-{{ $i }}",
-                                                      })
-                                                    </script>
-                                                {{ end }}
-                                            </tbody>
-                                        </table>
+                                        {{ $channelID := .ChannelID }}
+                                        {{ range $i, $t := .Things }}
+                                            <div class="col-sm-3 mb-3 mb-sm-0">
+                                              <div class="channel-thing-card card">
+                                                <div class="card-body">
+                                                  <h5 class="card-title">{{ $t.Name }}</h5>
+                                                  <p id="{{ $t.ID }}-onlineStatusTD" class="card-text">
+                                                      {{ if eq $t.Metadata.isOnline "1" }}
+                                                          <span class="badge rounded-pill enabled-pill">在线</span>
+                                                      {{ else }}
+                                                          <span class="badge rounded-pill disabled-pill">离线</span>
+                                                      {{ end }}
+                                                  </p>
+                                                  <p>
+                                                      <form action="{{ printf "%s/channels/%s/things/disconnect?item=channels" pathPrefix $channelID }}" method="post">
+                                                          <input type="hidden" name="thingID" id="thingID" value="{{ $t.ID }}" />
+                                                          <button
+                                                              type="submit"
+                                                              class="btn body-button"
+                                                              title="移除设备"
+                                                              {{ if not $shareButton }}disabled{{ end }}
+                                                          >
+                                                              <i class="fas fa-trash-can"></i>
+                                                          </button>
+                                                          {{ if eq $t.Metadata.isOnline "1" }}
+                                                              <button
+                                                                  type="button"
+                                                                  id="{{ $t.ID }}-rebootBtn"
+                                                                  class="btn body-button"
+                                                                  onclick="conntrolThing('{{ $t.ID }}', '{{ $t.Credentials.Identity }}', 'reboot')"
+                                                                  title="重启"
+                                                              >
+                                                                  <i class="fa-solid fa-arrows-rotate"></i>
+                                                              </button>
+                                                          {{ else }}
+                                                              <button
+                                                                  type="button"
+                                                                  id="{{ $t.ID }}-rebootBtn"
+                                                                  class="btn body-button"
+                                                                  title="重启"
+                                                                  disabled
+                                                              >
+                                                                  <i class="fa-solid fa-arrows-rotate"></i>
+                                                              </button>
+                                                          {{ end }}
+                                                      </form>
+                                                  </p>
+                                                </div>
+                                              </div>
+                                            </div>
+                                        {{ end }}
                                     </div>
-                                    {{ template "tablefooter" . }}
+                                    <!-- {{ template "tablefooter" . }} -->
                                 </div>
                             </div>
                         </div>
@@ -126,7 +129,101 @@ SPDX-License-Identifier: Apache-2.0 -->
                 let pathPrefix = "{{ pathPrefix }}";
                 window.location.href = `${pathPrefix}/things/${id}`;
               }
-            </script>      <script type="module">
+
+              //控制设备
+              function conntrolThing(thingID, thingIdentity, controlType) {
+                 //获取当前domain的ID号
+                const domainLinkElement = document.getElementById("domain");
+                const domainHrefValue = domainLinkElement.href;
+                const domainID = domainHrefValue.split("/").pop();
+
+                fetch(`/ui/domains/${domainID}/domainInJSON`, {
+                  method: "GET",
+                })
+                  .then(response => {
+                    if (!response.ok) {
+                      throw new Error('Network response was not ok');
+                    }
+                    return response.json(); // 直接将流转换为JSON对象
+                  })
+                  .then(json => {
+                    const data = json.data;
+                    const domainData = JSON.parse(data).domainData;
+                    const defaultChannelId = domainData.metadata["comID"];
+                    const message = `${controlType} ${thingIdentity}`;
+                    if (domainID && defaultChannelId) {
+                      const message = `${controlType} ${thingIdentity}`;
+                      postMessage(defaultChannelId, message)
+                    }
+                  })
+              }
+
+              //轮询刷新thingslist，以实现监听things在线状态的
+              function refreshThingsData() {
+                // 获取当前页面的完整URL
+                var currentUrl = window.location.href;
+                // 创建URL对象
+                var urlObj = new URL(currentUrl);
+                // 使用URL对象的searchParams属性获取URLSearchParams对象
+                var searchParams = urlObj.searchParams;
+                // 使用get方法从URLSearchParams对象中获取page和limit的值
+                var page = searchParams.get('page') || 1;
+                var limit = searchParams.get('limit') || 1000;
+                fetch(`/ui/things/thingsInJSON?page=${page}&limit=${limit}`, {
+                  method: "GET",
+                })
+                  .then(response => {
+                    if (!response.ok) {
+                      throw new Error('Network response was not ok');
+                    }
+                    return response.json(); // 直接将流转换为JSON对象
+                  })
+                  .then(json => {
+                    const data = json.data;
+                    const thingsData = JSON.parse(data).thingsData;
+                    const things = thingsData.things;
+                    things.forEach((thing) => {
+                      const onlineStatus = thing.metadata && thing.metadata.isOnline === "1";
+                      $(`#${thing.id}-onlineStatusTD`).empty();
+                      if (onlineStatus) {
+                        $('<span class="badge rounded-pill enabled-pill">在线</span>').appendTo(`#${thing.id}-onlineStatusTD`);
+                        $(`#${thing.id}-rebootBtn`).prop('disabled', false);
+                      } else {
+                        $('<span class="badge rounded-pill disabled-pill">离线</span>').appendTo(`#${thing.id}-onlineStatusTD`);
+                        $(`#${thing.id}-rebootBtn`).prop('disabled', true);
+                      }
+                    })
+                  })
+                  .catch(error => {
+                    // console.error('处理fetch或JSON时出错:', error);
+                  });
+              }
+              var intervalRefreshData = setInterval(refreshThingsData, 2000);
+
+              function postMessage(channelID, message) {
+                let formData = new FormData();
+                formData.append("channelID", channelID);
+                formData.append("message", message);
+                formData.append("thingSecret", "platform");
+                fetch(`/ui/channels/messages`, {
+                  method: "POST",
+                  body: formData,
+                })
+                  .then(response => {
+                    if (!response.ok) {
+                      throw new Error('Network response was not ok');
+                    }
+                    return response.json(); // 直接将流转换为JSON对象
+                  })
+                  .then(json => {
+                    //
+                  })
+                  .catch(error => {
+                    console.error('处理fetch或JSON时出错:', error);
+                  });
+              }
+            </script>      
+            <script type="module">
               import { fetchIndividualEntity } from "/js/infinitescroll.js";
 
               fetchIndividualEntity({

@@ -38,11 +38,6 @@ SPDX-License-Identifier: Apache-2.0 -->
                                                             <input type="text" class="form-control name-field" name="name" id="name" placeholder="设备名称" />
                                                             <div id="nameError" class="text-danger"></div>
                                                         </div>
-                                                        <!-- 隐藏不能使用的字段 -->
-                                                        <div class="mb-3" style="display: none;">
-                                                            <label for="thingID" class="form-label">设备ID</label>
-                                                            <input type="text" class="form-control" name="thingID" id="thingID" placeholder="设备ID" />
-                                                        </div>
                                                         <div class="mb-3">
                                                             <label for="identity" class="form-label">设备身份识别码</label>
                                                             <input type="text" class="form-control" name="identity" id="identity" placeholder="设备身份识别码" />
@@ -117,94 +112,98 @@ SPDX-License-Identifier: Apache-2.0 -->
                                             </div>
                                         </div>
                                     </div>
+
+                                    <!-- add thing modal -->
+                                    <div class="modal fade" id="editThingModal" tabindex="-1" role="dialog" aria-labelledby="editThingModalLabel" aria-hidden="true">
+                                      <div class="modal-dialog" role="document">
+                                          <div class="modal-content">
+                                              <div class="modal-header">
+                                                  <h1 class="modal-title" id="editThingModalLabel">修改设备</h1>
+                                                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                              </div>
+                                              <form id="editThingform">
+                                                  <div class="modal-body">
+                                                      <div id="editAlertMessage"></div>
+
+                                                      <div class="mb-3">
+                                                          <label for="name" class="form-label">名称</label>
+                                                          <input type="text" class="form-control name-field" name="name" id="editName" placeholder="设备名称" />
+                                                          <div id="editNameError" class="text-danger"></div>
+                                                      </div>
+                                                      <div class="mb-3">
+                                                          <label for="id" class="form-label">设备ID</label>
+                                                          <input type="text" class="form-control" name="id" id="editID" placeholder="设备ID" readonly />
+                                                      </div>
+                                                  </div>
+                                                  <div class="modal-footer">
+                                                      <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">取消</button>
+                                                      <button type="submit" class="btn body-button" id="edit-thing-button">确定</button>
+                                                  </div>
+                                              </form>
+                                          </div>
+                                      </div>
+                                  </div>
                                 </div>
                                 <div class="table-responsive table-container">
-                                    {{ template "tableheader" . }}
+                                    <!-- {{ template "tableheader" . }} -->
                                     <div class="itemsTable">
-                                        <table id="itemsTable" class="table table-hover">
-                                            <thead>
-                                                <tr>
-                                                    <th scope="col">名称</th>
-                                                    <th class="tags-col" scope="col">标识</th>
-                                                    <!-- <th class="meta-col" scope="col">附加属性</th> -->
-                                                    <th class="created-col" scope="col">创建时间</th>
-                                                    <th class="status-col" scope="col">在线状态</th>
-                                                    <!-- <th class="status-col" scope="col">状态</th> -->
-                                                    <th class="operation-col" scope="col">操作</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                {{ range $i, $t := .Things }}
-                                                    <tr class="clickable-row">
-                                                        <td>{{ $t.Name }}</td>
-                                                        <td class="tags-col">
-                                                            {{ range $j, $tag := $t.Tags }}
-                                                                <span class="badge bg-dark">{{ $tag }}</span>
-                                                            {{ end }}
-                                                        </td>
-                                                        <!-- <td class="meta-col">
-                                                          <div class="meta-div">
-                                                            <pre id="meta-{{ $i }}"></pre>
-                                                          </div>
-                                                        </td> -->
-                                                        <td class="created-col">{{ $t.CreatedAt }}</td>
-                                                        <td id="{{ $t.ID }}-onlineStatusTD">
-                                                            {{ if eq $t.Metadata.isOnline "1" }}
-                                                                <span class="badge rounded-pill enabled-pill">在线</span>
-                                                            {{ else }}
-                                                                <span class="badge rounded-pill disabled-pill">离线</span>
-                                                            {{ end }}
-                                                        </td>
-                                                        <!-- <td>
-                                                        {{ if eq $t.Status "enabled" }}
-                                                            <span class="badge rounded-pill enabled-pill">启用</span>
-                                                        {{ else if eq $t.Status "disabled" }}
-                                                            <span class="badge rounded-pill disabled-pill">禁用</span>
-                                                        {{ end }}
-                                                        </td> -->
-                                                        <td class="operation-col">
-                                                            <button class="btn body-button" onclick="viewThing('{{ $t.ID }}')" title="查看">
-                                                                <i class="fa-solid fa-info"></i>
-                                                            </button>
-                                                            {{ if eq $t.Metadata.isOnline "1" }}
-                                                                <button
-                                                                    id="{{ $t.ID }}-rebootBtn"
-                                                                    class="btn body-button"
-                                                                    onclick="conntrolThing('{{ $t.ID }}', '{{ $t.Credentials.Identity }}', 'reboot')"
-                                                                    title="重启"
-                                                                >
-                                                                    <i class="fa-solid fa-arrows-rotate"></i>
-                                                                </button>
-                                                                <button id="{{ $t.ID }}-deleteBtn" class="btn body-button" onclick="deleteThing('{{ $t.ID }}')" title="删除" disabled>
-                                                                    <i class="fa-solid fa-trash-can"></i>
-                                                                </button>
-                                                            {{ else }}
-                                                                <button
-                                                                    id="{{ $t.ID }}-rebootBtn"
-                                                                    class="btn body-button"
-                                                                    onclick="conntrolThing('{{ $t.ID }}', '{{ $t.Credentials.Identity }}', 'reboot')"
-                                                                    title="重启"
-                                                                    disabled
-                                                                >
-                                                                    <i class="fa-solid fa-arrows-rotate"></i>
-                                                                </button>
-                                                                <button id="{{ $t.ID }}-deleteBtn" class="btn body-button" onclick="deleteThing('{{ $t.ID }}')" title="删除">
-                                                                    <i class="fa-solid fa-trash-can"></i>
-                                                                </button>
-                                                            {{ end }}
-                                                        </td>
-                                                    </tr>
-                                                    <script>
-                                                      // attachFormatJsonWithPrettifyListener({
-                                                      //   data: '{{ toJSON $t.Metadata }}',
-                                                      //   id: "meta-{{ $i }}",
-                                                      // })
-                                                    </script>
+                                      {{ range $i, $t := .Things }}
+                                        <div class="col-sm-3 mb-3 mb-sm-0">
+                                          <div class="channel-thing-card card">
+                                            <div class="card-body">
+                                              <h5 class="card-title">{{ $t.Name }}</h5>
+                                              <p>{{ $t.Credentials.Identity }}</p>
+                                              <p>{{ $t.Credentials.Secret }}</p>
+                                              <p id="{{ $t.ID }}-onlineStatusTD" class="card-text">
+                                                  {{ if eq $t.Metadata.isOnline "1" }}
+                                                      <span class="badge rounded-pill enabled-pill">在线</span>
+                                                  {{ else }}
+                                                      <span class="badge rounded-pill disabled-pill">离线</span>
+                                                  {{ end }}
+                                              </p>
+                                              <p>
+                                                <button class="btn body-button" onclick="viewThing('{{ $t.ID }}')" title="查看">
+                                                  <i class="fa-solid fa-info"></i>
+                                                </button>
+                                                {{ if eq $t.Metadata.isOnline "1" }}
+                                                    <button
+                                                      id="{{ $t.ID }}-rebootBtn"
+                                                      class="btn body-button"
+                                                      onclick="conntrolThing('{{ $t.ID }}', '{{ $t.Credentials.Identity }}', 'reboot')"
+                                                      title="重启"
+                                                    >
+                                                      <i class="fa-solid fa-arrows-rotate"></i>
+                                                    </button>
+                                                    <button id="{{ $t.ID }}-deleteBtn" class="btn body-button" title="删除" disabled>
+                                                      <i class="fa-solid fa-trash-can"></i>
+                                                    </button>
+                                                    <button title="修改" class="btn body-button" title="修改" disabled>
+                                                      <i class="fa-solid fa-pencil-alt"></i>
+                                                    </button>
+                                                {{ else }}
+                                                    <button
+                                                      id="{{ $t.ID }}-rebootBtn"
+                                                      class="btn body-button"
+                                                      onclick="conntrolThing('{{ $t.ID }}', '{{ $t.Credentials.Identity }}', 'reboot')"
+                                                      title="重启"
+                                                      disabled
+                                                    >
+                                                      <i class="fa-solid fa-arrows-rotate"></i>
+                                                    </button>
+                                                    <button id="{{ $t.ID }}-deleteBtn" class="btn body-button" onclick="deleteThing('{{ $t.ID }}')" title="删除">
+                                                      <i class="fa-solid fa-trash-can"></i>
+                                                    </button>
+                                                    <button title="修改" class="btn body-button" onclick="editThing('{{ $t.ID }}', '{{ $t.Name }}', '{{ $t.Credentials.Identity }}', '{{ $t.Credentials.Secret }}')">
+                                                      <i class="fa-solid fa-pencil-alt"></i>
+                                                    </button>
                                                 {{ end }}
-                                            </tbody>
-                                        </table>
+                                              </p>
+                                            </div>
+                                          </div>
+                                        </div>
+                                      {{ end }}
                                     </div>
-                                    {{ template "tablefooter" . }}
+                                    <!-- {{ template "tablefooter" . }} -->
                                 </div>
                             </div>
                         </div>
@@ -214,6 +213,7 @@ SPDX-License-Identifier: Apache-2.0 -->
             <script>
               const thingModal = new bootstrap.Modal(document.getElementById("addThingModal"));
               const thingsModal = new bootstrap.Modal(document.getElementById("addThingsModal"));
+              const editThingModal = new bootstrap.Modal(document.getElementById("editThingModal"));
 
               function openModal(modal) {
                 if (modal === "single") {
@@ -223,11 +223,13 @@ SPDX-License-Identifier: Apache-2.0 -->
                 }
               }
 
-              codeMirrorEditor({
-                textArea: "metadata",
-                button: "create-thing-button",
-                value: {},
-              });
+              function editThing(id, name, identity, secret) {
+                editThingModal.show();
+                $("#editName").val(name);
+                $("#editID").val(id);
+                $("#editIdentity").val(identity);
+                $("#editSecret").val(secret);
+              }
 
               //查看详情
               function viewThing(id) {
@@ -328,7 +330,7 @@ SPDX-License-Identifier: Apache-2.0 -->
                 var searchParams = urlObj.searchParams;
                 // 使用get方法从URLSearchParams对象中获取page和limit的值
                 var page = searchParams.get('page') || 1;
-                var limit = searchParams.get('limit') || 10;
+                var limit = searchParams.get('limit') || 1000;
                 fetch(`/ui/things/thingsInJSON?page=${page}&limit=${limit}`, {
                   method: "GET",
                 })
@@ -427,6 +429,27 @@ SPDX-License-Identifier: Apache-2.0 -->
                 formId: "bulkThingsForm",
                 alertDiv: "alertBulkMessage",
                 modal: thingsModal,
+              });
+
+              attachValidationListener({
+                buttonId: "edit-thing-button",
+                errorDivs: {
+                  name: "editNameError",
+                },
+                validations: {
+                  editName: validateName,
+                },
+                fields: {
+                  editName: "name-field",
+                },
+              });
+
+              submitCreateForm({
+                url: '{{ printf "%s/things" pathPrefix }}',
+                formId: "editThingform",
+                alertDiv: "editAlertMessage",
+                modal: editThingModal,
+                type: "edit"
               });
             </script>
         </body>

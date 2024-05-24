@@ -45,6 +45,8 @@ SPDX-License-Identifier: Apache-2.0 -->
                             <span>邀请</span>
                         {{ else if eq .Name "domaininvitations" }}
                             <span>机构邀请</span>
+                        {{ else if eq .Name "Connect" }}
+                            <span>关联</span>
                         {{ else }}
                             <span>{{ .Name }}</span>
                         {{ end }}
@@ -86,6 +88,8 @@ SPDX-License-Identifier: Apache-2.0 -->
                                 <span>邀请</span>
                             {{ else if eq .Name "domaininvitations" }}
                                 <span>机构邀请</span>
+                            {{ else if eq .Name "Connect" }}
+                                <span>关联</span>
                             {{ else }}
                                 <span>{{ .Name }}</span>
                             {{ end }}

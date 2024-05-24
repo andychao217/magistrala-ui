@@ -792,6 +792,10 @@ button.edit-btn {
     cursor: pointer;
 }
 
-.channel-card:hover {
-    background-color: var(--pill-color-3);
+.channel-thing-card:hover {
+    background-color: #f5f5f5;
+}
+
+.card-body{
+    padding-bottom: 0px;
 }

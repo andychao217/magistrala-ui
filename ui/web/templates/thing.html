@@ -17,16 +17,16 @@ SPDX-License-Identifier: Apache-2.0 -->
                         <div class="col-lg-12 mx-auto py-3">
                             {{ template "breadcrumb" . }}
                             <div class="row">
-                                <div class="buttons mb-3">
+                                <div class="buttons mb-3" style="display: none;">
                                     <a class="btn body-button" href="{{ printf " %s/things/%s/channels" pathPrefix .Entity.ID }}" role="button">关联</a>
                                     <!-- 隐藏按钮 -->
-                                    <a class="btn body-button" href="{{ printf " %s/things/%s/users" pathPrefix .Entity.ID }}" role="button" style="display: none;">共享</a>
+                                    <a class="btn body-button" href="{{ printf " %s/things/%s/users" pathPrefix .Entity.ID }}" role="button">共享</a>
                                 </div>
                                 <div class="table-responsive table-container">
                                     <table id="itemsTable" class="table">
                                         <thead>
                                             <tr>
-                                                <th scope="row">设备</th>
+                                                <th scope="row">设备详情</th>
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -55,12 +55,17 @@ SPDX-License-Identifier: Apache-2.0 -->
                                                 <td></td>
                                             </tr>
                                             <tr>
+                                                <th>设备身份识别码</th>
+                                                <td>{{ .Entity.Credentials.Identity }}</td>
+                                                <td></td>
+                                            </tr>
+                                            <tr>
                                                 <th>密码</th>
                                                 <td class="editable secret-field" contenteditable="false" data-field="secret">
                                                     {{ .Entity.Credentials.Secret }}
                                                 </td>
                                                 <td>
-                                                    <button class="edit-btn" id="edit-secret" {{ if not $editButton }}disabled{{ end }}>
+                                                    <button class="edit-btn" id="edit-secret" style="display: none" {{ if not $editButton }}disabled{{ end }}>
                                                         <i class="fas fa-pencil-alt"></i>
                                                     </button>
                                                     <div class="save-cancel-buttons" style="display: none">
@@ -70,6 +75,17 @@ SPDX-License-Identifier: Apache-2.0 -->
                                                 </td>
                                             </tr>
                                             <tr>
+                                                <th>在线状态</th>
+                                                <td id="{{ .Entity.ID }}-onlineStatusTD">
+                                                    {{ if eq .Entity.Metadata.isOnline "1" }}
+                                                        <span class="badge rounded-pill enabled-pill">在线</span>
+                                                    {{ else }}
+                                                        <span class="badge rounded-pill disabled-pill">离线</span>
+                                                    {{ end }}
+                                                </td>
+                                                <td></td>
+                                            </tr>
+                                            <tr style="display: none;">
                                                 <th>标识</th>
                                                 <td class="editable tags-field" contenteditable="false" data-field="tags">
                                                     {{ toSlice .Entity.Tags }}
@@ -84,7 +100,7 @@ SPDX-License-Identifier: Apache-2.0 -->
                                                     </div>
                                                 </td>
                                             </tr>
-                                            <tr>
+                                            <tr style="display: none;">
                                                 <th>附加属性</th>
                                                 <td class="entityMeta-col">
                                                     <div>
