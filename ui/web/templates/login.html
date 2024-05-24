@@ -92,7 +92,11 @@ SPDX-License-Identifier: Apache-2.0 -->
                 </div>
             </div>
             <script type="module">
-                import { attachValidationListener, validateEmailOrPhone, validatePassword } from "/js/validation.js";
+                import { 
+                    attachValidationListener, 
+                    validateEmailOrPhone, 
+                    validatePassword 
+                } from "/js/validation.js";
 
                 attachValidationListener({
                     buttonId: "login-button",
@@ -111,60 +115,61 @@ SPDX-License-Identifier: Apache-2.0 -->
                 });
             </script>
             <script>
-              const passwordField = document.getElementById("password");
-              const emailField = document.querySelector(".email-field");
-              const loginError = document.getElementById("loginError");
-              const pathPrefix = "{{ pathPrefix }}";
-              function submitLoginForm() {
-                event.preventDefault();
-                var form = event.target;
+                sessionStorage.setItem("domainID", "");
+                const passwordField = document.getElementById("password");
+                const emailField = document.querySelector(".email-field");
+                const loginError = document.getElementById("loginError");
+                const pathPrefix = "{{ pathPrefix }}";
+                function submitLoginForm() {
+                    event.preventDefault();
+                    var form = event.target;
 
-                //密码加密
-                let formData = new FormData(form);
-                const password = formData.get('password');
-                const encryptedData = encryptByAesCbc(password, SECRET_KEY);
-                formData.delete("password");
-                formData.append("password",encryptedData);
+                    //密码加密
+                    let formData = new FormData(form);
+                    const password = formData.get('password');
+                    const encryptedData = encryptByAesCbc(password, SECRET_KEY);
+                    formData.delete("password");
+                    formData.append("password",encryptedData);
 
-                fetch('{{ printf "%s/login" pathPrefix }}', {
-                  method: "POST",
-                  body: formData,
-                })
-                  .then((response) => {
-                    switch (response.status) {
-                      case 401:
-                        passwordField.classList.add("border-red");
-                        emailField.classList.add("border-red");
-                        errorMessage = "无效的用户名或密码. 请重试!";
-                        showError(errorMessage);
-                        break;
-                      default:
-                        window.location.href = `${pathPrefix}/tokens/secure`;
-                        break;
+                    fetch('{{ printf "%s/login" pathPrefix }}', {
+                        method: "POST",
+                        body: formData,
+                    })
+                        .then((response) => {
+                            switch (response.status) {
+                                case 401:
+                                    passwordField.classList.add("border-red");
+                                    emailField.classList.add("border-red");
+                                    errorMessage = "无效的用户名或密码. 请重试!";
+                                    showError(errorMessage);
+                                    break;
+                                default:
+                                    window.location.href = `${pathPrefix}/tokens/secure`;
+                                break;
+                            }
+                        })
+                        .catch((error) => {
+                        console.error("error submitting login form: ", error);
+                        });
                     }
-                  })
-                  .catch((error) => {
-                    console.error("error submitting login form: ", error);
-                  });
-              }
 
-              // Code for toggling the visibility of the password
-              $('span.password-toggle-icon').click(function() {
-                let inputType =  $("#password").attr("type");
-                if (inputType=== "password")  {
-                  $("#password").attr("type", "text");
-                  $('span.password-toggle-icon').empty();
-                  $("<i class='fa-solid fa-eye-slash' title='隐藏密码'></i>").appendTo('span.password-toggle-icon');
-                } else {
-                  $("#password").attr("type", "password");
-                  $('span.password-toggle-icon').empty();
-                  $("<i class='fa-solid fa-eye' title='显示密码'></i>").appendTo('span.password-toggle-icon');
+                // Code for toggling the visibility of the password
+                $('span.password-toggle-icon').click(function() {
+                    let inputType =  $("#password").attr("type");
+                    if (inputType=== "password")  {
+                        $("#password").attr("type", "text");
+                        $('span.password-toggle-icon').empty();
+                        $("<i class='fa-solid fa-eye-slash' title='隐藏密码'></i>").appendTo('span.password-toggle-icon');
+                    } else {
+                        $("#password").attr("type", "password");
+                        $('span.password-toggle-icon').empty();
+                        $("<i class='fa-solid fa-eye' title='显示密码'></i>").appendTo('span.password-toggle-icon');
+                    }
+                });
+
+                function showError(errorMessage) {
+                    loginError.innerHTML = errorMessage;
                 }
-              });
-
-              function showError(errorMessage) {
-                loginError.innerHTML = errorMessage;
-              }
             </script>
         </body>
     </html>

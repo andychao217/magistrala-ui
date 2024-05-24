@@ -54,20 +54,17 @@ SPDX-License-Identifier: Apache-2.0 -->
                                                     {{ end }}
                                                     </td> -->
                                                     <td>
-                                                        <form method="post" action="{{ printf "%s/domains/login" pathPrefix }}">
-                                                            <input type="hidden" name="domainID" value="{{ $d.ID }}" />
-                                                            <button
-                                                                type="submit"
-                                                                class="btn body-button"
-                                                                {{ if ne $d.Permission "administrator" }}
-                                                                    {{ if eq $d.Status "disabled" }}
-                                                                        disabled
-                                                                    {{ end }}
+                                                        <button
+                                                            onclick="selectDomain('{{ $d.ID }}')"
+                                                            class="btn body-button"
+                                                            {{ if ne $d.Permission "administrator" }}
+                                                                {{ if eq $d.Status "disabled" }}
+                                                                    disabled
                                                                 {{ end }}
-                                                            >
-                                                                <i class="fa-solid fa-right-to-bracket"></i>
-                                                            </button>
-                                                        </form>
+                                                            {{ end }}
+                                                        >
+                                                            <i class="fa-solid fa-right-to-bracket"></i>
+                                                        </button>
                                                     </td>
                                                 </tr>
                                             {{ end }}
@@ -80,6 +77,34 @@ SPDX-License-Identifier: Apache-2.0 -->
                     </div>
                 </div>
             </div>
+            <script>
+                function selectDomain(id){
+                    let formData = new FormData();
+                    formData.append("domainID", id);
+                    fetch( "/ui/domains/login" ,  {
+                            method: "POST",
+                            body: formData,
+                        }
+                    )
+                        .then(function (response) {
+                            if (!response.ok) {
+                                const errorMessage = response.headers.get("X-Error-Message");
+                                if (errorMessage) {
+                                    showError(errorMessage, config.alertDiv);
+                                } else {
+                                    showError(`Error: ${response.status}`, config.alertDiv);
+                                }
+                            } else {
+                                sessionStorage.setItem("domainID", id);
+                                window.location.href = `/ui`;
+                            }
+                        })
+                        .catch((error) => {
+                            console.error("error submitting form: ", error);
+                            showError(`错误: ${error}`, config.alertDiv);
+                        });
+                }
+            </script>
         </body>
     </html>
 {{ end }}

@@ -295,9 +295,7 @@ SPDX-License-Identifier: Apache-2.0 -->
               //控制设备
               function conntrolThing(thingID, thingIdentity, controlType) {
                  //获取当前domain的ID号
-                const domainLinkElement = document.getElementById("domain");
-                const domainHrefValue = domainLinkElement.href;
-                const domainID = domainHrefValue.split("/").pop();
+                 const domainID = sessionStorage.getItem("domainID");
 
                 fetch(`/ui/domains/${domainID}/domainInJSON`, {
                   method: "GET",

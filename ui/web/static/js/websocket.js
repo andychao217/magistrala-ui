@@ -64,9 +64,10 @@ $(function () {
     // DOM 加载完成后执行的代码
     if (!containsLoginInUrl()) {
         //获取当前domain的ID号
-        const domainLinkElement = document.getElementById("domain");
-        const domainHrefValue = domainLinkElement.href;
-        const domainID = domainHrefValue.split("/").pop();
+        // const domainLinkElement = document.getElementById("domain");
+        // const domainHrefValue = domainLinkElement.href;
+        // const domainID = domainHrefValue.split("/").pop();
+        const domainID = sessionStorage.getItem("domainID");
 
         fetch(`/ui/domains/${domainID}/domainInJSON`, {
             method: "GET",
