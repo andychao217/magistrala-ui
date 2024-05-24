@@ -52,7 +52,7 @@ SPDX-License-Identifier: Apache-2.0 -->
                                                             <input type="text" class="form-control" name="secret" id="secret" placeholder="设备密码" />
                                                             <div id="secretError" class="error-message"></div>
                                                         </div>
-                                                        <div class="mb-3">
+                                                        <div class="mb-3" style="display: none;">
                                                             <label for="thingsTags" class="form-label">标识</label>
                                                             <div id="thingsTagsList" onclick="deleteItem(event)"></div>
                                                             <input
@@ -67,7 +67,7 @@ SPDX-License-Identifier: Apache-2.0 -->
                                                             <div id="tagHelp" class="form-text">以字符串数组形式输入标识.</div>
                                                             <div id="tagsError" class="text-danger"></div>
                                                         </div>
-                                                        <div class="mb-3">
+                                                        <div class="mb-3" style="display: none;">
                                                             <label for="metadata" class="form-label">附加属性</label>
                                                             <div class="metadata-field">
                                                                 <textarea name="metadata" id="metadata"></textarea>
