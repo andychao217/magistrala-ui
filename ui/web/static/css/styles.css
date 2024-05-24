@@ -791,3 +791,7 @@ button.edit-btn {
     margin-right: 5px;
     cursor: pointer;
 }
+
+.channel-card:hover {
+    background-color: var(--pill-color-3);
+}

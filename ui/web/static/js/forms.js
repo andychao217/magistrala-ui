@@ -4,6 +4,7 @@
 // config parameters are: formId, url, alertDiv, modal
 export function submitCreateForm(config) {
     const form = document.getElementById(config.formId);
+    let url = config.url;
     form.addEventListener("submit", function (event) {
         event.preventDefault();
         let formData = new FormData(form);
@@ -16,10 +17,29 @@ export function submitCreateForm(config) {
             formData.append("password", encryptedData);
         }
 
-        fetch(config.url, {
+        let fetchConfig = {
             method: "POST",
             body: formData,
-        })
+        }
+
+        if (config.type === 'edit') {
+            url += `/${formData.get("id")}`;
+            let data = {};
+            // 遍历 FormData 对象
+            for (let pair of formData.entries()) {
+                // pair 是一个包含键和值的数组 [key, value]
+                data[pair[0]] = pair[1];
+            }
+            fetchConfig = {
+                method: "POST",
+                body: JSON.stringify(data),
+                headers: {
+                    "Content-Type": "application/json",
+                }
+            }
+        }
+
+        fetch(url, fetchConfig)
             .then(function (response) {
                 if (!response.ok) {
                     const errorMessage = response.headers.get("X-Error-Message");
@@ -62,7 +82,7 @@ export function submitUpdateForm(config) {
                     showError(`Error: ${response.status}`, config.alertDiv);
                 }
             } else {
-                window.location.reload();
+                // window.location.reload();
             }
         })
         .catch((error) => {

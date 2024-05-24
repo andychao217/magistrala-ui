@@ -32,7 +32,7 @@ SPDX-License-Identifier: Apache-2.0 -->
                                                         <div id="alertMessage"></div>
                                                         <div class="mb-3">
                                                             <label for="name" class="form-label">名称</label>
-                                                            <input type="text" class="form-control name-field" name="name" id="name" placeholder="Channel Name" />
+                                                            <input type="text" class="form-control name-field" name="name" id="name" placeholder="分区名称" />
                                                             <div id="nameError" class="text-danger"></div>
                                                         </div>
                                                         <div class="mb-3">
@@ -42,7 +42,7 @@ SPDX-License-Identifier: Apache-2.0 -->
                                                         </div>
                                                         <div class="mb-3">
                                                             <label for="description" class="form-label">描述</label>
-                                                            <input type="text" class="form-control" name="description" id="description" placeholder="Channel Description" />
+                                                            <input type="text" class="form-control" name="description" id="description" placeholder="分区描述" />
                                                         </div>
                                                         <div class="mb-3">
                                                             <label for="metadata" class="form-label">附加属性</label>
@@ -94,28 +94,64 @@ SPDX-License-Identifier: Apache-2.0 -->
                                             </div>
                                         </div>
                                     </div>
+
+                                    <!-- edit channel modal -->
+                                    <div class="modal fade" id="editChannelModal" tabindex="-1" role="dialog" aria-labelledby="editChannelModalLabel" aria-hidden="true">
+                                      <div class="modal-dialog" role="document">
+                                          <div class="modal-content">
+                                              <div class="modal-header">
+                                                  <h1 class="modal-title" id="editChannelModalLabel">修改分区</h1>
+                                                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                              </div>
+                                              <form method="post" id="editChannelForm">
+                                                  <div class="modal-body">
+                                                      <div id="editAlertMessage"></div>
+                                                      <div class="mb-3">
+                                                          <label for="name" class="form-label">名称</label>
+                                                          <input type="text" class="form-control name-field" name="name" id="editName" placeholder="分区名称" />
+                                                          <div id="editNameError" class="text-danger"></div>
+                                                      </div>
+                                                      <div class="mb-3">
+                                                          <label for="id" class="form-label">ID</label>
+                                                          <input type="text" class="form-control id-field" name="id" id="editId" placeholder="分区ID" readonly />
+                                                      </div>
+                                                      <div class="mb-3">
+                                                          <label for="description" class="form-label">描述</label>
+                                                          <input type="text" class="form-control" name="description" id="editDescription" placeholder="分区描述" />
+                                                      </div>
+                                                  </div>
+                                                  <div class="modal-footer">
+                                                      <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">取消</button>
+                                                      <button type="submit" class="btn body-button" id="edit-channel-button">确定</button>
+                                                  </div>
+                                              </form>
+                                          </div>
+                                      </div>
+                                  </div>
                                 </div>
                                 <div class="table-responsive table-container">
                                     <!-- {{ template "tableheader" . }} -->
                                     <div class="itemsTable">
                                       {{ range $i, $c := .Channels }}
                                         <div class="col-sm-3 mb-3 mb-sm-0">
-                                          <div class="card">
+                                          <div class="channel-card card">
                                             <div class="card-body">
                                               <h5 class="card-title">{{ $c.Name }}</h5>
                                               <p class="card-text">{{ $c.ID }}</p>
                                               <p class="card-text">{{ $c.Description }}</p>
-                                              <button class="btn body-button" title="查看" onclick="viewChannels('{{ $c.ID }}')">
+                                              <button title="查看" class="btn body-button"onclick="viewChannels('{{ $c.ID }}')">
                                                 <i class="fa-solid fa-info"></i>
                                               </button>
-                                              <button id="{{ $c.ID }}-deleteBtn" title="删除"  class="btn body-button" onclick="deleteChannel('{{ $c.ID }}')">
+                                              <button title="删除" class="btn body-button" onclick="deleteChannel('{{ $c.ID }}')">
                                                   <i class="fa-solid fa-trash-can"></i>
+                                              </button>
+                                              <button title="修改" class="btn body-button" onclick="editChannel('{{ $c.ID }}', '{{ $c.Name }}', '{{ $c.Description }}')">
+                                                <i class="fa-solid fa-pencil-alt"></i>
                                               </button>
                                             </div>
                                           </div>
                                         </div>
-                                      </div>
-                                    {{ end }}
+                                      {{ end }}
                                     </div>
                                     <!-- {{ template "tablefooter" . }} -->
                                 </div>
@@ -127,6 +163,7 @@ SPDX-License-Identifier: Apache-2.0 -->
             <script>
               const channelModal = new bootstrap.Modal(document.getElementById("addChannelModal"));
               const channelsModal = new bootstrap.Modal(document.getElementById("addChannelsModal"));
+              const editChannelModal = new bootstrap.Modal(document.getElementById("editChannelModal"));
 
               function openModal(modal) {
                 if (modal === "single") {
@@ -141,6 +178,13 @@ SPDX-License-Identifier: Apache-2.0 -->
                 button: "create-channel-button",
                 value: {},
               });
+
+              function editChannel(id, name, description) {
+                editChannelModal.show();
+                $("#editName").val(name);
+                $("#editId").val(id);
+                $("#editDescription").val(description);
+              }
 
               function viewChannels(id) {
                 window.location.href = "{{ printf "%s/channels/" pathPrefix }}" + id;
@@ -201,7 +245,12 @@ SPDX-License-Identifier: Apache-2.0 -->
               }
             </script>     
             <script type="module">
-              import { attachValidationListener, validateName, validateID, validateJSON } from "/js/validation.js";
+              import { 
+                attachValidationListener, 
+                validateName, 
+                validateID, 
+                validateJSON 
+              } from "/js/validation.js";
               import { submitCreateForm } from "/js/forms.js";
               import { fetchIndividualEntity } from "/js/infinitescroll.js";
 
@@ -236,6 +285,26 @@ SPDX-License-Identifier: Apache-2.0 -->
                 formId: "bulkchannelsform",
                 alertDiv: "alertBulkMessage",
                 modal: channelsModal,
+              });
+
+              attachValidationListener({
+                buttonId: "edit-channel-button",
+                errorDivs: {
+                  editName: "editNameError",
+                },
+                validations: {
+                  editName: validateName,
+                },
+                fields: {
+                  editName: "name-field",
+                },
+              });
+              submitCreateForm({
+                url: '{{ printf "%s/channels" pathPrefix }}',
+                formId: "editChannelForm",
+                alertDiv: "editAlertMessage",
+                modal: editChannelModal,
+                type: "edit"
               });
             </script>
         </body>
