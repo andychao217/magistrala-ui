@@ -799,3 +799,7 @@ button.edit-btn {
 .card-body{
     padding-bottom: 0px;
 }
+
+.page-header-title{
+    line-height: 42px;
+}

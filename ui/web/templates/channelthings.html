@@ -13,6 +13,37 @@ SPDX-License-Identifier: Apache-2.0 -->
             <div class="main-content pt-3">
                 <div class="container-fluid">
                     <div class="row-mb-3 p-3">
+                        <!-- edit thing modal -->
+                        <div class="modal fade" id="editThingModal" tabindex="-1" role="dialog" aria-labelledby="editThingModalLabel" aria-hidden="true">
+                          <div class="modal-dialog" role="document">
+                              <div class="modal-content">
+                                  <div class="modal-header">
+                                      <h1 class="modal-title" id="editThingModalLabel">修改设备</h1>
+                                      <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                  </div>
+                                  <form id="editThingform">
+                                      <div class="modal-body">
+                                          <div id="editAlertMessage"></div>
+
+                                          <div class="mb-3">
+                                              <label for="name" class="form-label">名称</label>
+                                              <input type="text" class="form-control name-field" name="name" id="editName" placeholder="设备名称" />
+                                              <div id="editNameError" class="text-danger"></div>
+                                          </div>
+                                          <div class="mb-3">
+                                              <label for="id" class="form-label">设备ID</label>
+                                              <input type="text" class="form-control" name="id" id="editID" placeholder="设备ID" readonly />
+                                          </div>
+                                      </div>
+                                      <div class="modal-footer">
+                                          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">取消</button>
+                                          <button type="submit" class="btn body-button" id="edit-thing-button">确定</button>
+                                      </div>
+                                  </form>
+                              </div>
+                          </div>
+                        </div>
+
                         <div class="col-lg-12 mx-auto py-3">
                             {{ template "breadcrumb" . }}
                             <div class="row">
@@ -22,14 +53,14 @@ SPDX-License-Identifier: Apache-2.0 -->
                                         {{ $shareButton = true }}
                                     {{ end }}
                                     <div class="d-flex flex-row justify-content-between">
-                                        <h4>分区关联设备</h4>
+                                        <h4 class="page-header-title">分区关联设备</h4>
                                         <button
                                             role="button"
                                             class="btn body-button"
                                             onclick="openThingModal()"
                                             {{ if not $shareButton }}disabled{{ end }}
                                         >
-                                            <i class="fa-solid fa-plus fs-4"></i>
+                                            <i class="fa-solid fa-link fs-4"></i>
                                         </button>
                                         <!-- add thing modal -->
                                         <div class="modal fade" id="addThingModal" tabindex="-1" aria-labelledby="addThingModalLabel" aria-hidden="true">
@@ -82,7 +113,10 @@ SPDX-License-Identifier: Apache-2.0 -->
                                                               title="移除设备"
                                                               {{ if not $shareButton }}disabled{{ end }}
                                                           >
-                                                              <i class="fas fa-trash-can"></i>
+                                                              <i class="fas fa-link-slash"></i>
+                                                          </button>
+                                                          <button type="button" class="btn body-button" onclick="viewThing('{{ $t.ID }}')" title="查看">
+                                                            <i class="fa-solid fa-info"></i>
                                                           </button>
                                                           {{ if eq $t.Metadata.isOnline "1" }}
                                                               <button
@@ -94,6 +128,9 @@ SPDX-License-Identifier: Apache-2.0 -->
                                                               >
                                                                   <i class="fa-solid fa-arrows-rotate"></i>
                                                               </button>
+                                                              <button type="button" title="修改" class="btn body-button" title="修改" disabled>
+                                                                <i class="fa-solid fa-pencil-alt"></i>
+                                                              </button>
                                                           {{ else }}
                                                               <button
                                                                   type="button"
@@ -103,6 +140,9 @@ SPDX-License-Identifier: Apache-2.0 -->
                                                                   disabled
                                                               >
                                                                   <i class="fa-solid fa-arrows-rotate"></i>
+                                                              </button>
+                                                              <button type="button" title="修改" class="btn body-button" onclick="editThing('{{ $t.ID }}', '{{ $t.Name }}')">
+                                                                <i class="fa-solid fa-pencil-alt"></i>
                                                               </button>
                                                           {{ end }}
                                                       </form>
@@ -121,19 +161,27 @@ SPDX-License-Identifier: Apache-2.0 -->
             </div>
             <script>
               const thingModal = new bootstrap.Modal(document.getElementById("addThingModal"));
+              const editThingModal = new bootstrap.Modal(document.getElementById("editThingModal"));
+
               function openThingModal() {
                 thingModal.show();
               }
 
+              function editThing(id, name) {
+                editThingModal.show();
+                $("#editName").val(name);
+                $("#editID").val(id);
+              }
+
+              //查看详情
               function viewThing(id) {
-                let pathPrefix = "{{ pathPrefix }}";
-                window.location.href = `${pathPrefix}/things/${id}`;
+                window.location.href = '{{printf "%s/things/" pathPrefix}}' + id;
               }
 
               //控制设备
               function conntrolThing(thingID, thingIdentity, controlType) {
-                 //获取当前domain的ID号
-                 const domainID = sessionStorage.getItem("domainID");
+                //获取当前domain的ID号
+                const domainID = sessionStorage.getItem("domainID");
 
                 fetch(`/ui/domains/${domainID}/domainInJSON`, {
                   method: "GET",
@@ -222,6 +270,11 @@ SPDX-License-Identifier: Apache-2.0 -->
               }
             </script>      
             <script type="module">
+              import {
+                attachValidationListener,
+                validateName,
+              } from "/js/validation.js";
+              import { submitCreateForm } from "/js/forms.js";
               import { fetchIndividualEntity } from "/js/infinitescroll.js";
 
               fetchIndividualEntity({
@@ -229,6 +282,27 @@ SPDX-License-Identifier: Apache-2.0 -->
                 itemSelect: "infiniteScroll",
                 item: "things",
                 pathPrefix: "{{ pathPrefix }}",
+              });
+
+              attachValidationListener({
+                buttonId: "edit-thing-button",
+                errorDivs: {
+                  name: "editNameError",
+                },
+                validations: {
+                  editName: validateName,
+                },
+                fields: {
+                  editName: "name-field",
+                },
+              });
+
+              submitCreateForm({
+                url: '{{ printf "%s/things" pathPrefix }}',
+                formId: "editThingform",
+                alertDiv: "editAlertMessage",
+                modal: editThingModal,
+                type: "edit"
               });
             </script>
         </body>

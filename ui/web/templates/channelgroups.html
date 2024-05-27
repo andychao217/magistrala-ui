@@ -22,14 +22,14 @@ SPDX-License-Identifier: Apache-2.0 -->
                                         {{ $shareButton = true }}
                                     {{ end }}
                                     <div class="d-flex flex-row justify-content-between">
-                                        <h4>分区关联组</h4>
+                                        <h4 class="page-header-title">分区关联组</h4>
                                         <button
                                             role="button"
                                             class="btn body-button"
                                             onclick="openGroupModal()"
                                             {{ if not $shareButton }}disabled{{ end }}
                                         >
-                                            <i class="fa-solid fa-plus fs-4"></i>
+                                            <i class="fa-solid fa-link fs-4"></i>
                                         </button>
                                         <!-- add group modal -->
                                         <div class="modal fade" id="addGroupModal" tabindex="-1" aria-labelledby="addGroupModalLabel" aria-hidden="true">

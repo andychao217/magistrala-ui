@@ -113,7 +113,7 @@ SPDX-License-Identifier: Apache-2.0 -->
                                         </div>
                                     </div>
 
-                                    <!-- add thing modal -->
+                                    <!-- edit thing modal -->
                                     <div class="modal fade" id="editThingModal" tabindex="-1" role="dialog" aria-labelledby="editThingModalLabel" aria-hidden="true">
                                       <div class="modal-dialog" role="document">
                                           <div class="modal-content">
@@ -142,7 +142,7 @@ SPDX-License-Identifier: Apache-2.0 -->
                                               </form>
                                           </div>
                                       </div>
-                                  </div>
+                                    </div>
                                 </div>
                                 <div class="table-responsive table-container">
                                     <!-- {{ template "tableheader" . }} -->
@@ -193,7 +193,7 @@ SPDX-License-Identifier: Apache-2.0 -->
                                                     <button id="{{ $t.ID }}-deleteBtn" class="btn body-button" onclick="deleteThing('{{ $t.ID }}')" title="删除">
                                                       <i class="fa-solid fa-trash-can"></i>
                                                     </button>
-                                                    <button title="修改" class="btn body-button" onclick="editThing('{{ $t.ID }}', '{{ $t.Name }}', '{{ $t.Credentials.Identity }}', '{{ $t.Credentials.Secret }}')">
+                                                    <button title="修改" class="btn body-button" onclick="editThing('{{ $t.ID }}', '{{ $t.Name }}')">
                                                       <i class="fa-solid fa-pencil-alt"></i>
                                                     </button>
                                                 {{ end }}
@@ -223,12 +223,10 @@ SPDX-License-Identifier: Apache-2.0 -->
                 }
               }
 
-              function editThing(id, name, identity, secret) {
+              function editThing(id, name) {
                 editThingModal.show();
                 $("#editName").val(name);
                 $("#editID").val(id);
-                $("#editIdentity").val(identity);
-                $("#editSecret").val(secret);
               }
 
               //查看详情

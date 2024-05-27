@@ -23,9 +23,9 @@ SPDX-License-Identifier: Apache-2.0 -->
                                         {{ $shareButton = true }}
                                     {{ end }}
                                     <div class="d-flex flex-row justify-content-between">
-                                        <h4>设备关联分区</h4>
+                                        <h4 class="page-header-title">设备关联分区</h4>
                                         <button role="button" class="btn body-button" onclick="openChannelModal()" {{ if not $shareButton }}disabled{{ end }}>
-                                            <i class="fa-solid fa-plus fs-4"></i>
+                                            <i class="fa-solid fa-link fs-4"></i>
                                         </button>
                                         <!-- add channel modal -->
                                         <div class="modal fade" id="addChannelModal" tabindex="-1" aria-labelledby="addChannelModalLabel" aria-hidden="true">
