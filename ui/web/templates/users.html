@@ -152,12 +152,12 @@ SPDX-License-Identifier: Apache-2.0 -->
                                                         {{ end }}
                                                         </td> -->
                                                     </tr>
-                                                <script>
-                                                  attachFormatJsonWithPrettifyListener({
-                                                    data: '{{ toJSON $u.Metadata }}',
-                                                    id: "meta-{{ $i }}",
-                                                  })
-                                                </script>
+                                                    <!-- <script>
+                                                        attachFormatJsonWithPrettifyListener({
+                                                            data: '{{ toJSON $u.Metadata }}',
+                                                            id: "meta-{{ $i }}",
+                                                        })
+                                                    </script> -->
                                                 {{ end }}
                                             </tbody>
                                         </table>
@@ -186,67 +186,67 @@ SPDX-License-Identifier: Apache-2.0 -->
                 const usersModal = new bootstrap.Modal(document.getElementById("addUsersModal"));
 
                 function openModal(modal) {
-                if (modal === "single") {
-                    userModal.show();
-                } else if (modal === "bulk") {
-                    usersModal.show();
-                }
+                    if (modal === "single") {
+                        userModal.show();
+                    } else if (modal === "bulk") {
+                        usersModal.show();
+                    }
                 }
 
-                codeMirrorEditor({
-                textArea: "metadata",
-                button: "create-user-button",
-                value: {},
-                });
+                // codeMirrorEditor({
+                //     textArea: "metadata",
+                //     button: "create-user-button",
+                //     value: {},
+                // });
             </script>      
             <script type="module">
                 import {
-                attachValidationListener,
-                validateName,
-                validateEmailOrPhone,
-                validatePassword,
-                validateJSON,
-                validateStringArray,
+                    attachValidationListener,
+                    validateName,
+                    validateEmailOrPhone,
+                    validatePassword,
+                    validateJSON,
+                    validateStringArray,
                 } from "/js/validation.js";
                 import { submitCreateForm } from "/js/forms.js";
 
                 attachValidationListener({
-                buttonId: "create-user-button",
-                errorDivs: {
-                    name: "nameError",
-                    email: "emailError",
-                    secret: "secretError",
-                    metadata: "metadataError",
-                    userTags: "tagsError",
-                },
-                validations: {
-                    name: validateName,
-                    email: validateEmailOrPhone,
-                    secret: validatePassword,
-                    metadata: validateJSON,
-                    userTags: validateStringArray,
-                },
-                fields: {
-                    name: "name-field",
-                    email: "email-field",
-                    secret: "secret-field",
-                    metadata: "metadata-field",
-                    userTags: "tags-field",
-                },
+                    buttonId: "create-user-button",
+                    errorDivs: {
+                        name: "nameError",
+                        email: "emailError",
+                        secret: "secretError",
+                        metadata: "metadataError",
+                        userTags: "tagsError",
+                    },
+                    validations: {
+                        name: validateName,
+                        email: validateEmailOrPhone,
+                        secret: validatePassword,
+                        metadata: validateJSON,
+                        userTags: validateStringArray,
+                    },
+                    fields: {
+                        name: "name-field",
+                        email: "email-field",
+                        secret: "secret-field",
+                        metadata: "metadata-field",
+                        userTags: "tags-field",
+                    },
                 });
 
                 submitCreateForm({
-                url: '{{ printf "%s/users" pathPrefix }}',
-                formId: "userform",
-                alertDiv: "alertMessage",
-                modal: userModal,
+                    url: '{{ printf "%s/users" pathPrefix }}',
+                    formId: "userform",
+                    alertDiv: "alertMessage",
+                    modal: userModal,
                 });
 
                 submitCreateForm({
-                url: '{{ printf "%s/users/bulk" pathPrefix }}',
-                formId: "bulkusersform",
-                alertDiv: "alertBulkMessage",
-                modal: usersModal,
+                    url: '{{ printf "%s/users/bulk" pathPrefix }}',
+                    formId: "bulkusersform",
+                    alertDiv: "alertBulkMessage",
+                    modal: usersModal,
                 });
             </script>
         </body>

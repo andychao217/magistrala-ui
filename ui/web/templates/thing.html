@@ -154,16 +154,16 @@ SPDX-License-Identifier: Apache-2.0 -->
               var secret = "{{.Entity.Credentials.Secret}}";
               var parsedMetadata = JSON.parse(metadata);
 
-              attachFormatJsonWithPrettifyListener({
-                id: "meta-data",
-                data: metadata,
-              });
+            //   attachFormatJsonWithPrettifyListener({
+            //     id: "meta-data",
+            //     data: metadata,
+            //   });
 
-              codeMirrorEditor({
-                textArea: "metadataTextArea",
-                button: "save-metadata",
-                value: parsedMetadata,
-              });
+            //   codeMirrorEditor({
+            //     textArea: "metadataTextArea",
+            //     button: "save-metadata",
+            //     value: parsedMetadata,
+            //   });
             </script> 
             <script type="module">
               import { 

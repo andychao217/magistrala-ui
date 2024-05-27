@@ -91,12 +91,12 @@ SPDX-License-Identifier: Apache-2.0 -->
                                                         {{ $m.CreatedAt }}
                                                     </td>
                                                 </tr>
-                        <script>
-                          attachFormatJsonWithPrettifyListener({
-                            data: '{{ toJSON $m.Metadata }}',
-                            id: "meta-{{ $i }}",
-                          })
-                        </script>
+                                                <!-- <script>
+                                                    attachFormatJsonWithPrettifyListener({
+                                                        data: '{{ toJSON $m.Metadata }}',
+                                                        id: "meta-{{ $i }}",
+                                                    })
+                                                </script> -->
                                             {{ end }}
                                         </tbody>
                                     </table>

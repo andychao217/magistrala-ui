@@ -130,12 +130,12 @@ SPDX-License-Identifier: Apache-2.0 -->
                                                         {{ end }}
                                                         </td> -->
                                                     </tr>
-                                                    <script>
+                                                    <!-- <script>
                                                       attachFormatJsonWithPrettifyListener({
                                                         data: '{{ toJSON $g.Metadata }}',
                                                         id: "meta-{{ $i }}",
                                                       })
-                                                    </script>
+                                                    </script> -->
                                                 {{ end }}
                                             </tbody>
                                         </table>
@@ -159,11 +159,11 @@ SPDX-License-Identifier: Apache-2.0 -->
                 }
               }
 
-              codeMirrorEditor({
-                textArea: "metadata",
-                button: "create-group-button",
-                value: {},
-              });
+            //   codeMirrorEditor({
+            //     textArea: "metadata",
+            //     button: "create-group-button",
+            //     value: {},
+            //   });
 
               function viewGroup(id) {
                 window.location.href = '{{ printf "%s/groups/" pathPrefix }}' + id;

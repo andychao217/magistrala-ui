@@ -161,53 +161,52 @@ SPDX-License-Identifier: Apache-2.0 -->
                 var metadata = "{{ toJSON .Entity.Metadata }}";
                 var parsedMetadata = JSON.parse(metadata);
 
-                attachFormatJsonWithPrettifyListener({
-                id: "meta-data",
-                data: metadata,
-                });
+                // attachFormatJsonWithPrettifyListener({
+                //     id: "meta-data",
+                //     data: metadata,
+                // });
 
-                codeMirrorEditor({
-                textArea: "metadataTextArea",
-                button: "save-metadata",
-                value: parsedMetadata,
-                });
+                // codeMirrorEditor({
+                //     textArea: "metadataTextArea",
+                //     button: "save-metadata",
+                //     value: parsedMetadata,
+                // });
             </script>  
             <script type="module">
                 import {
-                attachEditRowListener,
-                updateName,
-                updateIdentity,
-                updateTags,
-                updateMetadata
+                    attachEditRowListener,
+                    updateName,
+                    updateIdentity,
+                    updateTags,
+                    updateMetadata
                 } from "/js/update.js";
 
-                attachEditRowListener(
-                {
+                attachEditRowListener({
                     entity: "users",
                     id: "{{ .Entity.ID }}",
                     rows: {
-                    name: updateName,
-                    identity: updateIdentity,
-                    tags: updateTags,
+                        name: updateName,
+                        identity: updateIdentity,
+                        tags: updateTags,
                     },
                     errorDiv: "error-message",
                     fields: {
-                    name: "name-field",
-                    identity: "identity-field",
-                    tags: "tags-field",
+                        name: "name-field",
+                        identity: "identity-field",
+                        tags: "tags-field",
                     },
                     pathPrefix: "{{ pathPrefix }}",
                 });
 
                 updateMetadata({
-                textArea: "metadataTextArea",
-                field: "metadata",
-                alertDiv: "metadataError",
-                fieldName: "metadata-field",
-                id: "{{ .Entity.ID }}",
-                entity: "users",
-                button: "save-metadata",
-                pathPrefix: "{{ pathPrefix }}",
+                    textArea: "metadataTextArea",
+                    field: "metadata",
+                    alertDiv: "metadataError",
+                    fieldName: "metadata-field",
+                    id: "{{ .Entity.ID }}",
+                    entity: "users",
+                    button: "save-metadata",
+                    pathPrefix: "{{ pathPrefix }}",
                 });
             </script>
         </body>

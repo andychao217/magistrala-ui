@@ -136,12 +136,12 @@ SPDX-License-Identifier: Apache-2.0 -->
                                                                 </td>
                                                                 <td class="created-col">{{ $u.CreatedAt }}</td>
                                                             </tr>
-                        <script>
-                          attachFormatJsonWithPrettifyListener({
-                            data: '{{ toJSON $u.Metadata }}',
-                            id: "all-meta-{{ $i }}",
-                          })
-                        </script>
+                                                            <!-- <script>
+                                                                attachFormatJsonWithPrettifyListener({
+                                                                    data: '{{ toJSON $u.Metadata }}',
+                                                                    id: "all-meta-{{ $i }}",
+                                                                })
+                                                            </script> -->
                                                         {{ end }}
                                                     </tbody>
                                                 </table>
@@ -189,12 +189,12 @@ SPDX-License-Identifier: Apache-2.0 -->
                                                                     </form>
                                                                 </td>
                                                             </tr>
-                        <script>
-                          attachFormatJsonWithPrettifyListener({
-                            data: '{{ toJSON $u.Metadata }}',
-                            id: "admin-meta-{{ $i }}",
-                          })
-                        </script>
+                                                            <!-- <script>
+                                                                attachFormatJsonWithPrettifyListener({
+                                                                    data: '{{ toJSON $u.Metadata }}',
+                                                                    id: "admin-meta-{{ $i }}",
+                                                                })
+                                                            </script> -->
                                                         {{ end }}
                                                     </tbody>
                                                 </table>
