@@ -16,7 +16,7 @@ SPDX-License-Identifier: Apache-2.0 -->
             <li class="nav-item mb-2 mx-2">
                 {{ $navbarActive := "homepage" }}
                 <a href="{{ printf "%s/" pathPrefix }}" id="index" class="nav-link sidebar-link {{ if eq .NavbarActive $navbarActive }}active{{ end }}">
-                    <i class="fas fa-home"></i>
+                    <i class="menu-icon fas fa-home"></i>
                     <span>首页</span>
                 </a>
             </li>
@@ -24,7 +24,7 @@ SPDX-License-Identifier: Apache-2.0 -->
             <li class="nav-item mb-2 mx-2" style="display: none;">
                 {{ $navbarActive := "dashboard" }}
                 <a href="{{ printf "%s/dashboards" pathPrefix }}" id="dashboard" class="nav-link sidebar-link {{ if eq .NavbarActive $navbarActive }}active{{ end }}">
-                    <i class="fas fa-chart-line"></i>
+                    <i class="menu-icon fas fa-chart-line"></i>
                     <span>统计信息</span>
                 </a>
             </li>
@@ -39,7 +39,7 @@ SPDX-License-Identifier: Apache-2.0 -->
         <li class="nav-item mb-2 mx-2" id="domains-sidebar-link">
             {{ $navbarActive := "domains" }}
             <a class="nav-link sidebar-link {{ if eq .NavbarActive $navbarActive }}active{{ end }}" href="{{ printf "%s/domains" pathPrefix }}">
-                <i class="fa-solid fa-building"></i>
+                <i class="menu-icon fa-solid fa-building"></i>
                 <span>机构</span>
             </a>
         </li>
@@ -53,7 +53,7 @@ SPDX-License-Identifier: Apache-2.0 -->
                 {{ end }}"
                 id="invitations"
             >
-                <i class="fa-solid fa-envelope"></i>
+                <i class="menu-icon fa-solid fa-envelope"></i>
                 <span>邀请</span>
             </a>
         </li>
@@ -70,7 +70,7 @@ SPDX-License-Identifier: Apache-2.0 -->
                 {{ end }}"
                 style="margin-right: 20px;"
             >
-                <i class="fa-solid fa-building"></i>
+                <i class="menu-icon fa-solid fa-building"></i>
                 <span id="domainName">{{ .Session.Domain.Name }}</span>
             </a>
             <div
@@ -83,14 +83,14 @@ SPDX-License-Identifier: Apache-2.0 -->
                     <li class="nav-item mb-2 mx-2">
                         {{ $navbarActive = "domain" }}
                         <a class="nav-link {{ if eq .NavbarActive $navbarActive }}active{{ end }}" id="domain" href="{{ printf "%s/domains/%s" pathPrefix .Session.Domain.ID }}">
-                            <i class="fa-solid fa-building"></i>
+                            <i class="menu-icon fa-solid fa-building"></i>
                             <span>机构</span>
                         </a>
                     </li>
                     <li class="nav-item mb-2 mx-2">
                         {{ $navbarActive = "members" }}
                         <a href="{{ printf "%s/domains/%s/members" pathPrefix .Session.Domain.ID }}" id="members" class="nav-link  {{ if eq .NavbarActive $navbarActive }}active{{ end }}">
-                            <i class="fa-solid fa-users"></i>
+                            <i class="menu-icon fa-solid fa-users"></i>
                             <span>成员</span>
                         </a>
                     </li>
@@ -98,7 +98,7 @@ SPDX-License-Identifier: Apache-2.0 -->
                     <li class="nav-item mb-2 mx-2" style="display: none;">
                         {{ $navbarActive = "domaininvitations" }}
                         <a href="{{ printf "%s/invitations?domain=%s" pathPrefix .Session.Domain.ID }}" class="nav-link {{ if eq .NavbarActive $navbarActive }}active{{ end }}" id="domainInvitations">
-                            <i class="fa-solid fa-envelope"></i>
+                            <i class="menu-icon fa-solid fa-envelope"></i>
                             <span>机构邀请</span>
                         </a>
                     </li>
@@ -114,7 +114,7 @@ SPDX-License-Identifier: Apache-2.0 -->
                     disabled-item
                 {{ end }} {{ if eq .NavbarActive $navbarActive }}active{{ end }}"
             >
-                <i class="fas fa-users"></i>
+                <i class="menu-icon fas fa-users"></i>
                 <span>用户</span>
             </a>
         </li>
@@ -135,7 +135,7 @@ SPDX-License-Identifier: Apache-2.0 -->
                         disabled-item
                     {{ end }} {{ if eq .NavbarActive $navbarActive }}active{{ end }}"
                 >
-                    <i class="fas fa-layer-group"></i>
+                    <i class="menu-icon fas fa-layer-group"></i>
                     <span>组</span>
                 </a>
             </li>
@@ -148,7 +148,7 @@ SPDX-License-Identifier: Apache-2.0 -->
                         disabled-item
                     {{ end }} {{ if eq .NavbarActive $navbarActive }}active{{ end }}"
                 >
-                    <i class="fas fa-microchip"></i>
+                    <i class="menu-icon fas fa-microchip"></i>
                     <span>设备</span>
                 </a>
             </li>
@@ -161,7 +161,7 @@ SPDX-License-Identifier: Apache-2.0 -->
                         disabled-item
                     {{ end }} {{ if eq .NavbarActive $navbarActive }}active{{ end }}"
                 >
-                    <i class="fas fa-exchange-alt"></i>
+                    <i class="menu-icon fas fa-exchange-alt"></i>
                     <span>分区</span>
                 </a>
             </li>
@@ -175,7 +175,7 @@ SPDX-License-Identifier: Apache-2.0 -->
                         disabled-item
                     {{ end }} {{ if eq .NavbarActive $navbarActive }}active{{ end }}"
                 >
-                    <i class="fas fa-solid fa-broadcast-tower"></i>
+                    <i class="menu-icon fas fa-solid fa-broadcast-tower"></i>
                     <span>Bootstrap</span>
                 </a>
             </li>
@@ -217,14 +217,14 @@ SPDX-License-Identifier: Apache-2.0 -->
                             <li><hr class="dropdown-divider" /></li>
                             <li>
                                 <a class="dropdown-item user-item-button p-2 mb-2" href="#" role="button" onclick="openCreateDomainModal()">
-                                    <i class="fa-solid fa-square-plus"></i>
+                                    <i class="menu-icon fa-solid fa-square-plus"></i>
                                     新建机构
                                 </a>
                             </li>
                             <li><hr class="dropdown-divider" /></li>
                             <li>
                                 <a class="dropdown-item user-item-button p-2 mb-2" href="{{ printf "%s/domains" pathPrefix }}">
-                                    <i class="fa-solid fa-repeat"></i>
+                                    <i class="menu-icon fa-solid fa-repeat"></i>
                                     切换机构
                                 </a>
                             </li>
@@ -250,11 +250,11 @@ SPDX-License-Identifier: Apache-2.0 -->
                             <li class="mb-2"><hr class="dropdown-divider" /></li>
                             <li class="mb-2">
                                 <a href="{{ printf "%s/password" pathPrefix }}" class="dropdown-item user-item-button p-2 mb-2">
-                                    <i class="fas fa-solid fa-lock me-2"></i>
+                                    <i class="menu-icon fas fa-solid fa-lock me-2"></i>
                                     <span>修改密码</span>
                                 </a>
                                 <a class="dropdown-item user-item-button p-2 mb-2" onclick="logout();">
-                                    <i class="fa-solid fa-right-from-bracket me-2"></i>
+                                    <i class="menu-icon fa-solid fa-right-from-bracket me-2"></i>
                                     <span>登出</span>
                                 </a>
                             </li>
