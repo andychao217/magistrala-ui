@@ -8,6 +8,13 @@ export function submitCreateForm(config) {
     form.addEventListener("submit", function (event) {
         event.preventDefault();
         let formData = new FormData(form);
+        if(config.type === "addThing"){
+            formData.delete("metadata");
+            formData.append("metadata", `{"isOnline": "0"}`);
+        } else if (config.type === "addThing" || config.type === "addChannel" || config.type === "addGroup" || config.type === "addUser" ) {
+            formData.delete("metadata");
+            formData.append("metadata", `{}`);
+        }
 
         if (config.formId === "userform") {
             //密码加密
@@ -60,6 +67,7 @@ export function submitCreateForm(config) {
             });
     });
 }
+
 
 export function submitUpdateForm(config) {
     fetch(config.url, {

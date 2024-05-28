@@ -88,11 +88,12 @@ SPDX-License-Identifier: Apache-2.0 -->
                                                 <th>附加属性</th>
                                                 <td class="entityMeta-col">
                                                     <div>
-                                                        <pre id="meta-data"></pre>
+                                                        <pre id="meta-data" style="display: none;"></pre>
                                                     </div>
                                                 </td>
                                                 <td>
                                                     <button
+                                                        style="display: none;"
                                                         type="button"
                                                         class="edit-btn"
                                                         data-bs-toggle="modal"
@@ -139,8 +140,8 @@ SPDX-License-Identifier: Apache-2.0 -->
                 </div>
             </div>
             <script>
-              var metadata = "{{ toJSON .Entity.Metadata }}";
-              var parsedMetadata = JSON.parse(metadata);
+            //   var metadata = "{{ toJSON .Entity.Metadata }}";
+            //   var parsedMetadata = JSON.parse(metadata);
 
             //   attachFormatJsonWithPrettifyListener({
             //     id: "meta-data",
@@ -158,7 +159,7 @@ SPDX-License-Identifier: Apache-2.0 -->
                 attachEditRowListener,
                 updateName,
                 updateDescription,
-                updateMetadata
+                // updateMetadata
               } from "/js/update.js";
 
               attachEditRowListener({
@@ -174,16 +175,16 @@ SPDX-License-Identifier: Apache-2.0 -->
                 },
                 pathPrefix: "{{ pathPrefix }}",
               });
-              updateMetadata({
-                textArea: "metadataTextArea",
-                field:"metadata",
-                alertDiv: "metadataError",
-                fieldName: "metadata-field",
-                id: "{{ .Entity.ID }}",
-                entity: "groups",
-                button: "save-metadata",
-                pathPrefix: "{{ pathPrefix }}",
-              });
+            //   updateMetadata({
+            //     textArea: "metadataTextArea",
+            //     field:"metadata",
+            //     alertDiv: "metadataError",
+            //     fieldName: "metadata-field",
+            //     id: "{{ .Entity.ID }}",
+            //     entity: "groups",
+            //     button: "save-metadata",
+            //     pathPrefix: "{{ pathPrefix }}",
+            //   });
             </script>
         </body>
     </html>

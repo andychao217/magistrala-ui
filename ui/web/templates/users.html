@@ -216,21 +216,21 @@ SPDX-License-Identifier: Apache-2.0 -->
                         name: "nameError",
                         email: "emailError",
                         secret: "secretError",
-                        metadata: "metadataError",
+                        // metadata: "metadataError",
                         userTags: "tagsError",
                     },
                     validations: {
                         name: validateName,
                         email: validateEmailOrPhone,
                         secret: validatePassword,
-                        metadata: validateJSON,
+                        // metadata: validateJSON,
                         userTags: validateStringArray,
                     },
                     fields: {
                         name: "name-field",
                         email: "email-field",
                         secret: "secret-field",
-                        metadata: "metadata-field",
+                        // metadata: "metadata-field",
                         userTags: "tags-field",
                     },
                 });
@@ -240,6 +240,7 @@ SPDX-License-Identifier: Apache-2.0 -->
                     formId: "userform",
                     alertDiv: "alertMessage",
                     modal: userModal,
+                    type: "addUser",
                 });
 
                 submitCreateForm({

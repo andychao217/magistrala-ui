@@ -48,7 +48,7 @@ SPDX-License-Identifier: Apache-2.0 -->
                                                                 <option disabled>选择组</option>
                                                             </select>
                                                         </div>
-                                                        <div class="mb-3">
+                                                        <div class="mb-3" style="display: none;">
                                                             <label for="metadata" class="form-label">附加属性</label>
                                                             <div class="metadata-field">
                                                                 <textarea name="metadata" id="metadata"></textarea>
@@ -178,15 +178,15 @@ SPDX-License-Identifier: Apache-2.0 -->
                 buttonId: "create-group-button",
                 errorDivs: {
                   name: "nameError",
-                  metadata: "metadataError",
+                //   metadata: "metadataError",
                 },
                 validations: {
                   name: validateName,
-                  metadata: validateJSON,
+                //   metadata: validateJSON,
                 },
                 fields: {
                   name: "name-field",
-                  metadata: "metadata-field",
+                //   metadata: "metadata-field",
                 },
               });
 
@@ -195,6 +195,7 @@ SPDX-License-Identifier: Apache-2.0 -->
                 formId: "groupform",
                 alertDiv: "alertMessage",
                 modal: groupModal,
+                type: "addGroup",
               });
 
               submitCreateForm({

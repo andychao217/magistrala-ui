@@ -146,7 +146,7 @@ SPDX-License-Identifier: Apache-2.0 -->
                                 </div>
                                 <div class="table-responsive table-container">
                                     <!-- {{ template "tableheader" . }} -->
-                                    <div class="itemsTable">
+                                    <div class="row">
                                       {{ range $i, $t := .Things }}
                                         <div class="col-sm-3 mb-3 mb-sm-0">
                                           <div class="channel-thing-card card">
@@ -398,17 +398,17 @@ SPDX-License-Identifier: Apache-2.0 -->
                 buttonId: "create-thing-button",
                 errorDivs: {
                   name: "nameError",
-                  metadata: "metadataError",
+                  // metadata: "metadataError",
                   thingsTags: "tagsError",
                 },
                 validations: {
                   name: validateName,
-                  metadata: validateJSON,
+                  // metadata: validateJSON,
                   thingsTags: validateStringArray,
                 },
                 fields: {
                   name: "name-field",
-                  metadata: "metadata-field",
+                  // metadata: "metadata-field",
                   thingsTags: "tags-field",
                 },
               });
@@ -418,6 +418,7 @@ SPDX-License-Identifier: Apache-2.0 -->
                 formId: "thingform",
                 alertDiv: "alertMessage",
                 modal: thingModal,
+                type:"addThing"
               });
 
               submitCreateForm({
