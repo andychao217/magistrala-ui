@@ -29,7 +29,7 @@ export function submitCreateForm(config) {
             body: formData,
         }
 
-        if (config.type === 'edit') {
+        if (config.type.includes('edit')) {
             url += `/${formData.get("id")}`;
             let data = {};
             // 遍历 FormData 对象
@@ -90,7 +90,7 @@ export function submitUpdateForm(config) {
                     showError(`Error: ${response.status}`, config.alertDiv);
                 }
             } else {
-                // window.location.reload();
+                window.location.reload();
             }
         })
         .catch((error) => {

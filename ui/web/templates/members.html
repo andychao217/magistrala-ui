@@ -43,7 +43,17 @@ SPDX-License-Identifier: Apache-2.0 -->
                                                         <select class="form-control" name="relation" id="relation" aria-describedby="relationHelp" required>
                                                             {{ range $r := .Relations }}
                                                                 <option value="{{ $r }}">
-                                                                    {{ $r }}
+                                                                    {{ if eq $r "administrator" }}
+                                                                        <span>管理员</span>
+                                                                    {{ else if eq $r "editor" }}
+                                                                        <span>编辑</span>
+                                                                    {{ else if eq $r "viewer" }}
+                                                                        <span>查看者</span>
+                                                                    {{ else if eq $r "member" }}
+                                                                        <span>成员</span>
+                                                                    {{ else }}
+                                                                        <span>{{ $r }}</span>
+                                                                    {{ end }}
                                                                 </option>
                                                             {{ end }}
                                                         </select>
@@ -60,79 +70,55 @@ SPDX-License-Identifier: Apache-2.0 -->
                                 </div>
                             </div>
                             <div class="table-responsive table-container">
-                                {{ template "tableheader" . }}
-                                <div class="itemsTable">
-                                    <table class="table table-hover" id="itemsTable">
-                                        <thead>
-                                            <tr>
-                                                <th scope="col">名称</th>
-                                                <th class="tags-col" scope="col">标识</th>
-                                                <th class="meta-col" scope="col">附加属性</th>
-                                                <th class="created-col" scope="col">创建时间</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            {{ range $i, $m := .Members }}
-                                                <tr onclick="viewMember('{{ $m.Credentials.Identity }}')" class="clickable-row">
-                                                    <td>{{ $m.Name }}</td>
-                                                    <td class="tags-col">
-                                                        {{ range $j, $tag := $m.Tags }}
-                                                            <span class="badge bg-dark">
-                                                                {{ $tag }}
-                                                            </span>
-                                                        {{ end }}
-                                                    </td>
-                                                    <td class="meta-col">
-                                                        <div class="meta-div">
-                                                            <pre id="meta-{{ $i }}"></pre>
-                                                        </div>
-                                                    </td>
-                                                    <td class="created-col">
-                                                        {{ $m.CreatedAt }}
-                                                    </td>
-                                                </tr>
-                                                <!-- <script>
-                                                    attachFormatJsonWithPrettifyListener({
-                                                        data: '{{ toJSON $m.Metadata }}',
-                                                        id: "meta-{{ $i }}",
-                                                    })
-                                                </script> -->
-                                            {{ end }}
-                                        </tbody>
-                                    </table>
+                                <!-- {{ template "tableheader" . }} -->
+                                <div class="row">
+                                    {{ range $i, $m := .Members }}
+                                        <div class="col-sm-3 mb-3 mb-sm-0">
+                                            <div class="channel-thing-card card">
+                                                <div class="card-body">
+                                                    <h5 class="card-title">{{ $m.Name }}</h5>
+                                                    <p>
+                                                        <button class="btn body-button" onclick="viewMember('{{ $m.Credentials.Identity }}')" title="查看">
+                                                            <i class="fa-solid fa-info"></i>
+                                                        </button>
+                                                    </p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    {{ end }}
                                 </div>
-                                {{ template "tablefooter" . }}
+                                <!-- {{ template "tablefooter" . }} -->
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
             <script>
-              const memberModal = new bootstrap.Modal(document.getElementById("addMemberModal"));
+                const memberModal = new bootstrap.Modal(document.getElementById("addMemberModal"));
 
-              function openMemberModal() {
-                memberModal.show();
-              }
-              let userRole = '{{.Session.User.Role}}';
-              if (userRole == "admin") {
-                document.getElementById("add-member-button").style.display = "block";
-              } else {
-                document.getElementById("add-member-button").style.display = "none";
-              }
+                function openMemberModal() {
+                    memberModal.show();
+                }
+                let userRole = '{{.Session.User.Role}}';
+                if (userRole == "admin") {
+                    document.getElementById("add-member-button").style.display = "block";
+                } else {
+                    document.getElementById("add-member-button").style.display = "none";
+                }
 
-              function viewMember(identity) {
-                window.location.href = '{{ printf "%s/domains/members?identity=" pathPrefix }}' + identity;
-              }
+                function viewMember(identity) {
+                    window.location.href = '{{ printf "%s/domains/members?identity=" pathPrefix }}' + identity;
+                }
             </script>      
             <script type="module">
-              import { fetchIndividualEntity } from "/js/infinitescroll.js";
+                import { fetchIndividualEntity } from "/js/infinitescroll.js";
 
-              fetchIndividualEntity({
-                input: "userFilter",
-                itemSelect: "users-scroll",
-                item: "users",
-                pathPrefix: "{{ pathPrefix }}",
-              });
+                fetchIndividualEntity({
+                    input: "userFilter",
+                    itemSelect: "users-scroll",
+                    item: "users",
+                    pathPrefix: "{{ pathPrefix }}",
+                });
             </script>
         </body>
     </html>

@@ -38,7 +38,7 @@ SPDX-License-Identifier: Apache-2.0 -->
 
         <li class="nav-item mb-2 mx-2" id="domains-sidebar-link">
             {{ $navbarActive := "domains" }}
-            <a class="nav-link sidebar-link {{ if eq .NavbarActive $navbarActive }}active{{ end }}" href="{{ printf "%s/domains" pathPrefix }}">
+            <a class="nav-link sidebar-link {{ if eq .NavbarActive $navbarActive }}active{{ end }}" href="{{ printf "%s/domains?limit=1000" pathPrefix }}">
                 <i class="menu-icon fa-solid fa-building"></i>
                 <span>机构</span>
             </a>
@@ -89,7 +89,7 @@ SPDX-License-Identifier: Apache-2.0 -->
                     </li>
                     <li class="nav-item mb-2 mx-2">
                         {{ $navbarActive = "members" }}
-                        <a href="{{ printf "%s/domains/%s/members" pathPrefix .Session.Domain.ID }}" id="members" class="nav-link  {{ if eq .NavbarActive $navbarActive }}active{{ end }}">
+                        <a href="{{ printf "%s/domains/%s/members?limit=1000" pathPrefix .Session.Domain.ID }}" id="members" class="nav-link  {{ if eq .NavbarActive $navbarActive }}active{{ end }}">
                             <i class="menu-icon fa-solid fa-users"></i>
                             <span>成员</span>
                         </a>
@@ -109,7 +109,7 @@ SPDX-License-Identifier: Apache-2.0 -->
         <li id="users-nav-items" class="nav-item mb-2 mx-2">
             {{ $navbarActive = "users" }}
             <a
-                href="{{ printf "%s/users" pathPrefix }}"
+                href="{{ printf "%s/users?limit=1000" pathPrefix }}"
                 class=" nav-link sidebar-link {{ if (serviceUnavailable "users") }}
                     disabled-item
                 {{ end }} {{ if eq .NavbarActive $navbarActive }}active{{ end }}"
@@ -142,7 +142,7 @@ SPDX-License-Identifier: Apache-2.0 -->
             <li class="nav-item mb-2 mx-2">
                 {{ $navbarActive = "things" }}
                 <a
-                    href="{{ printf "%s/things" pathPrefix }}"
+                    href="{{ printf "%s/things?limit=1000" pathPrefix }}"
                     id="things"
                     class="nav-link sidebar-link {{ if (serviceUnavailable "things") }}
                         disabled-item
@@ -223,7 +223,7 @@ SPDX-License-Identifier: Apache-2.0 -->
                             </li>
                             <li><hr class="dropdown-divider" /></li>
                             <li>
-                                <a class="dropdown-item user-item-button p-2 mb-2" href="{{ printf "%s/domains" pathPrefix }}">
+                                <a class="dropdown-item user-item-button p-2 mb-2" href="{{ printf "%s/domains?limit=1000" pathPrefix }}">
                                     <i class="menu-icon fa-solid fa-repeat"></i>
                                     切换机构
                                 </a>

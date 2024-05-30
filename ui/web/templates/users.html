@@ -110,59 +110,60 @@ SPDX-License-Identifier: Apache-2.0 -->
                                             </div>
                                         </div>
                                     </div>
+
+                                     <!-- add user modal -->
+                                     <div class="modal fade" id="editUserModal" tabindex="-1" role="dialog" aria-labelledby="editUserModalLabel" aria-hidden="true">
+                                        <div class="modal-dialog" role="document">
+                                            <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <h1 class="modal-title" id="editUserModalLabel">修改用户</h1>
+                                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                </div>
+                                                <form id="editUserform">
+                                                    <div class="modal-body">
+                                                        <div id="editAlertMessage"></div>
+                                                        <div class="mb-3">
+                                                            <label for="name" class="form-label">用户昵称</label>
+                                                            <input type="text" class="form-control name-field" name="name" id="editName" placeholder="用户昵称" />
+                                                            <div id="editNameError" class="text-danger"></div>
+                                                        </div>
+                                                        <div class="mb-3">
+                                                            <label for="id" class="form-label">用户ID</label>
+                                                            <input class="form-control id-field" name="id" id="editID" readonly />
+                                                        </div>
+                                                    </div>
+                                                    <div class="modal-footer">
+                                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">取消</button>
+                                                        <button type="submit" class="btn body-button" id="edit-user-button">确定</button>
+                                                    </div>
+                                                </form>
+                                            </div>
+                                        </div>
+                                    </div>
                                     <!-- modals end -->
                                 </div>
                                 <div class="table-responsive table-container">
-                                    {{ template "tableheader" . }}
-                                    <div class="itemsTable">
-                                        <table id="itemsTable" class="table table-hover">
-                                            <thead>
-                                                <tr>
-                                                    <th scope="col">用户昵称</th>
-                                                    <th class="id-col" scope="col">ID</th>
-                                                    <th class="tags-col" scope="col">标识</th>
-                                                    <th class="meta-col" scope="col">附加属性</th>
-                                                    <th class="created-col" scope="col">创建时间</th>
-                                                    <!-- <th class="status-col" scope="col">状态</th> -->
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                {{ range $i, $u := .Users }}
-                                                    <tr>
-                                                        <td>{{ $u.Name }}</td>
-                                                        <td class="userID">
-                                                            {{ $u.ID }}
-                                                        </td>
-                                                        <td class="tags-col">
-                                                            {{ range $j, $tag := $u.Tags }}
-                                                                <span class="badge bg-dark">{{ $tag }}</span>
-                                                            {{ end }}
-                                                        </td>
-                                                        <td class="meta-col">
-                                                            <div class="meta-div">
-                                                                <pre id="meta-{{ $i }}"></pre>
-                                                            </div>
-                                                        </td>
-                                                        <td class="created-col">{{ $u.CreatedAt }}</td>
-                                                        <!-- <td>
-                                                          {{ if eq $u.Status "enabled" }}
-                                                            <span class="badge rounded-pill enabled-pill">启用</span>
-                                                        {{ else if eq $u.Status "disabled" }}
-                                                            <span class="badge rounded-pill disabled-pill">停用</span>
-                                                        {{ end }}
-                                                        </td> -->
-                                                    </tr>
-                                                    <!-- <script>
-                                                        attachFormatJsonWithPrettifyListener({
-                                                            data: '{{ toJSON $u.Metadata }}',
-                                                            id: "meta-{{ $i }}",
-                                                        })
-                                                    </script> -->
-                                                {{ end }}
-                                            </tbody>
-                                        </table>
+                                    <!-- {{ template "tableheader" . }} -->
+                                    <div class="row">
+                                        {{ range $i, $u := .Users }}
+                                        <div class="col-sm-3 mb-3 mb-sm-0">
+                                            <div class="channel-thing-card card">
+                                              <div class="card-body">
+                                                <h5 class="card-title">{{ $u.Name }}</h5>
+                                                <p>
+                                                    <button class="btn body-button" onclick="viewUser('{{ $u.ID }}')" title="查看">
+                                                        <i class="fa-solid fa-info"></i>
+                                                    </button>
+                                                    <button title="修改" class="btn body-button" onclick="editUser('{{ $u.ID }}', '{{ $u.Name }}')">
+                                                        <i class="fa-solid fa-pencil-alt"></i>
+                                                    </button>
+                                                </p>
+                                              </div>
+                                            </div>
+                                          </div>
+                                        {{ end }}
                                     </div>
-                                    {{ template "tablefooter" . }}
+                                    <!-- {{ template "tablefooter" . }} -->
                                 </div>
                             </div>
                         </div>
@@ -170,20 +171,20 @@ SPDX-License-Identifier: Apache-2.0 -->
                 </div>
             </div>
             <script>
-                document.addEventListener("DOMContentLoaded", function () {
-                var table = document.getElementById("itemsTable");
-                let pathPrefix = "{{ pathPrefix }}";
-                var rows = table.querySelectorAll("tbody tr");
-                rows.forEach(function (row) {
-                    var userID = row.querySelector(".userID").textContent.trim();
-                    row.onclick = () => {
-                    window.location.href = `${pathPrefix}/users/${userID}`;
-                    };
-                    row.classList.add("clickable-row");
-                });
-                });
                 const userModal = new bootstrap.Modal(document.getElementById("addUserModal"));
                 const usersModal = new bootstrap.Modal(document.getElementById("addUsersModal"));
+                const editUserModal = new bootstrap.Modal(document.getElementById("editUserModal"));
+
+                //查看详情
+                function viewUser(id) {
+                    window.location.href = '{{printf "%s/users/" pathPrefix}}' + id;
+                }
+
+                function editUser(id, name) {
+                    editUserModal.show();
+                    $("#editName").val(name);
+                    $("#editID").val(id);
+                }
 
                 function openModal(modal) {
                     if (modal === "single") {
@@ -248,6 +249,27 @@ SPDX-License-Identifier: Apache-2.0 -->
                     formId: "bulkusersform",
                     alertDiv: "alertBulkMessage",
                     modal: usersModal,
+                });
+
+                attachValidationListener({
+                    buttonId: "edit-user-button",
+                    errorDivs: {
+                        name: "editNameError",
+                    },
+                    validations: {
+                        editName: validateName,
+                    },
+                    fields: {
+                        editName: "name-field",
+                    },
+                });
+
+                submitCreateForm({
+                    url: '{{ printf "%s/users" pathPrefix }}',
+                    formId: "editUserform",
+                    alertDiv: "editAlertMessage",
+                    modal: editUserModal,
+                    type: "editUser",
                 });
             </script>
         </body>
