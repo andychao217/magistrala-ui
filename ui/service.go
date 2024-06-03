@@ -15,6 +15,7 @@ import (
 	"log"
 	"math"
 	"reflect"
+	"strconv"
 	"strings"
 	"sync"
 	"time"
@@ -221,8 +222,8 @@ type Service interface {
 	// CreateThings creates new things.
 	CreateThings(token string, things ...sdk.Thing) error
 	// ListThings retrieves things owned/shared by a user.
-	ListThings(s Session, status string, page, limit uint64) ([]byte, error)
-	ListThingsInJSON(s Session, status string, page, limit uint64) (sdk.ThingsPage, error)
+	ListThings(s Session, status string, page, limit uint64, onlineStatus uint64) ([]byte, error)
+	ListThingsInJSON(s Session, status string, page, limit uint64, onlineStatus uint64) (sdk.ThingsPage, error)
 	// ViewThing retrieves information about the thing with the given ID.
 	ViewThing(s Session, id string) ([]byte, error)
 	// UpdateThing updates the thing with the given ID.
@@ -259,8 +260,8 @@ type Service interface {
 	// UpdateChannel updates the channel with the given ID.
 	UpdateChannel(token string, channel sdk.Channel) error
 	// ListThingsByChannel retrieves a list of things based on the given channel ID.
-	ListThingsByChannel(s Session, id string, page, limit uint64) ([]byte, error)
-	ListThingsByChannelInJSON(s Session, id string, page, limit uint64) (sdk.ThingsPage, error)
+	ListThingsByChannel(s Session, id string, page, limit uint64, onlineStatus uint64) ([]byte, error)
+	ListThingsByChannelInJSON(s Session, id string, page, limit uint64, onlineStatus uint64) (sdk.ThingsPage, error)
 	// EnableChannel updates the status of the channel with the given ID to enabled.
 	EnableChannel(token, id string) error
 	// DisableChannel updates the status of the channel with the given ID to disabled.
@@ -829,7 +830,7 @@ func (us *uiService) CreateThings(token string, things ...sdk.Thing) error {
 	return nil
 }
 
-func (us *uiService) ListThings(s Session, status string, page, limit uint64) ([]byte, error) {
+func (us *uiService) ListThings(s Session, status string, page, limit uint64, onlineStatus uint64) ([]byte, error) {
 	offset := (page - 1) * limit
 
 	pgm := sdk.PageMetadata{
@@ -837,9 +838,51 @@ func (us *uiService) ListThings(s Session, status string, page, limit uint64) ([
 		Limit:  limit,
 		Status: status,
 	}
+
 	things, err := us.sdk.Things(pgm, s.Token)
 	if err != nil {
 		return []byte{}, errors.Wrap(ErrFailedRetreive, err)
+	}
+	if onlineStatus == 0 {
+		// Filter things where Metadata.isOnline is 0
+		var thingPage sdk.ThingsPage
+		offlineThings := thingPage.Things
+		for _, thing := range things.Things {
+			status, ok := thing.Metadata["isOnline"].(string)
+			// 当isOnline字段不存在或者值为"0"时，将thing添加到offlineThings切片
+			if !ok || status == "0" {
+				offlineThings = append(offlineThings, thing)
+				continue // 继续下一个循环迭代
+			}
+			// 如果isOnline字段存在且不为"0"，尝试将其解析为uint64
+			statusUint, err := strconv.ParseUint(status, 10, 64)
+			if err != nil {
+				fmt.Println("Error parsing isOnline:", err)
+				continue // 如果出现错误，跳过当前迭代
+			}
+			// 如果解析结果为0，即表示离线
+			if statusUint == 0 {
+				offlineThings = append(offlineThings, thing)
+			}
+		}
+		things.Things = offlineThings
+	} else if onlineStatus == 1 {
+		// Filter things where Metadata.isOnline is 1
+		var thingPage sdk.ThingsPage
+		onlineThings := thingPage.Things
+		for _, thing := range things.Things {
+			if status, ok := thing.Metadata["isOnline"].(string); ok {
+				statusUint, err := strconv.ParseUint(status, 10, 64)
+				if err != nil {
+					fmt.Println("Error parsing isOnline:", err)
+					continue // Skip this item if the conversion fails
+				}
+				if statusUint == 1 {
+					onlineThings = append(onlineThings, thing)
+				}
+			}
+		}
+		things.Things = onlineThings
 	}
 
 	noOfPages := int(math.Ceil(float64(things.Total) / float64(limit)))
@@ -878,7 +921,7 @@ func (us *uiService) ListThings(s Session, status string, page, limit uint64) ([
 	return btpl.Bytes(), nil
 }
 
-func (us *uiService) ListThingsInJSON(s Session, status string, page, limit uint64) (sdk.ThingsPage, error) {
+func (us *uiService) ListThingsInJSON(s Session, status string, page, limit uint64, onlineStatus uint64) (sdk.ThingsPage, error) {
 	offset := (page - 1) * limit
 
 	pgm := sdk.PageMetadata{
@@ -886,10 +929,53 @@ func (us *uiService) ListThingsInJSON(s Session, status string, page, limit uint
 		Limit:  limit,
 		Status: status,
 	}
+
 	things, err := us.sdk.Things(pgm, s.Token)
 	if err != nil {
 		return sdk.ThingsPage{}, errors.Wrap(ErrFailedRetreive, err)
 	}
+	if onlineStatus == 0 {
+		// Filter things where Metadata.isOnline is 0
+		var thingPage sdk.ThingsPage
+		offlineThings := thingPage.Things
+		for _, thing := range things.Things {
+			status, ok := thing.Metadata["isOnline"].(string)
+			// 当isOnline字段不存在或者值为"0"时，将thing添加到offlineThings切片
+			if !ok || status == "0" {
+				offlineThings = append(offlineThings, thing)
+				continue // 继续下一个循环迭代
+			}
+			// 如果isOnline字段存在且不为"0"，尝试将其解析为uint64
+			statusUint, err := strconv.ParseUint(status, 10, 64)
+			if err != nil {
+				fmt.Println("Error parsing isOnline:", err)
+				continue // 如果出现错误，跳过当前迭代
+			}
+			// 如果解析结果为0，即表示离线
+			if statusUint == 0 {
+				offlineThings = append(offlineThings, thing)
+			}
+		}
+		things.Things = offlineThings
+	} else if onlineStatus == 1 {
+		// Filter things where Metadata.isOnline is 1
+		var thingPage sdk.ThingsPage
+		onlineThings := thingPage.Things
+		for _, thing := range things.Things {
+			if status, ok := thing.Metadata["isOnline"].(string); ok {
+				statusUint, err := strconv.ParseUint(status, 10, 64)
+				if err != nil {
+					fmt.Println("Error parsing isOnline:", err)
+					continue // Skip this item if the conversion fails
+				}
+				if statusUint == 1 {
+					onlineThings = append(onlineThings, thing)
+				}
+			}
+		}
+		things.Things = onlineThings
+	}
+
 	return things, nil
 }
 
@@ -1273,7 +1359,7 @@ func (us *uiService) UpdateChannel(token string, channel sdk.Channel) error {
 	return nil
 }
 
-func (us *uiService) ListThingsByChannel(s Session, channelID string, page, limit uint64) ([]byte, error) {
+func (us *uiService) ListThingsByChannel(s Session, channelID string, page, limit uint64, onlineStatus uint64) ([]byte, error) {
 	offset := (page - 1) * limit
 
 	pgm := sdk.PageMetadata{
@@ -1285,6 +1371,47 @@ func (us *uiService) ListThingsByChannel(s Session, channelID string, page, limi
 	thsPage, err := us.sdk.ThingsByChannel(channelID, pgm, s.Token)
 	if err != nil {
 		return []byte{}, errors.Wrap(ErrFailedRetreive, err)
+	}
+	if onlineStatus == 0 {
+		// Filter things where Metadata.isOnline is 0
+		var thingPage sdk.ThingsPage
+		offlineThings := thingPage.Things
+		for _, thing := range thsPage.Things {
+			status, ok := thing.Metadata["isOnline"].(string)
+			// 当isOnline字段不存在或者值为"0"时，将thing添加到offlineThings切片
+			if !ok || status == "0" {
+				offlineThings = append(offlineThings, thing)
+				continue // 继续下一个循环迭代
+			}
+			// 如果isOnline字段存在且不为"0"，尝试将其解析为uint64
+			statusUint, err := strconv.ParseUint(status, 10, 64)
+			if err != nil {
+				fmt.Println("Error parsing isOnline:", err)
+				continue // 如果出现错误，跳过当前迭代
+			}
+			// 如果解析结果为0，即表示离线
+			if statusUint == 0 {
+				offlineThings = append(offlineThings, thing)
+			}
+		}
+		thsPage.Things = offlineThings
+	} else if onlineStatus == 1 {
+		// Filter things where Metadata.isOnline is 1
+		var thingPage sdk.ThingsPage
+		onlineThings := thingPage.Things
+		for _, thing := range thsPage.Things {
+			if status, ok := thing.Metadata["isOnline"].(string); ok {
+				statusUint, err := strconv.ParseUint(status, 10, 64)
+				if err != nil {
+					fmt.Println("Error parsing isOnline:", err)
+					continue // Skip this item if the conversion fails
+				}
+				if statusUint == 1 {
+					onlineThings = append(onlineThings, thing)
+				}
+			}
+		}
+		thsPage.Things = onlineThings
 	}
 
 	permissions, err := us.sdk.ChannelPermissions(channelID, s.Token)
@@ -1331,7 +1458,7 @@ func (us *uiService) ListThingsByChannel(s Session, channelID string, page, limi
 	return btpl.Bytes(), nil
 }
 
-func (us *uiService) ListThingsByChannelInJSON(s Session, channelID string, page, limit uint64) (sdk.ThingsPage, error) {
+func (us *uiService) ListThingsByChannelInJSON(s Session, channelID string, page, limit uint64, onlineStatus uint64) (sdk.ThingsPage, error) {
 	offset := (page - 1) * limit
 
 	pgm := sdk.PageMetadata{
@@ -1344,6 +1471,48 @@ func (us *uiService) ListThingsByChannelInJSON(s Session, channelID string, page
 	if err != nil {
 		return sdk.ThingsPage{}, errors.Wrap(ErrFailedRetreive, err)
 	}
+	if onlineStatus == 0 {
+		// Filter things where Metadata.isOnline is 0
+		var thingPage sdk.ThingsPage
+		offlineThings := thingPage.Things
+		for _, thing := range thsPage.Things {
+			status, ok := thing.Metadata["isOnline"].(string)
+			// 当isOnline字段不存在或者值为"0"时，将thing添加到offlineThings切片
+			if !ok || status == "0" {
+				offlineThings = append(offlineThings, thing)
+				continue // 继续下一个循环迭代
+			}
+			// 如果isOnline字段存在且不为"0"，尝试将其解析为uint64
+			statusUint, err := strconv.ParseUint(status, 10, 64)
+			if err != nil {
+				fmt.Println("Error parsing isOnline:", err)
+				continue // 如果出现错误，跳过当前迭代
+			}
+			// 如果解析结果为0，即表示离线
+			if statusUint == 0 {
+				offlineThings = append(offlineThings, thing)
+			}
+		}
+		thsPage.Things = offlineThings
+	} else if onlineStatus == 1 {
+		// Filter things where Metadata.isOnline is 1
+		var thingPage sdk.ThingsPage
+		onlineThings := thingPage.Things
+		for _, thing := range thsPage.Things {
+			if status, ok := thing.Metadata["isOnline"].(string); ok {
+				statusUint, err := strconv.ParseUint(status, 10, 64)
+				if err != nil {
+					fmt.Println("Error parsing isOnline:", err)
+					continue // Skip this item if the conversion fails
+				}
+				if statusUint == 1 {
+					onlineThings = append(onlineThings, thing)
+				}
+			}
+		}
+		thsPage.Things = onlineThings
+	}
+
 	return thsPage, nil
 }
 
@@ -2391,7 +2560,7 @@ func (us *uiService) DomainInJSON(s Session) (sdk.Domain, error) {
 		return sdk.Domain{}, errors.Wrap(ErrFailedRetreive, err)
 	}
 
-	_, _ = us.sdk.DomainPermissions(s.Domain.ID, s.Token)
+	_, err = us.sdk.DomainPermissions(s.Domain.ID, s.Token)
 	if err != nil {
 		return sdk.Domain{}, errors.Wrap(ErrFailedRetreive, err)
 	}

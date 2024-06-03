@@ -280,22 +280,22 @@ func (mm *metricsMiddleware) CreateThings(token string, things ...sdk.Thing) err
 }
 
 // ListThings adds metrics middleware to list things method.
-func (mm *metricsMiddleware) ListThings(s ui.Session, status string, page, limit uint64) ([]byte, error) {
+func (mm *metricsMiddleware) ListThings(s ui.Session, status string, page, limit, onlineStatus uint64) ([]byte, error) {
 	defer func(begin time.Time) {
 		mm.counter.With("method", "list_things").Add(1)
 		mm.latency.With("method", "list_things").Observe(time.Since(begin).Seconds())
 	}(time.Now())
 
-	return mm.svc.ListThings(s, status, page, limit)
+	return mm.svc.ListThings(s, status, page, limit, onlineStatus)
 }
 
-func (mm *metricsMiddleware) ListThingsInJSON(s ui.Session, status string, page, limit uint64) (sdk.ThingsPage, error) {
+func (mm *metricsMiddleware) ListThingsInJSON(s ui.Session, status string, page, limit, onlineStatus uint64) (sdk.ThingsPage, error) {
 	defer func(begin time.Time) {
 		mm.counter.With("method", "list_things").Add(1)
 		mm.latency.With("method", "list_things").Observe(time.Since(begin).Seconds())
 	}(time.Now())
 
-	return mm.svc.ListThingsInJSON(s, status, page, limit)
+	return mm.svc.ListThingsInJSON(s, status, page, limit, onlineStatus)
 }
 
 // viewThing adds metrics middleware to view thing method.
@@ -477,22 +477,22 @@ func (mm *metricsMiddleware) UpdateChannel(token string, channel sdk.Channel) er
 }
 
 // ListThingsByChannel adds metrics middleware to list things by channel method.
-func (mm *metricsMiddleware) ListThingsByChannel(s ui.Session, id string, page, limit uint64) ([]byte, error) {
+func (mm *metricsMiddleware) ListThingsByChannel(s ui.Session, id string, page, limit, onlineStatus uint64) ([]byte, error) {
 	defer func(begin time.Time) {
 		mm.counter.With("method", "list_things_by_channel").Add(1)
 		mm.latency.With("method", "list_things_by_channel").Observe(time.Since(begin).Seconds())
 	}(time.Now())
 
-	return mm.svc.ListThingsByChannel(s, id, page, limit)
+	return mm.svc.ListThingsByChannel(s, id, page, limit, onlineStatus)
 }
 
-func (mm *metricsMiddleware) ListThingsByChannelInJSON(s ui.Session, id string, page, limit uint64) (sdk.ThingsPage, error) {
+func (mm *metricsMiddleware) ListThingsByChannelInJSON(s ui.Session, id string, page, limit, onlineStatus uint64) (sdk.ThingsPage, error) {
 	defer func(begin time.Time) {
 		mm.counter.With("method", "list_things_by_channel").Add(1)
 		mm.latency.With("method", "list_things_by_channel").Observe(time.Since(begin).Seconds())
 	}(time.Now())
 
-	return mm.svc.ListThingsByChannelInJSON(s, id, page, limit)
+	return mm.svc.ListThingsByChannelInJSON(s, id, page, limit, onlineStatus)
 }
 
 // EnableChannel adds metrics middleware to enable channel method.

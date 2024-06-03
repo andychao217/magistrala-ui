@@ -131,9 +131,10 @@ func (req createUsersReq) validate() error {
 
 type listEntityReq struct {
 	ui.Session
-	status string
-	page   uint64
-	limit  uint64
+	status       string
+	page         uint64
+	limit        uint64
+	onlineStatus uint64
 }
 
 func (req listEntityReq) validate() error {
@@ -151,10 +152,11 @@ func (req listEntityReq) validate() error {
 
 type listEntityByIDReq struct {
 	ui.Session
-	id       string
-	page     uint64
-	limit    uint64
-	relation string
+	id           string
+	page         uint64
+	limit        uint64
+	relation     string
+	onlineStatus uint64
 }
 
 func (req listEntityByIDReq) validate() error {

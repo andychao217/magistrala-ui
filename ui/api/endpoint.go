@@ -762,7 +762,7 @@ func listThingsEndpoint(svc ui.Service) endpoint.Endpoint {
 			return nil, err
 		}
 
-		res, err := svc.ListThings(req.Session, req.status, req.page, req.limit)
+		res, err := svc.ListThings(req.Session, req.status, req.page, req.limit, req.onlineStatus)
 		if err != nil {
 			return nil, err
 		}
@@ -782,7 +782,7 @@ func listThingsDataEndpoint(svc ui.Service) endpoint.Endpoint {
 			return nil, err
 		}
 
-		res, err := svc.ListThingsInJSON(req.Session, req.status, req.page, req.limit)
+		res, err := svc.ListThingsInJSON(req.Session, req.status, req.page, req.limit, req.onlineStatus)
 		if err != nil {
 			fmt.Println("get things data 123: ", err)
 			return nil, err
@@ -1212,7 +1212,7 @@ func listThingsByChannelEndpoint(svc ui.Service) endpoint.Endpoint {
 			return nil, err
 		}
 
-		res, err := svc.ListThingsByChannel(req.Session, req.id, req.page, req.limit)
+		res, err := svc.ListThingsByChannel(req.Session, req.id, req.page, req.limit, req.onlineStatus)
 		if err != nil {
 			return nil, err
 		}
@@ -1231,7 +1231,7 @@ func listThingsByChannelInJSONEndpoint(svc ui.Service) endpoint.Endpoint {
 			return nil, err
 		}
 
-		res, err := svc.ListThingsByChannelInJSON(req.Session, req.id, req.page, req.limit)
+		res, err := svc.ListThingsByChannelInJSON(req.Session, req.id, req.page, req.limit, req.onlineStatus)
 		if err != nil {
 			fmt.Println("get listThingsByChannelInJSONEndpoint 123: ", err)
 			return nil, err

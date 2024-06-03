@@ -142,7 +142,7 @@ SPDX-License-Identifier: Apache-2.0 -->
             <li class="nav-item mb-2 mx-2">
                 {{ $navbarActive = "things" }}
                 <a
-                    href="{{ printf "%s/things?limit=1000" pathPrefix }}"
+                    href="{{ printf "%s/things?limit=1000&onlineStatus=2" pathPrefix }}"
                     id="things"
                     class="nav-link sidebar-link {{ if (serviceUnavailable "things") }}
                         disabled-item

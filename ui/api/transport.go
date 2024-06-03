@@ -35,6 +35,7 @@ const (
 	protocol                = "http"
 	pageKey                 = "page"
 	limitKey                = "limit"
+	onlineStatusKey         = "onlineStatus"
 	itemKey                 = "item"
 	nameKey                 = "name"
 	refererKey              = "referer_url"
@@ -59,6 +60,7 @@ const (
 	defInterval             = "1s"
 	defPage                 = 1
 	defLimit                = 10
+	defOnlineStatus         = 2
 	defKey                  = ""
 	usersAPIEndpoint        = "users"
 	thingsAPIEndpoint       = "things"
@@ -2236,11 +2238,17 @@ func decodeListEntityRequest(_ context.Context, r *http.Request) (interface{}, e
 		return nil, err
 	}
 
+	onlineStatus, err := readNumQuery[uint64](r, onlineStatusKey, defOnlineStatus)
+	if err != nil {
+		return nil, err
+	}
+
 	return listEntityReq{
-		status:  status,
-		page:    page,
-		limit:   limit,
-		Session: session,
+		status:       status,
+		page:         page,
+		limit:        limit,
+		Session:      session,
+		onlineStatus: onlineStatus,
 	}, nil
 }
 
@@ -2265,12 +2273,18 @@ func decodeListEntityByIDRequest(_ context.Context, r *http.Request) (interface{
 		return nil, err
 	}
 
+	onlineStatus, err := readNumQuery[uint64](r, onlineStatusKey, defOnlineStatus)
+	if err != nil {
+		return nil, err
+	}
+
 	return listEntityByIDReq{
-		id:       chi.URLParam(r, "id"),
-		page:     page,
-		limit:    limit,
-		relation: relation,
-		Session:  session,
+		id:           chi.URLParam(r, "id"),
+		page:         page,
+		limit:        limit,
+		relation:     relation,
+		Session:      session,
+		onlineStatus: onlineStatus,
 	}, nil
 }
 

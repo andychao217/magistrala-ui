@@ -421,13 +421,14 @@ func (lm *loggingMiddleware) CreateThings(token string, things ...sdk.Thing) (er
 }
 
 // ListThings adds logging middleware to list things method.
-func (lm *loggingMiddleware) ListThings(s ui.Session, status string, page, limit uint64) (b []byte, err error) {
+func (lm *loggingMiddleware) ListThings(s ui.Session, status string, page, limit, onlineStatus uint64) (b []byte, err error) {
 	defer func(begin time.Time) {
 		args := []any{
 			slog.String("duration", time.Since(begin).String()),
 			slog.String("status", status),
 			slog.Uint64("page", page),
 			slog.Uint64("limit", limit),
+			slog.Uint64("onlineStatus", onlineStatus),
 		}
 		if err != nil {
 			args = append(args, slog.Any("error", err))
@@ -437,16 +438,17 @@ func (lm *loggingMiddleware) ListThings(s ui.Session, status string, page, limit
 		lm.logger.Info("List things completed successfully", args...)
 	}(time.Now())
 
-	return lm.svc.ListThings(s, status, page, limit)
+	return lm.svc.ListThings(s, status, page, limit, onlineStatus)
 }
 
-func (lm *loggingMiddleware) ListThingsInJSON(s ui.Session, status string, page, limit uint64) (b sdk.ThingsPage, err error) {
+func (lm *loggingMiddleware) ListThingsInJSON(s ui.Session, status string, page, limit, onlineStatus uint64) (b sdk.ThingsPage, err error) {
 	defer func(begin time.Time) {
 		args := []any{
 			slog.String("duration", time.Since(begin).String()),
 			slog.String("status", status),
 			slog.Uint64("page", page),
 			slog.Uint64("limit", limit),
+			slog.Uint64("onlineStatus", onlineStatus),
 		}
 		if err != nil {
 			args = append(args, slog.Any("error", err))
@@ -456,7 +458,7 @@ func (lm *loggingMiddleware) ListThingsInJSON(s ui.Session, status string, page,
 		lm.logger.Info("List things completed successfully", args...)
 	}(time.Now())
 
-	return lm.svc.ListThingsInJSON(s, status, page, limit)
+	return lm.svc.ListThingsInJSON(s, status, page, limit, onlineStatus)
 }
 
 // ViewThing adds logging middleware to view thing method.
@@ -793,13 +795,14 @@ func (lm *loggingMiddleware) UpdateChannel(token string, channel sdk.Channel) (e
 }
 
 // ListThingsByChannel adds logging middleware to list things by channel method.
-func (lm *loggingMiddleware) ListThingsByChannel(s ui.Session, id string, page, limit uint64) (b []byte, err error) {
+func (lm *loggingMiddleware) ListThingsByChannel(s ui.Session, id string, page, limit, onlineStatus uint64) (b []byte, err error) {
 	defer func(begin time.Time) {
 		args := []any{
 			slog.String("duration", time.Since(begin).String()),
 			slog.String("channel_id", id),
 			slog.Uint64("page", page),
 			slog.Uint64("limit", limit),
+			slog.Uint64("onlineStatus", onlineStatus),
 		}
 		if err != nil {
 			args = append(args, slog.Any("error", err))
@@ -809,16 +812,17 @@ func (lm *loggingMiddleware) ListThingsByChannel(s ui.Session, id string, page, 
 		lm.logger.Info("List things by channel completed successfully", args...)
 	}(time.Now())
 
-	return lm.svc.ListThingsByChannel(s, id, page, limit)
+	return lm.svc.ListThingsByChannel(s, id, page, limit, onlineStatus)
 }
 
-func (lm *loggingMiddleware) ListThingsByChannelInJSON(s ui.Session, id string, page, limit uint64) (b sdk.ThingsPage, err error) {
+func (lm *loggingMiddleware) ListThingsByChannelInJSON(s ui.Session, id string, page, limit, onlineStatus uint64) (b sdk.ThingsPage, err error) {
 	defer func(begin time.Time) {
 		args := []any{
 			slog.String("duration", time.Since(begin).String()),
 			slog.String("thing_id", id),
 			slog.Uint64("page", page),
 			slog.Uint64("limit", limit),
+			slog.Uint64("onlineStatus", onlineStatus),
 		}
 		if err != nil {
 			args = append(args, slog.Any("error", err))
@@ -828,7 +832,7 @@ func (lm *loggingMiddleware) ListThingsByChannelInJSON(s ui.Session, id string, 
 		lm.logger.Info("List channels by thing completed successfully", args...)
 	}(time.Now())
 
-	return lm.svc.ListThingsByChannelInJSON(s, id, page, limit)
+	return lm.svc.ListThingsByChannelInJSON(s, id, page, limit, onlineStatus)
 }
 
 // EnableChannel adds logging middleware to enable channel method.
