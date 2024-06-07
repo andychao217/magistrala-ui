@@ -1052,6 +1052,15 @@ func (mm *metricsMiddleware) DeleteInvitation(token, userID, domainID string) er
 	return mm.svc.DeleteInvitation(token, userID, domainID)
 }
 
+func (mm *metricsMiddleware) File(s ui.Session) ([]byte, error) {
+	defer func(begin time.Time) {
+		mm.counter.With("method", "view_file").Add(1)
+		mm.latency.With("method", "view_file").Observe(time.Since(begin).Seconds())
+	}(time.Now())
+
+	return mm.svc.File(s)
+}
+
 // ViewDashboard adds metrics middleware to view dashboard method.
 func (mm *metricsMiddleware) ViewDashboard(ctx context.Context, s ui.Session, dashboardID string) (b []byte, err error) {
 	defer func(begin time.Time) {

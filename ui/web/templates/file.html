@@ -1,0 +1,40 @@
+<!-- Copyright (c) Abstract Machines
+SPDX-License-Identifier: Apache-2.0 -->
+
+{{ define "file" }}
+    <!doctype html>
+    <html lang="en">
+        <head>
+            <title>文件管理</title>
+            {{ template "header" }}
+            <style>
+              /* 设置iframe以适应其容器的大小 */
+              iframe {
+                  width: 100%;
+                  height: 100%;
+              }
+              /* 为iframe的直接容器设置高度 */
+              .iframe-container {
+                  width: 100%;
+                  height: 100%;
+              }
+          </style>
+        </head>
+
+        <body>
+            {{ template "navbar" . }}
+            <div class="main-content pt-3 iframe-container">
+              <iframe id="filePage" sandbox="allow-scripts allow-same-origin"></iframe>
+            </div>
+            <script>
+              const protocol = window.location.protocol;
+              const hostname = window.location.hostname;
+              const port = window.location.port;
+
+              $(document).ready(function() {
+                $('#filePage').attr('src', `${protocol}//${hostname}:9102`);
+              });
+            </script>
+        </body>
+    </html>
+{{ end }}

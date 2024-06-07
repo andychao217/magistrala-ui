@@ -1872,6 +1872,18 @@ func (lm *loggingMiddleware) DeleteInvitation(token, userID, domainID string) (e
 	return lm.svc.DeleteInvitation(token, userID, domainID)
 }
 
+func (lm *loggingMiddleware) File(s ui.Session) (b []byte, err error) {
+	defer func(begin time.Time) {
+		if err != nil {
+			lm.logger.Warn("View File failed to complete successfully")
+			return
+		}
+		lm.logger.Info("View File completed successfully")
+	}(time.Now())
+
+	return lm.svc.File(s)
+}
+
 // ViewDashboard adds logging middleware to view dashboard method.
 func (lm *loggingMiddleware) ViewDashboard(ctx context.Context, s ui.Session, dashboardID string) (b []byte, err error) {
 	defer func(begin time.Time) {

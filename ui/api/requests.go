@@ -1240,3 +1240,14 @@ func (req deleteDashboardReq) validate() error {
 	}
 	return nil
 }
+
+type fileReq struct {
+	ui.Session
+}
+
+func (req fileReq) validate() error {
+	if req.Token == "" {
+		return errInvalidCredentials
+	}
+	return nil
+}

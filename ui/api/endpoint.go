@@ -2327,6 +2327,25 @@ func deleteInvitationEndpoint(svc ui.Service, prefix string) endpoint.Endpoint {
 	}
 }
 
+func listFileEndpoint(svc ui.Service) endpoint.Endpoint {
+	return func(_ context.Context, request interface{}) (interface{}, error) {
+		req := request.(fileReq)
+		if err := req.validate(); err != nil {
+			return nil, err
+		}
+
+		res, err := svc.File(req.Session)
+		if err != nil {
+			return nil, err
+		}
+
+		return uiRes{
+			code: http.StatusOK,
+			html: res,
+		}, nil
+	}
+}
+
 func viewDashboardEndpoint(svc ui.Service) endpoint.Endpoint {
 	return func(ctx context.Context, request interface{}) (interface{}, error) {
 		req := request.(viewDashboardReq)

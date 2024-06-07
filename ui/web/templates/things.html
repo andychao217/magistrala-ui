@@ -245,12 +245,13 @@ SPDX-License-Identifier: Apache-2.0 -->
             </div>
             <script>
               let currentDevices = {}, newDevices = {};
-              const url = window.location.href; // 获取当前页面的URL
-              const onlineStatusValue = (url.match(/onlineStatus=(\d+)/) || [])[1]; // 从URL获取onlineStatus的值
-
-              getThingsList(onlineStatusValue);
-
+              
               $(document).ready(function() {
+                const url = window.location.href; // 获取当前页面的URL
+                const onlineStatusValue = (url.match(/onlineStatus=(\d+)/) || [])[1]; // 从URL获取onlineStatus的值
+
+                getThingsList(onlineStatusValue);
+
                 if (onlineStatusValue === '1') {
                   $('#btnAll').prop('checked', false);
                   $('#btnOnline').prop('checked', true);
@@ -484,70 +485,74 @@ SPDX-License-Identifier: Apache-2.0 -->
                     ) {
                       const device = newDevices[newId];
                       const onlineSpan = device.metadata && Number(device.metadata.isOnline) === 1 ? 
-                        `<span class="badge rounded-pill enabled-pill">在线</span>` : 
-                        `<span class="badge rounded-pill disabled-pill">离线</span>`;\
+                        $(`<span class="badge rounded-pill enabled-pill">在线</span>`) : 
+                        $(`<span class="badge rounded-pill disabled-pill">离线</span>`);
                       const btnSpan = device.metadata && Number(device.metadata.isOnline) === 1 ? 
-                        `<p>
-                          <button class="btn body-button" onclick="viewThing(${device.id})" title="查看">
-                            <i class="fa-solid fa-info"></i>
-                          </button>
-                          <button
-                            id="${device.id}-rebootBtn"
-                            class="btn body-button"
-                            onclick="conntrolThing(${device.id}, ${device.credentials.identity}, 'reboot')"
-                            title="重启"
-                          >
-                            <i class="fa-solid fa-arrows-rotate"></i>
-                          </button>
-                          <button 
-                            id="${device.id}-deleteBtn" 
-                            class="btn body-button" 
-                            onclick="deleteThing(${device.id})" 
-                            title="删除"
-                            disabled
-                          >
-                            <i class="fa-solid fa-trash-can"></i>
-                          </button>
-                          <button 
-                            id="${device.id}-editBtn" 
-                            title="修改" 
-                            class="btn body-button" 
-                            onclick="editThing(${device.id}, ${device.name})"
-                            disabled
-                          >
-                            <i class="fa-solid fa-pencil-alt"></i>
-                          </button>
-                        </p>` : 
-                        `<p>
-                          <button class="btn body-button" onclick="viewThing(${device.id})" title="查看">
-                            <i class="fa-solid fa-info"></i>
-                          </button>
-                          <button
-                            id="${device.id}-rebootBtn"
-                            class="btn body-button"
-                            onclick="conntrolThing(${device.id}, ${device.credentials.identity}, 'reboot')"
-                            title="重启"
-                            disabled
-                          >
-                            <i class="fa-solid fa-arrows-rotate"></i>
-                          </button>
-                          <button 
-                            id="${device.id}-deleteBtn" 
-                            class="btn body-button" 
-                            onclick="deleteThing(${device.id})" 
-                            title="删除"
-                          >
-                            <i class="fa-solid fa-trash-can"></i>
-                          </button>
-                          <button 
-                            id="${device.id}-editBtn" 
-                            title="修改" 
-                            class="btn body-button" 
-                            onclick="editThing(${device.id}, ${device.name})"
-                          >
-                            <i class="fa-solid fa-pencil-alt"></i>
-                          </button>
-                        </p>`;
+                        $(`
+                          <p>
+                            <button class="btn body-button" onclick="viewThing(${device.id})" title="查看">
+                              <i class="fa-solid fa-info"></i>
+                            </button>
+                            <button
+                              id="${device.id}-rebootBtn"
+                              class="btn body-button"
+                              onclick="conntrolThing(${device.id}, ${device.credentials.identity}, 'reboot')"
+                              title="重启"
+                            >
+                              <i class="fa-solid fa-arrows-rotate"></i>
+                            </button>
+                            <button 
+                              id="${device.id}-deleteBtn" 
+                              class="btn body-button" 
+                              onclick="deleteThing(${device.id})" 
+                              title="删除"
+                              disabled
+                            >
+                              <i class="fa-solid fa-trash-can"></i>
+                            </button>
+                            <button 
+                              id="${device.id}-editBtn" 
+                              title="修改" 
+                              class="btn body-button" 
+                              onclick="editThing(${device.id}, ${device.name})"
+                              disabled
+                            >
+                              <i class="fa-solid fa-pencil-alt"></i>
+                            </button>
+                          </p>
+                        `) : 
+                        $(`
+                          <p>
+                            <button class="btn body-button" onclick="viewThing(${device.id})" title="查看">
+                              <i class="fa-solid fa-info"></i>
+                            </button>
+                            <button
+                              id="${device.id}-rebootBtn"
+                              class="btn body-button"
+                              onclick="conntrolThing(${device.id}, ${device.credentials.identity}, 'reboot')"
+                              title="重启"
+                              disabled
+                            >
+                              <i class="fa-solid fa-arrows-rotate"></i>
+                            </button>
+                            <button 
+                              id="${device.id}-deleteBtn" 
+                              class="btn body-button" 
+                              onclick="deleteThing(${device.id})" 
+                              title="删除"
+                            >
+                              <i class="fa-solid fa-trash-can"></i>
+                            </button>
+                            <button 
+                              id="${device.id}-editBtn" 
+                              title="修改" 
+                              class="btn body-button" 
+                              onclick="editThing(${device.id}, ${device.name})"
+                            >
+                              <i class="fa-solid fa-pencil-alt"></i>
+                            </button>
+                          </p>
+                        `);
                       const $thingCard = $(`
                         <div class="col-sm-3 mb-3 mb-sm-0" id="${device.id}-thingCard">
                           <div class="channel-thing-card card">
