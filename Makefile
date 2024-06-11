@@ -31,6 +31,7 @@ define make_docker
 		--build-arg COMMIT=$(COMMIT) \
 		--build-arg TIME=$(TIME) \
 		--tag=$(MG_DOCKER_IMAGE_USERNAME_PREFIX)/$(MG_DOCKER_IMAGE_NAME_PREFIX)-$(SVC) \
+		--tag=$(MG_DOCKER_IMAGE_ALIYUN_PREFIX)/$(MG_DOCKER_IMAGE_USERNAME_PREFIX)/$(MG_DOCKER_IMAGE_NAME_PREFIX)-$(SVC) \
 		-f docker/Dockerfile .
 endef
 
