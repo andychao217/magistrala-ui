@@ -24,7 +24,7 @@ SPDX-License-Identifier: Apache-2.0 -->
         <body>
             {{ template "navbar" . }}
             <div class="main-content pt-3 iframe-container">
-              <iframe id="filePage" sandbox="allow-scripts allow-same-origin"></iframe>
+              <iframe id="filePage" sandbox="allow-forms allow-scripts allow-same-origin allow-popups"></iframe>
             </div>
             <script>
               const protocol = window.location.protocol;
