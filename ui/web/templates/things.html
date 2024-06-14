@@ -142,6 +142,29 @@ SPDX-License-Identifier: Apache-2.0 -->
                                           </div>
                                       </div>
                                     </div>
+
+                                    <button type="button" class="btn body-button" onclick="openModal('scan')">扫描添加设备</button>
+                                    <div class="modal fade" id="scanThingsModal" tabindex="-1" role="dialog" aria-labelledby="scanThingsModalLabel" aria-hidden="true">
+                                      <div class="modal-dialog" role="document">
+                                          <div class="modal-content">
+                                              <div class="modal-header">
+                                                  <h1 class="modal-title" id="scanThingsModalLabel">扫描添加设备</h1>
+                                                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                              </div>
+                                              <div class="modal-body">
+                                                  <div class="row">
+                                                    <ul class="list-group" id="scanThingsGrid" style="padding-left: 10px;">
+                                                      <!-- <li class="list-group-item">An item</li> -->
+                                                    </ul>
+                                                  </div>
+                                              </div>
+                                              <div class="modal-footer">
+                                                  <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">取消</button>
+                                                  <button type="button" class="btn body-button" id="scan-add-thing-button" onclick="" disabled>添加设备</button>
+                                              </div>
+                                          </div>
+                                      </div>
+                                    </div>
                                 </div>
                                 <div class="table-responsive table-container">
                                     <!-- {{ template "tableheader" . }} -->
@@ -244,12 +267,13 @@ SPDX-License-Identifier: Apache-2.0 -->
                 </div>
             </div>
             <script>
-              let currentDevices = {}, newDevices = {};
+              let currentDevices = {}, newDevices = {}, scanThingsList = [];
               
               $(document).ready(function() {
                 const url = window.location.href; // 获取当前页面的URL
+                const address = new URL(url);
                 const onlineStatusValue = (url.match(/onlineStatus=(\d+)/) || [])[1]; // 从URL获取onlineStatus的值
-
+                
                 getThingsList(onlineStatusValue);
 
                 if (onlineStatusValue === '1') {
@@ -277,22 +301,26 @@ SPDX-License-Identifier: Apache-2.0 -->
                 });
 
                 const intervalRefreshData = setInterval(refreshThingsData, 2000);
+
+                getNewThings();
               });
-             
-
-              const thingModal = new bootstrap.Modal(document.getElementById("addThingModal"));
-              const thingsModal = new bootstrap.Modal(document.getElementById("addThingsModal"));
-              const editThingModal = new bootstrap.Modal(document.getElementById("editThingModal"));
-
+              
               function openModal(modal) {
+                const thingModal = new bootstrap.Modal(document.getElementById("addThingModal"));
+                const thingsModal = new bootstrap.Modal(document.getElementById("addThingsModal"));
+                const scanThingsModal = new bootstrap.Modal(document.getElementById("scanThingsModal"));
                 if (modal === "single") {
                   thingModal.show();
                 } else if (modal === "bulk") {
                   thingsModal.show();
+                } else if (modal === "scan") {
+                  scanThingsModal.show();
                 }
               }
 
+              //修改设备
               function editThing(id, name) {
+                const editThingModal = new bootstrap.Modal(document.getElementById("editThingModal"));
                 editThingModal.show();
                 $("#editName").val(name);
                 $("#editID").val(id);
@@ -385,6 +413,7 @@ SPDX-License-Identifier: Apache-2.0 -->
                   })
               }
 
+              //更改设备在线状态
               function changeOnlineStatus(thing){
                 const onlineStatus = thing.metadata && thing.metadata.isOnline === "1";
                 $(`#${thing.id}-onlineStatusTD`).empty();
@@ -458,6 +487,7 @@ SPDX-License-Identifier: Apache-2.0 -->
                   });
               }
               
+              //更新设备显示表格
               function updateThingsGrid(devices) {
                 const $thingsGrid = $('#thingsGrid');
                 const currentDevicesLength = Object.keys(currentDevices).length;
@@ -612,6 +642,7 @@ SPDX-License-Identifier: Apache-2.0 -->
                   });
               }
 
+              //给设备发信息
               function postMessage(channelID, message) {
                 let formData = new FormData();
                 formData.append("channelID", channelID);
@@ -634,6 +665,52 @@ SPDX-License-Identifier: Apache-2.0 -->
                     console.error('处理fetch或JSON时出错:', error);
                   });
               }
+              
+              //获取udp组播扫描到的新设备
+              function getNewThings(){
+                const url = window.location.href; // 获取当前页面的URL
+                const address = new URL(url);
+                const port =  sessionStorage.getItem("socketBridgePort") || "63000";
+                fetch(`http://${address.hostname}:${port}/devices`, {
+                    method: "GET",
+                  })
+                    .then(response => {
+                      // 检查响应的内容类型是否为JSON
+                      if (
+                        response.headers.get('Content-Type') && 
+                        response.headers.get('Content-Type').includes('application/json')
+                      ) {
+                        // 检查响应的内容长度
+                        if (response.headers.get('Content-Length') === '0') {
+                          // 如果内容长度为0，返回一个空对象或执行其他逻辑
+                          return {};
+                        }
+
+                        // 返回响应的JSON解析结果
+                        return response.json();
+                      } else {
+                        // 如果内容类型不是JSON，抛出错误或执行其他逻辑
+                        throw new Error('Response content type is not JSON');
+                      }
+                    })
+                    .then(json => {
+                      if (json && JSON.stringify(json) !== '{}') {
+                        console.log("json123: ", json)
+                      } else {
+                        $(`#scanThingsGrid`).empty();
+                        scanThingsList = [
+                          {deviceName: '123456789', aliases: 'test', productName: 'NXT-2012'},
+                          {deviceName: '1234567890', aliases: 'test1', productName: 'NXT-2012'}
+                        ]
+                        scanThingsList.forEach((thing)=>{
+                          const $thingList = $(`
+                            <li class="list-group-item">${thing.deviceName}</li>
+                          `);
+                          $(`#scanThingsGrid`).append($thingList);
+                        })
+                      }
+                    })
+              }
             </script> 
             <script type="module">
               import {
@@ -643,6 +720,10 @@ SPDX-License-Identifier: Apache-2.0 -->
                 validateStringArray,
               } from "/js/validation.js";
               import { submitCreateForm } from "/js/forms.js";
+
+              const thingModal = new bootstrap.Modal(document.getElementById("addThingModal"));
+              const thingsModal = new bootstrap.Modal(document.getElementById("addThingsModal"));
+              const editThingModal = new bootstrap.Modal(document.getElementById("editThingModal"));
 
               attachValidationListener({
                 buttonId: "create-thing-button",

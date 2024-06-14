@@ -14,6 +14,7 @@ import (
 	"html/template"
 	"log"
 	"math"
+	"os"
 	"reflect"
 	"strconv"
 	"strings"
@@ -533,10 +534,14 @@ func (us *uiService) RegisterUser(user sdk.User) (sdk.Token, error) {
 }
 
 func (us *uiService) Login() ([]byte, error) {
+	socketBridgePort := os.Getenv("MG_SOCKET_BRIDGE_PORT")
+
 	data := struct {
-		Providers []oauth2.Provider
+		Providers        []oauth2.Provider
+		SocketBridgePort string
 	}{
 		us.providers,
+		socketBridgePort,
 	}
 
 	var btpl bytes.Buffer

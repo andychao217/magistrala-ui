@@ -9,6 +9,7 @@ SPDX-License-Identifier: Apache-2.0 -->
             {{ template "header" }}
         </head>
         <body class="login-body">
+            <p id="socketBridgePort" style="display: none;">{{ .SocketBridgePort }}</p>
             <div class="container-fluid mt-5 pt-5">
                 <div class="row p-5">
                     <div class="login-card col-lg-6 col-xxl-3 mx-auto mt-5" style="min-width: 650px;">
@@ -115,14 +116,34 @@ SPDX-License-Identifier: Apache-2.0 -->
                 });
             </script>
             <script>
-                sessionStorage.setItem("domainID", "");
-                const passwordField = document.getElementById("password");
-                const emailField = document.querySelector(".email-field");
-                const loginError = document.getElementById("loginError");
-                const pathPrefix = "{{ pathPrefix }}";
+                $(document).ready(function() {
+                    sessionStorage.setItem("domainID", "");
+                    const socketBridgePort = document.getElementById('socketBridgePort').innerText;
+                    if (socketBridgePort) {
+                        sessionStorage.setItem("socketBridgePort", socketBridgePort);
+                    }
+
+                    // Code for toggling the visibility of the password
+                    $('span.password-toggle-icon').click(function() {
+                        let inputType =  $("#password").attr("type");
+                        if (inputType=== "password")  {
+                            $("#password").attr("type", "text");
+                            $('span.password-toggle-icon').empty();
+                            $("<i class='fa-solid fa-eye-slash' title='隐藏密码'></i>").appendTo('span.password-toggle-icon');
+                        } else {
+                            $("#password").attr("type", "password");
+                            $('span.password-toggle-icon').empty();
+                            $("<i class='fa-solid fa-eye' title='显示密码'></i>").appendTo('span.password-toggle-icon');
+                        }
+                    });
+                });
+
                 function submitLoginForm() {
                     event.preventDefault();
-                    var form = event.target;
+                    const passwordField = document.getElementById("password");
+                    const emailField = document.querySelector(".email-field");
+                    const pathPrefix = "{{ pathPrefix }}";
+                    const form = event.target;
 
                     //密码加密
                     let formData = new FormData(form);
@@ -153,21 +174,8 @@ SPDX-License-Identifier: Apache-2.0 -->
                         });
                     }
 
-                // Code for toggling the visibility of the password
-                $('span.password-toggle-icon').click(function() {
-                    let inputType =  $("#password").attr("type");
-                    if (inputType=== "password")  {
-                        $("#password").attr("type", "text");
-                        $('span.password-toggle-icon').empty();
-                        $("<i class='fa-solid fa-eye-slash' title='隐藏密码'></i>").appendTo('span.password-toggle-icon');
-                    } else {
-                        $("#password").attr("type", "password");
-                        $('span.password-toggle-icon').empty();
-                        $("<i class='fa-solid fa-eye' title='显示密码'></i>").appendTo('span.password-toggle-icon');
-                    }
-                });
-
                 function showError(errorMessage) {
+                    const loginError = document.getElementById("loginError");
                     loginError.innerHTML = errorMessage;
                 }
             </script>

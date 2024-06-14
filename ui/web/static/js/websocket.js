@@ -6,9 +6,9 @@ function getHostname(url) {
     return parsedUrl.hostname;
 }
 
-function connectWebSocket(host, defaultChannelId) {
+function connectWebSocket(host, port, defaultChannelId) {
     // 假设WebSocket服务器在ws://your-websocket-server-url
-    ws = new WebSocket(`ws://${host}:63000/websocket`);
+    ws = new WebSocket(`ws://${host}:${port}/websocket`);
 
     ws.onopen = function (event) {
         console.log("WebSocket is open now.");
@@ -36,7 +36,7 @@ function connectWebSocket(host, defaultChannelId) {
 
     ws.onerror = function (error) {
         console.error("WebSocket Error: ", error);
-        connectWebSocket(host);
+        connectWebSocket(host, port, defaultChannelId);
     };
 }
 
@@ -82,8 +82,9 @@ $(function () {
                   const data = json.data;
                   const domainData = JSON.parse(data).domainData;
                   const defaultChannelId = domainData.metadata["comID"];
+                  const port =  sessionStorage.getItem("socketBridgePort") || "63000";
                   if (domainID && defaultChannelId) {
-                    connectWebSocket(hostName, defaultChannelId);
+                    connectWebSocket(hostName, port, defaultChannelId);
                   }
                 })
         }

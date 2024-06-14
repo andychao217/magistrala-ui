@@ -85,3 +85,97 @@ function containsLoginInUrl() {
     // 如果不包含，返回false
     return false;
 }
+
+// 解释
+// watchVariable 方法：
+// 该方法接收一个值 value（可以是对象、数组、字符串、数字或布尔值）和一个回调函数 callback。
+// 根据 value 的类型，处理对象、数组或基本数据类型。
+
+// 对象和数组：
+// 使用 Proxy 拦截 set 和 deleteProperty 操作。
+// 当属性值发生变化或属性被删除时，调用回调函数 callback。
+
+// 基本数据类型（字符串、数字、布尔值）：
+// 使用对象包装基本数据类型，并通过 getter 和 setter 拦截值的变化。
+// 当值发生变化时，调用回调函数 callback。
+
+// 这种方法可以灵活地监听多种数据类型的变化，并在变化时执行相应的回调函数。
+function watchVariable(value, callback) {
+    if (typeof value === 'object' && value !== null) {
+        // 对象或数组
+        return new Proxy(value, {
+            set(target, property, newValue, receiver) {
+                const oldValue = target[property];
+                if (oldValue !== newValue) {
+                    target[property] = newValue;
+                    callback(target, property, oldValue, newValue);
+                }
+                return true; // 表示设置成功
+            },
+            deleteProperty(target, property) {
+                if (property in target) {
+                    const oldValue = target[property];
+                    delete target[property];
+                    callback(target, property, oldValue, undefined);
+                }
+                return true; // 表示删除成功
+            }
+        });
+    } else if (['string', 'number', 'boolean'].includes(typeof value)) {
+        // 基本类型
+        let internalValue = value;
+        return {
+            get value() {
+                return internalValue;
+            },
+            set value(newValue) {
+                if (internalValue !== newValue) {
+                    const oldValue = internalValue;
+                    internalValue = newValue;
+                    callback(window, 'value', oldValue, newValue);
+                }
+            }
+        };
+    } else {
+        throw new Error('Unsupported data type for watching');
+    }
+}
+
+/*
+    // 示例
+    // 监听对象
+    let myObject = { a: 1, b: 2 };
+    let proxyObject = watchVariable(myObject, (target, key, oldVal, newVal) => {
+        console.log(`Object property ${key} changed from ${oldVal} to ${newVal}`);
+    });
+    proxyObject.a = 10; // 输出: Object property a changed from 1 to 10
+    delete proxyObject.b; // 输出: Object property b changed from 2 to undefined
+
+    // 监听数组
+    let myArray = [1, 2, 3];
+    let proxyArray = watchVariable(myArray, (target, key, oldVal, newVal) => {
+        console.log(`Array index ${key} changed from ${oldVal} to ${newVal}`);
+    });
+    proxyArray[0] = 100; // 输出: Array index 0 changed from 1 to 100
+
+    // 监听字符串
+    let myString = 'hello';
+    let watchedString = watchVariable(myString, (target, key, oldVal, newVal) => {
+        console.log(`String changed from ${oldVal} to ${newVal}`);
+    });
+    watchedString.value = 'world'; // 输出: String changed from hello to world
+
+    // 监听数字
+    let myNumber = 42;
+    let watchedNumber = watchVariable(myNumber, (target, key, oldVal, newVal) => {
+        console.log(`Number changed from ${oldVal} to ${newVal}`);
+    });
+    watchedNumber.value = 100; // 输出: Number changed from 42 to 100
+
+    // 监听布尔值
+    let myBoolean = true;
+    let watchedBoolean = watchVariable(myBoolean, (target, key, oldVal, newVal) => {
+        console.log(`Boolean changed from ${oldVal} to ${newVal}`);
+    });
+    watchedBoolean.value = false; // 输出: Boolean changed from true to false
+*/

@@ -245,7 +245,6 @@ body .body-button {
     color: #fff;
     font-size: 1rem;
     border: 1px solid var(--main-color);
-    margin-bottom: 0.5rem;
 }
 
 .main-content .sendMessage-button {
