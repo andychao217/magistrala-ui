@@ -267,7 +267,7 @@ SPDX-License-Identifier: Apache-2.0 -->
                 </div>
             </div>
             <script>
-              let currentDevices = {}, newDevices = {}, scanThingsList = [];
+              let currentDevices = {}, newDevices = {}, scanNewThingsList = [];
               
               $(document).ready(function() {
                 const url = window.location.href; // 获取当前页面的URL
@@ -301,20 +301,17 @@ SPDX-License-Identifier: Apache-2.0 -->
                 });
 
                 const intervalRefreshData = setInterval(refreshThingsData, 2000);
-
-                getNewThings();
               });
               
               function openModal(modal) {
                 const thingModal = new bootstrap.Modal(document.getElementById("addThingModal"));
                 const thingsModal = new bootstrap.Modal(document.getElementById("addThingsModal"));
-                const scanThingsModal = new bootstrap.Modal(document.getElementById("scanThingsModal"));
                 if (modal === "single") {
                   thingModal.show();
                 } else if (modal === "bulk") {
                   thingsModal.show();
                 } else if (modal === "scan") {
-                  scanThingsModal.show();
+                  scanNewThings();
                 }
               }
 
@@ -666,11 +663,24 @@ SPDX-License-Identifier: Apache-2.0 -->
                   });
               }
               
+              //显示扫描添加设备弹框设备列表
+              function showNewThingsGrid (thingsList) {
+                const scanThingsModal = new bootstrap.Modal(document.getElementById("scanThingsModal"));
+                scanThingsModal.show();
+                $(`#scanThingsGrid`).empty();
+                thingsList.forEach((thing)=>{
+                  const $thingList = $(`
+                    <li class="list-group-item">${thing.device_name}</li>
+                  `);
+                  $(`#scanThingsGrid`).append($thingList);
+                })
+              }
+
               //获取udp组播扫描到的新设备
-              function getNewThings(){
+              function scanNewThings(){
                 const url = window.location.href; // 获取当前页面的URL
                 const address = new URL(url);
-                const port =  sessionStorage.getItem("socketBridgePort") || "63000";
+                const port =  sessionStorage.getItem("socketBridgePort") || "63001";
                 fetch(`http://${address.hostname}:${port}/devices`, {
                     method: "GET",
                   })
@@ -694,20 +704,13 @@ SPDX-License-Identifier: Apache-2.0 -->
                       }
                     })
                     .then(json => {
-                      if (json && JSON.stringify(json) !== '{}') {
-                        console.log("json123: ", json)
-                      } else {
-                        $(`#scanThingsGrid`).empty();
-                        scanThingsList = [
-                          {deviceName: '123456789', aliases: 'test', productName: 'NXT-2012'},
-                          {deviceName: '1234567890', aliases: 'test1', productName: 'NXT-2012'}
-                        ]
-                        scanThingsList.forEach((thing)=>{
-                          const $thingList = $(`
-                            <li class="list-group-item">${thing.deviceName}</li>
-                          `);
-                          $(`#scanThingsGrid`).append($thingList);
+                      if (json && JSON.stringify(json) !== '{}' && json.length) {
+                        scanNewThingsList = json.map((item)=>{
+                          return JSON.parse(item.message)
                         })
+                        showNewThingsGrid(scanNewThingsList)
+                      } else {
+                        alert("没有扫描到设备")
                       }
                     })
               }

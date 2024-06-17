@@ -82,7 +82,7 @@ $(function () {
                   const data = json.data;
                   const domainData = JSON.parse(data).domainData;
                   const defaultChannelId = domainData.metadata["comID"];
-                  const port =  sessionStorage.getItem("socketBridgePort") || "63000";
+                  const port =  sessionStorage.getItem("socketBridgePort") || "63001";
                   if (domainID && defaultChannelId) {
                     connectWebSocket(hostName, port, defaultChannelId);
                   }
