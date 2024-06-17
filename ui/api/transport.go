@@ -367,6 +367,13 @@ func MakeHandler(svc ui.Service, r *chi.Mux, instanceID, prefix string, secureCo
 						opts...,
 					).ServeHTTP)
 
+					r.Post("/batch", kithttp.NewServer(
+						createThingsEndpoint(svc),
+						decodeThingsBatchCreation,
+						encodeJSONResponse,
+						opts...,
+					).ServeHTTP)
+
 					r.Get("/thingsInJSON", kithttp.NewServer(
 						listThingsDataEndpoint(svc),
 						decodeListEntityRequest,
@@ -1659,6 +1666,25 @@ func decodeThingsCreation(_ context.Context, r *http.Request) (interface{}, erro
 		}
 
 		things = append(things, thing)
+	}
+
+	return createThingsReq{
+		token:  session.Token,
+		things: things,
+	}, nil
+}
+
+func decodeThingsBatchCreation(_ context.Context, r *http.Request) (interface{}, error) {
+	session, err := sessionFromHeader(r)
+	if err != nil {
+		return nil, err
+	}
+
+	things := []sdk.Thing{}
+	// 从请求体中读取 JSON 数据
+	err = json.NewDecoder(r.Body).Decode(&things)
+	if err != nil {
+		return nil, err
 	}
 
 	return createThingsReq{

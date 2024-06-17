@@ -791,7 +791,8 @@ button.edit-btn {
     cursor: pointer;
 }
 
-.channel-thing-card:hover {
+.channel-thing-card:hover, 
+.newThingItemList:hover {
     background-color: #f5f5f5;
 }
 

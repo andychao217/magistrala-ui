@@ -153,14 +153,14 @@ SPDX-License-Identifier: Apache-2.0 -->
                                               </div>
                                               <div class="modal-body">
                                                   <div class="row">
-                                                    <ul class="list-group" id="scanThingsGrid" style="padding-left: 10px;">
+                                                    <ul class="list-group" id="scanThingsGrid" style="padding-left: 10px;max-height: 400px;overflow-y: auto;">
                                                       <!-- <li class="list-group-item">An item</li> -->
                                                     </ul>
                                                   </div>
                                               </div>
                                               <div class="modal-footer">
                                                   <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">取消</button>
-                                                  <button type="button" class="btn body-button" id="scan-add-thing-button" onclick="" disabled>添加设备</button>
+                                                  <button type="button" class="btn body-button" id="scan-add-thing-button" disabled>添加设备</button>
                                               </div>
                                           </div>
                                       </div>
@@ -170,13 +170,13 @@ SPDX-License-Identifier: Apache-2.0 -->
                                     <!-- {{ template "tableheader" . }} -->
                                     <div class="row buttons mb-3">
                                       <div class="btn-group col-4 offset-4" role="group">
-                                        <input type="radio" class="btn-check" name="btnOnlineStatus" id="btnAll" autocomplete="off">
+                                        <input type="radio" class="btn-check" name="btnOnlineStatus" id="btnAll" autocomplete="off" />
                                         <label class="btn btn-outline-primary" for="btnAll">全部</label>
                                       
-                                        <input type="radio" class="btn-check" name="btnOnlineStatus" id="btnOnline" autocomplete="off">
+                                        <input type="radio" class="btn-check" name="btnOnlineStatus" id="btnOnline" autocomplete="off" />
                                         <label class="btn btn-outline-primary" for="btnOnline">在线</label>
                                       
-                                        <input type="radio" class="btn-check" name="btnOnlineStatus" id="btnOffline" autocomplete="off">
+                                        <input type="radio" class="btn-check" name="btnOnlineStatus" id="btnOffline" autocomplete="off" />
                                         <label class="btn btn-outline-primary" for="btnOffline">离线</label>
                                       </div>
                                     </div>
@@ -267,7 +267,10 @@ SPDX-License-Identifier: Apache-2.0 -->
                 </div>
             </div>
             <script>
-              let currentDevices = {}, newDevices = {}, scanNewThingsList = [];
+              let currentDevices = {}, 
+                  newDevices = {},
+                  scanNewThingsList = [],
+                  selectedNewThingNames = [];
               
               $(document).ready(function() {
                 const url = window.location.href; // 获取当前页面的URL
@@ -301,6 +304,8 @@ SPDX-License-Identifier: Apache-2.0 -->
                 });
 
                 const intervalRefreshData = setInterval(refreshThingsData, 2000);
+
+                $('#scan-add-thing-button').on('click', addScanNewThings);
               });
               
               function openModal(modal) {
@@ -663,14 +668,97 @@ SPDX-License-Identifier: Apache-2.0 -->
                   });
               }
               
+              //扫描添加设备弹框设备列表-勾选设备
+              function onSelectNewThing(e) {
+                const checkbox = e.target;
+                const isChecked = checkbox.checked;
+                const value = e.target.value;
+                //判断是否全选，全反选
+                if (value === 'selectAll') {
+                  if (isChecked) {
+                    selectedNewThingNames = scanNewThingsList.map((item)=>{
+                      return item.device_name;
+                    });
+                    scanNewThingsList.forEach((item)=>{
+                      $(`#checkbox_${item.device_name}`).prop("checked", true);
+                    });
+                  } else {
+                    selectedNewThingNames = [];
+                    scanNewThingsList.forEach((item)=>{
+                      $(`#checkbox_${item.device_name}`).prop("checked", false);
+                    });
+                  }
+                } else {
+                  if (isChecked) {
+                    if (!selectedNewThingNames.includes(value)) {
+                      selectedNewThingNames.push(value);
+                    }
+                  } else {
+                    selectedNewThingNames = selectedNewThingNames.filter((name)=> name !== value)
+                  }
+                }
+                
+                if (selectedNewThingNames.length) {
+                  $("#scan-add-thing-button").removeAttr("disabled");
+                  //判断全选框是否半勾选
+                  if (selectedNewThingNames.length === scanNewThingsList.length) {
+                    $(`#checkbox_selectAll`).prop("checked", true);
+                    $(`#checkbox_selectAll`).prop("indeterminate", false);
+                  } else {
+                    $(`#checkbox_selectAll`).prop("indeterminate", true);
+                    $(`#checkbox_selectAll`).prop("checked", false);
+                  }
+                } else {
+                  $("#scan-add-thing-button").attr("disabled", true);
+                  $(`#checkbox_selectAll`).prop("indeterminate", false);
+                  $(`#checkbox_selectAll`).prop("checked", false);
+                }
+                console.log("selectedNewThingNames: ", selectedNewThingNames);
+              }
+
               //显示扫描添加设备弹框设备列表
               function showNewThingsGrid (thingsList) {
                 const scanThingsModal = new bootstrap.Modal(document.getElementById("scanThingsModal"));
                 scanThingsModal.show();
                 $(`#scanThingsGrid`).empty();
-                thingsList.forEach((thing)=>{
+
+                //全选按钮
+                const $selectAll = $(`
+                    <li class="list-group-item newThingItemList">
+                      <input 
+                        class="form-check-input" 
+                        type="checkbox" 
+                        value="selectAll" 
+                        id="checkbox_selectAll"
+                        onchange="onSelectNewThing(event)"
+                      />
+                      <label class="form-check-label" for="checkbox_selectAll">
+                        全选
+                      </label>
+                    </li>
+                  `);
+                $(`#scanThingsGrid`).append($selectAll);
+
+                //设备列表
+                thingsList.forEach((thing, index)=>{
                   const $thingList = $(`
-                    <li class="list-group-item">${thing.device_name}</li>
+                    <li 
+                      class="list-group-item newThingItemList" 
+                      data-device_name="${thing.device_name}"
+                      data-device_aliase="${thing.device_aliase}"
+                      data-product_name="${thing.product_name}"
+                    >
+                      <input 
+                        class="form-check-input" 
+                        type="checkbox" 
+                        value="${thing.device_name}" 
+                        id="checkbox_${thing.device_name}"
+                        onchange="onSelectNewThing(event)"
+                      />
+                      <label class="form-check-label" for="checkbox_${thing.device_name}">
+                        ${thing.device_aliase}
+                      </label>
+                    </li>
                   `);
                   $(`#scanThingsGrid`).append($thingList);
                 })
@@ -713,6 +801,54 @@ SPDX-License-Identifier: Apache-2.0 -->
                         alert("没有扫描到设备")
                       }
                     })
+              }
+
+              //添加扫描设备
+              function addScanNewThings() {
+                // 显示确认对话框
+                const userConfirmed = confirm("你确定要添加所选设备吗？");
+
+                console.log("userConfirmed: ", userConfirmed);
+                // 根据用户的选择执行不同的操作
+                if (userConfirmed) {
+                  console.log("selectedNewThingNames: ", selectedNewThingNames);
+                  console.log("scanNewThingsList: ", scanNewThingsList);
+
+                  const selectedNewThings = scanNewThingsList.filter(item => selectedNewThingNames.includes(item.device_name));
+                  const query = selectedNewThings.map((thing)=>{
+                    return {
+                      name: thing.device_aliase,
+                      credentials: {
+                        identity: thing.device_name,
+                        secret: thing.device_name,
+                      },
+                      tags: [],
+                      metadata: {
+                        netcfg: thing.netcfg,
+                        productName: thing.product_name,
+                        isOnline: "0",
+                      }
+                    }
+                  })
+                  console.log("query: ", query);
+                  fetch(`/ui/things/batch`, {
+                    method: "POST",
+                    headers: {
+                      "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify(query),
+                  })
+                    .then(response => {
+                      // 获取当前 URL
+                      const currentUrl = new URL(window.location.href);
+                      // 修改查询参数
+                      currentUrl.searchParams.set('onlineStatus', '2');
+                      // 跳转到新的 URL
+                      window.location.href = currentUrl.toString();
+                    })
+                } else {
+                  console.log("用户点击了取消。");
+                }
               }
             </script> 
             <script type="module">
