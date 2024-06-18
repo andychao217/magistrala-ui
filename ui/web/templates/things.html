@@ -41,7 +41,7 @@ SPDX-License-Identifier: Apache-2.0 -->
                                                 <form id="thingform">
                                                     <div class="modal-body">
                                                         <div id="alertMessage"></div>
-
+                                                        
                                                         <div class="mb-3">
                                                             <label for="name" class="form-label">名称</label>
                                                             <input type="text" class="form-control name-field" name="name" id="name" placeholder="设备名称" />
@@ -278,77 +278,92 @@ SPDX-License-Identifier: Apache-2.0 -->
                                     <div class="row" id="thingsGrid">
                                       {{ range $i, $t := .Things }}
                                         <div class="col-sm-3 mb-3 mb-sm-0" id="{{ $t.ID }}-thingCard">
-                                          <div class="channel-thing-card card">
+                                          <div 
+                                            class="channel-thing-card card"  
+                                            id="{{ $t.ID }}-thingCardContent"
+                                            {{ if eq $t.Metadata.isOnline "1" }}
+                                              style="background: white;"
+                                            {{ else }}
+                                              style="background: lightgray;"
+                                            {{ end }}
+                                          >
                                             <div class="card-body">
-                                              <h5 class="card-title">{{ $t.Name }}</h5>
-                                              <p>{{ $t.Credentials.Identity }}</p>
-                                              <p>{{ $t.Credentials.Secret }}</p>
-                                              <p id="{{ $t.ID }}-onlineStatusTD" class="card-text">
-                                                {{ if eq $t.Metadata.isOnline "1" }}
-                                                    <span class="badge rounded-pill enabled-pill">在线</span>
-                                                {{ else }}
-                                                    <span class="badge rounded-pill disabled-pill">离线</span>
-                                                {{ end }}
-                                              </p>
-                                              <p>
-                                                <button class="btn body-button" onclick="viewThing('{{ $t.ID }}')" title="查看">
-                                                  <i class="fa-solid fa-info"></i>
-                                                </button>
-                                                {{ if eq $t.Metadata.isOnline "1" }}
-                                                  <button
-                                                    id="{{ $t.ID }}-rebootBtn"
-                                                    class="btn body-button"
-                                                    onclick="conntrolThing('{{ $t.ID }}', '{{ $t.Credentials.Identity }}', 'reboot')"
-                                                    title="重启"
-                                                  >
-                                                    <i class="fa-solid fa-arrows-rotate"></i>
-                                                  </button>
-                                                  <button 
-                                                    id="{{ $t.ID }}-deleteBtn" 
-                                                    class="btn body-button" 
-                                                    title="删除" 
-                                                    onclick="deleteThing('{{ $t.ID }}')" 
-                                                    disabled
-                                                  >
-                                                    <i class="fa-solid fa-trash-can"></i>
-                                                  </button>
-                                                  <button 
-                                                    id="{{ $t.ID }}-editBtn" 
-                                                    class="btn body-button" 
-                                                    title="修改" 
-                                                    onclick="editThing('{{ $t.ID }}', '{{ $t.Name }}')" 
-                                                    disabled
-                                                  >
-                                                    <i class="fa-solid fa-pencil-alt"></i>
-                                                  </button>
-                                                {{ else }}
-                                                  <button
-                                                    id="{{ $t.ID }}-rebootBtn"
-                                                    class="btn body-button"
-                                                    onclick="conntrolThing('{{ $t.ID }}', '{{ $t.Credentials.Identity }}', 'reboot')"
-                                                    title="重启"
-                                                    disabled
-                                                  >
-                                                    <i class="fa-solid fa-arrows-rotate"></i>
-                                                  </button>
-                                                  <button 
-                                                    id="{{ $t.ID }}-deleteBtn" 
-                                                    class="btn body-button" 
-                                                    title="删除" 
-                                                    onclick="deleteThing('{{ $t.ID }}')"
-                                                  >
-                                                    <i class="fa-solid fa-trash-can"></i>
-                                                  </button>
-                                                  <button 
-                                                    id="{{ $t.ID }}-editBtn" 
-                                                    class="btn body-button" 
-                                                    title="修改" 
-                                                    onclick="editThing('{{ $t.ID }}', '{{ $t.Name }}')"
-                                                  >
-                                                    <i class="fa-solid fa-pencil-alt"></i>
-                                                  </button>
-                                                {{ end }}
-                                              </p>
+                                              <div class="row">
+                                                <div class="col">
+                                                  {{ if stringContains .Metadata.productName "2204" }}
+                                                    <img id="{{ $t.ID }}-thingIcon" src="/images/icon_device1.svg" alt="" style="height: 38px; float: left;">
+                                                  {{ else if stringContains .Metadata.productName "2200" }}
+                                                    <img id="{{ $t.ID }}-thingIcon" src="/images/icon_device1.svg" alt="" style="height: 38px; float: left;">
+                                                  {{ else if stringContains .Metadata.productName "2201" }}
+                                                    <img id="{{ $t.ID }}-thingIcon" src="/images/icon_device1.svg" alt="" style="height: 38px; float: left;">
+                                                  {{ else if stringContains .Metadata.productName "2102" }}
+                                                    <img id="{{ $t.ID }}-thingIcon" src="/images/icon_device2.svg" alt="" style="height: 38px; float: left;">
+                                                  {{ else if stringContains .Metadata.productName "2110" }}
+                                                    <img id="{{ $t.ID }}-thingIcon" src="/images/icon_device2.svg" alt="" style="height: 38px; float: left;">
+                                                  {{ else if stringContains .Metadata.productName "2112" }}
+                                                    <img id="{{ $t.ID }}-thingIcon" src="/images/icon_device2.svg" alt="" style="height: 38px; float: left;">
+                                                  {{ else if stringContains .Metadata.productName "3302" }}
+                                                    <img id="{{ $t.ID }}-thingIcon" src="/images/icon_device3.svg" alt="" style="height: 38px; float: left;">
+                                                  {{ else if stringContains .Metadata.productName "2001" }}
+                                                    <img id="{{ $t.ID }}-thingIcon" src="/images/icon_device4.svg" alt="" style="height: 38px; float: left;">
+                                                  {{ else if stringContains .Metadata.productName "2011" }}
+                                                    <img id="{{ $t.ID }}-thingIcon" src="/images/icon_device4.svg" alt="" style="height: 38px; float: left;">
+                                                  {{ else if stringContains .Metadata.productName "3401" }}
+                                                    <img id="{{ $t.ID }}-thingIcon" src="/images/icon_device5.svg" alt="" style="height: 38px; float: left;">
+                                                  {{ else if stringContains .Metadata.productName "2401" }}
+                                                    <img id="{{ $t.ID }}-thingIcon" src="/images/icon_device5.svg" alt="" style="height: 38px; float: left;">
+                                                  {{ else if stringContains .Metadata.productName "3602" }}
+                                                    <img id="{{ $t.ID }}-thingIcon" src="/images/icon_device8.svg" alt="" style="height: 38px; float: left;">
+                                                  {{ else }}
+                                                    <img id="{{ $t.ID }}-thingIcon" src="/images/icon_device0.svg" alt="" style="height: 38px; float: left;">
+                                                  {{ end }}
+                                                </div>
+                                                <div class="col">
+                                                  <div class="dropdown" style="float: right;">
+                                                    <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                                      <i class="fa-solid fa-info"></i>
+                                                    </button>
+                                                    <ul class="dropdown-menu">
+                                                      <li><a class="dropdown-item" onclick="viewThing('{{ $t.ID }}')"><i class="fa-solid fa-info" style="width: 16px;"></i> 查看</a></li>
+                                                      <li
+                                                        id="{{ $t.ID }}-rebootBtn"
+                                                        {{ if eq $t.Metadata.isOnline "1" }}
+                                                          style="display: block;"
+                                                        {{ else }}
+                                                          style="display: none;"
+                                                        {{ end }}
+                                                      >
+                                                        <a class="dropdown-item" onclick="conntrolThing('{{ $t.ID }}', '{{ $t.Credentials.Identity }}', 'reboot')">
+                                                          <i class="fa-solid fa-arrows-rotate"></i> 重启
+                                                        </a>
+                                                      </li>
+                                                      <li
+                                                        id="{{ $t.ID }}-editBtn"
+                                                        {{ if eq $t.Metadata.isOnline "1" }}
+                                                          style="display: block;"
+                                                        {{ else }}
+                                                          style="display: none;"
+                                                        {{ end }}
+                                                      >
+                                                        <a class="dropdown-item" onclick="editThing('{{ $t.ID }}', '{{ $t.Name }}')"><i class="fa-solid fa-pencil-alt"></i> 修改</a>
+                                                      </li>
+                                                      <li
+                                                        id="{{ $t.ID }}-deleteBtn"
+                                                        {{ if eq $t.Metadata.isOnline "1" }}
+                                                          style="display: none;"
+                                                        {{ else }}
+                                                          style="display: block;"
+                                                        {{ end }}
+                                                      >
+                                                        <a class="dropdown-item" onclick="deleteThing('{{ $t.ID }}')" ><i class="fa-solid fa-trash-can"></i> 删除</a>
+                                                      </li>
+                                                    </ul>
+                                                  </div>
+                                                </div>
+                                              </div>
+                                              <div class="row" style="margin-top: 50px;">
+                                                <h5 class="card-title">{{ $t.Name }}</h5>
+                                              </div>
                                             </div>
                                           </div>
                                         </div>
@@ -598,17 +613,16 @@ SPDX-License-Identifier: Apache-2.0 -->
               //更改设备在线状态
               function changeOnlineStatus(thing){
                 const onlineStatus = thing.metadata && thing.metadata.isOnline === "1";
-                $(`#${thing.id}-onlineStatusTD`).empty();
                 if (onlineStatus) {
-                  $('<span class="badge rounded-pill enabled-pill">在线</span>').appendTo(`#${thing.id}-onlineStatusTD`);
-                  $(`#${thing.id}-rebootBtn`).prop('disabled', false);
-                  $(`#${thing.id}-deleteBtn`).prop('disabled', true);
-                  $(`#${thing.id}-editBtn`).prop('disabled', true);
+                  $(`#${thing.id}-thingCardContent`).css('background', 'white');
+                  $(`#${thing.id}-rebootBtn`).css('display', 'block');
+                  $(`#${thing.id}-editBtn`).css('display', 'block');
+                  $(`#${thing.id}-deleteBtn`).css('display', 'none');
                 } else {
-                  $('<span class="badge rounded-pill disabled-pill">离线</span>').appendTo(`#${thing.id}-onlineStatusTD`);
-                  $(`#${thing.id}-rebootBtn`).prop('disabled', true);
-                  $(`#${thing.id}-deleteBtn`).prop('disabled', false);
-                  $(`#${thing.id}-editBtn`).prop('disabled', false);
+                  $(`#${thing.id}-thingCardContent`).css('background', 'lightgray');
+                  $(`#${thing.id}-rebootBtn`).css('display', 'none');
+                  $(`#${thing.id}-editBtn`).css('display', 'none');
+                  $(`#${thing.id}-deleteBtn`).css('display', 'block');
                 }
               }
 
@@ -696,85 +710,44 @@ SPDX-License-Identifier: Apache-2.0 -->
                       (typeof currentDevices[newId] === 'object' && Object.entries(currentDevices[newId]).length === 0)
                     ) {
                       const device = newDevices[newId];
-                      const onlineSpan = device.metadata && Number(device.metadata.isOnline) === 1 ? 
-                        $(`<span class="badge rounded-pill enabled-pill">在线</span>`) : 
-                        $(`<span class="badge rounded-pill disabled-pill">离线</span>`);
-                      const btnSpan = device.metadata && Number(device.metadata.isOnline) === 1 ? 
-                        $(`
-                          <p>
-                            <button class="btn body-button" onclick="viewThing(${device.id})" title="查看">
+                      const deviceIcon = getDeviceIcon(device);
+                      const imgSpan = $(`<img id="${device.id}-thingIcon" src="/images/${deviceIcon}.svg" alt="" style="height: 38px; float: left;">`);
+                      const btnSpan = $(`
+                          <div class="dropdown" style="float: right;">
+                            <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
                               <i class="fa-solid fa-info"></i>
                             </button>
-                            <button
-                              id="${device.id}-rebootBtn"
-                              class="btn body-button"
-                              onclick="conntrolThing(${device.id}, ${device.credentials.identity}, 'reboot')"
-                              title="重启"
-                            >
-                              <i class="fa-solid fa-arrows-rotate"></i>
-                            </button>
-                            <button 
-                              id="${device.id}-deleteBtn" 
-                              class="btn body-button" 
-                              onclick="deleteThing(${device.id})" 
-                              title="删除"
-                              disabled
-                            >
-                              <i class="fa-solid fa-trash-can"></i>
-                            </button>
-                            <button 
-                              id="${device.id}-editBtn" 
-                              title="修改" 
-                              class="btn body-button" 
-                              onclick="editThing(${device.id}, ${device.name})"
-                              disabled
-                            >
-                              <i class="fa-solid fa-pencil-alt"></i>
-                            </button>
-                          </p>
-                        `) : 
-                        $(`
-                          <p>
-                            <button class="btn body-button" onclick="viewThing(${device.id})" title="查看">
-                              <i class="fa-solid fa-info"></i>
-                            </button>
-                            <button
-                              id="${device.id}-rebootBtn"
-                              class="btn body-button"
-                              onclick="conntrolThing(${device.id}, ${device.credentials.identity}, 'reboot')"
-                              title="重启"
-                              disabled
-                            >
-                              <i class="fa-solid fa-arrows-rotate"></i>
-                            </button>
-                            <button 
-                              id="${device.id}-deleteBtn" 
-                              class="btn body-button" 
-                              onclick="deleteThing(${device.id})" 
-                              title="删除"
-                            >
-                              <i class="fa-solid fa-trash-can"></i>
-                            </button>
-                            <button 
-                              id="${device.id}-editBtn" 
-                              title="修改" 
-                              class="btn body-button" 
-                              onclick="editThing(${device.id}, ${device.name})"
-                            >
-                              <i class="fa-solid fa-pencil-alt"></i>
-                            </button>
-                          </p>
-                        `);
+                            <ul class="dropdown-menu">
+                              <li><a class="dropdown-item" onclick="viewThing(${device.id})"><i class="fa-solid fa-info" style="width: 16px;"></i> 查看</a></li>
+                              <li id="${device.id}-rebootBtn" style="display: ${device.metadata && Number(device.metadata.isOnline) === 1 ? 'block':'none'}">
+                                <a class="dropdown-item" onclick="conntrolThing(${device.id}, ${device.credentials.identity}, 'reboot')">
+                                  <i class="fa-solid fa-arrows-rotate"></i> 重启
+                                </a>
+                              </li>
+                              <li id="${device.id}-editBtn" style="display: ${device.metadata && Number(device.metadata.isOnline) === 1 ? 'block':'none'}">
+                                <a class="dropdown-item" onclick="editThing(${device.id}, ${device.name})"><i class="fa-solid fa-pencil-alt"></i> 修改</a>
+                              </li>
+                              <li id="${device.id}-deleteBtn" style="display: ${device.metadata && Number(device.metadata.isOnline) === 1 ? 'none':'block'}">
+                                <a class="dropdown-item" onclick="deleteThing(${device.id})"><i class="fa-solid fa-trash-can"></i> 删除</a>
+                              </li>
+                            </ul>
+                          </div>
+                        `)
                       const $thingCard = $(`
                         <div class="col-sm-3 mb-3 mb-sm-0" id="${device.id}-thingCard">
-                          <div class="channel-thing-card card">
+                          <div class="channel-thing-card card" id="${device.id}-thingCardContent">
                             <div class="card-body">
-                              <h5 class="card-title">${device.name}</h5>
-                              <p>${device.credentials.identity}</p>
-                              <p id="${device.id}-onlineStatusTD" class="card-text">
-                                ${onlineSpan}
-                              </p>
-                              ${btnSpan}
+                              <div class="row">
+                                <div class="col">
+                                  ${imgSpan}
+                                </div>
+                                <div class="col">
+                                  ${btnSpan}
+                                </div>
+                              </div>
+                              <div class="row" style="margin-top:50px">
+                                <h5 class="card-title">${device.name}</h5>
+                              </div>
                             </div>
                           </div>
                         </div>

@@ -4,6 +4,7 @@ SPDX-License-Identifier: Apache-2.0 */
 html {
     min-width: 1200px;
     overflow-x: auto;
+    overflow-y: hidden;
 }
 
 :root {
@@ -269,6 +270,8 @@ body .body-button:hover {
 }
 
 .table-container {
+    height: calc(100vh - 280px);
+    overflow-y: auto;
     margin-top: 20px;
     padding: 10px;
     background: #fff;
@@ -797,7 +800,7 @@ button.edit-btn {
 }
 
 .card-body{
-    padding-bottom: 0px;
+    padding-bottom: 10px;
 }
 
 .page-header-title{

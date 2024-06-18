@@ -3001,6 +3001,9 @@ func parseTemplates(mfsdk sdk.SDK, prefix string) (tpl *template.Template, err e
 		"contains": func(data []string, substring string) bool {
 			return slices.Contains(data, substring)
 		},
+		"stringContains": func(data string, substring string) bool {
+			return strings.Contains(data, substring)
+		},
 		"serviceUnavailable": func(service string) bool {
 			if _, err := mfsdk.Health(service); err != nil {
 				return true
