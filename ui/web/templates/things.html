@@ -22,7 +22,16 @@ SPDX-License-Identifier: Apache-2.0 -->
                                     <button type="button" class="btn body-button" onclick="openModal('single')">添加设备</button>
 
                                     <!-- add thing modal -->
-                                    <div class="modal fade" id="addThingModal" tabindex="-1" role="dialog" aria-labelledby="addThingModalLabel" aria-hidden="true">
+                                    <div 
+                                      class="modal fade" 
+                                      id="addThingModal" 
+                                      tabindex="-1" 
+                                      role="dialog" 
+                                      aria-labelledby="addThingModalLabel"
+                                      data-bs-backdrop="static" 
+                                      data-bs-keyboard="false"  
+                                      aria-hidden="true"
+                                    >
                                         <div class="modal-dialog" role="document">
                                             <div class="modal-content">
                                                 <div class="modal-header">
@@ -114,7 +123,16 @@ SPDX-License-Identifier: Apache-2.0 -->
                                     </div>
 
                                     <!-- edit thing modal -->
-                                    <div class="modal fade" id="editThingModal" tabindex="-1" role="dialog" aria-labelledby="editThingModalLabel" aria-hidden="true">
+                                    <div 
+                                      class="modal fade" 
+                                      id="editThingModal" 
+                                      tabindex="-1" 
+                                      role="dialog" 
+                                      aria-labelledby="editThingModalLabel" 
+                                      data-bs-backdrop="static" 
+                                      data-bs-keyboard="false" 
+                                      aria-hidden="true"
+                                    >
                                       <div class="modal-dialog" role="document">
                                           <div class="modal-content">
                                               <div class="modal-header">
@@ -144,7 +162,16 @@ SPDX-License-Identifier: Apache-2.0 -->
                                     </div>
 
                                     <button type="button" class="btn body-button" onclick="openModal('scan')">扫描添加设备</button>
-                                    <div class="modal fade" id="scanThingsModal" tabindex="-1" role="dialog" aria-labelledby="scanThingsModalLabel" aria-hidden="true">
+                                    <div 
+                                      class="modal fade" 
+                                      id="scanThingsModal" 
+                                      tabindex="-1" 
+                                      role="dialog" 
+                                      aria-labelledby="scanThingsModalLabel" 
+                                      data-bs-backdrop="static" 
+                                      data-bs-keyboard="false" 
+                                      aria-hidden="true"
+                                    >
                                       <div class="modal-dialog" role="document">
                                           <div class="modal-content">
                                               <div class="modal-header">
@@ -161,6 +188,74 @@ SPDX-License-Identifier: Apache-2.0 -->
                                               <div class="modal-footer">
                                                   <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">取消</button>
                                                   <button type="button" class="btn body-button" id="scan-add-thing-button" disabled>添加设备</button>
+                                              </div>
+                                          </div>
+                                      </div>
+                                    </div>
+
+                                    <div 
+                                      class="modal fade" 
+                                      id="deviceNetCfgModal" 
+                                      tabindex="-1" 
+                                      role="dialog" 
+                                      aria-labelledby="deviceNetCfgModalLabel" 
+                                      data-bs-backdrop="static" 
+                                      data-bs-keyboard="false" 
+                                      aria-hidden="true"
+                                    >
+                                      <div class="modal-dialog" role="document">
+                                          <div class="modal-content">
+                                              <div class="modal-header">
+                                                  <h1 class="modal-title" id="scanThingsModalLabel">有线网络设置</h1>
+                                                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                              </div>
+                                              <div class="modal-body">
+                                                <div class="mb-3">
+                                                  <label for="dhcp_enable" class="form-label">设置IP</label>
+                                                  <select 
+                                                    class="form-control" 
+                                                    name="dhcp_enable" 
+                                                    id="dhcp_enable-deviceNetCfg"
+                                                  >
+                                                    <option value="0">手动</option>
+                                                    <option value="1">自动</option>
+                                                  </select>
+                                                </div>
+                                                <div class="mb-3">
+                                                  <label for="ip" class="form-label">IP地址</label>
+                                                  <input type="text" class="form-control" name="ip" id="ip-deviceNetCfg" placeholder="IP地址" />
+                                                  <div id="ipError" class="text-danger"></div>
+                                                </div>
+                                                <div class="mb-3">
+                                                  <label for="gateway" class="form-label">网关</label>
+                                                  <input type="text" class="form-control" name="gateway" id="gateway-deviceNetCfg" placeholder="网关" />
+                                                  <div id="gatewayError" class="text-danger"></div>
+                                                </div>
+                                                <div class="mb-3">
+                                                  <label for="netmask" class="form-label">子网掩码</label>
+                                                  <input type="text" class="form-control" name="netmask" id="netmask-deviceNetCfg" placeholder="子网掩码" />
+                                                  <div id="netmaskError" class="text-danger"></div>
+                                                </div>
+                                                <div class="mb-3">
+                                                  <label for="dns1" class="form-label">主DNS</label>
+                                                  <input type="text" class="form-control" name="dns1" id="dns1-deviceNetCfg" placeholder="主DNS" />
+                                                  <div id="dns1Error" class="text-danger"></div>
+                                                </div>
+                                                <div class="mb-3">
+                                                  <label for="dns2" class="form-label">从DNS</label>
+                                                  <input type="text" class="form-control" name="dns2" id="dns2-deviceNetCfg" placeholder="从DNS" />
+                                                  <div id="dns2Error" class="text-danger"></div>
+                                                </div>
+                                              </div>
+                                              <div class="modal-footer">
+                                                  <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">取消</button>
+                                                  <button 
+                                                    type="button" 
+                                                    class="btn body-button" 
+                                                    id="deviceNetCfgModal-confirm-button"
+                                                  >
+                                                    确定
+                                                  </button>
                                               </div>
                                           </div>
                                       </div>
@@ -271,6 +366,7 @@ SPDX-License-Identifier: Apache-2.0 -->
                   newDevices = {},
                   scanNewThingsList = [],
                   selectedNewThingNames = [];
+              const deviceNetCfgModal = new bootstrap.Modal(document.getElementById("deviceNetCfgModal"));
               
               $(document).ready(function() {
                 const url = window.location.href; // 获取当前页面的URL
@@ -305,7 +401,91 @@ SPDX-License-Identifier: Apache-2.0 -->
 
                 const intervalRefreshData = setInterval(refreshThingsData, 2000);
 
+                //搜索添加设备确认添加按钮事件
                 $('#scan-add-thing-button').on('click', addScanNewThings);
+
+                //搜索添加设备-网络配置-手动、自动下拉选项
+                $('#dhcp_enable-deviceNetCfg').change(function() {
+                    const deviceName = $(this).data('device_name');
+                    const deviceInfo = scanNewThingsList.find((item)=>item.device_name === deviceName); 
+                    const dhcp_enable = $(this).val();
+                    let ip = deviceInfo.netcfg.static_ip, 
+                        gateway = deviceInfo.netcfg.static_gateway,
+                        netmask = deviceInfo.netcfg.static_netmask, 
+                        dns1 = deviceInfo.netcfg.static_dns1, 
+                        dns2 = deviceInfo.netcfg.static_dns2,
+                        readOnly = false;
+                    if (dhcp_enable === "1") {
+                      //自动
+                      ip = deviceInfo.netcfg.dhcp_ip;
+                      gateway = deviceInfo.netcfg.dhcp_gateway;
+                      netmask = deviceInfo.netcfg.dhcp_netmask;
+                      dns1 = deviceInfo.netcfg.dhcp_dns1;
+                      dns2 = deviceInfo.netcfg.dhcp_dns2;
+                      readOnly = true;
+
+                      $('#ipError').empty();
+                      $('#gatewayError').empty();
+                      $('#netmaskError').empty();
+                      $('#dns1Error').empty();
+                      $('#dns2Error').empty();
+                    }
+
+                    $('#ip-deviceNetCfg').val(ip);
+                    $('#gateway-deviceNetCfg').val(gateway);
+                    $('#netmask-deviceNetCfg').val(netmask);
+                    $('#dns1-deviceNetCfg').val(dns1);
+                    $('#dns2-deviceNetCfg').val(dns2);
+
+                    $('#ip-deviceNetCfg').prop('readOnly', readOnly);
+                    $('#gateway-deviceNetCfg').prop('readOnly', readOnly);
+                    $('#netmask-deviceNetCfg').prop('readOnly', readOnly);
+                    $('#dns1-deviceNetCfg').prop('readOnly', readOnly);
+                    $('#dns2-deviceNetCfg').prop('readOnly', readOnly);
+
+                    scanNewThingsList = scanNewThingsList.map((item)=>{
+                      if(item.device_name === deviceName) {
+                        item.netcfg.dhcp_enable = dhcp_enable === "1";
+                      }
+                      return item;
+                    });
+                });
+
+                //搜索添加设备-网络配置-手动-注册所有输入框的验证和保存逻辑
+                validateAndSave('ip');
+                validateAndSave('gateway');
+                validateAndSave('netmask');
+                validateAndSave('dns1');
+                validateAndSave('dns2');
+
+                //搜索添加设备-网络配置-确认按钮
+                $('#deviceNetCfgModal-confirm-button').on('click', function() {
+                  const deviceName = $(this).data('device_name');
+                  const deviceInfo = scanNewThingsList.find(item => item.device_name === deviceName);
+                  const dhcp_enable = deviceInfo.netcfg.dhcp_enable;
+                  let canCloseModal = true;
+
+                  function validateAndUpdateError(inputId, value) {
+                    if (!IPV4REGX.test(value)) {
+                      $(`#${inputId}Error`).html(IPERRORMSG);
+                      canCloseModal = false;
+                    } else {
+                      $(`#${inputId}Error`).empty();
+                    }
+                  }
+
+                  if (!dhcp_enable) {
+                    validateAndUpdateError('ip', deviceInfo.netcfg.static_ip);
+                    validateAndUpdateError('gateway', deviceInfo.netcfg.static_gateway);
+                    validateAndUpdateError('netmask', deviceInfo.netcfg.static_netmask);
+                    validateAndUpdateError('dns1', deviceInfo.netcfg.static_dns1);
+                    validateAndUpdateError('dns2', deviceInfo.netcfg.static_dns2);
+                  }
+
+                  if (canCloseModal) {
+                    deviceNetCfgModal.hide();
+                  }
+                });
               });
               
               function openModal(modal) {
@@ -668,8 +848,82 @@ SPDX-License-Identifier: Apache-2.0 -->
                   });
               }
               
+              //扫描添加设备弹框中手动设置网络信息验证
+              function validateAndSave(property) {
+                const $inputElement = $(`#${property}-deviceNetCfg`);
+                $inputElement.on('change blur keyup', function(event) {
+                  const deviceName = $(this).data('device_name');
+                  const deviceInfo = scanNewThingsList.find(item => item.device_name === deviceName);
+                  const dhcp_enable = deviceInfo.netcfg.dhcp_enable;
+                  const value = $(this).val();
+                  
+                  if (!dhcp_enable) {
+                    if (IPV4REGX.test(value)) {
+                      $(`#${property}Error`).empty();
+                      if (event.type === 'blur') {
+                        scanNewThingsList = scanNewThingsList.map(item => {
+                          if (item.device_name === deviceName) {
+                            item.netcfg[`static_${property}`] = value;
+                          }
+                          return item;
+                        });
+                      }
+                    } else {
+                      $(`#${property}Error`).html(IPERRORMSG);
+                    }
+                  }
+                });
+              }
+
+              //扫描设备添加弹框设备列表-配置网络
+              function deviceNetCfg(e) {
+                e.stopPropagation();
+                deviceNetCfgModal.show();
+
+                const deviceName = e.target.dataset.device_name;
+                const deviceInfo = scanNewThingsList.find((item)=>item.device_name === deviceName); 
+                let ip = deviceInfo.netcfg.static_ip, 
+                    gateway = deviceInfo.netcfg.static_gateway,
+                    netmask = deviceInfo.netcfg.static_netmask, 
+                    dns1 = deviceInfo.netcfg.static_dns1, 
+                    dns2 = deviceInfo.netcfg.static_dns2;
+                    dhcp_enable = "0",
+                    readOnly = false;
+                if (deviceInfo.netcfg.dhcp_enable) {
+                  ip = deviceInfo.netcfg.dhcp_ip;
+                  gateway = deviceInfo.netcfg.dhcp_gateway;
+                  netmask = deviceInfo.netcfg.dhcp_netmask;
+                  dns1 = deviceInfo.netcfg.dhcp_dns1;
+                  dns2 = deviceInfo.netcfg.dhcp_dns2;
+                  dhcp_enable = "1";
+                  readOnly = true;
+                }
+
+                $('#dhcp_enable-deviceNetCfg').val(dhcp_enable);
+                $('#ip-deviceNetCfg').attr('data-device_name', deviceName);
+                $('#gateway-deviceNetCfg').attr('data-device_name', deviceName);
+                $('#netmask-deviceNetCfg').attr('data-device_name', deviceName);
+                $('#dns1-deviceNetCfg').attr('data-device_name', deviceName);
+                $('#dns2-deviceNetCfg').attr('data-device_name', deviceName);
+                $('#dhcp_enable-deviceNetCfg').attr('data-device_name', deviceName);
+                $('#deviceNetCfgModal-confirm-button').attr('data-device_name', deviceName);
+
+                $('#ip-deviceNetCfg').val(ip);
+                $('#gateway-deviceNetCfg').val(gateway);
+                $('#netmask-deviceNetCfg').val(netmask);
+                $('#dns1-deviceNetCfg').val(dns1);
+                $('#dns2-deviceNetCfg').val(dns2);
+
+                $('#ip-deviceNetCfg').prop('readOnly', readOnly);
+                $('#gateway-deviceNetCfg').prop('readOnly', readOnly);
+                $('#netmask-deviceNetCfg').prop('readOnly', readOnly);
+                $('#dns1-deviceNetCfg').prop('readOnly', readOnly);
+                $('#dns2-deviceNetCfg').prop('readOnly', readOnly);
+              }
+
               //扫描添加设备弹框设备列表-勾选设备
               function onSelectNewThing(e) {
+                e.stopPropagation();
                 const checkbox = e.target;
                 const isChecked = checkbox.checked;
                 const value = e.target.value;
@@ -742,12 +996,7 @@ SPDX-License-Identifier: Apache-2.0 -->
                 //设备列表
                 thingsList.forEach((thing, index)=>{
                   const $thingList = $(`
-                    <li 
-                      class="list-group-item newThingItemList" 
-                      data-device_name="${thing.device_name}"
-                      data-device_aliase="${thing.device_aliase}"
-                      data-product_name="${thing.product_name}"
-                    >
+                    <li class="list-group-item newThingItemList">
                       <input 
                         class="form-check-input" 
                         type="checkbox" 
@@ -758,6 +1007,13 @@ SPDX-License-Identifier: Apache-2.0 -->
                       <label class="form-check-label" for="checkbox_${thing.device_name}">
                         ${thing.device_aliase}
                       </label>
+                      <span 
+                        style="float:right; cursor:pointer; color:#20afbf;" 
+                        data-device_name="${thing.device_name}" 
+                        onclick="deviceNetCfg(event)"
+                      >
+                        配置网络
+                      </span>
                     </li>
                   `);
                   $(`#scanThingsGrid`).append($thingList);

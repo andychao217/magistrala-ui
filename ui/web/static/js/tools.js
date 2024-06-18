@@ -1,5 +1,8 @@
+// ip v4 正则
+const IPV4REGX = /^((25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$/;
+const IPERRORMSG = "请输入正确的IP地址";
 // 密钥（需要是16字节或32字节长，这里是一个16字节长的示例）
-var SECRET_KEY = CryptoJS.enc.Utf8.parse(`LFJEW2HvOI9EpI5FmIWE*#&$(HFKDFR0`); // 128位密钥
+const SECRET_KEY = CryptoJS.enc.Utf8.parse(`LFJEW2HvOI9EpI5FmIWE*#&$(HFKDFR0`); // 128位密钥
 
 // 加密函数
 function encryptByAesCbc(message, key) {
