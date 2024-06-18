@@ -1063,13 +1063,9 @@ SPDX-License-Identifier: Apache-2.0 -->
               function addScanNewThings() {
                 // 显示确认对话框
                 const userConfirmed = confirm("你确定要添加所选设备吗？");
-
-                console.log("userConfirmed: ", userConfirmed);
+                
                 // 根据用户的选择执行不同的操作
                 if (userConfirmed) {
-                  console.log("selectedNewThingNames: ", selectedNewThingNames);
-                  console.log("scanNewThingsList: ", scanNewThingsList);
-
                   const selectedNewThings = scanNewThingsList.filter(item => selectedNewThingNames.includes(item.device_name));
                   const query = selectedNewThings.map((thing)=>{
                     return {
@@ -1086,21 +1082,54 @@ SPDX-License-Identifier: Apache-2.0 -->
                       }
                     }
                   })
-                  console.log("query: ", query);
-                  fetch(`/ui/things/batch`, {
-                    method: "POST",
-                    headers: {
-                      "Content-Type": "application/json",
-                    },
-                    body: JSON.stringify(query),
+                  
+                  //获取当前domain的ID号
+                  const domainID = sessionStorage.getItem("domainID");
+                  fetch(`/ui/domains/${domainID}/domainInJSON`, {
+                    method: "GET",
                   })
                     .then(response => {
-                      // 获取当前 URL
-                      const currentUrl = new URL(window.location.href);
-                      // 修改查询参数
-                      currentUrl.searchParams.set('onlineStatus', '2');
-                      // 跳转到新的 URL
-                      window.location.href = currentUrl.toString();
+                      if (!response.ok) {
+                        throw new Error('Network response was not ok');
+                      }
+                      return response.json(); // 直接将流转换为JSON对象
+                    })
+                    .then(json => {
+                      const data = json.data;
+                      const domainData = JSON.parse(data).domainData;
+                      const defaultChannelId = domainData.metadata["comID"];
+                      fetch(`/ui/things/batch`, {
+                        method: "POST",
+                        headers: {
+                          "Content-Type": "application/json",
+                        },
+                        body: JSON.stringify(query),
+                      })
+                        .then(response => {
+                          const url = window.location.href; // 获取当前页面的URL
+                          const address = new URL(url);
+                          const port =  sessionStorage.getItem("socketBridgePort") || "63001";
+                          // 添加成功后需要向UDP发送回执
+                          fetch(`http://${address.hostname}:${port}/addDeviceReply`, {
+                            method: "POST",
+                            headers: {
+                              "Content-Type": "application/json",
+                            },
+                            body: JSON.stringify(selectedNewThings.map((item)=>{
+                              item.tenant_id = defaultChannelId;
+                              item.netcfg.mqtt_server = address.hostname;
+                              return item;
+                            })),
+                          })
+                            .then(response => {
+                              // 获取当前 URL
+                              const currentUrl = new URL(window.location.href);
+                              // 修改查询参数
+                              currentUrl.searchParams.set('onlineStatus', '2');
+                              // 跳转到新的 URL
+                              window.location.href = currentUrl.toString();
+                            })
+                        })
                     })
                 } else {
                   console.log("用户点击了取消。");
