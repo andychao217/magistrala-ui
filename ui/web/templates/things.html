@@ -281,41 +281,45 @@ SPDX-License-Identifier: Apache-2.0 -->
                                           <div 
                                             class="channel-thing-card card"  
                                             id="{{ $t.ID }}-thingCardContent"
-                                            {{ if eq $t.Metadata.isOnline "1" }}
-                                              style="background: white;"
-                                            {{ else }}
-                                              style="background: lightgray;"
+                                            {{ if .Metadata.is_online }}
+                                              {{ if eq $t.Metadata.is_online "1" }}
+                                                style="background: white;"
+                                              {{ else }}
+                                                style="background: lightgray;"
+                                              {{ end }}
                                             {{ end }}
                                           >
                                             <div class="card-body">
                                               <div class="row">
                                                 <div class="col">
-                                                  {{ if stringContains .Metadata.productName "2204" }}
-                                                    <img id="{{ $t.ID }}-thingIcon" src="/images/icon_device1.svg" alt="" style="height: 38px; float: left;">
-                                                  {{ else if stringContains .Metadata.productName "2200" }}
-                                                    <img id="{{ $t.ID }}-thingIcon" src="/images/icon_device1.svg" alt="" style="height: 38px; float: left;">
-                                                  {{ else if stringContains .Metadata.productName "2201" }}
-                                                    <img id="{{ $t.ID }}-thingIcon" src="/images/icon_device1.svg" alt="" style="height: 38px; float: left;">
-                                                  {{ else if stringContains .Metadata.productName "2102" }}
-                                                    <img id="{{ $t.ID }}-thingIcon" src="/images/icon_device2.svg" alt="" style="height: 38px; float: left;">
-                                                  {{ else if stringContains .Metadata.productName "2110" }}
-                                                    <img id="{{ $t.ID }}-thingIcon" src="/images/icon_device2.svg" alt="" style="height: 38px; float: left;">
-                                                  {{ else if stringContains .Metadata.productName "2112" }}
-                                                    <img id="{{ $t.ID }}-thingIcon" src="/images/icon_device2.svg" alt="" style="height: 38px; float: left;">
-                                                  {{ else if stringContains .Metadata.productName "3302" }}
-                                                    <img id="{{ $t.ID }}-thingIcon" src="/images/icon_device3.svg" alt="" style="height: 38px; float: left;">
-                                                  {{ else if stringContains .Metadata.productName "2001" }}
-                                                    <img id="{{ $t.ID }}-thingIcon" src="/images/icon_device4.svg" alt="" style="height: 38px; float: left;">
-                                                  {{ else if stringContains .Metadata.productName "2011" }}
-                                                    <img id="{{ $t.ID }}-thingIcon" src="/images/icon_device4.svg" alt="" style="height: 38px; float: left;">
-                                                  {{ else if stringContains .Metadata.productName "3401" }}
-                                                    <img id="{{ $t.ID }}-thingIcon" src="/images/icon_device5.svg" alt="" style="height: 38px; float: left;">
-                                                  {{ else if stringContains .Metadata.productName "2401" }}
-                                                    <img id="{{ $t.ID }}-thingIcon" src="/images/icon_device5.svg" alt="" style="height: 38px; float: left;">
-                                                  {{ else if stringContains .Metadata.productName "3602" }}
-                                                    <img id="{{ $t.ID }}-thingIcon" src="/images/icon_device8.svg" alt="" style="height: 38px; float: left;">
-                                                  {{ else }}
-                                                    <img id="{{ $t.ID }}-thingIcon" src="/images/icon_device0.svg" alt="" style="height: 38px; float: left;">
+                                                  {{ if .Metadata.product_name }}
+                                                    {{ if stringContains .Metadata.product_name "2204" }}
+                                                      <img id="{{ $t.ID }}-thingIcon" src="/images/icon_device1.svg" alt="" style="height: 38px; float: left;">
+                                                    {{ else if stringContains .Metadata.product_name "2200" }}
+                                                      <img id="{{ $t.ID }}-thingIcon" src="/images/icon_device1.svg" alt="" style="height: 38px; float: left;">
+                                                    {{ else if stringContains .Metadata.product_name "2201" }}
+                                                      <img id="{{ $t.ID }}-thingIcon" src="/images/icon_device1.svg" alt="" style="height: 38px; float: left;">
+                                                    {{ else if stringContains .Metadata.product_name "2102" }}
+                                                      <img id="{{ $t.ID }}-thingIcon" src="/images/icon_device2.svg" alt="" style="height: 38px; float: left;">
+                                                    {{ else if stringContains .Metadata.product_name "2110" }}
+                                                      <img id="{{ $t.ID }}-thingIcon" src="/images/icon_device2.svg" alt="" style="height: 38px; float: left;">
+                                                    {{ else if stringContains .Metadata.product_name "2112" }}
+                                                      <img id="{{ $t.ID }}-thingIcon" src="/images/icon_device2.svg" alt="" style="height: 38px; float: left;">
+                                                    {{ else if stringContains .Metadata.product_name "3302" }}
+                                                      <img id="{{ $t.ID }}-thingIcon" src="/images/icon_device3.svg" alt="" style="height: 38px; float: left;">
+                                                    {{ else if stringContains .Metadata.product_name "2001" }}
+                                                      <img id="{{ $t.ID }}-thingIcon" src="/images/icon_device4.svg" alt="" style="height: 38px; float: left;">
+                                                    {{ else if stringContains .Metadata.product_name "2011" }}
+                                                      <img id="{{ $t.ID }}-thingIcon" src="/images/icon_device4.svg" alt="" style="height: 38px; float: left;">
+                                                    {{ else if stringContains .Metadata.product_name "3401" }}
+                                                      <img id="{{ $t.ID }}-thingIcon" src="/images/icon_device5.svg" alt="" style="height: 38px; float: left;">
+                                                    {{ else if stringContains .Metadata.product_name "2401" }}
+                                                      <img id="{{ $t.ID }}-thingIcon" src="/images/icon_device5.svg" alt="" style="height: 38px; float: left;">
+                                                    {{ else if stringContains .Metadata.product_name "3602" }}
+                                                      <img id="{{ $t.ID }}-thingIcon" src="/images/icon_device8.svg" alt="" style="height: 38px; float: left;">
+                                                    {{ else }}
+                                                      <img id="{{ $t.ID }}-thingIcon" src="/images/icon_device0.svg" alt="" style="height: 38px; float: left;">
+                                                    {{ end }}
                                                   {{ end }}
                                                 </div>
                                                 <div class="col">
@@ -327,10 +331,12 @@ SPDX-License-Identifier: Apache-2.0 -->
                                                       <li><a class="dropdown-item" onclick="viewThing('{{ $t.ID }}')"><i class="fa-solid fa-info" style="width: 16px;"></i> 查看</a></li>
                                                       <li
                                                         id="{{ $t.ID }}-rebootBtn"
-                                                        {{ if eq $t.Metadata.isOnline "1" }}
-                                                          style="display: block;"
-                                                        {{ else }}
-                                                          style="display: none;"
+                                                        {{ if .Metadata.is_online }}
+                                                          {{ if eq $t.Metadata.is_online "1" }}
+                                                            style="display: block;"
+                                                          {{ else }}
+                                                            style="display: none;"
+                                                          {{ end }}
                                                         {{ end }}
                                                       >
                                                         <a class="dropdown-item" onclick="conntrolThing('{{ $t.ID }}', '{{ $t.Credentials.Identity }}', 'reboot')">
@@ -339,20 +345,24 @@ SPDX-License-Identifier: Apache-2.0 -->
                                                       </li>
                                                       <li
                                                         id="{{ $t.ID }}-editBtn"
-                                                        {{ if eq $t.Metadata.isOnline "1" }}
-                                                          style="display: block;"
-                                                        {{ else }}
-                                                          style="display: none;"
+                                                        {{ if .Metadata.is_online }}
+                                                          {{ if eq $t.Metadata.is_online "1" }}
+                                                            style="display: block;"
+                                                          {{ else }}
+                                                            style="display: none;"
+                                                          {{ end }}
                                                         {{ end }}
                                                       >
                                                         <a class="dropdown-item" onclick="editThing('{{ $t.ID }}', '{{ $t.Name }}')"><i class="fa-solid fa-pencil-alt"></i> 修改</a>
                                                       </li>
                                                       <li
                                                         id="{{ $t.ID }}-deleteBtn"
-                                                        {{ if eq $t.Metadata.isOnline "1" }}
-                                                          style="display: none;"
-                                                        {{ else }}
-                                                          style="display: block;"
+                                                        {{ if .Metadata.is_online }}
+                                                          {{ if eq $t.Metadata.is_online "1" }}
+                                                            style="display: none;"
+                                                          {{ else }}
+                                                            style="display: block;"
+                                                          {{ end }}
                                                         {{ end }}
                                                       >
                                                         <a class="dropdown-item" onclick="deleteThing('{{ $t.ID }}')" ><i class="fa-solid fa-trash-can"></i> 删除</a>
@@ -612,7 +622,7 @@ SPDX-License-Identifier: Apache-2.0 -->
 
               //更改设备在线状态
               function changeOnlineStatus(thing){
-                const onlineStatus = thing.metadata && thing.metadata.isOnline === "1";
+                const onlineStatus = thing.metadata && thing.metadata.is_online === "1";
                 if (onlineStatus) {
                   $(`#${thing.id}-thingCardContent`).css('background', 'white');
                   $(`#${thing.id}-rebootBtn`).css('display', 'block');
@@ -719,15 +729,15 @@ SPDX-License-Identifier: Apache-2.0 -->
                             </button>
                             <ul class="dropdown-menu">
                               <li><a class="dropdown-item" onclick="viewThing(${device.id})"><i class="fa-solid fa-info" style="width: 16px;"></i> 查看</a></li>
-                              <li id="${device.id}-rebootBtn" style="display: ${device.metadata && Number(device.metadata.isOnline) === 1 ? 'block':'none'}">
+                              <li id="${device.id}-rebootBtn" style="display: ${device.metadata && Number(device.metadata.is_online) === 1 ? 'block':'none'}">
                                 <a class="dropdown-item" onclick="conntrolThing(${device.id}, ${device.credentials.identity}, 'reboot')">
                                   <i class="fa-solid fa-arrows-rotate"></i> 重启
                                 </a>
                               </li>
-                              <li id="${device.id}-editBtn" style="display: ${device.metadata && Number(device.metadata.isOnline) === 1 ? 'block':'none'}">
+                              <li id="${device.id}-editBtn" style="display: ${device.metadata && Number(device.metadata.is_online) === 1 ? 'block':'none'}">
                                 <a class="dropdown-item" onclick="editThing(${device.id}, ${device.name})"><i class="fa-solid fa-pencil-alt"></i> 修改</a>
                               </li>
-                              <li id="${device.id}-deleteBtn" style="display: ${device.metadata && Number(device.metadata.isOnline) === 1 ? 'none':'block'}">
+                              <li id="${device.id}-deleteBtn" style="display: ${device.metadata && Number(device.metadata.is_online) === 1 ? 'none':'block'}">
                                 <a class="dropdown-item" onclick="deleteThing(${device.id})"><i class="fa-solid fa-trash-can"></i> 删除</a>
                               </li>
                             </ul>
@@ -1049,8 +1059,8 @@ SPDX-License-Identifier: Apache-2.0 -->
                       },
                       tags: [],
                       metadata: {
-                        productName: thing.product_name,
-                        isOnline: "0",
+                        product_name: thing.product_name,
+                        is_online: "0",
                       }
                     }
                   })

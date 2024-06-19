@@ -185,23 +185,23 @@ function watchVariable(value, callback) {
 
 function getDeviceIcon (deviceInfo) {
 	let src = 'icon_device0',
-		productName = deviceInfo.metadata.productName;
-	if (productName.indexOf('2204') > -1 || productName.indexOf('2200') > -1 || productName.indexOf('2201') > -1) {
+		product_name = deviceInfo.metadata.product_name;
+	if (product_name.indexOf('2204') > -1 || product_name.indexOf('2200') > -1 || product_name.indexOf('2201') > -1) {
 		src = 'icon_device1';
 	}
-	if (productName.indexOf('2102') > -1 || productName.indexOf('2110') > -1 || productName.indexOf('2112') > -1) {
+	if (product_name.indexOf('2102') > -1 || product_name.indexOf('2110') > -1 || product_name.indexOf('2112') > -1) {
 		src = 'icon_device2';
 	}
-	if (productName.indexOf('3302') > -1) {
+	if (product_name.indexOf('3302') > -1) {
 		src = 'icon_device3';
 	}
-	if (productName.indexOf('2001') > -1 || productName.indexOf('2011') > -1) {
+	if (product_name.indexOf('2001') > -1 || product_name.indexOf('2011') > -1) {
 		src = 'icon_device4';
 	}
-	if (productName.indexOf('3401') > -1 || productName.indexOf('2401') > -1) {
+	if (product_name.indexOf('3401') > -1 || product_name.indexOf('2401') > -1) {
 		src = 'icon_device5';
 	}
-	if (productName.indexOf('3602') > -1) {
+	if (product_name.indexOf('3602') > -1) {
 		src = 'icon_device8';
 	}
 	return src;

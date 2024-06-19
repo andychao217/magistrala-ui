@@ -112,7 +112,7 @@ SPDX-License-Identifier: Apache-2.0 -->
                                                   <p>{{ $t.Credentials.Identity }}</p>
                                                   <p>{{ $t.Credentials.Secret }}</p>
                                                   <p id="{{ $t.ID }}-onlineStatusTD" class="card-text">
-                                                      {{ if eq $t.Metadata.isOnline "1" }}
+                                                      {{ if eq $t.Metadata.is_online "1" }}
                                                           <span class="badge rounded-pill enabled-pill">在线</span>
                                                       {{ else }}
                                                           <span class="badge rounded-pill disabled-pill">离线</span>
@@ -132,7 +132,7 @@ SPDX-License-Identifier: Apache-2.0 -->
                                                           <button type="button" class="btn body-button" onclick="viewThing('{{ $t.ID }}')" title="查看">
                                                             <i class="fa-solid fa-info"></i>
                                                           </button>
-                                                          {{ if eq $t.Metadata.isOnline "1" }}
+                                                          {{ if eq $t.Metadata.is_online "1" }}
                                                               <button
                                                                   type="button"
                                                                   id="{{ $t.ID }}-rebootBtn"
@@ -269,7 +269,7 @@ SPDX-License-Identifier: Apache-2.0 -->
               }
 
               function changeOnlineStatus(thing){
-                const onlineStatus = thing.metadata && thing.metadata.isOnline === "1";
+                const onlineStatus = thing.metadata && thing.metadata.is_online === "1";
                 $(`#${thing.id}-onlineStatusTD`).empty();
                 if (onlineStatus) {
                   $('<span class="badge rounded-pill enabled-pill">在线</span>').appendTo(`#${thing.id}-onlineStatusTD`);
@@ -373,11 +373,11 @@ SPDX-License-Identifier: Apache-2.0 -->
                       (typeof currentDevices[newId] === 'object' && Object.entries(currentDevices[newId]).length === 0)
                     ) {
                       const device = newDevices[newId];
-                      const onlineSpan = device.metadata && Number(device.metadata.isOnline) === 1 ? 
+                      const onlineSpan = device.metadata && Number(device.metadata.is_online) === 1 ? 
                         $(`<span class="badge rounded-pill enabled-pill">在线</span>`) : 
                         $(`<span class="badge rounded-pill disabled-pill">离线</span>`);
                       
-                      const btnSpan = device.metadata && Number(device.metadata.isOnline) === 1 ? 
+                      const btnSpan = device.metadata && Number(device.metadata.is_online) === 1 ? 
                         $(`
                           <p>
                             <form action="/ui/channels/${channelID}/things/disconnect?item=channels" method="post">

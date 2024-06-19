@@ -852,20 +852,20 @@ func (us *uiService) ListThings(s Session, status string, page, limit uint64, on
 		return []byte{}, errors.Wrap(ErrFailedRetreive, err)
 	}
 	if onlineStatus == 0 {
-		// Filter things where Metadata.isOnline is 0
+		// Filter things where Metadata.is_online is 0
 		var thingPage sdk.ThingsPage
 		offlineThings := thingPage.Things
 		for _, thing := range things.Things {
-			status, ok := thing.Metadata["isOnline"].(string)
-			// 当isOnline字段不存在或者值为"0"时，将thing添加到offlineThings切片
+			status, ok := thing.Metadata["is_online"].(string)
+			// 当is_online字段不存在或者值为"0"时，将thing添加到offlineThings切片
 			if !ok || status == "0" {
 				offlineThings = append(offlineThings, thing)
 				continue // 继续下一个循环迭代
 			}
-			// 如果isOnline字段存在且不为"0"，尝试将其解析为uint64
+			// 如果is_online字段存在且不为"0"，尝试将其解析为uint64
 			statusUint, err := strconv.ParseUint(status, 10, 64)
 			if err != nil {
-				fmt.Println("Error parsing isOnline:", err)
+				fmt.Println("Error parsing is_online:", err)
 				continue // 如果出现错误，跳过当前迭代
 			}
 			// 如果解析结果为0，即表示离线
@@ -875,14 +875,14 @@ func (us *uiService) ListThings(s Session, status string, page, limit uint64, on
 		}
 		things.Things = offlineThings
 	} else if onlineStatus == 1 {
-		// Filter things where Metadata.isOnline is 1
+		// Filter things where Metadata.is_online is 1
 		var thingPage sdk.ThingsPage
 		onlineThings := thingPage.Things
 		for _, thing := range things.Things {
-			if status, ok := thing.Metadata["isOnline"].(string); ok {
+			if status, ok := thing.Metadata["is_online"].(string); ok {
 				statusUint, err := strconv.ParseUint(status, 10, 64)
 				if err != nil {
-					fmt.Println("Error parsing isOnline:", err)
+					fmt.Println("Error parsing is_online:", err)
 					continue // Skip this item if the conversion fails
 				}
 				if statusUint == 1 {
@@ -943,20 +943,20 @@ func (us *uiService) ListThingsInJSON(s Session, status string, page, limit uint
 		return sdk.ThingsPage{}, errors.Wrap(ErrFailedRetreive, err)
 	}
 	if onlineStatus == 0 {
-		// Filter things where Metadata.isOnline is 0
+		// Filter things where Metadata.is_online is 0
 		var thingPage sdk.ThingsPage
 		offlineThings := thingPage.Things
 		for _, thing := range things.Things {
-			status, ok := thing.Metadata["isOnline"].(string)
-			// 当isOnline字段不存在或者值为"0"时，将thing添加到offlineThings切片
+			status, ok := thing.Metadata["is_online"].(string)
+			// 当is_online字段不存在或者值为"0"时，将thing添加到offlineThings切片
 			if !ok || status == "0" {
 				offlineThings = append(offlineThings, thing)
 				continue // 继续下一个循环迭代
 			}
-			// 如果isOnline字段存在且不为"0"，尝试将其解析为uint64
+			// 如果is_online字段存在且不为"0"，尝试将其解析为uint64
 			statusUint, err := strconv.ParseUint(status, 10, 64)
 			if err != nil {
-				fmt.Println("Error parsing isOnline:", err)
+				fmt.Println("Error parsing is_online:", err)
 				continue // 如果出现错误，跳过当前迭代
 			}
 			// 如果解析结果为0，即表示离线
@@ -966,14 +966,14 @@ func (us *uiService) ListThingsInJSON(s Session, status string, page, limit uint
 		}
 		things.Things = offlineThings
 	} else if onlineStatus == 1 {
-		// Filter things where Metadata.isOnline is 1
+		// Filter things where Metadata.is_online is 1
 		var thingPage sdk.ThingsPage
 		onlineThings := thingPage.Things
 		for _, thing := range things.Things {
-			if status, ok := thing.Metadata["isOnline"].(string); ok {
+			if status, ok := thing.Metadata["is_online"].(string); ok {
 				statusUint, err := strconv.ParseUint(status, 10, 64)
 				if err != nil {
-					fmt.Println("Error parsing isOnline:", err)
+					fmt.Println("Error parsing is_online:", err)
 					continue // Skip this item if the conversion fails
 				}
 				if statusUint == 1 {
@@ -1381,20 +1381,20 @@ func (us *uiService) ListThingsByChannel(s Session, channelID string, page, limi
 		return []byte{}, errors.Wrap(ErrFailedRetreive, err)
 	}
 	if onlineStatus == 0 {
-		// Filter things where Metadata.isOnline is 0
+		// Filter things where Metadata.is_online is 0
 		var thingPage sdk.ThingsPage
 		offlineThings := thingPage.Things
 		for _, thing := range thsPage.Things {
-			status, ok := thing.Metadata["isOnline"].(string)
-			// 当isOnline字段不存在或者值为"0"时，将thing添加到offlineThings切片
+			status, ok := thing.Metadata["is_online"].(string)
+			// 当is_online字段不存在或者值为"0"时，将thing添加到offlineThings切片
 			if !ok || status == "0" {
 				offlineThings = append(offlineThings, thing)
 				continue // 继续下一个循环迭代
 			}
-			// 如果isOnline字段存在且不为"0"，尝试将其解析为uint64
+			// 如果is_online字段存在且不为"0"，尝试将其解析为uint64
 			statusUint, err := strconv.ParseUint(status, 10, 64)
 			if err != nil {
-				fmt.Println("Error parsing isOnline:", err)
+				fmt.Println("Error parsing is_online:", err)
 				continue // 如果出现错误，跳过当前迭代
 			}
 			// 如果解析结果为0，即表示离线
@@ -1404,14 +1404,14 @@ func (us *uiService) ListThingsByChannel(s Session, channelID string, page, limi
 		}
 		thsPage.Things = offlineThings
 	} else if onlineStatus == 1 {
-		// Filter things where Metadata.isOnline is 1
+		// Filter things where Metadata.is_online is 1
 		var thingPage sdk.ThingsPage
 		onlineThings := thingPage.Things
 		for _, thing := range thsPage.Things {
-			if status, ok := thing.Metadata["isOnline"].(string); ok {
+			if status, ok := thing.Metadata["is_online"].(string); ok {
 				statusUint, err := strconv.ParseUint(status, 10, 64)
 				if err != nil {
-					fmt.Println("Error parsing isOnline:", err)
+					fmt.Println("Error parsing is_online:", err)
 					continue // Skip this item if the conversion fails
 				}
 				if statusUint == 1 {
@@ -1480,20 +1480,20 @@ func (us *uiService) ListThingsByChannelInJSON(s Session, channelID string, page
 		return sdk.ThingsPage{}, errors.Wrap(ErrFailedRetreive, err)
 	}
 	if onlineStatus == 0 {
-		// Filter things where Metadata.isOnline is 0
+		// Filter things where Metadata.is_online is 0
 		var thingPage sdk.ThingsPage
 		offlineThings := thingPage.Things
 		for _, thing := range thsPage.Things {
-			status, ok := thing.Metadata["isOnline"].(string)
-			// 当isOnline字段不存在或者值为"0"时，将thing添加到offlineThings切片
+			status, ok := thing.Metadata["is_online"].(string)
+			// 当is_online字段不存在或者值为"0"时，将thing添加到offlineThings切片
 			if !ok || status == "0" {
 				offlineThings = append(offlineThings, thing)
 				continue // 继续下一个循环迭代
 			}
-			// 如果isOnline字段存在且不为"0"，尝试将其解析为uint64
+			// 如果is_online字段存在且不为"0"，尝试将其解析为uint64
 			statusUint, err := strconv.ParseUint(status, 10, 64)
 			if err != nil {
-				fmt.Println("Error parsing isOnline:", err)
+				fmt.Println("Error parsing is_online:", err)
 				continue // 如果出现错误，跳过当前迭代
 			}
 			// 如果解析结果为0，即表示离线
@@ -1503,14 +1503,14 @@ func (us *uiService) ListThingsByChannelInJSON(s Session, channelID string, page
 		}
 		thsPage.Things = offlineThings
 	} else if onlineStatus == 1 {
-		// Filter things where Metadata.isOnline is 1
+		// Filter things where Metadata.is_online is 1
 		var thingPage sdk.ThingsPage
 		onlineThings := thingPage.Things
 		for _, thing := range thsPage.Things {
-			if status, ok := thing.Metadata["isOnline"].(string); ok {
+			if status, ok := thing.Metadata["is_online"].(string); ok {
 				statusUint, err := strconv.ParseUint(status, 10, 64)
 				if err != nil {
-					fmt.Println("Error parsing isOnline:", err)
+					fmt.Println("Error parsing is_online:", err)
 					continue // Skip this item if the conversion fails
 				}
 				if statusUint == 1 {
@@ -3002,7 +3002,7 @@ func parseTemplates(mfsdk sdk.SDK, prefix string) (tpl *template.Template, err e
 			return slices.Contains(data, substring)
 		},
 		"stringContains": func(data string, substring string) bool {
-			return strings.Contains(data, substring)
+			return data != "" && strings.Contains(data, substring)
 		},
 		"serviceUnavailable": func(service string) bool {
 			if _, err := mfsdk.Health(service); err != nil {

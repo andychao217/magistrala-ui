@@ -77,7 +77,7 @@ SPDX-License-Identifier: Apache-2.0 -->
                                             <tr>
                                                 <th>在线状态</th>
                                                 <td id="{{ .Entity.ID }}-onlineStatusTD">
-                                                    {{ if eq .Entity.Metadata.isOnline "1" }}
+                                                    {{ if eq .Entity.Metadata.is_online "1" }}
                                                         <span class="badge rounded-pill enabled-pill">在线</span>
                                                     {{ else }}
                                                         <span class="badge rounded-pill disabled-pill">离线</span>
