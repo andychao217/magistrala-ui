@@ -102,74 +102,97 @@ SPDX-License-Identifier: Apache-2.0 -->
                                         {{ $channelID := .ChannelID }}
                                         {{ range $i, $t := .Things }}
                                             <div class="col-sm-3 mb-3 mb-sm-0" id="{{ $t.ID }}-thingCard">
-                                              <div class="channel-thing-card card">
+                                              <div 
+                                                class="channel-thing-card card"  
+                                                id="{{ $t.ID }}-thingCardContent"
+                                                {{ if $t.Metadata.is_online }}
+                                                  {{ if eq $t.Metadata.is_online "1" }}
+                                                    style="background: white;"
+                                                  {{ else }}
+                                                    style="background: lightgray;"
+                                                  {{ end }}
+                                                {{ end }}
+                                              >
                                                 <div class="card-body">
-                                                  <h5 class="card-title">{{ $t.Name }}</h5>
-                                                  <p>{{ $t.Credentials.Identity }}</p>
-                                                  <p>{{ $t.Credentials.Secret }}</p>
-                                                  <p id="{{ $t.ID }}-onlineStatusTD" class="card-text">
-                                                      {{ if eq $t.Metadata.is_online "1" }}
-                                                          <span class="badge rounded-pill enabled-pill">在线</span>
-                                                      {{ else }}
-                                                          <span class="badge rounded-pill disabled-pill">离线</span>
+                                                  <div class="row">
+                                                    <div class="col">
+                                                      {{ if $t.Metadata.product_name }}
+                                                        {{ if stringContains $t.Metadata.product_name "2204" }}
+                                                          <img id="{{ $t.ID }}-thingIcon" src="/images/icon_device1.svg" alt="" style="height: 38px; float: left;">
+                                                        {{ else if stringContains $t.Metadata.product_name "2200" }}
+                                                          <img id="{{ $t.ID }}-thingIcon" src="/images/icon_device1.svg" alt="" style="height: 38px; float: left;">
+                                                        {{ else if stringContains $t.Metadata.product_name "2201" }}
+                                                          <img id="{{ $t.ID }}-thingIcon" src="/images/icon_device1.svg" alt="" style="height: 38px; float: left;">
+                                                        {{ else if stringContains $t.Metadata.product_name "2102" }}
+                                                          <img id="{{ $t.ID }}-thingIcon" src="/images/icon_device2.svg" alt="" style="height: 38px; float: left;">
+                                                        {{ else if stringContains $t.Metadata.product_name "2110" }}
+                                                          <img id="{{ $t.ID }}-thingIcon" src="/images/icon_device2.svg" alt="" style="height: 38px; float: left;">
+                                                        {{ else if stringContains $t.Metadata.product_name "2112" }}
+                                                          <img id="{{ $t.ID }}-thingIcon" src="/images/icon_device2.svg" alt="" style="height: 38px; float: left;">
+                                                        {{ else if stringContains $t.Metadata.product_name "3302" }}
+                                                          <img id="{{ $t.ID }}-thingIcon" src="/images/icon_device3.svg" alt="" style="height: 38px; float: left;">
+                                                        {{ else if stringContains $t.Metadata.product_name "2001" }}
+                                                          <img id="{{ $t.ID }}-thingIcon" src="/images/icon_device4.svg" alt="" style="height: 38px; float: left;">
+                                                        {{ else if stringContains $t.Metadata.product_name "2011" }}
+                                                          <img id="{{ $t.ID }}-thingIcon" src="/images/icon_device4.svg" alt="" style="height: 38px; float: left;">
+                                                        {{ else if stringContains $t.Metadata.product_name "3401" }}
+                                                          <img id="{{ $t.ID }}-thingIcon" src="/images/icon_device5.svg" alt="" style="height: 38px; float: left;">
+                                                        {{ else if stringContains $t.Metadata.product_name "2401" }}
+                                                          <img id="{{ $t.ID }}-thingIcon" src="/images/icon_device5.svg" alt="" style="height: 38px; float: left;">
+                                                        {{ else if stringContains $t.Metadata.product_name "3602" }}
+                                                          <img id="{{ $t.ID }}-thingIcon" src="/images/icon_device8.svg" alt="" style="height: 38px; float: left;">
+                                                        {{ else }}
+                                                          <img id="{{ $t.ID }}-thingIcon" src="/images/icon_device0.svg" alt="" style="height: 38px; float: left;">
+                                                        {{ end }}
                                                       {{ end }}
-                                                  </p>
-                                                  <p>
-                                                      <form action="{{ printf "%s/channels/%s/things/disconnect?item=channels" pathPrefix $channelID }}" method="post">
-                                                          <input type="hidden" name="thingID" value="{{ $t.ID }}" />
-                                                          <button
-                                                              type="submit"
-                                                              class="btn body-button"
-                                                              title="移除设备"
-                                                              {{ if not $shareButton }}disabled{{ end }}
-                                                          >
-                                                              <i class="fas fa-link-slash"></i>
-                                                          </button>
-                                                          <button type="button" class="btn body-button" onclick="viewThing('{{ $t.ID }}')" title="查看">
-                                                            <i class="fa-solid fa-info"></i>
-                                                          </button>
-                                                          {{ if eq $t.Metadata.is_online "1" }}
-                                                              <button
-                                                                  type="button"
-                                                                  id="{{ $t.ID }}-rebootBtn"
-                                                                  class="btn body-button"
-                                                                  onclick="conntrolThing('{{ $t.ID }}', '{{ $t.Credentials.Identity }}', 'reboot')"
-                                                                  title="重启"
-                                                              >
-                                                                  <i class="fa-solid fa-arrows-rotate"></i>
+                                                    </div>
+                                                    <div class="col">
+                                                      <div class="dropdown" style="float: right;">
+                                                        <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                                          <i class="fa-solid fa-info"></i>
+                                                        </button>
+                                                        <ul class="dropdown-menu">
+                                                          <form action="{{ printf "%s/channels/%s/things/disconnect?item=channels" pathPrefix $channelID }}" method="post">
+                                                            <li><a class="dropdown-item" onclick="viewThing('{{ $t.ID }}')"><i class="fa-solid fa-info" style="width: 16px;"></i> 查看</a></li>
+                                                            <li>
+                                                              <input type="hidden" name="thingID" value="{{ $t.ID }}" />
+                                                              <button type="submit" class="dropdown-item" {{ if not $shareButton }}disabled{{ end }}>
+                                                                <i class="fa-solid fa-link-slash" style="width: 16px;"></i> 移除设备
                                                               </button>
-                                                              <button 
-                                                                id="{{ $t.ID }}-editBtn" 
-                                                                type="button" 
-                                                                title="修改" 
-                                                                class="btn body-button" 
-                                                                title="修改" 
-                                                                disabled
-                                                              >
-                                                                <i class="fa-solid fa-pencil-alt"></i>
-                                                              </button>
-                                                          {{ else }}
-                                                              <button
-                                                                  type="button"
-                                                                  id="{{ $t.ID }}-rebootBtn"
-                                                                  class="btn body-button"
-                                                                  title="重启"
-                                                                  disabled
-                                                              >
-                                                                  <i class="fa-solid fa-arrows-rotate"></i>
-                                                              </button>
-                                                              <button 
-                                                                id="{{ $t.ID }}-editBtn" 
-                                                                type="button" 
-                                                                title="修改" 
-                                                                class="btn body-button" 
-                                                                onclick="editThing('{{ $t.ID }}', '{{ $t.Name }}')"
-                                                              >
-                                                                <i class="fa-solid fa-pencil-alt"></i>
-                                                              </button>
-                                                          {{ end }}
-                                                      </form>
-                                                  </p>
+                                                            </li>
+                                                            <li
+                                                              id="{{ $t.ID }}-rebootBtn"
+                                                              {{ if $t.Metadata.is_online }}
+                                                                {{ if eq $t.Metadata.is_online "1" }}
+                                                                  style="display: block;"
+                                                                {{ else }}
+                                                                  style="display: none;"
+                                                                {{ end }}
+                                                              {{ end }}
+                                                            >
+                                                              <a class="dropdown-item" onclick="conntrolThing('{{ $t.ID }}', '{{ $t.Credentials.Identity }}', 'reboot')">
+                                                                <i class="fa-solid fa-arrows-rotate"></i> 重启
+                                                              </a>
+                                                            </li>
+                                                            <li
+                                                              id="{{ $t.ID }}-editBtn"
+                                                              {{ if $t.Metadata.is_online }}
+                                                                {{ if eq $t.Metadata.is_online "1" }}
+                                                                  style="display: block;"
+                                                                {{ else }}
+                                                                  style="display: none;"
+                                                                {{ end }}
+                                                              {{ end }}
+                                                            >
+                                                              <a class="dropdown-item" onclick="editThing('{{ $t.ID }}', '{{ $t.Name }}')"><i class="fa-solid fa-pencil-alt"></i> 修改</a>
+                                                            </li>
+                                                          </form>
+                                                        </ul>
+                                                      </div>
+                                                  </div>
+                                                  <div class="row" style="margin-top: 50px;">
+                                                    <h5 class="card-title">{{ $t.Name }}</h5>
+                                                  </div>
                                                 </div>
                                               </div>
                                             </div>
@@ -220,14 +243,13 @@ SPDX-License-Identifier: Apache-2.0 -->
                 const intervalRefreshData = setInterval(refreshThingsData, 2000);
               });
 
-              const thingModal = new bootstrap.Modal(document.getElementById("addThingModal"));
-              const editThingModal = new bootstrap.Modal(document.getElementById("editThingModal"));
-
               function openThingModal() {
+                const thingModal = new bootstrap.Modal(document.getElementById("addThingModal"));
                 thingModal.show();
               }
 
               function editThing(id, name) {
+                const editThingModal = new bootstrap.Modal(document.getElementById("editThingModal"));
                 editThingModal.show();
                 $("#editName").val(name);
                 $("#editID").val(id);
@@ -266,17 +288,16 @@ SPDX-License-Identifier: Apache-2.0 -->
 
               function changeOnlineStatus(thing){
                 const onlineStatus = thing.metadata && thing.metadata.is_online === "1";
-                $(`#${thing.id}-onlineStatusTD`).empty();
                 if (onlineStatus) {
-                  $('<span class="badge rounded-pill enabled-pill">在线</span>').appendTo(`#${thing.id}-onlineStatusTD`);
-                  $(`#${thing.id}-rebootBtn`).prop('disabled', false);
-                  // $(`#${thing.id}-deleteBtn`).prop('disabled', true);
-                  $(`#${thing.id}-editBtn`).prop('disabled', true);
+                  $(`#${thing.id}-thingCardContent`).css('background', 'white');
+                  $(`#${thing.id}-rebootBtn`).css('display', 'block');
+                  $(`#${thing.id}-editBtn`).css('display', 'block');
+                  $(`#${thing.id}-deleteBtn`).css('display', 'none');
                 } else {
-                  $('<span class="badge rounded-pill disabled-pill">离线</span>').appendTo(`#${thing.id}-onlineStatusTD`);
-                  $(`#${thing.id}-rebootBtn`).prop('disabled', true);
-                  // $(`#${thing.id}-deleteBtn`).prop('disabled', false);
-                  $(`#${thing.id}-editBtn`).prop('disabled', false);
+                  $(`#${thing.id}-thingCardContent`).css('background', 'lightgray');
+                  $(`#${thing.id}-rebootBtn`).css('display', 'none');
+                  $(`#${thing.id}-editBtn`).css('display', 'none');
+                  $(`#${thing.id}-deleteBtn`).css('display', 'block');
                 }
               }
 
@@ -369,89 +390,50 @@ SPDX-License-Identifier: Apache-2.0 -->
                       (typeof currentDevices[newId] === 'object' && Object.entries(currentDevices[newId]).length === 0)
                     ) {
                       const device = newDevices[newId];
-                      const onlineSpan = device.metadata && Number(device.metadata.is_online) === 1 ? 
-                        $(`<span class="badge rounded-pill enabled-pill">在线</span>`) : 
-                        $(`<span class="badge rounded-pill disabled-pill">离线</span>`);
+                      const deviceIcon = getDeviceIcon(device);
+                      const imgSpan = $(`<img id="${device.id}-thingIcon" src="/images/${deviceIcon}.svg" alt="" style="height: 38px; float: left;">`);
                       
-                      const btnSpan = device.metadata && Number(device.metadata.is_online) === 1 ? 
-                        $(`
-                          <p>
-                            <form action="/ui/channels/${channelID}/things/disconnect?item=channels" method="post">
-                              <input type="hidden" name="thingID" value="${device.id}" />
-                              <button
-                                  type="submit"
-                                  class="btn body-button"
-                                  title="移除设备"
-                              >
-                                  <i class="fas fa-link-slash"></i>
-                              </button>
-                              <button class="btn body-button" onclick="viewThing(${device.id})" title="查看">
-                                <i class="fa-solid fa-info"></i>
-                              </button>
-                              <button
-                                id="${device.id}-rebootBtn"
-                                class="btn body-button"
-                                onclick="conntrolThing(${device.id}, ${device.credentials.identity}, 'reboot')"
-                                title="重启"
-                              >
-                                <i class="fa-solid fa-arrows-rotate"></i>
-                              </button>
-                              <button 
-                                id="${device.id}-editBtn" 
-                                title="修改" 
-                                class="btn body-button" 
-                                onclick="editThing(${device.id}, ${device.name})"
-                                disabled
-                              >
-                                <i class="fa-solid fa-pencil-alt"></i>
-                              </button>
-                            </form>
-                          </p>
-                        `) : 
-                        $(`
-                          <p>
-                            <form action="/ui/channels/${channelID}/things/disconnect?item=channels" method="post">
-                              <input type="hidden" name="thingID" value="${device.id}" />
-                              <button
-                                  type="submit"
-                                  class="btn body-button"
-                                  title="移除设备"
-                              >
-                                  <i class="fas fa-link-slash"></i>
-                              </button>
-                              <button class="btn body-button" onclick="viewThing(${device.id})" title="查看">
-                                <i class="fa-solid fa-info"></i>
-                              </button>
-                              <button
-                                id="${device.id}-rebootBtn"
-                                class="btn body-button"
-                                onclick="conntrolThing(${device.id}, ${device.credentials.identity}, 'reboot')"
-                                title="重启"
-                                disabled
-                              >
-                                <i class="fa-solid fa-arrows-rotate"></i>
-                              </button>
-                              <button 
-                                id="${device.id}-editBtn" 
-                                title="修改" 
-                                class="btn body-button" 
-                                onclick="editThing(${device.id}, ${device.name})"
-                              >
-                                <i class="fa-solid fa-pencil-alt"></i>
-                              </button>
-                            </form>
-                          </p>
+                      const btnSpan = $(`
+                          <div class="dropdown" style="float: right;">
+                            <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                              <i class="fa-solid fa-info"></i>
+                            </button>
+                            <ul class="dropdown-menu">
+                              <form action="/ui/channels/${channelID}/things/disconnect?item=channels" method="post">
+                                <li><a class="dropdown-item" onclick="viewThing(${device.id})"><i class="fa-solid fa-info" style="width: 16px;"></i> 查看</a></li>
+                                <li>
+                                  <input type="hidden" name="thingID" value="${device.id}" />
+                                  <button type="submit" class="dropdown-item">
+                                    <i class="fa-solid fa-link-slash" style="width: 16px;"></i> 移除设备
+                                  </button>
+                                </li>
+                                <li id="${device.id}-rebootBtn" style="display: ${device.metadata && Number(device.metadata.is_online) === 1 ? 'block':'none'}">
+                                  <a class="dropdown-item" onclick="conntrolThing(${device.id}, ${device.credentials.identity}, 'reboot')">
+                                    <i class="fa-solid fa-arrows-rotate"></i> 重启
+                                  </a>
+                                </li>
+                                <li id="${device.id}-editBtn" style="display: ${device.metadata && Number(device.metadata.is_online) === 1 ? 'block':'none'}">
+                                  <a class="dropdown-item" onclick="editThing(${device.id}, ${device.name})"><i class="fa-solid fa-pencil-alt"></i> 修改</a>
+                                </li>
+                              </form>
+                            </ul>
+                          </div>
                         `);
                       const $thingCard = $(`
                         <div class="col-sm-3 mb-3 mb-sm-0" id="${device.id}-thingCard">
-                          <div class="channel-thing-card card">
+                          <div class="channel-thing-card card" id="${device.id}-thingCardContent">
                             <div class="card-body">
-                              <h5 class="card-title">${device.name}</h5>
-                              <p>${device.credentials.identity}</p>
-                              <p id="${device.id}-onlineStatusTD" class="card-text">
-                                ${onlineSpan}
-                              </p>
-                              ${btnSpan}
+                              <div class="row">
+                                <div class="col">
+                                  ${imgSpan}
+                                </div>
+                                <div class="col">
+                                  ${btnSpan}
+                                </div>
+                              </div>
+                              <div class="row" style="margin-top:50px">
+                                <h5 class="card-title">${device.name}</h5>
+                              </div>
                             </div>
                           </div>
                         </div>

@@ -282,7 +282,7 @@ SPDX-License-Identifier: Apache-2.0 -->
                                           <div 
                                             class="channel-thing-card card"  
                                             id="{{ $t.ID }}-thingCardContent"
-                                            {{ if .Metadata.is_online }}
+                                            {{ if $t.Metadata.is_online }}
                                               {{ if eq $t.Metadata.is_online "1" }}
                                                 style="background: white;"
                                               {{ else }}
@@ -293,30 +293,30 @@ SPDX-License-Identifier: Apache-2.0 -->
                                             <div class="card-body">
                                               <div class="row">
                                                 <div class="col">
-                                                  {{ if .Metadata.product_name }}
-                                                    {{ if stringContains .Metadata.product_name "2204" }}
+                                                  {{ if $t.Metadata.product_name }}
+                                                    {{ if stringContains $t.Metadata.product_name "2204" }}
                                                       <img id="{{ $t.ID }}-thingIcon" src="/images/icon_device1.svg" alt="" style="height: 38px; float: left;">
-                                                    {{ else if stringContains .Metadata.product_name "2200" }}
+                                                    {{ else if stringContains $t.Metadata.product_name "2200" }}
                                                       <img id="{{ $t.ID }}-thingIcon" src="/images/icon_device1.svg" alt="" style="height: 38px; float: left;">
-                                                    {{ else if stringContains .Metadata.product_name "2201" }}
+                                                    {{ else if stringContains $t.Metadata.product_name "2201" }}
                                                       <img id="{{ $t.ID }}-thingIcon" src="/images/icon_device1.svg" alt="" style="height: 38px; float: left;">
-                                                    {{ else if stringContains .Metadata.product_name "2102" }}
+                                                    {{ else if stringContains $t.Metadata.product_name "2102" }}
                                                       <img id="{{ $t.ID }}-thingIcon" src="/images/icon_device2.svg" alt="" style="height: 38px; float: left;">
-                                                    {{ else if stringContains .Metadata.product_name "2110" }}
+                                                    {{ else if stringContains $t.Metadata.product_name "2110" }}
                                                       <img id="{{ $t.ID }}-thingIcon" src="/images/icon_device2.svg" alt="" style="height: 38px; float: left;">
-                                                    {{ else if stringContains .Metadata.product_name "2112" }}
+                                                    {{ else if stringContains $t.Metadata.product_name "2112" }}
                                                       <img id="{{ $t.ID }}-thingIcon" src="/images/icon_device2.svg" alt="" style="height: 38px; float: left;">
-                                                    {{ else if stringContains .Metadata.product_name "3302" }}
+                                                    {{ else if stringContains $t.Metadata.product_name "3302" }}
                                                       <img id="{{ $t.ID }}-thingIcon" src="/images/icon_device3.svg" alt="" style="height: 38px; float: left;">
-                                                    {{ else if stringContains .Metadata.product_name "2001" }}
+                                                    {{ else if stringContains $t.Metadata.product_name "2001" }}
                                                       <img id="{{ $t.ID }}-thingIcon" src="/images/icon_device4.svg" alt="" style="height: 38px; float: left;">
-                                                    {{ else if stringContains .Metadata.product_name "2011" }}
+                                                    {{ else if stringContains $t.Metadata.product_name "2011" }}
                                                       <img id="{{ $t.ID }}-thingIcon" src="/images/icon_device4.svg" alt="" style="height: 38px; float: left;">
-                                                    {{ else if stringContains .Metadata.product_name "3401" }}
+                                                    {{ else if stringContains $t.Metadata.product_name "3401" }}
                                                       <img id="{{ $t.ID }}-thingIcon" src="/images/icon_device5.svg" alt="" style="height: 38px; float: left;">
-                                                    {{ else if stringContains .Metadata.product_name "2401" }}
+                                                    {{ else if stringContains $t.Metadata.product_name "2401" }}
                                                       <img id="{{ $t.ID }}-thingIcon" src="/images/icon_device5.svg" alt="" style="height: 38px; float: left;">
-                                                    {{ else if stringContains .Metadata.product_name "3602" }}
+                                                    {{ else if stringContains $t.Metadata.product_name "3602" }}
                                                       <img id="{{ $t.ID }}-thingIcon" src="/images/icon_device8.svg" alt="" style="height: 38px; float: left;">
                                                     {{ else }}
                                                       <img id="{{ $t.ID }}-thingIcon" src="/images/icon_device0.svg" alt="" style="height: 38px; float: left;">
@@ -332,7 +332,7 @@ SPDX-License-Identifier: Apache-2.0 -->
                                                       <li><a class="dropdown-item" onclick="viewThing('{{ $t.ID }}')"><i class="fa-solid fa-info" style="width: 16px;"></i> 查看</a></li>
                                                       <li
                                                         id="{{ $t.ID }}-rebootBtn"
-                                                        {{ if .Metadata.is_online }}
+                                                        {{ if $t.Metadata.is_online }}
                                                           {{ if eq $t.Metadata.is_online "1" }}
                                                             style="display: block;"
                                                           {{ else }}
@@ -346,7 +346,7 @@ SPDX-License-Identifier: Apache-2.0 -->
                                                       </li>
                                                       <li
                                                         id="{{ $t.ID }}-editBtn"
-                                                        {{ if .Metadata.is_online }}
+                                                        {{ if $t.Metadata.is_online }}
                                                           {{ if eq $t.Metadata.is_online "1" }}
                                                             style="display: block;"
                                                           {{ else }}
@@ -358,7 +358,7 @@ SPDX-License-Identifier: Apache-2.0 -->
                                                       </li>
                                                       <li
                                                         id="{{ $t.ID }}-deleteBtn"
-                                                        {{ if .Metadata.is_online }}
+                                                        {{ if $t.Metadata.is_online }}
                                                           {{ if eq $t.Metadata.is_online "1" }}
                                                             style="display: none;"
                                                           {{ else }}
