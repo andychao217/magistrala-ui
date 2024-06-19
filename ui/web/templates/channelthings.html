@@ -53,15 +53,6 @@ SPDX-License-Identifier: Apache-2.0 -->
                                         {{ $shareButton = true }}
                                     {{ end }}
                                     <div class="d-flex flex-row justify-content-between">
-                                        <h4 class="page-header-title">分区关联设备</h4>
-                                        <button
-                                            role="button"
-                                            class="btn body-button"
-                                            onclick="openThingModal()"
-                                            {{ if not $shareButton }}disabled{{ end }}
-                                        >
-                                            <i class="fa-solid fa-link fs-4"></i>
-                                        </button>
                                         <!-- add thing modal -->
                                         <div class="modal fade" id="addThingModal" tabindex="-1" aria-labelledby="addThingModalLabel" aria-hidden="true">
                                             <div class="modal-dialog modal-dialog-centered">
@@ -91,7 +82,12 @@ SPDX-License-Identifier: Apache-2.0 -->
                                     </div>
                                     <!-- {{ template "tableheader" . }} -->
                                     <div class="row buttons mb-3">
-                                      <div class="btn-group col-4 offset-4" role="group">
+                                      <div class="col-4" role="group">
+                                        <button type="button" class="btn body-button" onclick="openThingModal()" {{ if not $shareButton }}disabled{{ end }}>
+                                          <i class="fa-solid fa-link"></i> 分区关联设备
+                                        </button>
+                                      </div>
+                                      <div class="btn-group col-4" role="group">
                                         <input type="radio" class="btn-check" name="btnOnlineStatus" id="btnAll" autocomplete="off" />
                                         <label class="btn btn-outline-primary" for="btnAll">全部</label>
                                       

@@ -16,7 +16,7 @@ SPDX-License-Identifier: Apache-2.0 -->
             <li class="nav-item mb-2 mx-2">
                 {{ $navbarActive := "homepage" }}
                 <a href="{{ printf "%s/" pathPrefix }}" id="index" class="nav-link sidebar-link {{ if eq .NavbarActive $navbarActive }}active{{ end }}">
-                    <i class="menu-icon fas fa-home"></i>
+                    <img src="/images/icon_organization_home_white.svg" style="height: 18px; margin-top: -3px; margin-right: 5px;">
                     <span>首页</span>
                 </a>
             </li>
@@ -70,7 +70,7 @@ SPDX-License-Identifier: Apache-2.0 -->
                 {{ end }}"
                 style="margin-right: 20px;"
             >
-                <i class="menu-icon fa-solid fa-building"></i>
+                <img src="/images/icon_mechanism.svg" style="height: 18px; margin-top: -3px; margin-right: 5px;">
                 <span id="domainName">{{ .Session.Domain.Name }}</span>
             </a>
             <div
@@ -83,14 +83,14 @@ SPDX-License-Identifier: Apache-2.0 -->
                     <li class="nav-item mb-2 mx-2">
                         {{ $navbarActive = "domain" }}
                         <a class="nav-link {{ if eq .NavbarActive $navbarActive }}active{{ end }}" id="domain" href="{{ printf "%s/domains/%s" pathPrefix .Session.Domain.ID }}">
-                            <i class="menu-icon fa-solid fa-building"></i>
+                            <img src="/images/icon_mechanism_active.svg" style="height: 18px; margin-top: -3px; margin-right: 5px;">
                             <span>机构</span>
                         </a>
                     </li>
                     <li class="nav-item mb-2 mx-2">
                         {{ $navbarActive = "members" }}
                         <a href="{{ printf "%s/domains/%s/members?limit=1000" pathPrefix .Session.Domain.ID }}" id="members" class="nav-link  {{ if eq .NavbarActive $navbarActive }}active{{ end }}">
-                            <i class="menu-icon fa-solid fa-users"></i>
+                            <i class="menu-icon fa-solid fa-users" style="margin-right: 5px;"></i>
                             <span>成员</span>
                         </a>
                     </li>
@@ -148,7 +148,7 @@ SPDX-License-Identifier: Apache-2.0 -->
                         disabled-item
                     {{ end }} {{ if eq .NavbarActive $navbarActive }}active{{ end }}"
                 >
-                    <i class="menu-icon fas fa-microchip"></i>
+                    <img src="/images/icon_organization_area_white.svg" style="height: 18px; margin-top: -3px; margin-right: 5px;">
                     <span>设备</span>
                 </a>
             </li>
@@ -161,7 +161,7 @@ SPDX-License-Identifier: Apache-2.0 -->
                         disabled-item
                     {{ end }} {{ if eq .NavbarActive $navbarActive }}active{{ end }}"
                 >
-                    <i class="menu-icon fas fa-exchange-alt"></i>
+                    <img src="/images/icon_equipment.svg" style="height: 18px; margin-top: -3px; margin-right: 5px;">
                     <span>分区</span>
                 </a>
             </li>

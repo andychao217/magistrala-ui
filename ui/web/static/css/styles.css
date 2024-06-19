@@ -850,10 +850,6 @@ button.edit-btn {
     --bs-gradient: none;
 }
 
-.p-3 {
-    padding: 0 1rem !important;
-}
-
 /* 隐藏breadcrumbs */
 nav[aria-label="breadcrumb"] {
     display: none;

@@ -16,11 +16,6 @@ SPDX-License-Identifier: Apache-2.0 -->
                         <div class="col-lg-12 mx-auto">
                             {{ template "breadcrumb" . }}
                             <div class="row-mb-3 d-flex flex-row justify-content-between mb-3">
-                                <h2>成员</h2>
-                                <button class="btn body-button" role="button" id="add-member-button" onclick="openMemberModal()">
-                                    <i class="fa-solid fa-plus me-2"></i>
-                                    添加用户
-                                </button>
                                 <!-- add member modal -->
                                 <div class="modal fade" id="addMemberModal" tabindex="-1" aria-labelledby="addMemberModalLabel" aria-hidden="true">
                                     <div class="modal-dialog modal-dialog-centered">
@@ -71,17 +66,43 @@ SPDX-License-Identifier: Apache-2.0 -->
                             </div>
                             <div class="table-responsive table-container">
                                 <!-- {{ template "tableheader" . }} -->
+                                <div class="row buttons mb-3">
+                                    <div class="col-4" role="group">
+                                        <button type="button" class="btn body-button" role="button" id="add-member-button" onclick="openMemberModal()">
+                                            <i class="fa-solid fa-plus me-2"></i>
+                                            添加用户
+                                        </button>
+                                    </div>
+                                </div>
                                 <div class="row">
                                     {{ range $i, $m := .Members }}
                                         <div class="col-sm-3 mb-3 mb-sm-0">
                                             <div class="channel-thing-card card">
                                                 <div class="card-body">
-                                                    <h5 class="card-title">{{ $m.Name }}</h5>
-                                                    <p>
-                                                        <button class="btn body-button" onclick="viewMember('{{ $m.Credentials.Identity }}')" title="查看">
-                                                            <i class="fa-solid fa-info"></i>
-                                                        </button>
-                                                    </p>
+                                                    <div class="card-body">
+                                                        <div class="row">
+                                                            <div class="col">
+                                                                <i class="fa-solid fa-user" style="height: 38px; float: left;"></i>
+                                                            </div>
+                                                            <div class="col">
+                                                                <div class="dropdown" style="float: right;">
+                                                                    <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                                                        <i class="fa-solid fa-info"></i>
+                                                                    </button>
+                                                                    <ul class="dropdown-menu">
+                                                                        <li>
+                                                                            <a class="dropdown-item" onclick="viewMember('{{ $m.Credentials.Identity }}')">
+                                                                                <i class="fa-solid fa-info" style="width: 16px;"></i> 查看
+                                                                            </a>
+                                                                        </li>
+                                                                    </ul>
+                                                                </div>
+                                                            </div>
+                                                            <div class="row" style="margin-top: 50px;">
+                                                                <h5 class="card-title">{{ $m.Name }}</h5>
+                                                            </div>
+                                                        </div>
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>

@@ -16,9 +16,7 @@ SPDX-License-Identifier: Apache-2.0 -->
                         <div class="col-lg-12 mx-auto">
                             {{ template "breadcrumb" . }}
                             <div class="row">
-                                <div class="buttons mb-3">
-                                    <button type="button" class="btn body-button" onclick="openModal('single')">添加分区</button>
-
+                                <div class="buttons">
                                     <!-- add channel modal -->
                                     <div class="modal fade" id="addChannelModal" tabindex="-1" role="dialog" aria-labelledby="addChannelModalLabel" aria-hidden="true">
                                         <div class="modal-dialog" role="document">
@@ -131,28 +129,49 @@ SPDX-License-Identifier: Apache-2.0 -->
                                 </div>
                                 <div class="table-responsive table-container">
                                     <!-- {{ template "tableheader" . }} -->
+                                    <div class="row buttons mb-3">
+                                      <div class="col-4" role="group">
+                                        <button type="button" class="btn body-button" onclick="openModal('single')">添加分区</button>
+                                      </div>
+                                    </div>
                                     <div class="row">
                                       {{ range $i, $c := .Channels }}
                                         <div class="col-sm-3 mb-3 mb-sm-0">
                                           <div class="channel-thing-card card">
                                             <div class="card-body">
-                                              <h5 class="card-title">{{ $c.Name }}</h5>
-                                              <p class="card-text">{{ $c.ID }}</p>
-                                              <p class="card-text">{{ $c.Description }}</p>
-                                              <button title="查看" class="btn body-button" onclick="viewChannel('{{ $c.ID }}')">
-                                                <i class="fa-solid fa-info"></i>
-                                              </button>
-                                              <button title="删除" class="btn body-button" onclick="deleteChannel('{{ $c.ID }}')">
-                                                  <i class="fa-solid fa-trash-can"></i>
-                                              </button>
-                                              <button title="修改" class="btn body-button" onclick="editChannel('{{ $c.ID }}', '{{ $c.Name }}', '{{ $c.Description }}')">
-                                                <i class="fa-solid fa-pencil-alt"></i>
-                                              </button>
+                                              <div class="row">
+                                                <div class="col">
+                                                  <img src="/images/icon_organization_area.svg" alt="" style="height: 38px; float: left;">
+                                                </div>
+                                                <div class="col">
+                                                  <div class="dropdown" style="float: right;">
+                                                    <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                                      <i class="fa-solid fa-info"></i>
+                                                    </button>
+                                                    <ul class="dropdown-menu">
+                                                      <li><a class="dropdown-item" onclick="viewChannel('{{ $c.ID }}')"><i class="fa-solid fa-info" style="width: 16px;"></i> 查看</a></li>
+                                                      <li>
+                                                        <a class="dropdown-item" onclick="deleteChannel('{{ $c.ID }}')">
+                                                          <i class="fa-solid fa-trash-can"></i> 删除
+                                                        </a>
+                                                      </li>
+                                                      <li>
+                                                        <a class="dropdown-item" onclick="editChannel('{{ $c.ID }}', '{{ $c.Name }}', '{{ $c.Description }}')">
+                                                          <i class="fa-solid fa-pencil-alt"></i> 修改
+                                                        </a>
+                                                      </li>
+                                                    </ul>
+                                                  </div>
+                                                </div>
+                                                <div class="row" style="margin-top: 50px;">
+                                                  <h5 class="card-title">{{ $c.Name }}</h5>
+                                                </div>
+                                                <!-- <p class="card-text">{{ $c.Description }}</p> -->
+                                              </div>
                                             </div>
                                           </div>
                                         </div>
                                       {{ end }}
-                                    </div>
                                     <!-- {{ template "tablefooter" . }} -->
                                 </div>
                             </div>
