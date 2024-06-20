@@ -814,6 +814,7 @@ button.edit-btn {
 
 .newThingItemList:hover {
     background-color: #f5f5f5;
+    cursor: pointer;
 }
 
 .card-body{

@@ -172,12 +172,12 @@ SPDX-License-Identifier: Apache-2.0 -->
                                       <div class="modal-dialog" role="document">
                                           <div class="modal-content">
                                               <div class="modal-header">
-                                                  <h1 class="modal-title" id="scanThingsModalLabel">扫描添加设备</h1>
+                                                  <h1 class="modal-title" id="scanThingsModalLabel">添加设备</h1>
                                                   <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                               </div>
                                               <div class="modal-body">
                                                   <div class="row">
-                                                    <ul class="list-group" id="scanThingsGrid" style="padding-left: 10px;max-height: 400px;overflow-y: auto;">
+                                                    <ul class="list-group" id="scanThingsGrid" style="padding-left: 10px; max-height: 400px; overflow-y: auto;">
                                                       <!-- <li class="list-group-item">An item</li> -->
                                                     </ul>
                                                   </div>
@@ -203,10 +203,15 @@ SPDX-License-Identifier: Apache-2.0 -->
                                       <div class="modal-dialog" role="document">
                                           <div class="modal-content">
                                               <div class="modal-header">
-                                                  <h1 class="modal-title" id="scanThingsModalLabel">有线网络设置</h1>
+                                                  <h1 class="modal-title" id="scanThingsModalLabel">设备设置</h1>
                                                   <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                               </div>
                                               <div class="modal-body">
+                                                <div class="mb-3">
+                                                  <label for="alias" class="form-label">设备名称</label>
+                                                  <input type="text" class="form-control" name="alias" id="alias-deviceNetCfg" placeholder="设备名称" />
+                                                  <div id="aliasError" class="text-danger"></div>
+                                                </div>
                                                 <div class="mb-3">
                                                   <label for="dhcp_enable" class="form-label">设置IP</label>
                                                   <select 
@@ -251,7 +256,7 @@ SPDX-License-Identifier: Apache-2.0 -->
                                                     class="btn body-button" 
                                                     id="deviceNetCfgModal-confirm-button"
                                                   >
-                                                    确定
+                                                    添加
                                                   </button>
                                               </div>
                                           </div>
@@ -484,6 +489,7 @@ SPDX-License-Identifier: Apache-2.0 -->
                 });
 
                 //搜索添加设备-网络配置-手动-注册所有输入框的验证和保存逻辑
+                validateAndSave('alias');
                 validateAndSave('ip');
                 validateAndSave('gateway');
                 validateAndSave('netmask');
@@ -497,26 +503,48 @@ SPDX-License-Identifier: Apache-2.0 -->
                   const dhcp_enable = deviceInfo.netcfg.dhcp_enable;
                   let canCloseModal = true;
 
-                  function validateAndUpdateError(inputId, value) {
-                    if (!IPV4REGX.test(value)) {
-                      $(`#${inputId}Error`).html(IPERRORMSG);
-                      canCloseModal = false;
+                  function validateAndUpdateError(inputId) {
+                    const value =  $(`#${inputId}-deviceNetCfg`).val();
+                    if (inputId === 'alias') {
+                      if (!value) {
+                        $(`#${inputId}Error`).html('请输入设备名称');
+                        canCloseModal = false;
+                      } else {
+                        $(`#${inputId}Error`).empty();
+                      }
                     } else {
-                      $(`#${inputId}Error`).empty();
+                      if (!IPV4REGX.test(value)) {
+                        $(`#${inputId}Error`).html(IPERRORMSG);
+                        canCloseModal = false;
+                      } else {
+                        $(`#${inputId}Error`).empty();
+                      }
                     }
                   }
 
+                  validateAndUpdateError('alias');
+
                   if (!dhcp_enable) {
-                    validateAndUpdateError('ip', deviceInfo.netcfg.static_ip);
-                    validateAndUpdateError('gateway', deviceInfo.netcfg.static_gateway);
-                    validateAndUpdateError('netmask', deviceInfo.netcfg.static_netmask);
-                    validateAndUpdateError('dns1', deviceInfo.netcfg.static_dns1);
-                    validateAndUpdateError('dns2', deviceInfo.netcfg.static_dns2);
+                    validateAndUpdateError('ip');
+                    validateAndUpdateError('gateway');
+                    validateAndUpdateError('netmask');
+                    validateAndUpdateError('dns1');
+                    validateAndUpdateError('dns2');
                   }
 
                   if (canCloseModal) {
+                    if (!selectedNewThingNames.includes(deviceName)) {
+                      selectedNewThingNames.push(deviceName);
+                    }
+                    showNewThingsGrid(scanNewThingsList, selectedNewThingNames);
                     deviceNetCfgModal.hide();
                   }
+                });
+
+                //关闭弹框遮罩残余
+                const scanThingsModalDiv = document.getElementById("scanThingsModal");
+                scanThingsModalDiv.addEventListener('hidden.bs.modal', function (event) {
+                  $('.modal-backdrop.fade.show').remove();
                 });
               });
               
@@ -853,19 +881,35 @@ SPDX-License-Identifier: Apache-2.0 -->
                   const dhcp_enable = deviceInfo.netcfg.dhcp_enable;
                   const value = $(this).val();
                   
-                  if (!dhcp_enable) {
-                    if (IPV4REGX.test(value)) {
+                  if (property === 'alias') {
+                    if (value) {
                       $(`#${property}Error`).empty();
                       if (event.type === 'blur') {
-                        scanNewThingsList = scanNewThingsList.map(item => {
-                          if (item.device_name === deviceName) {
-                            item.netcfg[`static_${property}`] = value;
-                          }
-                          return item;
-                        });
-                      }
+                          scanNewThingsList = scanNewThingsList.map(item => {
+                            if (item.device_name === deviceName) {
+                              item[`device_aliase`] = value;
+                            }
+                            return item;
+                          });
+                        }
                     } else {
-                      $(`#${property}Error`).html(IPERRORMSG);
+                      $(`#${property}Error`).html('请输入设备名称');
+                    }
+                  } else {
+                    if (!dhcp_enable) {
+                      if (IPV4REGX.test(value)) {
+                        $(`#${property}Error`).empty();
+                        if (event.type === 'blur') {
+                          scanNewThingsList = scanNewThingsList.map(item => {
+                            if (item.device_name === deviceName) {
+                              item.netcfg[`static_${property}`] = value;
+                            }
+                            return item;
+                          });
+                        }
+                      } else {
+                        $(`#${property}Error`).html(IPERRORMSG);
+                      }
                     }
                   }
                 });
@@ -873,48 +917,60 @@ SPDX-License-Identifier: Apache-2.0 -->
 
               //扫描设备添加弹框设备列表-配置网络
               function deviceNetCfg(e) {
-                e.stopPropagation();
-                deviceNetCfgModal.show();
+                if (event.target.classList.contains('form-check-input')) {
+                  // 阻止事件冒泡或默认行为
+                  e.stopPropagation();
+                } else {
+                  deviceNetCfgModal.show();
 
-                const deviceName = e.target.dataset.device_name;
-                const deviceInfo = scanNewThingsList.find((item)=>item.device_name === deviceName); 
-                let ip = deviceInfo.netcfg.static_ip, 
-                    gateway = deviceInfo.netcfg.static_gateway,
-                    netmask = deviceInfo.netcfg.static_netmask, 
-                    dns1 = deviceInfo.netcfg.static_dns1, 
-                    dns2 = deviceInfo.netcfg.static_dns2;
-                    dhcp_enable = "0",
-                    readOnly = false;
-                if (deviceInfo.netcfg.dhcp_enable) {
-                  ip = deviceInfo.netcfg.dhcp_ip;
-                  gateway = deviceInfo.netcfg.dhcp_gateway;
-                  netmask = deviceInfo.netcfg.dhcp_netmask;
-                  dns1 = deviceInfo.netcfg.dhcp_dns1;
-                  dns2 = deviceInfo.netcfg.dhcp_dns2;
-                  dhcp_enable = "1";
-                  readOnly = true;
+                  $('#aliasError').empty();
+                  $('#ipError').empty();
+                  $('#gatewayError').empty();
+                  $('#netmaskError').empty();
+                  $('#dns1Error').empty();
+                  $('#dns2Error').empty();
+
+                  const deviceName = e.target.dataset.device_name;
+                  const deviceInfo = scanNewThingsList.find((item)=>item.device_name === deviceName); 
+                  let ip = deviceInfo.netcfg.static_ip, 
+                      gateway = deviceInfo.netcfg.static_gateway,
+                      netmask = deviceInfo.netcfg.static_netmask, 
+                      dns1 = deviceInfo.netcfg.static_dns1, 
+                      dns2 = deviceInfo.netcfg.static_dns2;
+                      dhcp_enable = "0",
+                      readOnly = false;
+                  if (deviceInfo.netcfg.dhcp_enable) {
+                    ip = deviceInfo.netcfg.dhcp_ip;
+                    gateway = deviceInfo.netcfg.dhcp_gateway;
+                    netmask = deviceInfo.netcfg.dhcp_netmask;
+                    dns1 = deviceInfo.netcfg.dhcp_dns1;
+                    dns2 = deviceInfo.netcfg.dhcp_dns2;
+                    dhcp_enable = "1";
+                    readOnly = true;
+                  }
+
+                  $('#dhcp_enable-deviceNetCfg').val(dhcp_enable);
+                  $('#alias-deviceNetCfg').attr('data-device_name', deviceName);
+                  $('#ip-deviceNetCfg').attr('data-device_name', deviceName);
+                  $('#gateway-deviceNetCfg').attr('data-device_name', deviceName);
+                  $('#netmask-deviceNetCfg').attr('data-device_name', deviceName);
+                  $('#dns1-deviceNetCfg').attr('data-device_name', deviceName);
+                  $('#dns2-deviceNetCfg').attr('data-device_name', deviceName);
+                  $('#dhcp_enable-deviceNetCfg').attr('data-device_name', deviceName);
+                  $('#deviceNetCfgModal-confirm-button').attr('data-device_name', deviceName);
+
+                  $('#alias-deviceNetCfg').val(deviceInfo.device_aliase);
+                  $('#ip-deviceNetCfg').val(ip);
+                  $('#gateway-deviceNetCfg').val(gateway);
+                  $('#netmask-deviceNetCfg').val(netmask);
+                  $('#dns1-deviceNetCfg').val(dns1);
+                  $('#dns2-deviceNetCfg').val(dns2);
+
+                  $('#ip-deviceNetCfg').prop('readOnly', readOnly);
+                  $('#gateway-deviceNetCfg').prop('readOnly', readOnly);
+                  $('#netmask-deviceNetCfg').prop('readOnly', readOnly);
+                  $('#dns1-deviceNetCfg').prop('readOnly', readOnly);
                 }
-
-                $('#dhcp_enable-deviceNetCfg').val(dhcp_enable);
-                $('#ip-deviceNetCfg').attr('data-device_name', deviceName);
-                $('#gateway-deviceNetCfg').attr('data-device_name', deviceName);
-                $('#netmask-deviceNetCfg').attr('data-device_name', deviceName);
-                $('#dns1-deviceNetCfg').attr('data-device_name', deviceName);
-                $('#dns2-deviceNetCfg').attr('data-device_name', deviceName);
-                $('#dhcp_enable-deviceNetCfg').attr('data-device_name', deviceName);
-                $('#deviceNetCfgModal-confirm-button').attr('data-device_name', deviceName);
-
-                $('#ip-deviceNetCfg').val(ip);
-                $('#gateway-deviceNetCfg').val(gateway);
-                $('#netmask-deviceNetCfg').val(netmask);
-                $('#dns1-deviceNetCfg').val(dns1);
-                $('#dns2-deviceNetCfg').val(dns2);
-
-                $('#ip-deviceNetCfg').prop('readOnly', readOnly);
-                $('#gateway-deviceNetCfg').prop('readOnly', readOnly);
-                $('#netmask-deviceNetCfg').prop('readOnly', readOnly);
-                $('#dns1-deviceNetCfg').prop('readOnly', readOnly);
-                $('#dns2-deviceNetCfg').prop('readOnly', readOnly);
               }
 
               //扫描添加设备弹框设备列表-勾选设备
@@ -963,11 +1019,10 @@ SPDX-License-Identifier: Apache-2.0 -->
                   $(`#checkbox_selectAll`).prop("indeterminate", false);
                   $(`#checkbox_selectAll`).prop("checked", false);
                 }
-                console.log("selectedNewThingNames: ", selectedNewThingNames);
               }
 
               //显示扫描添加设备弹框设备列表
-              function showNewThingsGrid (thingsList) {
+              function showNewThingsGrid (thingsList, selectedThingsIds) {
                 const scanThingsModal = new bootstrap.Modal(document.getElementById("scanThingsModal"));
                 scanThingsModal.show();
                 $(`#scanThingsGrid`).empty();
@@ -982,7 +1037,7 @@ SPDX-License-Identifier: Apache-2.0 -->
                         id="checkbox_selectAll"
                         onchange="onSelectNewThing(event)"
                       />
-                      <label class="form-check-label" for="checkbox_selectAll">
+                      <label class="form-check-label" for="checkbox_selectAll" style="margin-left:5px">
                         全选
                       </label>
                     </li>
@@ -993,29 +1048,48 @@ SPDX-License-Identifier: Apache-2.0 -->
                 thingsList.forEach((thing, index)=>{
                   const deviceIcon = getDeviceIcon(thing);
                   const $thingList = $(`
-                    <li class="list-group-item newThingItemList">
+                    <li 
+                      class="list-group-item newThingItemList" 
+                      onclick="deviceNetCfg(event)"
+                      data-device_name="${thing.device_name}" 
+                    >
                       <input 
                         class="form-check-input" 
                         type="checkbox" 
                         value="${thing.device_name}" 
                         id="checkbox_${thing.device_name}"
                         onchange="onSelectNewThing(event)"
-                      />
-                      <label class="form-check-label" for="checkbox_${thing.device_name}">
-                        <img src="/images/${deviceIcon}.svg" alt="" style="height: 24px; margin-top: -3px;">
-                        <span>${thing.device_aliase}</span>
-                      </label>
-                      <span 
-                        style="float:right; cursor:pointer; color:#20afbf;" 
                         data-device_name="${thing.device_name}" 
-                        onclick="deviceNetCfg(event)"
-                      >
-                        配置网络
-                      </span>
+                        ${selectedThingsIds.includes(thing.device_name) ? `checked` : ``}
+                      />
+                      <label class="form-check-label" data-device_name="${thing.device_name}" >
+                        <img 
+                          src="/images/${deviceIcon}.svg" 
+                          style="height: 24px; margin-top: -3px;"
+                          data-device_name="${thing.device_name}" 
+                        >
+                        <span data-device_name="${thing.device_name}" >${thing.device_aliase}</span>
+                      </label>
                     </li>
                   `);
                   $(`#scanThingsGrid`).append($thingList);
                 })
+
+                if (selectedThingsIds.length) {
+                  $("#scan-add-thing-button").removeAttr("disabled");
+                  //判断全选框是否半勾选
+                  if (selectedThingsIds.length === thingsList.length) {
+                    $(`#checkbox_selectAll`).prop("checked", true);
+                    $(`#checkbox_selectAll`).prop("indeterminate", false);
+                  } else {
+                    $(`#checkbox_selectAll`).prop("indeterminate", true);
+                    $(`#checkbox_selectAll`).prop("checked", false);
+                  }
+                } else {
+                  $("#scan-add-thing-button").attr("disabled", true);
+                  $(`#checkbox_selectAll`).prop("indeterminate", false);
+                  $(`#checkbox_selectAll`).prop("checked", false);
+                }
               }
 
               //获取udp组播扫描到的新设备
@@ -1023,6 +1097,7 @@ SPDX-License-Identifier: Apache-2.0 -->
                 const url = window.location.href; // 获取当前页面的URL
                 const address = new URL(url);
                 const port =  sessionStorage.getItem("socketBridgePort") || "63001";
+                scanNewThingsList = []; selectedNewThingNames = [];
                 fetch(`http://${address.hostname}:${port}/devices`, {
                     method: "GET",
                   })
@@ -1050,22 +1125,17 @@ SPDX-License-Identifier: Apache-2.0 -->
                         scanNewThingsList = json.map((item)=>{
                           return JSON.parse(item.message)
                         })
-                        showNewThingsGrid(scanNewThingsList)
+                        showNewThingsGrid(scanNewThingsList, selectedNewThingNames)
                       } else {
-                        alert("没有扫描到设备")
+                        alert("没有可添加设备")
                       }
                     })
               }
 
               //添加扫描设备
               function addScanNewThings() {
-                // 显示确认对话框
-                const userConfirmed = confirm("你确定要添加所选设备吗？");
-                
-                // 根据用户的选择执行不同的操作
-                if (userConfirmed) {
-                  const selectedNewThings = scanNewThingsList.filter(item => selectedNewThingNames.includes(item.device_name));
-                  const query = selectedNewThings.map((thing)=>{
+                const selectedNewThings = scanNewThingsList.filter(item => selectedNewThingNames.includes(item.device_name));
+                const query = selectedNewThings.map((thing)=>{
                     return {
                       name: thing.device_aliase,
                       credentials: {
@@ -1080,57 +1150,54 @@ SPDX-License-Identifier: Apache-2.0 -->
                     }
                   })
                   
-                  //获取当前domain的ID号
-                  const domainID = sessionStorage.getItem("domainID");
-                  fetch(`/ui/domains/${domainID}/domainInJSON`, {
-                    method: "GET",
+                //获取当前domain的ID号
+                const domainID = sessionStorage.getItem("domainID");
+                fetch(`/ui/domains/${domainID}/domainInJSON`, {
+                  method: "GET",
+                })
+                  .then(response => {
+                    if (!response.ok) {
+                      throw new Error('Network response was not ok');
+                    }
+                    return response.json(); // 直接将流转换为JSON对象
                   })
-                    .then(response => {
-                      if (!response.ok) {
-                        throw new Error('Network response was not ok');
-                      }
-                      return response.json(); // 直接将流转换为JSON对象
+                  .then(json => {
+                    const data = json.data;
+                    const domainData = JSON.parse(data).domainData;
+                    const defaultChannelId = domainData.metadata["comID"];
+                    fetch(`/ui/things/batch`, {
+                      method: "POST",
+                      headers: {
+                        "Content-Type": "application/json",
+                      },
+                      body: JSON.stringify(query),
                     })
-                    .then(json => {
-                      const data = json.data;
-                      const domainData = JSON.parse(data).domainData;
-                      const defaultChannelId = domainData.metadata["comID"];
-                      fetch(`/ui/things/batch`, {
-                        method: "POST",
-                        headers: {
-                          "Content-Type": "application/json",
-                        },
-                        body: JSON.stringify(query),
-                      })
-                        .then(response => {
-                          const url = window.location.href; // 获取当前页面的URL
-                          const address = new URL(url);
-                          const port =  sessionStorage.getItem("socketBridgePort") || "63001";
-                          // 添加成功后需要向UDP发送回执
-                          fetch(`http://${address.hostname}:${port}/addDeviceReply`, {
-                            method: "POST",
-                            headers: {
-                              "Content-Type": "application/json",
-                            },
-                            body: JSON.stringify(selectedNewThings.map((item)=>{
-                              item.tenant_id = defaultChannelId;
-                              item.netcfg.mqtt_server = address.hostname;
-                              return item;
-                            })),
-                          })
-                            .then(response => {
-                              // 获取当前 URL
-                              const currentUrl = new URL(window.location.href);
-                              // 修改查询参数
-                              currentUrl.searchParams.set('onlineStatus', '2');
-                              // 跳转到新的 URL
-                              window.location.href = currentUrl.toString();
-                            })
+                      .then(response => {
+                        const url = window.location.href; // 获取当前页面的URL
+                        const address = new URL(url);
+                        const port =  sessionStorage.getItem("socketBridgePort") || "63001";
+                        // 添加成功后需要向UDP发送回执
+                        fetch(`http://${address.hostname}:${port}/addDeviceReply`, {
+                          method: "POST",
+                          headers: {
+                            "Content-Type": "application/json",
+                          },
+                          body: JSON.stringify(selectedNewThings.map((item)=>{
+                            item.tenant_id = defaultChannelId;
+                            item.netcfg.mqtt_server = address.hostname;
+                            return item;
+                          })),
                         })
-                    })
-                } else {
-                  console.log("用户点击了取消。");
-                }
+                          .then(response => {
+                            // 获取当前 URL
+                            const currentUrl = new URL(window.location.href);
+                            // 修改查询参数
+                            currentUrl.searchParams.set('onlineStatus', '2');
+                            // 跳转到新的 URL
+                            window.location.href = currentUrl.toString();
+                          })
+                      })
+                  })
               }
             </script> 
             <script type="module">
