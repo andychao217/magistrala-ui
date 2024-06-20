@@ -185,7 +185,7 @@ function watchVariable(value, callback) {
 
 function getDeviceIcon (deviceInfo) {
 	let src = 'icon_device0',
-		product_name = deviceInfo.metadata.product_name;
+		product_name = deviceInfo.product_name || deviceInfo.metadata.product_name;
 	if (product_name.indexOf('2204') > -1 || product_name.indexOf('2200') > -1 || product_name.indexOf('2201') > -1) {
 		src = 'icon_device1';
 	}

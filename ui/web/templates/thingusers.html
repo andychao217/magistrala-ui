@@ -38,8 +38,8 @@ SPDX-License-Identifier: Apache-2.0 -->
                                                     <form action="{{ printf " %s/things/%s/share?item=things" pathPrefix .ThingID }}" method="post">
                                                         <div class="modal-body">
                                                             <div class="mb-3">
-                                                                <label for="infiniteScroll" class="form-label">用户ID</label>
-                                                                <input type="text" name="userFilter" id="userFilter" placeholder="通过用户ID过滤" />
+                                                                <label for="infiniteScroll" class="form-label">用户</label>
+                                                                <input type="text" name="userFilter" id="userFilter" placeholder="请输入名称" />
                                                                 <select class="form-select" name="userID" id="infiniteScroll" size="5" required>
                                                                     <option disabled>选择用户</option>
                                                                 </select>

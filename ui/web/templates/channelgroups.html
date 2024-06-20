@@ -42,8 +42,8 @@ SPDX-License-Identifier: Apache-2.0 -->
                                                     <form action="{{ printf "%s/channels/%s/groups/assign?item=channels" pathPrefix .ChannelID }}" method="post">
                                                         <div class="modal-body">
                                                             <div class="mb-3">
-                                                                <label for="infiniteScroll" class="form-label">组ID</label>
-                                                                <input type="text" name="groupFilter" id="groupFilter" placeholder="通过组ID过滤" />
+                                                                <label for="infiniteScroll" class="form-label">组</label>
+                                                                <input type="text" name="groupFilter" id="groupFilter" placeholder="请输入名称" />
                                                                 <select class="form-select" name="groupID" id="infiniteScroll" size="5" required>
                                                                     <option disabled>选择组</option>
                                                                 </select>

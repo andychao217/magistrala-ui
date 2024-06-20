@@ -144,7 +144,7 @@ SPDX-License-Identifier: Apache-2.0 -->
                                                           <input type="text" class="form-control name-field" name="name" id="editName" placeholder="设备名称" />
                                                           <div id="editNameError" class="text-danger"></div>
                                                       </div>
-                                                      <div class="mb-3">
+                                                      <div class="mb-3" style="display: none;">
                                                           <label for="id" class="form-label">设备ID</label>
                                                           <input type="text" class="form-control" name="id" id="editID" placeholder="设备ID" readonly />
                                                       </div>
@@ -262,8 +262,8 @@ SPDX-License-Identifier: Apache-2.0 -->
                                     <!-- {{ template "tableheader" . }} -->
                                     <div class="row buttons mb-3">
                                       <div class="col-4" role="group">
-                                        <button type="button" class="btn body-button" onclick="openModal('single')">添加设备</button>
-                                        <button type="button" class="btn body-button" onclick="openModal('scan')">扫描添加设备</button>
+                                        <!-- <button type="button" class="btn body-button" onclick="openModal('single')">添加设备</button> -->
+                                        <button type="button" class="btn body-button" onclick="openModal('scan')">添加设备</button>
                                       </div>
                                       <div class="btn-group col-4" role="group">
                                         <input type="radio" class="btn-check" name="btnOnlineStatus" id="btnAll" autocomplete="off" />
@@ -326,10 +326,12 @@ SPDX-License-Identifier: Apache-2.0 -->
                                                 <div class="col">
                                                   <div class="dropdown" style="float: right;">
                                                     <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                                      <i class="fa-solid fa-info"></i>
+                                                      <i class="fa-solid fa-ellipsis"></i>
                                                     </button>
                                                     <ul class="dropdown-menu">
-                                                      <li><a class="dropdown-item" onclick="viewThing('{{ $t.ID }}')"><i class="fa-solid fa-info" style="width: 16px;"></i> 查看</a></li>
+                                                      <li><a class="dropdown-item" onclick="viewThing('{{ $t.ID }}')">
+                                                        <i class="fa-solid fa-info" style="width: 16px;"></i> 查看</a>
+                                                      </li>
                                                       <li
                                                         id="{{ $t.ID }}-rebootBtn"
                                                         {{ if $t.Metadata.is_online }}
@@ -341,7 +343,7 @@ SPDX-License-Identifier: Apache-2.0 -->
                                                         {{ end }}
                                                       >
                                                         <a class="dropdown-item" onclick="conntrolThing('{{ $t.ID }}', '{{ $t.Credentials.Identity }}', 'reboot')">
-                                                          <i class="fa-solid fa-arrows-rotate"></i> 重启
+                                                          <i class="fa-solid fa-arrows-rotate" style="width: 16px;"></i> 重启
                                                         </a>
                                                       </li>
                                                       <li
@@ -354,7 +356,9 @@ SPDX-License-Identifier: Apache-2.0 -->
                                                           {{ end }}
                                                         {{ end }}
                                                       >
-                                                        <a class="dropdown-item" onclick="editThing('{{ $t.ID }}', '{{ $t.Name }}')"><i class="fa-solid fa-pencil-alt"></i> 修改</a>
+                                                        <a class="dropdown-item" onclick="editThing('{{ $t.ID }}', '{{ $t.Name }}')">
+                                                          <i class="fa-solid fa-pencil-alt" style="width: 16px;"></i> 修改
+                                                        </a>
                                                       </li>
                                                       <li
                                                         id="{{ $t.ID }}-deleteBtn"
@@ -366,7 +370,9 @@ SPDX-License-Identifier: Apache-2.0 -->
                                                           {{ end }}
                                                         {{ end }}
                                                       >
-                                                        <a class="dropdown-item" onclick="deleteThing('{{ $t.ID }}')" ><i class="fa-solid fa-trash-can"></i> 删除</a>
+                                                        <a class="dropdown-item" onclick="deleteThing('{{ $t.ID }}')" >
+                                                          <i class="fa-solid fa-trash-can" style="width: 16px;"></i> 删除
+                                                        </a>
                                                       </li>
                                                     </ul>
                                                   </div>
@@ -726,20 +732,26 @@ SPDX-License-Identifier: Apache-2.0 -->
                       const btnSpan = $(`
                           <div class="dropdown" style="float: right;">
                             <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                              <i class="fa-solid fa-info"></i>
+                              <i class="fa-solid fa-ellipsis"></i>
                             </button>
                             <ul class="dropdown-menu">
-                              <li><a class="dropdown-item" onclick="viewThing(${device.id})"><i class="fa-solid fa-info" style="width: 16px;"></i> 查看</a></li>
+                              <li><a class="dropdown-item" onclick="viewThing(${device.id})">
+                                <i class="fa-solid fa-info" style="width: 16px;"></i> 查看</a>
+                              </li>
                               <li id="${device.id}-rebootBtn" style="display: ${device.metadata && Number(device.metadata.is_online) === 1 ? 'block':'none'}">
                                 <a class="dropdown-item" onclick="conntrolThing(${device.id}, ${device.credentials.identity}, 'reboot')">
-                                  <i class="fa-solid fa-arrows-rotate"></i> 重启
+                                  <i class="fa-solid fa-arrows-rotate" style="width: 16px;"></i> 重启
                                 </a>
                               </li>
                               <li id="${device.id}-editBtn" style="display: ${device.metadata && Number(device.metadata.is_online) === 1 ? 'block':'none'}">
-                                <a class="dropdown-item" onclick="editThing(${device.id}, ${device.name})"><i class="fa-solid fa-pencil-alt"></i> 修改</a>
+                                <a class="dropdown-item" onclick="editThing(${device.id}, ${device.name})">
+                                  <i class="fa-solid fa-pencil-alt" style="width: 16px;"></i> 修改
+                                </a>
                               </li>
                               <li id="${device.id}-deleteBtn" style="display: ${device.metadata && Number(device.metadata.is_online) === 1 ? 'none':'block'}">
-                                <a class="dropdown-item" onclick="deleteThing(${device.id})"><i class="fa-solid fa-trash-can"></i> 删除</a>
+                                <a class="dropdown-item" onclick="deleteThing(${device.id})">
+                                  <i class="fa-solid fa-trash-can" style="width: 16px;"></i> 删除
+                                </a>
                               </li>
                             </ul>
                           </div>
@@ -979,6 +991,7 @@ SPDX-License-Identifier: Apache-2.0 -->
 
                 //设备列表
                 thingsList.forEach((thing, index)=>{
+                  const deviceIcon = getDeviceIcon(thing);
                   const $thingList = $(`
                     <li class="list-group-item newThingItemList">
                       <input 
@@ -989,7 +1002,8 @@ SPDX-License-Identifier: Apache-2.0 -->
                         onchange="onSelectNewThing(event)"
                       />
                       <label class="form-check-label" for="checkbox_${thing.device_name}">
-                        ${thing.device_aliase}
+                        <img src="/images/${deviceIcon}.svg" alt="" style="height: 24px; margin-top: -3px;">
+                        <span>${thing.device_aliase}</span>
                       </label>
                       <span 
                         style="float:right; cursor:pointer; color:#20afbf;" 

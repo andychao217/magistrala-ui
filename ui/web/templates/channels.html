@@ -33,12 +33,12 @@ SPDX-License-Identifier: Apache-2.0 -->
                                                             <input type="text" class="form-control name-field" name="name" id="name" placeholder="分区名称" />
                                                             <div id="nameError" class="text-danger"></div>
                                                         </div>
-                                                        <div class="mb-3">
+                                                        <div class="mb-3" style="display: none;">
                                                             <label for="id" class="form-label">ID</label>
                                                             <input type="text" class="form-control id-field" name="id" id="id" placeholder="分区ID" />
                                                             <div id="idError" class="text-danger"></div>
                                                         </div>
-                                                        <div class="mb-3">
+                                                        <div class="mb-3" style="display: none;">
                                                             <label for="description" class="form-label">描述</label>
                                                             <input type="text" class="form-control" name="description" id="description" placeholder="分区描述" />
                                                         </div>
@@ -109,11 +109,11 @@ SPDX-License-Identifier: Apache-2.0 -->
                                                           <input type="text" class="form-control name-field" name="name" id="editName" placeholder="分区名称" />
                                                           <div id="editNameError" class="text-danger"></div>
                                                       </div>
-                                                      <div class="mb-3">
+                                                      <div class="mb-3" style="display: none;">
                                                           <label for="id" class="form-label">ID</label>
                                                           <input type="text" class="form-control id-field" name="id" id="editId" placeholder="分区ID" readonly />
                                                       </div>
-                                                      <div class="mb-3">
+                                                      <div class="mb-3" style="display: none;">
                                                           <label for="description" class="form-label">描述</label>
                                                           <input type="text" class="form-control" name="description" id="editDescription" placeholder="分区描述" />
                                                       </div>
@@ -136,7 +136,7 @@ SPDX-License-Identifier: Apache-2.0 -->
                                     </div>
                                     <div class="row">
                                       {{ range $i, $c := .Channels }}
-                                        <div class="col-sm-3 mb-3 mb-sm-0">
+                                        <div class="col-sm-3 mb-3 mb-sm-0" onclick="viewChannel('{{ $c.ID }}', event)">
                                           <div class="channel-thing-card card">
                                             <div class="card-body">
                                               <div class="row">
@@ -146,18 +146,18 @@ SPDX-License-Identifier: Apache-2.0 -->
                                                 <div class="col">
                                                   <div class="dropdown" style="float: right;">
                                                     <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                                      <i class="fa-solid fa-info"></i>
+                                                      <i class="fa-solid fa-ellipsis"></i>
                                                     </button>
                                                     <ul class="dropdown-menu">
-                                                      <li><a class="dropdown-item" onclick="viewChannel('{{ $c.ID }}')"><i class="fa-solid fa-info" style="width: 16px;"></i> 查看</a></li>
+                                                      <!-- <li><a class="dropdown-item" onclick="viewChannel('{{ $c.ID }}')"><i class="fa-solid fa-info" style="width: 16px;"></i> 查看</a></li> -->
                                                       <li>
                                                         <a class="dropdown-item" onclick="deleteChannel('{{ $c.ID }}')">
-                                                          <i class="fa-solid fa-trash-can"></i> 删除
+                                                          <i class="fa-solid fa-trash-can" style="width: 16px;"></i> 删除
                                                         </a>
                                                       </li>
                                                       <li>
                                                         <a class="dropdown-item" onclick="editChannel('{{ $c.ID }}', '{{ $c.Name }}', '{{ $c.Description }}')">
-                                                          <i class="fa-solid fa-pencil-alt"></i> 修改
+                                                          <i class="fa-solid fa-pencil-alt" style="width: 16px;"></i> 修改
                                                         </a>
                                                       </li>
                                                     </ul>
@@ -199,8 +199,17 @@ SPDX-License-Identifier: Apache-2.0 -->
                 $("#editDescription").val(description);
               }
 
-              function viewChannel(id) {
-                window.location.href = `/ui/channels/${id}/things?limit=1000&onlineStatus=2`;
+              function viewChannel(id, event) {
+                // 使用 event 对象进行判断或其他操作
+                if (
+                  event.target.classList.contains('dropdown-item') || 
+                  event.target.classList.contains('dropdown-toggle')
+                ) {
+                    // 阻止事件冒泡或默认行为
+                    event.stopPropagation();
+                } else {
+                  window.location.href = `/ui/channels/${id}/things?limit=1000&onlineStatus=2`;
+                }
               }
 
               //删除
@@ -271,17 +280,17 @@ SPDX-License-Identifier: Apache-2.0 -->
                 buttonId: "create-channel-button",
                 errorDivs: {
                   name: "nameError",
-                  id: "idError",
+                  // id: "idError",
                   // metadata: "metadataError",
                 },
                 validations: {
                   name: validateName,
-                  id: validateID,
+                  // id: validateID,
                   // metadata: validateJSON,
                 },
                 fields: {
                   name: "name-field",
-                  id: "id-field",
+                  // id: "id-field",
                   // metadata: "metadata-field",
                 },
               });

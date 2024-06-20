@@ -17,7 +17,7 @@ export function fetchIndividualEntity(config) {
     input.addEventListener("input", function (event) {
         const itemSelect = document.getElementById(config.itemSelect);
         if (event.target.value === "") {
-            itemSelect.innerHTML = `<option disabled>select a ${config.type}</option>`;
+            itemSelect.innerHTML = `<option disabled>请选择</option>`;
             getEntities(config, "");
             infiniteScroll(config);
         } else {

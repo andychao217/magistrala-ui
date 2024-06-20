@@ -64,10 +64,10 @@ SPDX-License-Identifier: Apache-2.0 -->
                                                     <form action="{{ printf "%s/channels/%s/things/connect?item=channels" pathPrefix .ChannelID }}" method="post">
                                                         <div class="modal-body">
                                                             <div class="mb-3">
-                                                                <label for="infiniteScroll" class="form-label">设备ID</label>
-                                                                <input type="text" name="thingFilter" id="thingFilter" placeholder="通过设备ID过滤" />
+                                                                <label for="infiniteScroll" class="form-label">设备</label>
+                                                                <input type="text" name="thingFilter" id="thingFilter" placeholder="请输入名称" />
                                                                 <select class="form-select" name="thingID" id="infiniteScroll" size="5" required>
-                                                                    <option disabled>选择设备</option>
+                                                                    <option disabled>请选择</option>
                                                                 </select>
                                                             </div>
                                                         </div>
@@ -149,7 +149,7 @@ SPDX-License-Identifier: Apache-2.0 -->
                                                     <div class="col">
                                                       <div class="dropdown" style="float: right;">
                                                         <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                                          <i class="fa-solid fa-info"></i>
+                                                          <i class="fa-solid fa-ellipsis"></i>
                                                         </button>
                                                         <ul class="dropdown-menu">
                                                           <form action="{{ printf "%s/channels/%s/things/disconnect?item=channels" pathPrefix $channelID }}" method="post">
@@ -171,7 +171,7 @@ SPDX-License-Identifier: Apache-2.0 -->
                                                               {{ end }}
                                                             >
                                                               <a class="dropdown-item" onclick="conntrolThing('{{ $t.ID }}', '{{ $t.Credentials.Identity }}', 'reboot')">
-                                                                <i class="fa-solid fa-arrows-rotate"></i> 重启
+                                                                <i class="fa-solid fa-arrows-rotate" style="width: 16px;"></i> 重启
                                                               </a>
                                                             </li>
                                                             <li
@@ -184,7 +184,9 @@ SPDX-License-Identifier: Apache-2.0 -->
                                                                 {{ end }}
                                                               {{ end }}
                                                             >
-                                                              <a class="dropdown-item" onclick="editThing('{{ $t.ID }}', '{{ $t.Name }}')"><i class="fa-solid fa-pencil-alt"></i> 修改</a>
+                                                              <a class="dropdown-item" onclick="editThing('{{ $t.ID }}', '{{ $t.Name }}')">
+                                                                <i class="fa-solid fa-pencil-alt" style="width: 16px;"></i> 修改
+                                                              </a>
                                                             </li>
                                                           </form>
                                                         </ul>
@@ -396,7 +398,7 @@ SPDX-License-Identifier: Apache-2.0 -->
                       const btnSpan = $(`
                           <div class="dropdown" style="float: right;">
                             <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                              <i class="fa-solid fa-info"></i>
+                              <i class="fa-solid fa-ellipsis"></i>
                             </button>
                             <ul class="dropdown-menu">
                               <form action="/ui/channels/${channelID}/things/disconnect?item=channels" method="post">
@@ -409,11 +411,13 @@ SPDX-License-Identifier: Apache-2.0 -->
                                 </li>
                                 <li id="${device.id}-rebootBtn" style="display: ${device.metadata && Number(device.metadata.is_online) === 1 ? 'block':'none'}">
                                   <a class="dropdown-item" onclick="conntrolThing(${device.id}, ${device.credentials.identity}, 'reboot')">
-                                    <i class="fa-solid fa-arrows-rotate"></i> 重启
+                                    <i class="fa-solid fa-arrows-rotate" style="width: 16px;"></i> 重启
                                   </a>
                                 </li>
                                 <li id="${device.id}-editBtn" style="display: ${device.metadata && Number(device.metadata.is_online) === 1 ? 'block':'none'}">
-                                  <a class="dropdown-item" onclick="editThing(${device.id}, ${device.name})"><i class="fa-solid fa-pencil-alt"></i> 修改</a>
+                                  <a class="dropdown-item" onclick="editThing(${device.id}, ${device.name})">
+                                    <i class="fa-solid fa-pencil-alt" style="width: 16px;"></i> 修改
+                                  </a>
                                 </li>
                               </form>
                             </ul>

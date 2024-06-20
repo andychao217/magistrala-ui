@@ -275,6 +275,7 @@ body .body-button:hover {
 .table-container {
     height: calc(100vh - 160px);
     overflow-y: auto;
+    overflow-x: hidden;
     margin-top: 20px;
     padding: 10px;
     background: #fff;
