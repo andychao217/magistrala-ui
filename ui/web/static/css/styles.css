@@ -433,8 +433,8 @@ body .body-button:hover {
 }
 
 .card-single:hover {
-    background: #dad8d8;
-    cursor: pointer;
+    /* background: #dad8d8; */
+    /* cursor: pointer; */
     transform: scale(1.03);
 }
 
@@ -802,6 +802,7 @@ button.edit-btn {
     cursor: pointer;
 }
 
+.card,
 .channel-thing-card {
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     transition: box-shadow 0.3s ease;

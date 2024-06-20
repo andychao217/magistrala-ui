@@ -58,14 +58,15 @@ SPDX-License-Identifier: Apache-2.0 -->
             </a>
         </li>
 
+        <!-- data-bs-toggle="collapse"
+        class="dropdown-toggle" -->
         <li class="nav-item mb-2 mx-2" id="domain-nav-item">
             {{ $collapseActive := "domain" }}
             <a
                 href="#domain-collapse"
-                data-bs-toggle="collapse"
                 aria-expanded="false"
                 aria-controls="domain-collapse"
-                class="dropdown-toggle nav-link sidebar-link {{ if eq .CollapseActive $collapseActive }}
+                class="nav-link sidebar-link {{ if eq .CollapseActive $collapseActive }}
                     active
                 {{ end }}"
                 style="margin-right: 20px;"
@@ -78,6 +79,7 @@ SPDX-License-Identifier: Apache-2.0 -->
                     show
                 {{ end }}"
                 id="domain-collapse"
+                style="display: none;"
             >
                 <ul class="collapse-list">
                     <li class="nav-item mb-2 mx-2">
