@@ -71,8 +71,24 @@ SPDX-License-Identifier: Apache-2.0 -->
                 {{ end }}"
                 style="margin-right: 20px;"
             >
-                <img src="/images/icon_mechanism.svg" style="height: 18px; margin-top: -3px; margin-right: 5px;">
-                <span id="domainName">{{ .Session.Domain.Name }}</span>
+                <img src="/images/icon_mechanism.svg" style="height: 18px; margin-top: -19px; margin-right: 5px;">
+                <span 
+                    id="domainName" 
+                    title="{{ .Session.Domain.Name }}"
+                    style="
+                        width: 110px;
+                        white-space: nowrap;
+                        overflow: hidden;
+                        text-overflow: ellipsis;
+                        display: inline-block;
+                    "
+                >
+                    {{ if stringContains .Session.Domain.Name "默认机构" }}
+                        默认机构
+                    {{ else }}
+                        {{ .Session.Domain.Name }}
+                    {{ end }}
+                </span>
             </a>
             <div
                 class="collapse {{ if eq .CollapseActive $collapseActive }}

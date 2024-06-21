@@ -57,7 +57,13 @@ SPDX-License-Identifier: Apache-2.0 -->
                                                             </div>
                                                             <!-- <span class="badge bg-secondary">{{ $d.Permission }}</span> -->
                                                             <div class="row" style="margin-top: 50px;">
-                                                                <h5 class="card-title">{{ $d.Name }}</h5>
+                                                                <h5 class="card-title truncate-text" title="{{ $d.Name }}">
+                                                                    {{ if stringContains $d.Name "默认机构" }}
+                                                                        默认机构
+                                                                    {{ else }}
+                                                                        {{ $d.Name }}
+                                                                    {{ end }}
+                                                                </h5>
                                                             </div>
                                                         </div>
                                                     </div>
