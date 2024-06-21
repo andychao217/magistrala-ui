@@ -647,10 +647,8 @@ SPDX-License-Identifier: Apache-2.0 -->
                     const data = json.data;
                     const domainData = JSON.parse(data).domainData;
                     const defaultChannelId = domainData.metadata["comID"];
-                    const message = `${controlType} ${thingIdentity}`;
                     if (domainID && defaultChannelId) {
-                      const message = `${controlType} ${thingIdentity}`;
-                      postMessage(defaultChannelId, message)
+                      postMessage(defaultChannelId, controlType, thingIdentity)
                     }
                   })
               }
@@ -849,27 +847,72 @@ SPDX-License-Identifier: Apache-2.0 -->
               }
 
               //给设备发信息
-              function postMessage(channelID, message) {
-                let formData = new FormData();
-                formData.append("channelID", channelID);
-                formData.append("message", message);
-                formData.append("thingSecret", "platform");
-                fetch(`/ui/channels/messages`, {
-                  method: "POST",
-                  body: formData,
-                })
-                  .then(response => {
-                    if (!response.ok) {
-                      throw new Error('Network response was not ok');
-                    }
-                    return response.json(); // 直接将流转换为JSON对象
-                  })
-                  .then(json => {
-                    //
-                  })
-                  .catch(error => {
-                    console.error('处理fetch或JSON时出错:', error);
-                  });
+              function postMessage(channelID, controlType, thingIdentity) {
+                if (controlType === "reboot") {
+                  const url = window.location.href; // 获取当前页面的URL
+                  const address = new URL(url);
+                  const port =  sessionStorage.getItem("socketBridgePort") || "63001";
+                  const data = {
+                    channelID: channelID,
+                    thingIdentity: thingIdentity,
+                    host: address.hostname,
+                  }
+                  fetch(`http://${address.hostname}:${port}/rebootDevice`, {
+                      method: "POST",
+                      headers: {
+                        "Content-Type": "application/json",
+                      },
+                      body: JSON.stringify(data),
+                    })
+                      .then(response => {
+                        console.log("postMessage: ", response)
+                      })
+                      .catch((error) => {
+                        console.error("error postMessage: ", error);
+                      });
+                } else {
+                  // protobuf.load('/proto/pbmsg.proto', function(err, root) {
+                  //   if (err) throw err;
+                  //   // 获取消息类型
+                  //   var PbMsg = root.lookupType('PbMsg');
+                  //   var DeviceReboot = root.lookupType('DeviceReboot');
+              
+                  //   var data = DeviceReboot.create({
+                  //     username: "platform"
+                  //   });
+                  //   // 创建一个 PbMsg 消息实例
+                  //   var msg = PbMsg.create({
+                  //     id: 359,
+                  //     data: data,
+                  //   });
+
+                  //   // 序列化消息
+                  //   var serializedMsg = PbMsg.encode(msg).finish();
+
+                  //   let formData = new FormData();
+                  //   formData.append("channelID", channelID+"."+thingIdentity);
+                  //   // 将 serializedMsg 包装在 Blob 中
+                  //   let blob = new Blob([serializedMsg], { type: 'application/octet-stream' });
+                  //   formData.append("message", blob, 'message.bin'); // 第三个参数是文件名，可以自定义
+                  //   formData.append("thingSecret", "platform");
+                  //   fetch(`/ui/channels/messages`, {
+                  //     method: "POST",
+                  //     body: formData,
+                  //   })
+                  //     .then(response => {
+                  //       if (!response.ok) {
+                  //         throw new Error('Network response was not ok');
+                  //       }
+                  //       return response.json(); // 直接将流转换为JSON对象
+                  //     })
+                  //     .then(json => {
+                  //       //
+                  //     })
+                  //     .catch(error => {
+                  //       console.error('处理fetch或JSON时出错:', error);
+                  //     });
+                  // });
+                }
               }
               
               //扫描添加设备弹框中手动设置网络信息验证
