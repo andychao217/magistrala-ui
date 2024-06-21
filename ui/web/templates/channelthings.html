@@ -61,21 +61,15 @@ SPDX-License-Identifier: Apache-2.0 -->
                                                         <h1 class="modal-title" id="addThingModalLabel">添加设备</h1>
                                                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                                     </div>
-                                                    <form action="{{ printf "%s/channels/%s/things/connect?item=channels" pathPrefix .ChannelID }}" method="post">
-                                                        <div class="modal-body">
-                                                            <div class="mb-3">
-                                                                <label for="infiniteScroll" class="form-label">设备</label>
-                                                                <input type="text" name="thingFilter" id="thingFilter" placeholder="请输入名称" />
-                                                                <select class="form-select" name="thingID" id="infiniteScroll" size="5" required>
-                                                                    <option disabled>请选择</option>
-                                                                </select>
-                                                            </div>
-                                                        </div>
-                                                        <div class="modal-footer">
-                                                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">取消</button>
-                                                            <button type="submit" class="btn body-button">关联</button>
-                                                        </div>
-                                                    </form>
+                                                    <div class="modal-body">
+                                                      <div class="row">
+                                                          <select name="thingID" id="thingsSelector" multiple="multiple" tabindex="-1"></select>
+                                                      </div>
+                                                    </div>
+                                                    <div class="modal-footer">
+                                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">取消</button>
+                                                        <button type="button" class="btn body-button" id="connect-things-btn">关联</button>
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
@@ -83,7 +77,7 @@ SPDX-License-Identifier: Apache-2.0 -->
                                     <!-- {{ template "tableheader" . }} -->
                                     <div class="row buttons mb-3">
                                       <div class="col-4" role="group">
-                                        <button type="button" class="btn body-button" onclick="openThingModal()" {{ if not $shareButton }}disabled{{ end }}>
+                                        <button type="button" class="btn body-button" onclick="openConnectThingModal()" {{ if not $shareButton }}disabled{{ end }}>
                                           <i class="fa-solid fa-link"></i> 分区关联设备
                                         </button>
                                       </div>
@@ -98,8 +92,8 @@ SPDX-License-Identifier: Apache-2.0 -->
                                         <label class="btn btn-outline-primary" for="btnOffline">离线</label>
                                       </div>
                                     </div>
-                                    <div class="row" id="thingsGrid">
-                                        {{ $channelID := .ChannelID }}
+                                    {{ $channelID := .ChannelID }}
+                                    <div class="row" id="thingsGrid" data-channelID="{{ $channelID }}">
                                         {{ range $i, $t := .Things }}
                                             <div class="col-sm-3 mb-3 mb-sm-0" id="{{ $t.ID }}-thingCard">
                                               <div 
@@ -244,11 +238,85 @@ SPDX-License-Identifier: Apache-2.0 -->
                 });
 
                 const intervalRefreshData = setInterval(refreshThingsData, 2000);
+
+                initThingsSelector();
+
+                $('#connect-things-btn').click(function() {
+                  const channelID = $('#thingsGrid').data('channelid');
+
+                  const selectedThingIDs = $('#thingsSelector').val();
+                  if (selectedThingIDs.length) {
+                    // 创建一个空数组来存储所有的fetch请求Promise
+                    const fetchPromises = [];
+
+                    // 遍历requests数组，为每个请求创建一个Promise
+                    selectedThingIDs.forEach(thingID => {
+                        const url = `/ui/channels/connect?channelID=${channelID}&thingID=${thingID}`;
+                        fetchPromises.push(
+                            fetch(url, {
+                                method: "POST",
+                            })
+                            .then(response => {
+                              return response.json();
+                            })
+                        );
+                    });
+
+                    // 使用Promise.all等待所有fetch请求完成
+                    Promise.all(fetchPromises)
+                        .then(responses => {
+                            // 所有请求都成功返回，可以处理响应数据
+                            responses.forEach(json => {
+                                console.error("处理fetch或JSON时出错:");
+                            });
+                            window.location.reload();
+                        })
+                        .catch(error => {
+                            // 处理任何请求失败的情况
+                            console.error('An error occurred:', error);
+                            window.location.reload();
+                        });
+                  } else {
+                    alert("请选择要添加的设备")
+                  }
+                });
               });
 
-              function openThingModal() {
+              //初始化关联设备弹框的下拉选择框
+              function initThingsSelector () {
+                let connectThingModalList = [];
+
+                $('#thingsSelector').SumoSelect({ 
+                  selectAll: true, 
+                  clearAll: false,
+                  search: true, 
+                  searchText: '请输入设备名',
+                  placeholder: '请选择设备',
+                  csvDispCount: 3,
+                  captionFormat: '{0} 已选择',
+                  captionFormatAllSelected: "'{0} 全部选择'",
+                  locale :  ['确定', '取消', '全选'],
+                  noMatch: '"{0}" 没有匹配结果',
+                });
+
+                fetch(`/ui/entities?item=things`,{ method: "GET" })
+                  .then((response) => response.json())
+                  .then((data) => {
+                    connectThingModalList = data.data;
+                    connectThingModalList.length && connectThingModalList.forEach((thing, index)=>{
+                      $('#thingsSelector')[0].sumo.add(thing.id, thing.name, index);
+                    });
+                  })
+                  .catch((error) => console.error("Error:", error));
+              }
+
+              //打开关联设备弹框
+              function openConnectThingModal() {
                 const thingModal = new bootstrap.Modal(document.getElementById("addThingModal"));
                 thingModal.show();
+
+                $('#thingsSelector').val([]);
+                $('#thingsSelector')[0].sumo.unSelectAll();
               }
 
               function editThing(id, name) {
@@ -561,14 +629,6 @@ SPDX-License-Identifier: Apache-2.0 -->
                 validateName,
               } from "/js/validation.js";
               import { submitCreateForm } from "/js/forms.js";
-              import { fetchIndividualEntity } from "/js/infinitescroll.js";
-
-              fetchIndividualEntity({
-                input: "thingFilter",
-                itemSelect: "infiniteScroll",
-                item: "things",
-                pathPrefix: "{{ pathPrefix }}",
-              });
 
               attachValidationListener({
                 buttonId: "edit-thing-button",

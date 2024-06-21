@@ -894,3 +894,13 @@ nav[aria-label="breadcrumb"] {
     -webkit-animation: rotateY 10s infinite;
     animation: rotateY 10s infinite
 }
+
+.SumoSelect .select-all{
+    height: 40px;
+}
+.sumo_thingID{
+    width: 490px;
+}
+.SumoSelect>.CaptionCont>span.placeholder{
+    color: #fff;
+}

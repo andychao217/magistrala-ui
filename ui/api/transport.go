@@ -1798,9 +1798,6 @@ func decodeConnectChannelAndThings(_ context.Context, r *http.Request) (interfac
 	if err := r.ParseForm(); err != nil {
 		return nil, err
 	}
-
-	fmt.Println("Form.Get 123: ", r.Form.Get("channelID"))
-	fmt.Println("PostFormValue 123: ", r.PostFormValue("channelID"))
 	req := connectChannelAndThingsReq{
 		token:     session.Token,
 		channelID: r.Form.Get("channelID"),
