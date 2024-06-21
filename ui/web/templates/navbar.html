@@ -6,7 +6,7 @@ SPDX-License-Identifier: Apache-2.0 -->
     <ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark" id="accordionSidebar">
         <!-- Sidebar Brand -->
         <a class="sidebar-brand d-flex justify-content-center">
-            <h2 class="mx-3">世邦思拓</h2>
+            <h2 class="mx-3 sidebar-logo">世邦思拓</h2>
         </a>
 
         <!-- Divider -->
@@ -71,17 +71,11 @@ SPDX-License-Identifier: Apache-2.0 -->
                 {{ end }}"
                 style="margin-right: 20px;"
             >
-                <img src="/images/icon_mechanism.svg" style="height: 18px; margin-top: -19px; margin-right: 5px;">
+                <img src="/images/icon_mechanism.svg" style="height: 18px; margin-top: -3px; margin-right: 5px;">
                 <span 
                     id="domainName" 
                     title="{{ .Session.Domain.Name }}"
-                    style="
-                        width: 110px;
-                        white-space: nowrap;
-                        overflow: hidden;
-                        text-overflow: ellipsis;
-                        display: inline-block;
-                    "
+                    class="truncate-text-sidebar"
                 >
                     {{ if stringContains .Session.Domain.Name "默认机构" }}
                         默认机构
@@ -236,12 +230,31 @@ SPDX-License-Identifier: Apache-2.0 -->
                         </a>
                     </li>
                     <li class="nav-item dropdown me-3" id="domain-header-dropdown">
-                        <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" data-bs-display="static" aria-expanded="false" id="domainName">
-                            {{ .Session.Domain.Name }}
+                        <a 
+                            class="nav-link dropdown-toggle truncate-text-topbar" 
+                            href="#" 
+                            role="button" 
+                            data-bs-toggle="dropdown" 
+                            data-bs-display="static" 
+                            aria-expanded="false" 
+                            id="domainName"
+                            title="{{ .Session.Domain.Name }}"
+                        >
+                            {{ if stringContains .Session.Domain.Name "默认机构" }}
+                                默认机构
+                            {{ else }}
+                                {{ .Session.Domain.Name }}
+                            {{ end }}
                         </a>
                         <ul class="dropdown-menu dropdown-menu-md-end mt-2 p-3">
                             <li class="text-center fw-bold">
-                                <span class="drop-item" id="domainName">{{ .Session.Domain.Name }}</span>
+                                <span class="drop-item truncate-text-topbar" id="domainName" title="{{ .Session.Domain.Name }}">
+                                    {{ if stringContains .Session.Domain.Name "默认机构" }}
+                                        默认机构
+                                    {{ else }}
+                                        {{ .Session.Domain.Name }}
+                                    {{ end }}
+                                </span>
                             </li>
                             <li><hr class="dropdown-divider" /></li>
                             <li>
