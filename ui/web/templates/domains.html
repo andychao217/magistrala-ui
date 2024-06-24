@@ -79,9 +79,19 @@ SPDX-License-Identifier: Apache-2.0 -->
                 </div>
             </div>
             <script>
-                function selectDomain(id){
+                $(document).ready(function() {
+                    //如果sessionStorage中domainID为空说明刚进入系统，则默认进入userInfo中保存的domain
+                    const curDomainID = sessionStorage.getItem("domainID");
+                    const userInfo = JSON.parse(sessionStorage.getItem("userInfo"));
+                    if (!curDomainID) {
+                        const defaultDomainID = userInfo.metadata.domainID;
+                        selectDomain(defaultDomainID);
+                    }
+                });
+
+                function selectDomain(domainID){
                     let formData = new FormData();
-                    formData.append("domainID", id);
+                    formData.append("domainID", domainID);
                     fetch( "/ui/domains/login" ,  {
                             method: "POST",
                             body: formData,
@@ -96,7 +106,9 @@ SPDX-License-Identifier: Apache-2.0 -->
                                     showError(`Error: ${response.status}`, config.alertDiv);
                                 }
                             } else {
-                                sessionStorage.setItem("domainID", id);
+                                sessionStorage.setItem("domainID", domainID);
+                                //选择domain之后要更新一下userInfo中保存的domain信息
+                                updateUserSelectedDomain(domainID);
                                 window.location.href = `/ui`;
                             }
                         })
@@ -104,6 +116,26 @@ SPDX-License-Identifier: Apache-2.0 -->
                             console.error("error submitting form: ", error);
                             showError(`错误: ${error}`, config.alertDiv);
                         });
+                }
+
+                function updateUserSelectedDomain(domainID){
+                    let userInfo = JSON.parse(sessionStorage.getItem("userInfo"));
+                    userInfo.metadata.domainID = domainID;
+                    fetch( `/ui/users/${userInfo.id}` ,  {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/json",
+                        },
+                        body: JSON.stringify(userInfo),
+                    }).then((response) => {
+                        if (!response.ok) {
+                            throw new Error("Network response was not ok");
+                        } else {
+                            sessionStorage.setItem("userInfo", JSON.stringify(userInfo));
+                            console.log("updated userInfo succeed 123")
+                        }
+                    })
+                    .catch((error) => {});
                 }
             </script>
         </body>

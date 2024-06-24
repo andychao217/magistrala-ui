@@ -901,6 +901,11 @@ nav[aria-label="breadcrumb"] {
 .sumo_thingID{
     width: 490px;
 }
-.SumoSelect>.CaptionCont>span.placeholder{
+.SumoSelect > .CaptionCont > span.placeholder{
     color: #fff;
+}
+
+.dropdown-menu {
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    transition: box-shadow 0.3s ease;
 }

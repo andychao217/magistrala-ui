@@ -256,7 +256,7 @@ SPDX-License-Identifier: Apache-2.0 -->
                                                     class="btn body-button" 
                                                     id="deviceNetCfgModal-confirm-button"
                                                   >
-                                                    添加
+                                                    确定
                                                   </button>
                                               </div>
                                           </div>
@@ -365,16 +365,7 @@ SPDX-License-Identifier: Apache-2.0 -->
                                                           <i class="fa-solid fa-pencil-alt" style="width: 16px;"></i> 修改
                                                         </a>
                                                       </li>
-                                                      <li
-                                                        id="{{ $t.ID }}-deleteBtn"
-                                                        {{ if $t.Metadata.is_online }}
-                                                          {{ if eq $t.Metadata.is_online "1" }}
-                                                            style="display: none;"
-                                                          {{ else }}
-                                                            style="display: block;"
-                                                          {{ end }}
-                                                        {{ end }}
-                                                      >
+                                                      <li id="{{ $t.ID }}-deleteBtn">
                                                         <a class="dropdown-item" onclick="deleteThing('{{ $t.ID }}')" >
                                                           <i class="fa-solid fa-trash-can" style="width: 16px;"></i> 删除
                                                         </a>
@@ -660,12 +651,10 @@ SPDX-License-Identifier: Apache-2.0 -->
                   $(`#${thing.id}-thingCardContent`).css('background', 'white');
                   $(`#${thing.id}-rebootBtn`).css('display', 'block');
                   $(`#${thing.id}-editBtn`).css('display', 'block');
-                  $(`#${thing.id}-deleteBtn`).css('display', 'none');
                 } else {
                   $(`#${thing.id}-thingCardContent`).css('background', 'lightgray');
                   $(`#${thing.id}-rebootBtn`).css('display', 'none');
                   $(`#${thing.id}-editBtn`).css('display', 'none');
-                  $(`#${thing.id}-deleteBtn`).css('display', 'block');
                 }
               }
 
@@ -774,7 +763,7 @@ SPDX-License-Identifier: Apache-2.0 -->
                                   <i class="fa-solid fa-pencil-alt" style="width: 16px;"></i> 修改
                                 </a>
                               </li>
-                              <li id="${device.id}-deleteBtn" style="display: ${device.metadata && Number(device.metadata.is_online) === 1 ? 'none':'block'}">
+                              <li id="${device.id}-deleteBtn">
                                 <a class="dropdown-item" onclick="deleteThing(${device.id})">
                                   <i class="fa-solid fa-trash-can" style="width: 16px;"></i> 删除
                                 </a>
@@ -1227,7 +1216,7 @@ SPDX-License-Identifier: Apache-2.0 -->
                           },
                           body: JSON.stringify(selectedNewThings.map((item)=>{
                             item.tenant_id = defaultChannelId;
-                            item.netcfg.mqtt_server = address.hostname;
+                            item.netcfg.mqtt_server = "nxt-gateway.local" || address.hostname;
                             return item;
                           })),
                         })

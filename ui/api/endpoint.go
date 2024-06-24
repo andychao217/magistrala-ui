@@ -479,9 +479,6 @@ func profileUserEndpoint(svc ui.Service) endpoint.Endpoint {
 		}
 
 		user, err := svc.ProfileUser(req.Session)
-		jsonData, _ = json.Marshal(user)
-		fmt.Println("user: ", jsonData)
-
 		if err != nil {
 			fmt.Println("profileUser profile: ", err)
 			return nil, err
@@ -494,7 +491,6 @@ func profileUserEndpoint(svc ui.Service) endpoint.Endpoint {
 
 		// 将map编码为JSON字符串
 		jsonData, err = json.Marshal(data)
-		fmt.Println("user: ", jsonData)
 		if err != nil {
 			fmt.Println("profileUser Marshal: ", err)
 			return nil, err

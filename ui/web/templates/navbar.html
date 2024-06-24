@@ -34,7 +34,7 @@ SPDX-License-Identifier: Apache-2.0 -->
         </div>
 
         <!-- Heading -->
-        <div class="sidebar-heading mb-3">机构管理</div>
+        <div class="sidebar-heading mb-3">当前机构</div>
 
         <li class="nav-item mb-2 mx-2" id="domains-sidebar-link">
             {{ $navbarActive := "domains" }}
@@ -74,13 +74,17 @@ SPDX-License-Identifier: Apache-2.0 -->
                 <img src="/images/icon_mechanism.svg" style="height: 18px; margin-top: -3px; margin-right: 5px;">
                 <span 
                     id="domainName" 
-                    title="{{ .Session.Domain.Name }}"
                     class="truncate-text-sidebar"
+                    {{ if .Session.Domain.Name }}
+                        title="{{ .Session.Domain.Name }}"
+                    {{ end }}
                 >
-                    {{ if stringContains .Session.Domain.Name "默认机构" }}
-                        默认机构
-                    {{ else }}
-                        {{ .Session.Domain.Name }}
+                    {{ if .Session.Domain.Name }}
+                        {{ if stringContains .Session.Domain.Name "默认机构" }}
+                            默认机构
+                        {{ else }}
+                            {{ .Session.Domain.Name }}
+                        {{ end }}
                     {{ end }}
                 </span>
             </a>
@@ -238,21 +242,33 @@ SPDX-License-Identifier: Apache-2.0 -->
                             data-bs-display="static" 
                             aria-expanded="false" 
                             id="domainName"
-                            title="{{ .Session.Domain.Name }}"
+                            {{ if .Session.Domain.Name }}
+                                title="{{ .Session.Domain.Name }}"
+                            {{ end }}
                         >
-                            {{ if stringContains .Session.Domain.Name "默认机构" }}
-                                默认机构
-                            {{ else }}
-                                {{ .Session.Domain.Name }}
+                            {{ if .Session.Domain.Name }}
+                                {{ if stringContains .Session.Domain.Name "默认机构" }}
+                                    默认机构
+                                {{ else }}
+                                    {{ .Session.Domain.Name }}
+                                {{ end }}
                             {{ end }}
                         </a>
                         <ul class="dropdown-menu dropdown-menu-md-end mt-2 p-3">
                             <li class="text-center fw-bold">
-                                <span class="drop-item truncate-text-topbar" id="domainName" title="{{ .Session.Domain.Name }}">
-                                    {{ if stringContains .Session.Domain.Name "默认机构" }}
-                                        默认机构
-                                    {{ else }}
-                                        {{ .Session.Domain.Name }}
+                                <span 
+                                    class="drop-item truncate-text-topbar" 
+                                    id="domainName"
+                                    {{ if .Session.Domain.Name }}
+                                        title="{{ .Session.Domain.Name }}"
+                                    {{ end }}
+                                >
+                                    {{ if .Session.Domain.Name }}
+                                        {{ if stringContains .Session.Domain.Name "默认机构" }}
+                                            默认机构
+                                        {{ else }}
+                                            {{ .Session.Domain.Name }}
+                                        {{ end }}
                                     {{ end }}
                                 </span>
                             </li>
