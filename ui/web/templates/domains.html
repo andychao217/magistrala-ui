@@ -80,12 +80,35 @@ SPDX-License-Identifier: Apache-2.0 -->
             </div>
             <script>
                 $(document).ready(function() {
-                    //如果sessionStorage中domainID为空说明刚进入系统，则默认进入userInfo中保存的domain
                     const curDomainID = sessionStorage.getItem("domainID");
-                    const userInfo = JSON.parse(sessionStorage.getItem("userInfo"));
-                    if (!curDomainID) {
-                        const defaultDomainID = userInfo.metadata.domainID;
-                        selectDomain(defaultDomainID);
+                    const userInfoStr = sessionStorage.getItem("userInfo");
+                    if(userInfoStr) {
+                        const userInfo = JSON.parse(userInfoStr);
+                         //如果sessionStorage中domainID为空说明刚进入系统，则默认进入userInfo中保存的domain
+                        if (!curDomainID) {
+                            const defaultDomainID = userInfo.metadata.domainID;
+                            selectDomain(defaultDomainID);
+                        }
+                    } else {
+                        // 如果sessionStorage没保存userInfo则重新获取一次
+                        fetch('{{ printf "%s/userProfile" pathPrefix }}', {
+                            method: "GET",
+                        })
+                        .then(response => {
+                            if (!response.ok) {
+                                throw new Error('Network response was not ok');
+                            }
+                            return response.json(); // 直接将流转换为JSON对象
+                        })
+                        .then(json => {
+                            const data = json.data;
+                            const userInfo = JSON.parse(data).user
+                            sessionStorage.setItem("userInfo", JSON.stringify(userInfo))
+                            selectDomain(userInfo.metadata.domainID);
+                        })
+                        .catch(error => {
+                            console.error('处理fetch或JSON时出错:', error);
+                        });
                     }
                 });
 
@@ -121,6 +144,7 @@ SPDX-License-Identifier: Apache-2.0 -->
                 function updateUserSelectedDomain(domainID){
                     let userInfo = JSON.parse(sessionStorage.getItem("userInfo"));
                     userInfo.metadata.domainID = domainID;
+                    userInfo.metadata.comID = userInfo.metadata[domainID]
                     fetch( `/ui/users/${userInfo.id}` ,  {
                         method: "POST",
                         headers: {
