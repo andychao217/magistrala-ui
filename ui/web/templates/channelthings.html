@@ -58,17 +58,18 @@ SPDX-License-Identifier: Apache-2.0 -->
                                             <div class="modal-dialog modal-dialog-centered">
                                                 <div class="modal-content">
                                                     <div class="modal-header">
-                                                        <h1 class="modal-title" id="addThingModalLabel">添加设备</h1>
-                                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                      <h1 class="modal-title" id="addThingModalLabel">分区关联设备</h1>
+                                                      <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                                     </div>
                                                     <div class="modal-body">
                                                       <div class="row">
-                                                          <select name="thingID" id="thingsSelector" multiple="multiple" tabindex="-1"></select>
+                                                        <p>请选择要关联的设备: </p>
+                                                        <select name="thingID" id="thingsSelector" multiple="multiple" tabindex="-1"></select>
                                                       </div>
                                                     </div>
                                                     <div class="modal-footer">
-                                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">取消</button>
-                                                        <button type="button" class="btn body-button" id="connect-things-btn">关联</button>
+                                                      <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">取消</button>
+                                                      <button type="button" class="btn body-button" id="connect-things-btn">关联</button>
                                                     </div>
                                                 </div>
                                             </div>
@@ -203,7 +204,7 @@ SPDX-License-Identifier: Apache-2.0 -->
                 </div>
             </div>
             <script>
-              let currentDevices = {}, newDevices = {};
+              let currentDevices = {}, newDevices = {}, connectThingModalList = [];
 
               $(document).ready(function() {
                 const currentUrl = window.location.href; // 获取当前页面的URL
@@ -284,8 +285,6 @@ SPDX-License-Identifier: Apache-2.0 -->
 
               //初始化关联设备弹框的下拉选择框
               function initThingsSelector () {
-                let connectThingModalList = [];
-
                 $('#thingsSelector').SumoSelect({ 
                   selectAll: true, 
                   clearAll: false,
@@ -317,6 +316,9 @@ SPDX-License-Identifier: Apache-2.0 -->
 
                 $('#thingsSelector').val([]);
                 $('#thingsSelector')[0].sumo.unSelectAll();
+                connectThingModalList.length && connectThingModalList.forEach((thing, index)=>{
+                  $('#thingsSelector')[0].sumo.unSelectItem(index);
+                });
               }
 
               function editThing(id, name) {

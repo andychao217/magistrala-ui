@@ -426,12 +426,18 @@ func (us *uiService) Index(s Session) ([]byte, error) {
 	pgm := sdk.PageMetadata{
 		Offset: uint64(0),
 		Status: statusAll,
+		Limit:  1000,
 	}
 
 	enabledPgm := pgm
 	enabledPgm.Status = enabled
 
 	users, err := us.sdk.Users(pgm, s.Token)
+	if err != nil {
+		return []byte{}, errors.Wrap(ErrFailedRetreive, err)
+	}
+
+	members, err := us.sdk.ListDomainUsers(s.Domain.ID, pgm, s.Token)
 	if err != nil {
 		return []byte{}, errors.Wrap(ErrFailedRetreive, err)
 	}
@@ -472,7 +478,8 @@ func (us *uiService) Index(s Session) ([]byte, error) {
 	}
 
 	summary := dataSummary{
-		TotalUsers:       int(users.Total),
+		// TotalUsers:       int(users.Total),
+		TotalUsers:       int(members.Total),
 		TotalGroups:      int(groups.Total),
 		TotalThings:      int(things.Total),
 		TotalChannels:    int(channels.Total),
