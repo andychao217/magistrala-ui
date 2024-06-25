@@ -119,6 +119,7 @@ SPDX-License-Identifier: Apache-2.0 -->
                 $(document).ready(function() {
                     sessionStorage.removeItem("domainID");
                     sessionStorage.removeItem("userInfo");
+                    sessionStorage.removeItem("onlineStatus");
                     const socketBridgePort = document.getElementById('socketBridgePort').innerText;
                     if (socketBridgePort) {
                         sessionStorage.setItem("socketBridgePort", socketBridgePort);

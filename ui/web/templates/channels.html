@@ -204,8 +204,8 @@ SPDX-License-Identifier: Apache-2.0 -->
                   event.target.classList.contains('dropdown-item') || 
                   event.target.classList.contains('dropdown-toggle')
                 ) {
-                    // 阻止事件冒泡或默认行为
-                    event.stopPropagation();
+                  // 阻止事件冒泡或默认行为
+                  event.stopPropagation();
                 } else {
                   window.location.href = `/ui/channels/${id}/things?limit=1000&onlineStatus=1`;
                 }

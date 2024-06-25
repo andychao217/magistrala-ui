@@ -46,7 +46,7 @@ SPDX-License-Identifier: Apache-2.0 -->
 
                         <div class="col-lg-12 mx-auto">
                             {{ template "breadcrumb" . }}
-                            <div class="row">
+                            <div class="row" style="padding-left: 20px;">
                                 <div class="table-responsive table-container">
                                     {{ $shareButton := false }}
                                     {{ if (hasPermission .Permissions "share") }}
@@ -95,7 +95,7 @@ SPDX-License-Identifier: Apache-2.0 -->
                                       </div>
                                     </div>
                                     {{ $channelID := .ChannelID }}
-                                    <div class="row" id="thingsGrid">
+                                      <div class="row" id="thingsGrid">
                                         {{ range $i, $t := .Things }}
                                             <div class="col-sm-3 mb-3 mb-sm-0" id="{{ $t.ID }}-thingCard">
                                               <div 
@@ -214,7 +214,7 @@ SPDX-License-Identifier: Apache-2.0 -->
                 const currentUrl = window.location.href; // 获取当前页面的URL
                 const urlObj = new URL(currentUrl);
                 const onlineStatusValue = (currentUrl.match(/onlineStatus=(\d+)/) || [])[1]; // 从URL获取onlineStatus的值
-
+                sessionStorage.setItem("onlineStatus", onlineStatusValue);
                 getThingsList(onlineStatusValue);
 
                 if (onlineStatusValue === '1') {
@@ -231,7 +231,6 @@ SPDX-License-Identifier: Apache-2.0 -->
                   $('#btnOffline').prop('checked', false);
                 }
 
-
                 $('input[name="btnOnlineStatus"]').change(function() {
                   let reqOnlineStatus = '2'; //all
                   if (this.id === 'btnOnline') {
@@ -239,7 +238,10 @@ SPDX-License-Identifier: Apache-2.0 -->
                   } else if (this.id === 'btnOffline') {
                     reqOnlineStatus = '0'; //offline
                   }
-                  window.location.href = `${urlObj.pathname}?limit=1000&onlineStatus=${reqOnlineStatus}`;
+                  sessionStorage.setItem("onlineStatus", reqOnlineStatus);
+                  $(`#thingsGrid`).empty();
+                  currentDevices = {}, newDevices = {};
+                  refreshThingsData();
                 });
 
                 const intervalRefreshData = setInterval(refreshThingsData, 2000);
@@ -270,12 +272,24 @@ SPDX-License-Identifier: Apache-2.0 -->
                             responses.forEach(json => {
                                 console.error("处理fetch或JSON时出错:");
                             });
-                            window.location.reload();
+                            // 获取当前 URL
+                            const currentUrl = new URL(window.location.href);
+                            const reqOnlineStatus = sessionStorage.getItem("onlineStatus");
+                            // 修改查询参数
+                            currentUrl.searchParams.set('onlineStatus', reqOnlineStatus);
+                            // 跳转到新的 URL
+                            window.location.href = currentUrl.toString();
                         })
                         .catch(error => {
                             // 处理任何请求失败的情况
                             console.error('An error occurred:', error);
-                            window.location.reload();
+                            // 获取当前 URL
+                            const currentUrl = new URL(window.location.href);
+                            const reqOnlineStatus = sessionStorage.getItem("onlineStatus");
+                            // 修改查询参数
+                            currentUrl.searchParams.set('onlineStatus', reqOnlineStatus);
+                            // 跳转到新的 URL
+                            window.location.href = currentUrl.toString();
                         });
                   } else {
                     alert("请选择要添加的设备")
@@ -455,7 +469,7 @@ SPDX-License-Identifier: Apache-2.0 -->
                 // 使用get方法从URLSearchParams对象中获取page和limit的值
                 const page = searchParams.get('page') || 1;
                 const limit = searchParams.get('limit') || 1000;
-                const reqOnlineStatus = searchParams.get('onlineStatus') || 2;
+                const reqOnlineStatus = sessionStorage.getItem("onlineStatus") || 1;
                 fetch(`${urlObj.pathname}InJSON?page=${page}&limit=${limit}&onlineStatus=${reqOnlineStatus}`, {
                   method: "GET",
                 })
@@ -469,32 +483,25 @@ SPDX-License-Identifier: Apache-2.0 -->
                     const data = json.data;
                     const thingsData = JSON.parse(data).thingsData;
                     const things = thingsData.things;
-                    if (Number(reqOnlineStatus) === 2) {
-                      // 所有设备
-                      things.forEach((thing) => {
-                        changeOnlineStatus(thing);
+                    newDevices = {};
+                      // 所有在线\离线
+                    if (things.length) {
+                      things.forEach(device => {
+                        newDevices[device.id] = {
+                          id: device.id,
+                          name: device.name,
+                          credentials: device.credentials,
+                          metadata: device.metadata,
+                          status: device.status,
+                          created_at: device.created_at,
+                          updated_at: device.updated_at,
+                        };
                       });
+                      updateThingsGrid(things);
                     } else {
-                      newDevices = {};
-                       // 所有在线\离线
-                      if (things.length) {
-                        things.forEach(device => {
-                          newDevices[device.id] = {
-                            id: device.id,
-                            name: device.name,
-                            credentials: device.credentials,
-                            metadata: device.metadata,
-                            status: device.status,
-                            created_at: device.created_at,
-                            updated_at: device.updated_at,
-                          };
-                        });
-                        updateThingsGrid(things);
-                      } else {
-                        currentDevices = {};
-                        $(`#thingsGrid`).empty();
-                      };
-                    }
+                      currentDevices = {};
+                      $(`#thingsGrid`).empty();
+                    };
                   })
                   .catch(error => {
                     // console.error('处理fetch或JSON时出错:', error);
@@ -534,36 +541,35 @@ SPDX-License-Identifier: Apache-2.0 -->
                     ) {
                       const device = newDevices[newId];
                       const deviceIcon = getDeviceIcon(device);
-                      const imgSpan = $(`<img id="${device.id}-thingIcon" src="/images/${deviceIcon}.svg" alt="" style="height: 38px; float: left;">`);
-                      
-                      const btnSpan = $(`
-                          <div class="dropdown" style="float: right;">
-                            <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                              <i class="fa-solid fa-ellipsis"></i>
-                            </button>
-                            <ul class="dropdown-menu">
-                              <form action="/ui/channels/${channelID}/things/disconnect?item=channels" method="post">
-                                <li><a class="dropdown-item" onclick="viewThing(${device.id})"><i class="fa-solid fa-info" style="width: 16px;"></i> 查看</a></li>
-                                <li>
-                                  <input type="hidden" name="thingID" value="${device.id}" />
-                                  <button type="submit" class="dropdown-item">
-                                    <i class="fa-solid fa-link-slash" style="width: 16px;"></i> 移除设备
-                                  </button>
-                                </li>
-                                <li id="${device.id}-rebootBtn" style="display: ${device.metadata && Number(device.metadata.is_online) === 1 ? 'block':'none'}">
-                                  <a class="dropdown-item" onclick="conntrolThing(${device.id}, ${device.credentials.identity}, 'reboot')">
-                                    <i class="fa-solid fa-arrows-rotate" style="width: 16px;"></i> 重启
-                                  </a>
-                                </li>
-                                <li id="${device.id}-editBtn" style="display: ${device.metadata && Number(device.metadata.is_online) === 1 ? 'block':'none'}">
-                                  <a class="dropdown-item" onclick="editThing(${device.id}, ${device.name})">
-                                    <i class="fa-solid fa-pencil-alt" style="width: 16px;"></i> 修改
-                                  </a>
-                                </li>
-                              </form>
-                            </ul>
-                          </div>
-                        `);
+                      const imgSpan = `<img id="${device.id}-thingIcon" src="/images/${deviceIcon}.svg" alt="" style="height: 38px; float: left;">`;
+                      const btnSpan = `
+                        <div class="dropdown" style="float: right;">
+                          <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            <i class="fa-solid fa-ellipsis"></i>
+                          </button>
+                          <ul class="dropdown-menu">
+                            <form action="/ui/channels/${channelID}/things/disconnect?item=channels" method="post">
+                              <li><a class="dropdown-item" onclick="viewThing('${device.id}')"><i class="fa-solid fa-info" style="width: 16px;"></i> 查看</a></li>
+                              <li>
+                                <input type="hidden" name="thingID" value="${device.id}" />
+                                <button type="submit" class="dropdown-item">
+                                  <i class="fa-solid fa-link-slash" style="width: 16px;"></i> 移除设备
+                                </button>
+                              </li>
+                              <li id="${device.id}-rebootBtn" style="display: ${device.metadata && Number(device.metadata.is_online) === 1 ? 'block':'none'}">
+                                <a class="dropdown-item" onclick="conntrolThing('${device.id}', '${device.credentials.identity}', 'reboot')">
+                                  <i class="fa-solid fa-arrows-rotate" style="width: 16px;"></i> 重启
+                                </a>
+                              </li>
+                              <li id="${device.id}-editBtn" style="display: ${device.metadata && Number(device.metadata.is_online) === 1 ? 'block':'none'}">
+                                <a class="dropdown-item" onclick="editThing('${device.id}', '${device.name}')">
+                                  <i class="fa-solid fa-pencil-alt" style="width: 16px;"></i> 修改
+                                </a>
+                              </li>
+                            </form>
+                          </ul>
+                        </div>
+                      `;
                       const $thingCard = $(`
                         <div class="col-sm-3 mb-3 mb-sm-0" id="${device.id}-thingCard">
                           <div class="channel-thing-card card" id="${device.id}-thingCardContent">
