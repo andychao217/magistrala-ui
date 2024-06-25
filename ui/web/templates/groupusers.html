@@ -391,29 +391,30 @@ SPDX-License-Identifier: Apache-2.0 -->
             <script>
                 let pathPrefix = "{{ pathPrefix }}";
                 const userModal = new bootstrap.Modal(
-                document.getElementById("addUserModal"),
+                    document.getElementById("addUserModal"),
                 );
                 function openUserModal() {
-                userModal.show();
+                    userModal.show();
                 }
                 function openTab(relation) {
-                let groupID = "{{ .GroupID }}";
-                event.preventDefault();
-                window.location.href = `${pathPrefix}/groups/${groupID}/users?relation=${relation}`;
+                    let groupID = "{{ .GroupID }}";
+                    event.preventDefault();
+                    window.location.href = `${pathPrefix}/groups/${groupID}/users?relation=${relation}`;
                 }
 
                 function viewUser(identity) {
-                window.location.href = `${pathPrefix}/domains/members?identity=${identity}`;
+                    window.location.href = `${pathPrefix}/domains/members?identity=${identity}`;
                 }
-            </script>      <script type="module">
+            </script>      
+            <script type="module">
                 import { fetchIndividualEntity } from "/js/infinitescroll.js";
 
                 fetchIndividualEntity({
-                input: "userFilter",
-                itemSelect: "infiniteScroll",
-                item: "members",
-                domain: '{{.Session.Domain.ID}}',
-                pathPrefix: pathPrefix,
+                    input: "userFilter",
+                    itemSelect: "infiniteScroll",
+                    item: "members",
+                    domain: '{{.Session.Domain.ID}}',
+                    pathPrefix: pathPrefix,
                 });
             </script>
         </body>

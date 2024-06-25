@@ -69,6 +69,7 @@ SPDX-License-Identifier: Apache-2.0 -->
                 class="nav-link sidebar-link {{ if eq .CollapseActive $collapseActive }}
                     active
                 {{ end }}"
+                id="domain-collapse-toggle"
                 style="margin-right: 20px;"
             >
                 <img src="/images/icon_mechanism.svg" style="height: 18px; margin-top: -3px; margin-right: 5px;">
@@ -79,11 +80,15 @@ SPDX-License-Identifier: Apache-2.0 -->
                         title="{{ .Session.Domain.Name }}"
                     {{ end }}
                 >
-                    {{ if .Session.Domain.Name }}
-                        {{ if stringContains .Session.Domain.Name "默认机构" }}
-                            默认机构
-                        {{ else }}
-                            {{ .Session.Domain.Name }}
+                    {{ if eq .Session.User.Role "admin"}}
+                        {{ .Session.Domain.Name }}
+                    {{ else }}
+                        {{ if .Session.Domain.Name }}
+                            {{ if stringContains .Session.Domain.Name "默认机构" }}
+                                默认机构
+                            {{ else }}
+                                {{ .Session.Domain.Name }}
+                            {{ end }}
                         {{ end }}
                     {{ end }}
                 </span>
@@ -93,7 +98,6 @@ SPDX-License-Identifier: Apache-2.0 -->
                     show
                 {{ end }}"
                 id="domain-collapse"
-                style="display: none;"
             >
                 <ul class="collapse-list">
                     <li class="nav-item mb-2 mx-2">
@@ -107,7 +111,7 @@ SPDX-License-Identifier: Apache-2.0 -->
                         {{ $navbarActive = "members" }}
                         <a href="{{ printf "%s/domains/%s/members?limit=1000" pathPrefix .Session.Domain.ID }}" id="members" class="nav-link  {{ if eq .NavbarActive $navbarActive }}active{{ end }}">
                             <i class="menu-icon fa-solid fa-users" style="margin-right: 5px;"></i>
-                            <span>成员</span>
+                            <span>机构成员</span>
                         </a>
                     </li>
                     <!-- 隐藏页面 -->
@@ -130,8 +134,8 @@ SPDX-License-Identifier: Apache-2.0 -->
                     disabled-item
                 {{ end }} {{ if eq .NavbarActive $navbarActive }}active{{ end }}"
             >
-                <i class="menu-icon fas fa-users"></i>
-                <span>用户</span>
+                <i class="menu-icon fas fa-users" style="margin-right: 5px;"></i>
+                <span>用户管理</span>
             </a>
         </li>
 
@@ -158,7 +162,7 @@ SPDX-License-Identifier: Apache-2.0 -->
             <li class="nav-item mb-2 mx-2">
                 {{ $navbarActive = "things" }}
                 <a
-                    href="{{ printf "%s/things?limit=1000&onlineStatus=2" pathPrefix }}"
+                    href="{{ printf "%s/things?limit=1000&onlineStatus=1" pathPrefix }}"
                     id="things"
                     class="nav-link sidebar-link {{ if (serviceUnavailable "things") }}
                         disabled-item
@@ -246,11 +250,15 @@ SPDX-License-Identifier: Apache-2.0 -->
                                 title="{{ .Session.Domain.Name }}"
                             {{ end }}
                         >
-                            {{ if .Session.Domain.Name }}
-                                {{ if stringContains .Session.Domain.Name "默认机构" }}
-                                    默认机构
-                                {{ else }}
-                                    {{ .Session.Domain.Name }}
+                            {{ if eq .Session.User.Role "admin"}}
+                                {{ .Session.Domain.Name }}
+                            {{ else }}
+                                {{ if .Session.Domain.Name }}
+                                    {{ if stringContains .Session.Domain.Name "默认机构" }}
+                                        默认机构
+                                    {{ else }}
+                                        {{ .Session.Domain.Name }}
+                                    {{ end }}
                                 {{ end }}
                             {{ end }}
                         </a>
@@ -263,11 +271,15 @@ SPDX-License-Identifier: Apache-2.0 -->
                                         title="{{ .Session.Domain.Name }}"
                                     {{ end }}
                                 >
-                                    {{ if .Session.Domain.Name }}
-                                        {{ if stringContains .Session.Domain.Name "默认机构" }}
-                                            默认机构
-                                        {{ else }}
-                                            {{ .Session.Domain.Name }}
+                                    {{ if eq .Session.User.Role "admin"}}
+                                        {{ .Session.Domain.Name }}
+                                    {{ else }}
+                                        {{ if .Session.Domain.Name }}
+                                            {{ if stringContains .Session.Domain.Name "默认机构" }}
+                                                默认机构
+                                            {{ else }}
+                                                {{ .Session.Domain.Name }}
+                                            {{ end }}
                                         {{ end }}
                                     {{ end }}
                                 </span>
@@ -384,34 +396,37 @@ SPDX-License-Identifier: Apache-2.0 -->
             </div>
         </div>
     </div>
-
     <script src="/js/listUtils.js"></script>
     <script src="/js/cookie.js"></script>
     <script defer>
       try {
-        let userID = '{{.Session.User.ID}}';
-        let role = '{{.Session.User.Role}}';
-        let loginStatus = '{{.Session.LoginStatus}}';
+        const userID = '{{.Session.User.ID}}';
+        const role = '{{.Session.User.Role}}';
+        const loginStatus = '{{.Session.LoginStatus}}';
         let domainID, domainName, domainPermissions;
 
         if (role !== "admin") {
-          document.getElementById("users-nav-items").style.display = "none";
+            document.getElementById("users-nav-items").style.display = "none";
+            document.getElementById("domain-collapse").style.display = "none";
+        } else {
+            document.getElementById("domain-collapse-toggle").setAttribute('data-bs-toggle', 'collapse');
+            document.getElementById("domain-collapse-toggle").classList.add('dropdown-toggle');
         }
         if (loginStatus === "domain") {
-          domainPermissions = '{{.Session.Domain.Permissions}}';
-          domainID = '{{.Session.Domain.ID}}';
+            domainPermissions = '{{.Session.Domain.Permissions}}';
+            domainID = '{{.Session.Domain.ID}}';
         }
 
         if (loginStatus !== "domain") {
-          document.getElementById("domain-nav-item").style.display = "none";
-          document.getElementById("things-nav-items").style.display = "none";
-          document.getElementById("index-nav-items").style.display = "none";
-          document.getElementById("domain-header-dropdown").style.display = "none";
+            document.getElementById("domain-nav-item").style.display = "none";
+            document.getElementById("things-nav-items").style.display = "none";
+            document.getElementById("index-nav-items").style.display = "none";
+            document.getElementById("domain-header-dropdown").style.display = "none";
         } else {
-          document.getElementById("domains-sidebar-link").style.display = "none";
-          if (!domainPermissions.includes("admin")) {
-            document.getElementById("domainInvitations").style.display = "none";
-          }
+            document.getElementById("domains-sidebar-link").style.display = "none";
+            if (!domainPermissions.includes("admin")) {
+                document.getElementById("domainInvitations").style.display = "none";
+            }
         }
       } catch (error) {
         console.error("Error loading session details:", error);

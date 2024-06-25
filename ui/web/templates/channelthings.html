@@ -54,17 +54,18 @@ SPDX-License-Identifier: Apache-2.0 -->
                                     {{ end }}
                                     <div class="d-flex flex-row justify-content-between">
                                         <!-- add thing modal -->
-                                        <div class="modal fade" id="addThingModal" tabindex="-1" aria-labelledby="addThingModalLabel" aria-hidden="true">
+                                        <div class="modal fade" id="connectThingModal" tabindex="-1" aria-labelledby="connectThingModalLabel" aria-hidden="true">
                                             <div class="modal-dialog modal-dialog-centered">
                                                 <div class="modal-content">
                                                     <div class="modal-header">
-                                                      <h1 class="modal-title" id="addThingModalLabel">分区关联设备</h1>
+                                                      <h1 class="modal-title" id="connectThingModalLabel">分区关联设备</h1>
                                                       <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                                     </div>
                                                     <div class="modal-body">
                                                       <div class="row">
                                                         <p>请选择要关联的设备: </p>
-                                                        <select name="thingID" id="thingsSelector" multiple="multiple" tabindex="-1"></select>
+                                                        <ul class="list-group" id="connectThingsList" style="padding-left: 10px; max-height: 400px; overflow-y: auto;">
+                                                        </ul>
                                                       </div>
                                                     </div>
                                                     <div class="modal-footer">
@@ -94,7 +95,7 @@ SPDX-License-Identifier: Apache-2.0 -->
                                       </div>
                                     </div>
                                     {{ $channelID := .ChannelID }}
-                                    <div class="row" id="thingsGrid" data-channelID="{{ $channelID }}">
+                                    <div class="row" id="thingsGrid">
                                         {{ range $i, $t := .Things }}
                                             <div class="col-sm-3 mb-3 mb-sm-0" id="{{ $t.ID }}-thingCard">
                                               <div 
@@ -204,7 +205,10 @@ SPDX-License-Identifier: Apache-2.0 -->
                 </div>
             </div>
             <script>
-              let currentDevices = {}, newDevices = {}, connectThingModalList = [];
+              let currentDevices = {}, 
+                  newDevices = {}, 
+                  connectThingsModalList = [],  //关联设备弹框列表
+                  selectedThingsIds = []; //关联设备弹框选中id
 
               $(document).ready(function() {
                 const currentUrl = window.location.href; // 获取当前页面的URL
@@ -240,18 +244,14 @@ SPDX-License-Identifier: Apache-2.0 -->
 
                 const intervalRefreshData = setInterval(refreshThingsData, 2000);
 
-                initThingsSelector();
-
                 $('#connect-things-btn').click(function() {
-                  const channelID = $('#thingsGrid').data('channelid');
-
-                  const selectedThingIDs = $('#thingsSelector').val();
-                  if (selectedThingIDs.length) {
+                  const channelID = "{{.ChannelID}}";
+                  if (selectedThingsIds.length) {
                     // 创建一个空数组来存储所有的fetch请求Promise
                     const fetchPromises = [];
 
                     // 遍历requests数组，为每个请求创建一个Promise
-                    selectedThingIDs.forEach(thingID => {
+                    selectedThingsIds.forEach(thingID => {
                         const url = `/ui/channels/connect?channelID=${channelID}&thingID=${thingID}`;
                         fetchPromises.push(
                             fetch(url, {
@@ -283,42 +283,114 @@ SPDX-License-Identifier: Apache-2.0 -->
                 });
               });
 
-              //初始化关联设备弹框的下拉选择框
-              function initThingsSelector () {
-                $('#thingsSelector').SumoSelect({ 
-                  selectAll: true, 
-                  clearAll: false,
-                  search: true, 
-                  searchText: '请输入设备名',
-                  placeholder: '请选择设备',
-                  csvDispCount: 3,
-                  captionFormat: '{0} 已选择',
-                  captionFormatAllSelected: "'{0} 全部选择'",
-                  locale :  ['确定', '取消', '全选'],
-                  noMatch: '"{0}" 没有匹配结果',
-                });
-
-                fetch(`/ui/entities?item=things`,{ method: "GET" })
-                  .then((response) => response.json())
-                  .then((data) => {
-                    connectThingModalList = data.data;
-                    connectThingModalList.length && connectThingModalList.forEach((thing, index)=>{
-                      $('#thingsSelector')[0].sumo.add(thing.id, thing.name, index);
+              //关联设备弹框设备列表-勾选设备
+              function onSelectNewThing(e) {
+                e.stopPropagation();
+                const checkbox = e.target;
+                const isChecked = checkbox.checked;
+                const value = e.target.value;
+                //判断是否全选，全反选
+                if (value === 'selectAll') {
+                  if (isChecked) {
+                    selectedThingsIds = connectThingsModalList.map((item)=>{
+                      return item.id;
                     });
-                  })
-                  .catch((error) => console.error("Error:", error));
+                    connectThingsModalList.forEach((item)=>{
+                      $(`#checkbox_${item.id}`).prop("checked", true);
+                    });
+                  } else {
+                    selectedThingsIds = [];
+                    connectThingsModalList.forEach((item)=>{
+                      $(`#checkbox_${item.id}`).prop("checked", false);
+                    });
+                  }
+                } else {
+                  if (isChecked) {
+                    if (!selectedThingsIds.includes(value)) {
+                      selectedThingsIds.push(value);
+                    }
+                  } else {
+                    selectedThingsIds = selectedThingsIds.filter((id)=> id !== value)
+                  }
+                }
+                
+                if (selectedThingsIds.length) {
+                  $("#connect-things-btn").removeAttr("disabled");
+                  //判断全选框是否半勾选
+                  if (selectedThingsIds.length === connectThingsModalList.length) {
+                    $(`#checkbox_selectAll`).prop("checked", true);
+                    $(`#checkbox_selectAll`).prop("indeterminate", false);
+                  } else {
+                    $(`#checkbox_selectAll`).prop("indeterminate", true);
+                    $(`#checkbox_selectAll`).prop("checked", false);
+                  }
+                } else {
+                  $("#connect-things-btn").attr("disabled", true);
+                  $(`#checkbox_selectAll`).prop("indeterminate", false);
+                  $(`#checkbox_selectAll`).prop("checked", false);
+                }
               }
 
               //打开关联设备弹框
               function openConnectThingModal() {
-                const thingModal = new bootstrap.Modal(document.getElementById("addThingModal"));
+                const thingModal = new bootstrap.Modal(document.getElementById("connectThingModal"));
                 thingModal.show();
 
-                $('#thingsSelector').val([]);
-                $('#thingsSelector')[0].sumo.unSelectAll();
-                connectThingModalList.length && connectThingModalList.forEach((thing, index)=>{
-                  $('#thingsSelector')[0].sumo.unSelectItem(index);
-                });
+                connectThingsModalList = [], selectedThingsIds = [];
+
+                fetch(`/ui/entities?item=things`,{ method: "GET" })
+                  .then((response) => response.json())
+                  .then((data) => {
+                    connectThingsModalList = data.data;
+                    $(`#connectThingsList`).empty();
+                    //全选按钮
+                    const $selectAll = $(`
+                        <li class="list-group-item newThingItemList">
+                          <input 
+                            class="form-check-input" 
+                            type="checkbox" 
+                            value="selectAll" 
+                            id="checkbox_selectAll"
+                            onchange="onSelectNewThing(event)"
+                          />
+                          <label class="form-check-label" for="checkbox_selectAll" style="margin-left:5px">
+                            全选
+                          </label>
+                        </li>
+                      `);
+                    $(`#connectThingsList`).append($selectAll);
+
+                    //设备列表
+                    connectThingsModalList.forEach((thing, index)=>{
+                      const deviceIcon = getDeviceIcon(thing);
+                      const $thingList = $(`
+                        <li class="list-group-item newThingItemList" >
+                          <input 
+                            class="form-check-input" 
+                            type="checkbox" 
+                            value="${thing.id}" 
+                            id="checkbox_${thing.id}"
+                            onchange="onSelectNewThing(event)"
+                            name="checkbox_${thing.id}" 
+                            ${selectedThingsIds.includes(thing.id) ? `checked` : ``}
+                          />
+                          <label for="checkbox_${thing.id}" class="form-check-label">
+                            <img 
+                              src="/images/${deviceIcon}.svg" 
+                              style="height: 24px; margin-top: -3px;"
+                            >
+                            <span>${thing.name}</span>
+                          </label>
+                        </li>
+                      `);
+                      $(`#connectThingsList`).append($thingList);
+                    })
+
+                    $("#connect-things-btn").attr("disabled", true);
+                    $(`#checkbox_selectAll`).prop("indeterminate", false);
+                    $(`#checkbox_selectAll`).prop("checked", false);
+                  })
+                  .catch((error) => console.error("Error:", error));
               }
 
               function editThing(id, name) {

@@ -56,15 +56,15 @@ SPDX-License-Identifier: Apache-2.0 -->
                                                                 </div>
                                                             </div>
                                                             <!-- <span class="badge bg-secondary">{{ $d.Permission }}</span> -->
-                                                            <div class="row" style="margin-top: 50px;">
-                                                                <h5 class="card-title truncate-text" title="{{ $d.Name }}">
-                                                                    {{ if stringContains $d.Name "默认机构" }}
-                                                                        默认机构
-                                                                    {{ else }}
-                                                                        {{ $d.Name }}
-                                                                    {{ end }}
-                                                                </h5>
-                                                            </div>
+                                                        </div>
+                                                        <div class="row" style="margin-top: 50px;">
+                                                            <h5 class="card-title truncate-text domain-title" data-domain_title="{{ $d.Name }}" title="{{ $d.Name }}">
+                                                                {{ if stringContains $d.Name "默认机构" }}
+                                                                    默认机构
+                                                                {{ else }}
+                                                                    {{ $d.Name }}
+                                                                {{ end }}
+                                                            </h5>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -102,12 +102,23 @@ SPDX-License-Identifier: Apache-2.0 -->
                         })
                         .then(json => {
                             const data = json.data;
-                            const userInfo = JSON.parse(data).user
+                            const userInfo = JSON.parse(data).user;
                             sessionStorage.setItem("userInfo", JSON.stringify(userInfo))
-                            selectDomain(userInfo.metadata.domainID);
+                            if(userInfo.metadata && userInfo.metadata.domainID){
+                                selectDomain(userInfo.metadata.domainID);
+                            }
                         })
                         .catch(error => {
                             console.error('处理fetch或JSON时出错:', error);
+                        });
+                    }
+
+                    const role = '{{.Session.User.Role}}';
+                    if (role === 'admin') {
+                        const domainTitles = $('h5.domain-title');
+                        domainTitles.each(function() {
+                            const domainTitle = $(this).data('domain_title');
+                            $(this).html(domainTitle);
                         });
                     }
                 });

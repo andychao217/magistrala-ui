@@ -16,8 +16,7 @@ SPDX-License-Identifier: Apache-2.0 -->
                         <div class="col-lg-12 mx-auto">
                             {{ template "breadcrumb" . }}
                             <div class="row">
-                                <div class="buttons mb-3">
-                                    <button class="btn body-button" type="button" onclick="openModal('single')">添加用户</button>
+                                <div class="buttons">
                                     <!-- <button class="btn body-button" type="button" onclick="openModal('bulk')" style="display: none;">
                                       批量添加用户
                                     </button> -->
@@ -111,7 +110,7 @@ SPDX-License-Identifier: Apache-2.0 -->
                                         </div>
                                     </div>
 
-                                     <!-- add user modal -->
+                                     <!-- edit user modal -->
                                      <div class="modal fade" id="editUserModal" tabindex="-1" role="dialog" aria-labelledby="editUserModalLabel" aria-hidden="true">
                                         <div class="modal-dialog" role="document">
                                             <div class="modal-content">
@@ -144,23 +143,46 @@ SPDX-License-Identifier: Apache-2.0 -->
                                 </div>
                                 <div class="table-responsive table-container">
                                     <!-- {{ template "tableheader" . }} -->
+                                    <div class="row buttons mb-3">
+                                        <div class="col-4" role="group">
+                                            <button class="btn body-button" type="button" onclick="openModal('single')">添加用户</button>
+                                        </div>
+                                    </div>
                                     <div class="row">
                                         {{ range $i, $u := .Users }}
                                         <div class="col-sm-3 mb-3 mb-sm-0">
                                             <div class="channel-thing-card card">
-                                              <div class="card-body">
-                                                <h5 class="card-title truncate-text">{{ $u.Name }}</h5>
-                                                <p>
-                                                    <button class="btn body-button" onclick="viewUser('{{ $u.ID }}')" title="查看">
-                                                        <i class="fa-solid fa-ellipsis"></i>
-                                                    </button>
-                                                    <button title="修改" class="btn body-button" onclick="editUser('{{ $u.ID }}', '{{ $u.Name }}')">
-                                                        <i class="fa-solid fa-pencil-alt"></i>
-                                                    </button>
-                                                </p>
-                                              </div>
+                                                <div class="card-body">
+                                                    <div class="row">
+                                                        <div class="col">
+                                                            <i class="fas fa-users" style="height: 38px; float: left;"></i>
+                                                        </div>
+                                                        <div class="col">
+                                                            <div class="dropdown" style="float: right;">
+                                                                <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                                                    <i class="fa-solid fa-ellipsis"></i>
+                                                                </button>
+                                                                <ul class="dropdown-menu">
+                                                                    <li>
+                                                                        <a class="dropdown-item" onclick="viewUser('{{ $u.ID }}')">
+                                                                            <i class="fa-solid fa-info" style="width: 16px;"></i> 查看
+                                                                        </a>
+                                                                    </li>
+                                                                    <li>
+                                                                        <a class="dropdown-item" onclick="editUser('{{ $u.ID }}', '{{ $u.Name }}')">
+                                                                            <i class="fa-solid fa-pencil-alt" style="width: 16px;"></i> 修改
+                                                                        </a>
+                                                                    </li>
+                                                                </ul>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="row" style="margin-top: 50px;">
+                                                        <h5 class="card-title truncate-text">{{ $u.Name }}</h5>
+                                                    </div>
+                                                </div>
                                             </div>
-                                          </div>
+                                        </div>
                                         {{ end }}
                                     </div>
                                     <!-- {{ template "tablefooter" . }} -->
