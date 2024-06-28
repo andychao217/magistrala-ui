@@ -2,39 +2,280 @@
 SPDX-License-Identifier: Apache-2.0 -->
 
 {{ define "file" }}
-    <!doctype html>
-    <html lang="en">
-        <head>
-            <title>文件管理</title>
-            {{ template "header" }}
-            <style>
-              /* 设置iframe以适应其容器的大小 */
-              iframe {
-                  width: 100%;
-                  height: 100%;
-              }
-              /* 为iframe的直接容器设置高度 */
-              .iframe-container {
-                  width: 100%;
-                  height: 100%;
-              }
-          </style>
-        </head>
-
-        <body>
-            {{ template "navbar" . }}
-            <div class="main-content pt-3 iframe-container">
-              <iframe id="filePage" sandbox="allow-forms allow-scripts allow-same-origin allow-popups"></iframe>
+  <!doctype html>
+  <html lang="en">
+    <head>
+      <title>资源管理</title>
+      {{ template "header" }}
+    </head>
+    <body>
+      <div 
+        class="modal fade" 
+        id="filePreviewModal" 
+        tabindex="-1" 
+        role="dialog" 
+        aria-labelledby="filePreviewModalLabel"
+        data-bs-backdrop="static" 
+        data-bs-keyboard="false"  
+        aria-hidden="true"
+      >
+        <div class="modal-dialog" role="document">
+          <div class="modal-content" style="width: 530px;">
+            <div class="modal-header">
+              <h1 class="modal-title truncate-text" id="filePreviewModalTitle"></h1>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-            <script>
-              const protocol = window.location.protocol;
-              const hostname = window.location.hostname;
-              const port = window.location.port;
+            <div class="modal-body" id="filePreviewModalContent">
+            </div>
+          </div>
+        </div>
+      </div>
 
-              $(document).ready(function() {
-                $('#filePage').attr('src', `${protocol}//${hostname}:9102`);
-              });
-            </script>
-        </body>
-    </html>
+      {{ template "navbar" . }}
+      <div class="main-content pt-3">
+        <div class="container-fluid">
+          <div class="row-mb-3 p-3">
+            <div class="col-lg-12 mx-auto">
+              <div class="table-responsive table-container">
+                <div class="row">
+                  <nav>
+                    <ol class="breadcrumb" id="breadcrumbNavigator">
+                      <li class="breadcrumb-item"><a href="#">Home</a></li>
+                      <li class="breadcrumb-item"><a href="#">Library</a></li>
+                      <li class="breadcrumb-item active" aria-current="page">Data</li>
+                    </ol>
+                  </nav>
+                </div>
+                <div class="row">
+                  <table 
+                    id="fileTable"
+                    class="table table-bordered table-hover"
+                    data-checkbox-header="true"
+                    data-click-to-select="false"
+                  >
+                    <thead>
+                      <tr>
+                        <th data-field="state" data-checkbox="true"></th>
+                        <th data-field="fileName" data-formatter="fileNameTableFormatter">文件名</th>
+                        <th data-field="size" data-formatter="fileSizeTableFormatter">大小(MB)</th>
+                        <th data-field="lastModified">修改时间</th>
+                        <th data-field="action" data-formatter="actionTableFormatter">操作</th>
+                      </tr>
+                    </thead>
+                  </table>
+                  <!-- <h1>MinIO File Upload</h1>
+                  <form id="uploadForm" enctype="multipart/form-data">
+                      <input type="file" id="fileInput" name="file" />
+                      <button type="submit">Upload</button>
+                  </form>
+                  <h2>Uploaded Files</h2>
+                  <ul id="fileList"></ul> -->
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <script>
+        const protocol = window.location.protocol;
+        const hostname = window.location.hostname;
+        const userInfoStr = sessionStorage.getItem("userInfo");
+        let comID = "";
+        if (userInfoStr) {
+          const userInfo = JSON.parse(userInfoStr);
+          comID = userInfo.metadata.comID;
+        }
+        let currentFolderList = [], //当前选中文件夹列表
+            rawTableData = []; //表格元数据
+
+        document.getElementById("filePreviewModal").addEventListener('hidden.bs.modal', () => {
+          const audio = document.getElementById("audioPreview");
+          audio.pause(); // 暂停音频播放
+          audio.currentTime = 0; // 重置音频到开始位置
+          $("#filePreviewModalTitle").empty();
+          $("#filePreviewModalContent").empty();
+        });
+
+        // document.getElementById('uploadForm').addEventListener('submit', function(e) {
+        //   e.preventDefault();
+        //   const fileInput = document.getElementById('fileInput');
+        //   const file = fileInput.files[0];
+
+        //   let formData = new FormData();
+        //   formData.append('file', file);
+
+        //   fetch(`${protocol}//${hostname}:9102/upload`, {
+        //     method: 'POST',
+        //     body: formData
+        //   }).then(response => response.text()).then(data => {
+        //     console.log(data);
+        //     loadFiles();
+        //   }).catch(error => {
+        //     console.error('Error:', error);
+        //   });
+        // });
+
+        // function loadFiles() {
+        //   fetch(`${protocol}//${hostname}:9102/files`).then(response => response.text()).then(data => {
+        //     const fileList = document.getElementById('fileList');
+        //     fileList.innerHTML = '';
+        //     data.split('\n').forEach(file => {
+        //       if (file) {
+        //         let li = document.createElement('li');
+        //         li.textContent = file;
+
+        //         let downloadLink = document.createElement('a');
+        //         downloadLink.href = `${protocol}//${hostname}:9102/download/${file}`;
+        //         downloadLink.textContent = ' Download';
+        //         li.appendChild(downloadLink);
+
+        //         const deleteButton = document.createElement('button');
+        //         deleteButton.textContent = ' Delete';
+        //         deleteButton.addEventListener('click', function() {
+        //             deleteFile(file);
+        //         });
+
+        //         li.appendChild(deleteButton);
+        //         fileList.appendChild(li);
+        //       }
+        //     });
+        //   }).catch(error => {
+        //       console.error('Error:', error);
+        //   });
+        // }
+
+        // function deleteFile(fileName) {
+        //   fetch(`${protocol}//${hostname}:9102/delete/${fileName}`, {
+        //     method: 'DELETE'
+        //   }).then(response => {
+        //     if (response.ok) {
+        //       console.log('File deleted:', fileName);
+        //       loadFiles(); // 重新加载文件列表
+        //     } else {
+        //       console.error('Failed to delete file:', fileName);
+        //     }
+        //   }).catch(error => {
+        //     console.error('Error:', error);
+        //   });
+        // }
+
+        
+        loadFilesTable();
+
+        // 初始化加载文件列表
+        function loadFilesTable() {
+          const $fileTable = $('#fileTable');
+          fetch(`${protocol}//${hostname}:9102/resourceTree?comID=${comID}`)
+            .then(response => {
+              if (!response.ok) {
+                  throw new Error("Network response was not ok");
+                  $fileTable.bootstrapTable({data: []});
+              }
+              return response.json(); // 直接将流转换为JSON对象
+            }).then(data => {
+              $fileTable.bootstrapTable({data: data.children || []});
+              currentFolderList.push(data);
+              rawTableData = data;
+            }).catch(error => {
+              console.error('Error:', error);
+              $fileTable.bootstrapTable({data: []});
+            });
+        }
+
+        //表格文件名称列
+        function fileNameTableFormatter(value, row, index) {
+          if (row.isDir) {
+            return `<div>
+                      <img src="/images/icon_folder.png" style="width: 16px; margin-right: 5px; margin-bottom: 3px;"/>
+                      <span data-key="${row.key}" onclick="onClickFolder(event)">${value}</span>
+                    </div>`;
+          } else {
+            return `<div>
+                      <img src="/images/icon_mp3.png" style="width: 18px; margin-right: 5px; margin-bottom: 3px;"/>
+                      <span>${value}</span>
+                    </div>`;
+          }
+        }
+
+        function findObjectByKey(data, targetKey) {
+          // 检查当前对象是否匹配目标key
+          if (data.key === targetKey) {
+            return data;
+          }
+          // 如果当前对象有children属性，递归搜索
+          if (data.children && data.children.length > 0) {
+            for (let i = 0; i < data.children.length; i++) {
+              const result = findObjectByKey(data.children[i], targetKey);
+              if (result) {
+                return result; // 如果找到匹配的对象，立即返回
+              }
+            }
+          }
+          // 如果没有找到匹配的对象，返回null
+          return null;
+        }
+
+        //点击文件夹
+        function onClickFolder (e) {
+          const key = e.target.dataset.key;
+          const row = findObjectByKey(rawTableData,key);
+          currentFolderList.push(row);
+          const $fileTable = $('#fileTable');
+          $fileTable.bootstrapTable('load', row.children || []);
+        }
+
+        //表格文件大小列
+        function fileSizeTableFormatter(value, row, index) {
+          if (row.isDir) {
+            return '';
+          } else {
+            return row.size;
+          }
+        }
+
+        //表格操作列
+        function actionTableFormatter(value, row, index) {
+          if (row.isDir) {
+            return '';
+          } else {
+            //获取文件后缀名
+            function getFileExtension(filename) {
+              return filename.split('.').pop();
+            }
+            const extension = getFileExtension(row.fileName);
+
+            if (extension.toLowerCase() === 'mp3' || extension.toLowerCase() === 'wav') {
+              return `<button 
+                        class="btn btn-link" 
+                        title="试听" 
+                        onclick="filePreview('${row.fileName}', '${row.key}')"
+                        style="height:24px; margin-top: -15px;"
+                      >
+                        <i class="fa-solid fa-headphones"></i>
+                      </button>`;
+            } else {
+              return '';
+            }
+          }
+        }
+
+        //预览音频文件
+        function filePreview(fileName, key) {
+          const filePreviewModal = new bootstrap.Modal(document.getElementById("filePreviewModal"));
+          filePreviewModal.show();
+
+          $("#filePreviewModalTitle").html(fileName);
+          $audio = $(`
+            <audio controls autoplay style="width: 500px;" id="audioPreview">
+              <source src="${protocol}//${hostname}:9102/previewFile?key=${key}" type="audio/mpeg">
+               您的浏览器不支持 audio 元素。
+            </audio>
+          `);
+          $("#filePreviewModalContent").append($audio);
+        }
+
+        
+      </script>
+    </body>
+  </html>
 {{ end }}

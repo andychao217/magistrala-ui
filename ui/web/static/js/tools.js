@@ -184,25 +184,25 @@ function watchVariable(value, callback) {
 */
 
 function getDeviceIcon (deviceInfo) {
-	let src = 'icon_device0',
+	let src = 'icon_device0.svg',
 		product_name = deviceInfo.product_name || deviceInfo.metadata.product_name;
 	if (product_name.indexOf('2204') > -1 || product_name.indexOf('2200') > -1 || product_name.indexOf('2201') > -1) {
-		src = 'icon_device1';
+		src = 'icon_device1.svg';
 	}
 	if (product_name.indexOf('2102') > -1 || product_name.indexOf('2110') > -1 || product_name.indexOf('2112') > -1) {
-		src = 'icon_device2';
+		src = 'icon_device2.png';
 	}
 	if (product_name.indexOf('3302') > -1) {
-		src = 'icon_device3';
+		src = 'icon_device3.svg';
 	}
 	if (product_name.indexOf('2001') > -1 || product_name.indexOf('2011') > -1) {
-		src = 'icon_device4';
+		src = 'icon_device4.svg';
 	}
 	if (product_name.indexOf('3401') > -1 || product_name.indexOf('2401') > -1) {
-		src = 'icon_device5';
+		src = 'icon_device5.svg';
 	}
 	if (product_name.indexOf('3602') > -1) {
-		src = 'icon_device8';
+		src = 'icon_device8.svg';
 	}
 	return src;
 };

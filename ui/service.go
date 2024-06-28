@@ -845,6 +845,23 @@ func (us *uiService) CreateThings(token string, things ...sdk.Thing) error {
 	return nil
 }
 
+// splitArrays splits the input array into two arrays: one with elements containing underscores and one without.
+// 根据设备Identity是否含有_分成两个数组，如果含有_则为设备的多通道
+func splitArrays(input []sdk.Thing) ([]sdk.Thing, []sdk.Thing) {
+	hasUnderscore := []sdk.Thing{}
+	noUnderscore := []sdk.Thing{}
+
+	for _, item := range input {
+		if strings.Contains(item.Credentials.Identity, "_") {
+			hasUnderscore = append(hasUnderscore, item)
+		} else {
+			noUnderscore = append(noUnderscore, item)
+		}
+	}
+
+	return hasUnderscore, noUnderscore
+}
+
 func (us *uiService) ListThings(s Session, status string, page, limit uint64, onlineStatus uint64) ([]byte, error) {
 	offset := (page - 1) * limit
 
@@ -899,6 +916,11 @@ func (us *uiService) ListThings(s Session, status string, page, limit uint64, on
 		}
 		things.Things = onlineThings
 	}
+
+	//identity 中有下划线则表示为多通道，默认在设备页面隐藏
+	hasUnderscore, noUnderscore := splitArrays(things.Things)
+	things.Things = noUnderscore
+	things.Total = things.Total - uint64(len(hasUnderscore))
 
 	noOfPages := int(math.Ceil(float64(things.Total) / float64(limit)))
 

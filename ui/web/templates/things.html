@@ -305,11 +305,11 @@ SPDX-License-Identifier: Apache-2.0 -->
                                                     {{ else if stringContains $t.Metadata.product_name "2201" }}
                                                       <img id="{{ $t.ID }}-thingIcon" src="/images/icon_device1.svg" alt="" style="height: 38px; float: left;">
                                                     {{ else if stringContains $t.Metadata.product_name "2102" }}
-                                                      <img id="{{ $t.ID }}-thingIcon" src="/images/icon_device2.svg" alt="" style="height: 38px; float: left;">
+                                                      <img id="{{ $t.ID }}-thingIcon" src="/images/icon_device2.png" alt="" style="height: 38px; float: left;">
                                                     {{ else if stringContains $t.Metadata.product_name "2110" }}
-                                                      <img id="{{ $t.ID }}-thingIcon" src="/images/icon_device2.svg" alt="" style="height: 38px; float: left;">
+                                                      <img id="{{ $t.ID }}-thingIcon" src="/images/icon_device2.png" alt="" style="height: 38px; float: left;">
                                                     {{ else if stringContains $t.Metadata.product_name "2112" }}
-                                                      <img id="{{ $t.ID }}-thingIcon" src="/images/icon_device2.svg" alt="" style="height: 38px; float: left;">
+                                                      <img id="{{ $t.ID }}-thingIcon" src="/images/icon_device2.png" alt="" style="height: 38px; float: left;">
                                                     {{ else if stringContains $t.Metadata.product_name "3302" }}
                                                       <img id="{{ $t.ID }}-thingIcon" src="/images/icon_device3.svg" alt="" style="height: 38px; float: left;">
                                                     {{ else if stringContains $t.Metadata.product_name "2001" }}
@@ -350,16 +350,7 @@ SPDX-License-Identifier: Apache-2.0 -->
                                                           <i class="fa-solid fa-arrows-rotate" style="width: 16px;"></i> 重启
                                                         </a>
                                                       </li>
-                                                      <li
-                                                        id="{{ $t.ID }}-editBtn"
-                                                        {{ if $t.Metadata.is_online }}
-                                                          {{ if eq $t.Metadata.is_online "1" }}
-                                                            style="display: block;"
-                                                          {{ else }}
-                                                            style="display: none;"
-                                                          {{ end }}
-                                                        {{ end }}
-                                                      >
+                                                      <li id="{{ $t.ID }}-editBtn">
                                                         <a class="dropdown-item" onclick="editThing('{{ $t.ID }}', '{{ $t.Name }}')">
                                                           <i class="fa-solid fa-pencil-alt" style="width: 16px;"></i> 修改
                                                         </a>
@@ -374,7 +365,7 @@ SPDX-License-Identifier: Apache-2.0 -->
                                                 </div>
                                               </div>
                                               <div class="row" style="margin-top: 50px;">
-                                                <h5 class="card-title truncate-text">{{ $t.Name }}</h5>
+                                                <h5 class="card-title truncate-text" title="{{ $t.Name }}">{{ $t.Name }}</h5>
                                               </div>
                                             </div>
                                           </div>
@@ -655,11 +646,9 @@ SPDX-License-Identifier: Apache-2.0 -->
                 if (onlineStatus) {
                   $(`#${thing.id}-thingCardContent`).css('background', 'white');
                   $(`#${thing.id}-rebootBtn`).css('display', 'block');
-                  $(`#${thing.id}-editBtn`).css('display', 'block');
                 } else {
                   $(`#${thing.id}-thingCardContent`).css('background', 'lightgray');
                   $(`#${thing.id}-rebootBtn`).css('display', 'none');
-                  $(`#${thing.id}-editBtn`).css('display', 'none');
                 }
               }
 
@@ -687,7 +676,10 @@ SPDX-License-Identifier: Apache-2.0 -->
                   .then(json => {
                     const data = json.data;
                     const thingsData = JSON.parse(data).thingsData;
-                    const things = thingsData.things || [];
+                    const things = thingsData.things.filter((thing)=>{
+                      //identity 中有下划线则表示为多通道，默认在设备页面隐藏
+                      return !thing.credentials.identity.includes("_");
+                    }) || [];
                     newDevices = {};
                       // 所有在线\离线
                     if (things.length) {
@@ -741,7 +733,7 @@ SPDX-License-Identifier: Apache-2.0 -->
                     ) {
                       const device = newDevices[newId];
                       const deviceIcon = getDeviceIcon(device);
-                      const imgSpan = `<img id="${device.id}-thingIcon" src="/images/${deviceIcon}.svg" alt="" style="height: 38px; float: left;">`;
+                      const imgSpan = `<img id="${device.id}-thingIcon" src="/images/${deviceIcon}" alt="" style="height: 38px; float: left;">`;
                       const btnSpan = `
                         <div class="dropdown" style="float: right;">
                           <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
@@ -756,7 +748,7 @@ SPDX-License-Identifier: Apache-2.0 -->
                                 <i class="fa-solid fa-arrows-rotate" style="width: 16px;"></i> 重启
                               </a>
                             </li>
-                            <li id="${device.id}-editBtn" style="display: ${device.metadata && Number(device.metadata.is_online) === 1 ? 'block':'none'}">
+                            <li id="${device.id}-editBtn">
                               <a class="dropdown-item" onclick="editThing('${device.id}', '${device.name}')">
                                 <i class="fa-solid fa-pencil-alt" style="width: 16px;"></i> 修改
                               </a>
@@ -771,7 +763,7 @@ SPDX-License-Identifier: Apache-2.0 -->
                       `;
                       const $thingCard = $(`
                         <div class="col-sm-3 mb-3 mb-sm-0" id="${device.id}-thingCard">
-                          <div class="channel-thing-card card" id="${device.id}-thingCardContent">
+                          <div class="channel-thing-card card" id="${device.id}-thingCardContent" >
                             <div class="card-body">
                               <div class="row">
                                 <div class="col">
@@ -782,13 +774,14 @@ SPDX-License-Identifier: Apache-2.0 -->
                                 </div>
                               </div>
                               <div class="row" style="margin-top:50px">
-                                <h5 class="card-title truncate-text">${device.name}</h5>
+                                <h5 class="card-title truncate-text" title="${device.name}">${device.name}</h5>
                               </div>
                             </div>
                           </div>
                         </div>
                       `);
                       $(`#thingsGrid`).append($thingCard);
+                      changeOnlineStatus(device);
                     }
                   })
                 }
@@ -812,7 +805,10 @@ SPDX-License-Identifier: Apache-2.0 -->
                   .then(json => {
                     const data = json.data;
                     const thingsData = JSON.parse(data).thingsData;
-                    const things = thingsData.things || [];
+                    const things = thingsData.things.filter((thing)=>{
+                      //identity 中有下划线则表示为多通道，默认在设备页面隐藏
+                      return !thing.credentials.identity.includes("_");
+                    }) || [];
                     currentDevices = {};
                     if (things.length) {
                       things.forEach(device => {
@@ -1094,7 +1090,7 @@ SPDX-License-Identifier: Apache-2.0 -->
                       />
                       <label class="form-check-label" data-device_name="${thing.device_name}" >
                         <img 
-                          src="/images/${deviceIcon}.svg" 
+                          src="/images/${deviceIcon}" 
                           style="height: 24px; margin-top: -3px;"
                           data-device_name="${thing.device_name}" 
                         >
@@ -1165,20 +1161,45 @@ SPDX-License-Identifier: Apache-2.0 -->
               //添加扫描设备
               function addScanNewThings() {
                 const selectedNewThings = scanNewThingsList.filter(item => selectedNewThingNames.includes(item.device_name));
-                const query = selectedNewThings.map((thing)=>{
-                    return {
-                      name: thing.device_aliase,
-                      credentials: {
-                        identity: thing.device_name,
-                        secret: thing.device_name,
-                      },
-                      tags: [],
-                      metadata: {
-                        product_name: thing.product_name,
-                        is_online: "0",
-                      }
+                const oriQuery = selectedNewThings.map((thing)=>{
+                  return {
+                    name: thing.device_aliase,
+                    credentials: {
+                      identity: thing.device_name,
+                      secret: thing.device_name,
+                    },
+                    tags: [],
+                    metadata: {
+                      product_name: thing.product_name,
+                      is_online: "0",
+                      out_channel: thing.out_channel && thing.out_channel.channel ? thing.out_channel.channel.length : 0,
+                      out_channel_array: thing.out_channel && thing.out_channel.channel ? thing.out_channel.channel : [],
+                      is_channel: "0",
+                      aliase: thing.out_channel && thing.out_channel.channel && thing.out_channel.channel.length ? thing.device_aliase + "_" + thing.out_channel.channel[0].aliase : thing.device_aliase
                     }
-                  })
+                  }
+                });
+
+                let query = [];
+                for(let i = 0; i < oriQuery.length; i++) {
+                  if (oriQuery[i].metadata.out_channel > 1) {
+                    //当out_channel存在且大于1时，说明有是多通道设备，则要保存为多个设备
+                    // 1、先保存一个原样的
+                    query.push(oriQuery[i])
+                    // 2、根据out_channel的大小从下标2开始，生成多个通道设备
+                    for (let j = 2; j <= oriQuery[i].metadata.out_channel_array.length; j++) {
+                      let newThing = oriQuery[i];
+                      newThing.credentials.identity = `${oriQuery[i].credentials.identity}_${j}`;
+                      newThing.credentials.secret = `${oriQuery[i].credentials.secret}_${j}`;
+                      newThing.metadata.aliase = `${oriQuery[i].name}_${oriQuery[i].metadata.out_channel_array[j-1].aliase}`;
+                      newThing.metadata.is_channel = "1";
+                      query.push(newThing);
+                    }
+                  } else {
+                    //当out_channel不存在 或者 等于1时，说明不是多通道设备，保留原样
+                    query.push(oriQuery[i]);
+                  }
+                }
                   
                 //获取当前domain的ID号
                 const domainID = sessionStorage.getItem("domainID");

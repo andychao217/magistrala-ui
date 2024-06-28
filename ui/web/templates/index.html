@@ -149,7 +149,10 @@ SPDX-License-Identifier: Apache-2.0 -->
                   .then(json => {
                     const data = json.data;
                     const thingsData = JSON.parse(data).thingsData;
-                    const things = thingsData.things || [];
+                    const things = thingsData.things.filter((thing)=>{
+                      //identity 中有下划线则表示为多通道，默认在设备页面隐藏
+                      return !thing.credentials.identity.includes("_");
+                    }) || [];
                     let onlineThingsQuantity = 0, offlineThingsQuantity = 0, totalThingsQuantity = 0;
                     if (things.length) {
                       const onlineThings = things.filter((thing)=>{

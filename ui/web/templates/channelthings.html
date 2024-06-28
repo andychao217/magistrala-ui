@@ -13,37 +13,6 @@ SPDX-License-Identifier: Apache-2.0 -->
             <div class="main-content pt-3">
                 <div class="container-fluid">
                     <div class="row-mb-3">
-                        <!-- edit thing modal -->
-                        <div class="modal fade" id="editThingModal" tabindex="-1" role="dialog" aria-labelledby="editThingModalLabel" aria-hidden="true">
-                          <div class="modal-dialog" role="document">
-                              <div class="modal-content">
-                                  <div class="modal-header">
-                                      <h1 class="modal-title" id="editThingModalLabel">修改设备</h1>
-                                      <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                  </div>
-                                  <form id="editThingform">
-                                      <div class="modal-body">
-                                          <div id="editAlertMessage"></div>
-
-                                          <div class="mb-3">
-                                              <label for="name" class="form-label">名称</label>
-                                              <input type="text" class="form-control name-field" name="name" id="editName" placeholder="设备名称" />
-                                              <div id="editNameError" class="text-danger"></div>
-                                          </div>
-                                          <div class="mb-3">
-                                              <label for="id" class="form-label">设备ID</label>
-                                              <input type="text" class="form-control" name="id" id="editID" placeholder="设备ID" readonly />
-                                          </div>
-                                      </div>
-                                      <div class="modal-footer">
-                                          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">取消</button>
-                                          <button type="submit" class="btn body-button" id="edit-thing-button">确定</button>
-                                      </div>
-                                  </form>
-                              </div>
-                          </div>
-                        </div>
-
                         <div class="col-lg-12 mx-auto">
                             {{ template "breadcrumb" . }}
                             <div class="row" style="padding-left: 20px;">
@@ -112,35 +81,7 @@ SPDX-License-Identifier: Apache-2.0 -->
                                                 <div class="card-body">
                                                   <div class="row">
                                                     <div class="col">
-                                                      {{ if $t.Metadata.product_name }}
-                                                        {{ if stringContains $t.Metadata.product_name "2204" }}
-                                                          <img id="{{ $t.ID }}-thingIcon" src="/images/icon_device1.svg" alt="" style="height: 38px; float: left;">
-                                                        {{ else if stringContains $t.Metadata.product_name "2200" }}
-                                                          <img id="{{ $t.ID }}-thingIcon" src="/images/icon_device1.svg" alt="" style="height: 38px; float: left;">
-                                                        {{ else if stringContains $t.Metadata.product_name "2201" }}
-                                                          <img id="{{ $t.ID }}-thingIcon" src="/images/icon_device1.svg" alt="" style="height: 38px; float: left;">
-                                                        {{ else if stringContains $t.Metadata.product_name "2102" }}
-                                                          <img id="{{ $t.ID }}-thingIcon" src="/images/icon_device2.svg" alt="" style="height: 38px; float: left;">
-                                                        {{ else if stringContains $t.Metadata.product_name "2110" }}
-                                                          <img id="{{ $t.ID }}-thingIcon" src="/images/icon_device2.svg" alt="" style="height: 38px; float: left;">
-                                                        {{ else if stringContains $t.Metadata.product_name "2112" }}
-                                                          <img id="{{ $t.ID }}-thingIcon" src="/images/icon_device2.svg" alt="" style="height: 38px; float: left;">
-                                                        {{ else if stringContains $t.Metadata.product_name "3302" }}
-                                                          <img id="{{ $t.ID }}-thingIcon" src="/images/icon_device3.svg" alt="" style="height: 38px; float: left;">
-                                                        {{ else if stringContains $t.Metadata.product_name "2001" }}
-                                                          <img id="{{ $t.ID }}-thingIcon" src="/images/icon_device4.svg" alt="" style="height: 38px; float: left;">
-                                                        {{ else if stringContains $t.Metadata.product_name "2011" }}
-                                                          <img id="{{ $t.ID }}-thingIcon" src="/images/icon_device4.svg" alt="" style="height: 38px; float: left;">
-                                                        {{ else if stringContains $t.Metadata.product_name "3401" }}
-                                                          <img id="{{ $t.ID }}-thingIcon" src="/images/icon_device5.svg" alt="" style="height: 38px; float: left;">
-                                                        {{ else if stringContains $t.Metadata.product_name "2401" }}
-                                                          <img id="{{ $t.ID }}-thingIcon" src="/images/icon_device5.svg" alt="" style="height: 38px; float: left;">
-                                                        {{ else if stringContains $t.Metadata.product_name "3602" }}
-                                                          <img id="{{ $t.ID }}-thingIcon" src="/images/icon_device8.svg" alt="" style="height: 38px; float: left;">
-                                                        {{ else }}
-                                                          <img id="{{ $t.ID }}-thingIcon" src="/images/icon_device0.svg" alt="" style="height: 38px; float: left;">
-                                                        {{ end }}
-                                                      {{ end }}
+                                                      <img id="{{ $t.ID }}-thingIcon" src="/images/icon_channel.png" alt="" style="height: 38px; float: left;">
                                                     </div>
                                                     <div class="col">
                                                       <div class="dropdown" style="float: right;">
@@ -170,27 +111,13 @@ SPDX-License-Identifier: Apache-2.0 -->
                                                                 <i class="fa-solid fa-arrows-rotate" style="width: 16px;"></i> 重启
                                                               </a>
                                                             </li>
-                                                            <li
-                                                              id="{{ $t.ID }}-editBtn"
-                                                              {{ if $t.Metadata.is_online }}
-                                                                {{ if eq $t.Metadata.is_online "1" }}
-                                                                  style="display: block;"
-                                                                {{ else }}
-                                                                  style="display: none;"
-                                                                {{ end }}
-                                                              {{ end }}
-                                                            >
-                                                              <a class="dropdown-item" onclick="editThing('{{ $t.ID }}', '{{ $t.Name }}')">
-                                                                <i class="fa-solid fa-pencil-alt" style="width: 16px;"></i> 修改
-                                                              </a>
-                                                            </li>
                                                           </form>
                                                         </ul>
                                                       </div>
                                                     </div>
                                                   </div>
                                                   <div class="row" style="margin-top: 50px;">
-                                                    <h5 class="card-title truncate-text">{{ $t.Name }}</h5>
+                                                    <h5 class="card-title truncate-text" title="{{ $t.Metadata.aliase }}">{{ $t.Metadata.aliase }}</h5>
                                                   </div>
                                                 </div>
                                               </div>
@@ -376,7 +303,6 @@ SPDX-License-Identifier: Apache-2.0 -->
 
                     //设备列表
                     connectThingsModalList.forEach((thing, index)=>{
-                      const deviceIcon = getDeviceIcon(thing);
                       const $thingList = $(`
                         <li class="list-group-item newThingItemList" >
                           <input 
@@ -390,10 +316,10 @@ SPDX-License-Identifier: Apache-2.0 -->
                           />
                           <label for="checkbox_${thing.id}" class="form-check-label">
                             <img 
-                              src="/images/${deviceIcon}.svg" 
-                              style="height: 24px; margin-top: -3px;"
+                              src="/images/icon_channel.png" 
+                              style="height: 16px; margin-top: -3px;"
                             >
-                            <span>${thing.name}</span>
+                            <span>${thing.metadata.aliase}</span>
                           </label>
                         </li>
                       `);
@@ -405,13 +331,6 @@ SPDX-License-Identifier: Apache-2.0 -->
                     $(`#checkbox_selectAll`).prop("checked", false);
                   })
                   .catch((error) => console.error("Error:", error));
-              }
-
-              function editThing(id, name) {
-                const editThingModal = new bootstrap.Modal(document.getElementById("editThingModal"));
-                editThingModal.show();
-                $("#editName").val(name);
-                $("#editID").val(id);
               }
 
               //查看详情
@@ -448,12 +367,10 @@ SPDX-License-Identifier: Apache-2.0 -->
                 if (onlineStatus) {
                   $(`#${thing.id}-thingCardContent`).css('background', 'white');
                   $(`#${thing.id}-rebootBtn`).css('display', 'block');
-                  $(`#${thing.id}-editBtn`).css('display', 'block');
                   $(`#${thing.id}-deleteBtn`).css('display', 'none');
                 } else {
                   $(`#${thing.id}-thingCardContent`).css('background', 'lightgray');
                   $(`#${thing.id}-rebootBtn`).css('display', 'none');
-                  $(`#${thing.id}-editBtn`).css('display', 'none');
                   $(`#${thing.id}-deleteBtn`).css('display', 'block');
                 }
               }
@@ -540,8 +457,7 @@ SPDX-License-Identifier: Apache-2.0 -->
                       (typeof currentDevices[newId] === 'object' && Object.entries(currentDevices[newId]).length === 0)
                     ) {
                       const device = newDevices[newId];
-                      const deviceIcon = getDeviceIcon(device);
-                      const imgSpan = `<img id="${device.id}-thingIcon" src="/images/${deviceIcon}.svg" alt="" style="height: 38px; float: left;">`;
+                      const imgSpan = `<img id="${device.id}-thingIcon" src="/images/icon_channel.png" alt="" style="height: 38px; float: left;">`;
                       const btnSpan = `
                         <div class="dropdown" style="float: right;">
                           <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
@@ -561,11 +477,6 @@ SPDX-License-Identifier: Apache-2.0 -->
                                   <i class="fa-solid fa-arrows-rotate" style="width: 16px;"></i> 重启
                                 </a>
                               </li>
-                              <li id="${device.id}-editBtn" style="display: ${device.metadata && Number(device.metadata.is_online) === 1 ? 'block':'none'}">
-                                <a class="dropdown-item" onclick="editThing('${device.id}', '${device.name}')">
-                                  <i class="fa-solid fa-pencil-alt" style="width: 16px;"></i> 修改
-                                </a>
-                              </li>
                             </form>
                           </ul>
                         </div>
@@ -583,13 +494,14 @@ SPDX-License-Identifier: Apache-2.0 -->
                                 </div>
                               </div>
                               <div class="row" style="margin-top:50px">
-                                <h5 class="card-title truncate-text">${device.name}</h5>
+                                <h5 class="card-title truncate-text" title="${device.metadata.aliase}">${device.metadata.aliase}</h5>
                               </div>
                             </div>
                           </div>
                         </div>
                       `);
                       $(`#thingsGrid`).append($thingCard);
+                      changeOnlineStatus(device);
                     }
                   })
                 }
@@ -702,34 +614,6 @@ SPDX-License-Identifier: Apache-2.0 -->
                   // });
                 }
               }
-            </script>      
-            <script type="module">
-              import {
-                attachValidationListener,
-                validateName,
-              } from "/js/validation.js";
-              import { submitCreateForm } from "/js/forms.js";
-
-              attachValidationListener({
-                buttonId: "edit-thing-button",
-                errorDivs: {
-                  name: "editNameError",
-                },
-                validations: {
-                  editName: validateName,
-                },
-                fields: {
-                  editName: "name-field",
-                },
-              });
-
-              submitCreateForm({
-                url: '{{ printf "%s/things" pathPrefix }}',
-                formId: "editThingform",
-                alertDiv: "editAlertMessage",
-                modal: editThingModal,
-                type: "edit"
-              });
             </script>
         </body>
     </html>
