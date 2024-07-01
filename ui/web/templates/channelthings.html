@@ -140,7 +140,7 @@ SPDX-License-Identifier: Apache-2.0 -->
               $(document).ready(function() {
                 const currentUrl = window.location.href; // 获取当前页面的URL
                 const urlObj = new URL(currentUrl);
-                const onlineStatusValue = (currentUrl.match(/onlineStatus=(\d+)/) || [])[1]; // 从URL获取onlineStatus的值
+                const onlineStatusValue = (currentUrl.match(/onlineStatus=(\d+)/) || [])[1] || sessionStorage.getItem("onlineStatus") || '1'; // 从URL获取onlineStatus的值
                 sessionStorage.setItem("onlineStatus", onlineStatusValue);
                 getThingsList(onlineStatusValue);
 
@@ -176,50 +176,28 @@ SPDX-License-Identifier: Apache-2.0 -->
                 $('#connect-things-btn').click(function() {
                   const channelID = "{{.ChannelID}}";
                   if (selectedThingsIds.length) {
-                    // 创建一个空数组来存储所有的fetch请求Promise
-                    const fetchPromises = [];
-
-                    // 遍历requests数组，为每个请求创建一个Promise
-                    selectedThingsIds.forEach(thingID => {
-                        const url = `/ui/channels/connect?channelID=${channelID}&thingID=${thingID}`;
-                        fetchPromises.push(
-                            fetch(url, {
-                                method: "POST",
-                            })
-                            .then(response => {
-                              return response.json();
-                            })
-                        );
-                    });
-
-                    // 使用Promise.all等待所有fetch请求完成
-                    Promise.all(fetchPromises)
-                        .then(responses => {
-                            // 所有请求都成功返回，可以处理响应数据
-                            responses.forEach(json => {
-                                console.error("处理fetch或JSON时出错:");
-                            });
-                            // 获取当前 URL
-                            const currentUrl = new URL(window.location.href);
-                            const reqOnlineStatus = sessionStorage.getItem("onlineStatus");
-                            // 修改查询参数
-                            currentUrl.searchParams.set('onlineStatus', reqOnlineStatus);
-                            // 跳转到新的 URL
-                            window.location.href = currentUrl.toString();
-                        })
-                        .catch(error => {
-                            // 处理任何请求失败的情况
-                            console.error('An error occurred:', error);
-                            // 获取当前 URL
-                            const currentUrl = new URL(window.location.href);
-                            const reqOnlineStatus = sessionStorage.getItem("onlineStatus");
-                            // 修改查询参数
-                            currentUrl.searchParams.set('onlineStatus', reqOnlineStatus);
-                            // 跳转到新的 URL
-                            window.location.href = currentUrl.toString();
-                        });
+                    // 定义一个异步函数来处理顺序调用
+                    async function processRequests() {
+                      try {
+                        for (const thingID of selectedThingsIds) {
+                          const url = `/ui/channels/connect?channelID=${channelID}&thingID=${thingID}`;
+                          const response = await fetch(url, {
+                            method: "POST",
+                          });
+                          const json = await response.json();
+                          console.error("处理fetch或JSON时出错:");
+                        }
+                        // 所有请求都成功返回，刷新页面
+                        window.location.reload();
+                      } catch (error) {
+                        // 捕获错误并刷新页面
+                        window.location.reload();
+                      }
+                    }
+                    // 调用异步函数
+                    processRequests();
                   } else {
-                    alert("请选择要添加的设备")
+                      alert("请选择要添加的设备");
                   }
                 });
               });

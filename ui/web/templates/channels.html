@@ -207,7 +207,9 @@ SPDX-License-Identifier: Apache-2.0 -->
                   // 阻止事件冒泡或默认行为
                   event.stopPropagation();
                 } else {
-                  window.location.href = `/ui/channels/${id}/things?limit=1000&onlineStatus=1`;
+                  const onlineStatus = "1";
+                  sessionStorage.setItem("onlineStatus", onlineStatus);
+                  window.location.href = `/ui/channels/${id}/things?limit=1000&onlineStatus=${onlineStatus}`;
                 }
               }
 
@@ -230,9 +232,9 @@ SPDX-License-Identifier: Apache-2.0 -->
                     const data = json.data;
                     const thingsData = JSON.parse(data).thingsData;
                     const things = thingsData.things;
-                    const fetchPromises = things.map((thing)=>disconnectThingsAndChannels(thing.id, channelID));
+                    const fetchPromises = things.map((thing) => disconnectThingsAndChannels(thing.id, channelID));
                     Promise.all(fetchPromises).then(responses => {})
-                      .then(jsonData => {handleDelete(channelID)})
+                      .then(jsonData => { handleDelete(channelID) })
                       .catch(error => {
                         // 如果有任何错误发生，这里会捕获到
                         console.error('An error occurred:', error);

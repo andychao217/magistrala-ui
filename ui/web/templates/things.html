@@ -389,7 +389,7 @@ SPDX-License-Identifier: Apache-2.0 -->
               $(document).ready(function() {
                 const url = window.location.href; // 获取当前页面的URL
                 const address = new URL(url);
-                const onlineStatusValue = (url.match(/onlineStatus=(\d+)/) || [])[1]; // 从URL获取onlineStatus的值
+                const onlineStatusValue = (url.match(/onlineStatus=(\d+)/) || [])[1] || sessionStorage.getItem("onlineStatus") || '1'; // 从URL获取onlineStatus的值
                 sessionStorage.setItem("onlineStatus", onlineStatusValue);
                 getThingsList(onlineStatusValue, false);
 
@@ -582,7 +582,7 @@ SPDX-License-Identifier: Apache-2.0 -->
                       const channelsData = JSON.parse(data).channelsData;
                       const channels = channelsData.groups;
                       const fetchPromises = channels.map((channel) => disconnectThingsAndChannels(thingID, channel.id));
-                      Promise.all(fetchPromises).then(responses => {})
+                      (fetchPromises).then(responses => {})
                         .then(jsonData => { handleDelete(thingID) })
                         .catch(error => {
                           // 如果有任何错误发生，这里会捕获到
@@ -1257,7 +1257,7 @@ SPDX-License-Identifier: Apache-2.0 -->
                             // 修改查询参数
                             currentUrl.searchParams.set('onlineStatus', reqOnlineStatus);
                             // 跳转到新的 URL
-                            // window.location.href = currentUrl.toString();
+                            window.location.href = currentUrl.toString();
                           })
                       });
                   })
