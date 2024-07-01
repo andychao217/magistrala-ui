@@ -908,3 +908,14 @@ nav[aria-label="breadcrumb"] {
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     transition: box-shadow 0.3s ease;
 }
+
+table > thead > tr > th {
+    background: whitesmoke;
+}
+
+.breadcrumb-item {
+    cursor: pointer;
+}
+.breadcrumb-item.active {
+    cursor: default;
+}

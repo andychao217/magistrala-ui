@@ -346,7 +346,7 @@ SPDX-License-Identifier: Apache-2.0 -->
                                                           {{ end }}
                                                         {{ end }}
                                                       >
-                                                        <a class="dropdown-item" onclick="conntrolThing('{{ $t.ID }}', '{{ $t.Credentials.Identity }}', 'reboot')">
+                                                        <a class="dropdown-item" onclick="conntrolThing('{{ $t.Credentials.Identity }}', 'reboot')">
                                                           <i class="fa-solid fa-arrows-rotate" style="width: 16px;"></i> 重启
                                                         </a>
                                                       </li>
@@ -391,7 +391,9 @@ SPDX-License-Identifier: Apache-2.0 -->
                 const address = new URL(url);
                 const onlineStatusValue = (url.match(/onlineStatus=(\d+)/) || [])[1]; // 从URL获取onlineStatus的值
                 sessionStorage.setItem("onlineStatus", onlineStatusValue);
-                getThingsList(onlineStatusValue);
+                getThingsList(onlineStatusValue, false);
+
+                let intervalRefreshData = setInterval(refreshThingsData, 2000);
 
                 if (onlineStatusValue === '1') {
                   $('#btnAll').prop('checked', false);
@@ -408,6 +410,9 @@ SPDX-License-Identifier: Apache-2.0 -->
                 }
 
                 $('input[name="btnOnlineStatus"]').change(function() {
+                  currentDevices = {}, newDevices = {};
+                  $(`#thingsGrid`).empty();
+
                   let reqOnlineStatus = '2'; //all
                   if (this.id === 'btnOnline') {
                     reqOnlineStatus = '1'; //online
@@ -415,13 +420,11 @@ SPDX-License-Identifier: Apache-2.0 -->
                     reqOnlineStatus = '0'; //offline
                   }
                   sessionStorage.setItem("onlineStatus", reqOnlineStatus);
-
-                  $(`#thingsGrid`).empty();
-                  currentDevices = {}, newDevices = {};
-                  refreshThingsData();
+                  clearInterval(intervalRefreshData);
+                  getThingsList(reqOnlineStatus, true);
                 });
 
-                const intervalRefreshData = setInterval(refreshThingsData, 2000);
+                
 
                 //搜索添加设备确认添加按钮事件
                 $('#scan-add-thing-button').on('click', addScanNewThings);
@@ -579,7 +582,7 @@ SPDX-License-Identifier: Apache-2.0 -->
                       const channelsData = JSON.parse(data).channelsData;
                       const channels = channelsData.groups;
                       const fetchPromises = channels.map((channel) => disconnectThingsAndChannels(thingID, channel.id));
-                      Promise.all(fetchPromises).then(responses => { })
+                      Promise.all(fetchPromises).then(responses => {})
                         .then(jsonData => { handleDelete(thingID) })
                         .catch(error => {
                           // 如果有任何错误发生，这里会捕获到
@@ -617,27 +620,16 @@ SPDX-License-Identifier: Apache-2.0 -->
               }
 
               //控制设备
-              function conntrolThing(thingID, thingIdentity, controlType) {
-                 //获取当前domain的ID号
-                 const domainID = sessionStorage.getItem("domainID");
-
-                fetch(`/ui/domains/${domainID}/domainInJSON`, {
-                  method: "GET",
-                })
-                  .then(response => {
-                    if (!response.ok) {
-                      throw new Error('Network response was not ok');
-                    }
-                    return response.json(); // 直接将流转换为JSON对象
-                  })
-                  .then(json => {
-                    const data = json.data;
-                    const domainData = JSON.parse(data).domainData;
-                    const defaultChannelId = domainData.metadata["comID"];
-                    if (domainID && defaultChannelId) {
-                      postMessage(defaultChannelId, controlType, thingIdentity)
-                    }
-                  })
+              function conntrolThing(thingIdentity, controlType) {
+                const userInfoStr = sessionStorage.getItem("userInfo");
+                let comID = "";
+                if (userInfoStr) {
+                  const userInfo = JSON.parse(userInfoStr);
+                  comID = userInfo.metadata.comID;
+                }
+                if (comID) {
+                  postMessage(comID, controlType, thingIdentity);
+                }
               }
 
               //更改设备在线状态
@@ -676,10 +668,16 @@ SPDX-License-Identifier: Apache-2.0 -->
                   .then(json => {
                     const data = json.data;
                     const thingsData = JSON.parse(data).thingsData;
-                    const things = thingsData.things.filter((thing)=>{
-                      //identity 中有下划线则表示为多通道，默认在设备页面隐藏
-                      return !thing.credentials.identity.includes("_");
-                    }) || [];
+                    const things = 
+                      thingsData && 
+                      typeof thingsData === 'object' && 
+                      thingsData.things && 
+                      typeof thingsData.things === 'object' ?  
+                        thingsData.things.filter((thing)=>{
+                          //identity 中有下划线则表示为多通道，默认在设备页面隐藏
+                          return thing.credentials.identity && !thing.credentials.identity.includes("_");
+                        }) || [] : 
+                        [];
                     newDevices = {};
                       // 所有在线\离线
                     if (things.length) {
@@ -701,7 +699,8 @@ SPDX-License-Identifier: Apache-2.0 -->
                     };
                   })
                   .catch(error => {
-                    // console.error('处理fetch或JSON时出错:', error);
+                    currentDevices = {};
+                    $(`#thingsGrid`).empty();
                   });
               }
               
@@ -722,9 +721,9 @@ SPDX-License-Identifier: Apache-2.0 -->
                       // 移除不在(查询在线时离线的，查询离线时上线的)的设备
                       $(`#${curId}-thingCard`).remove();
                     }
-                  })
+                  });
                 } else if (currentDevicesLength < newDevicesLength) {
-                  // 新增(查询在线时刚上线的，查询离线时刚离线的)的设备]
+                    // 新增(查询在线时刚上线的，查询离线时刚离线的)的设备]
                   Object.keys(newDevices).forEach((newId)=>{
                     if (
                       (typeof currentDevices === 'object' && Object.entries(currentDevices).length === 0) || 
@@ -732,67 +731,74 @@ SPDX-License-Identifier: Apache-2.0 -->
                       (typeof currentDevices[newId] === 'object' && Object.entries(currentDevices[newId]).length === 0)
                     ) {
                       const device = newDevices[newId];
-                      const deviceIcon = getDeviceIcon(device);
-                      const imgSpan = `<img id="${device.id}-thingIcon" src="/images/${deviceIcon}" alt="" style="height: 38px; float: left;">`;
-                      const btnSpan = `
-                        <div class="dropdown" style="float: right;">
-                          <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                            <i class="fa-solid fa-ellipsis"></i>
-                          </button>
-                          <ul class="dropdown-menu">
-                            <li><a class="dropdown-item" onclick="viewThing('${device.id}')">
-                              <i class="fa-solid fa-info" style="width: 16px;"></i> 查看</a>
-                            </li>
-                            <li id="${device.id}-rebootBtn" style="display: ${device.metadata && Number(device.metadata.is_online) === 1 ? 'block':'none'}">
-                              <a class="dropdown-item" onclick="conntrolThing('${device.id}', '${device.credentials.identity}', 'reboot')">
-                                <i class="fa-solid fa-arrows-rotate" style="width: 16px;"></i> 重启
-                              </a>
-                            </li>
-                            <li id="${device.id}-editBtn">
-                              <a class="dropdown-item" onclick="editThing('${device.id}', '${device.name}')">
-                                <i class="fa-solid fa-pencil-alt" style="width: 16px;"></i> 修改
-                              </a>
-                            </li>
-                            <li id="${device.id}-deleteBtn">
-                              <a class="dropdown-item" onclick="deleteThing('${device.id}')">
-                                <i class="fa-solid fa-trash-can" style="width: 16px;"></i> 删除
-                              </a>
-                            </li>
-                          </ul>
-                        </div>
-                      `;
-                      const $thingCard = $(`
-                        <div class="col-sm-3 mb-3 mb-sm-0" id="${device.id}-thingCard">
-                          <div class="channel-thing-card card" id="${device.id}-thingCardContent" >
-                            <div class="card-body">
-                              <div class="row">
-                                <div class="col">
-                                  ${imgSpan}
-                                </div>
-                                <div class="col">
-                                  ${btnSpan}
-                                </div>
-                              </div>
-                              <div class="row" style="margin-top:50px">
-                                <h5 class="card-title truncate-text" title="${device.name}">${device.name}</h5>
-                              </div>
-                            </div>
-                          </div>
-                        </div>
-                      `);
-                      $(`#thingsGrid`).append($thingCard);
-                      changeOnlineStatus(device);
+                      updateThingsGridDom(device);
                     }
-                  })
+                  });
+                } else if (currentDevicesLength === newDevicesLength) {
+                  Object.keys(newDevices).forEach((newId)=>{
+                    const device = newDevices[newId];
+                    changeOnlineStatus(device);
+                  });
                 }
 
                 currentDevices = {};
                 currentDevices = newDevices;
               }
 
+              function updateThingsGridDom(device) {
+                const deviceIcon = getDeviceIcon(device);
+                const imgSpan = `<img id="${device.id}-thingIcon" src="/images/${deviceIcon}" alt="" style="height: 38px; float: left;">`;
+                const btnSpan = `
+                  <div class="dropdown" style="float: right;">
+                    <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                      <i class="fa-solid fa-ellipsis"></i>
+                    </button>
+                    <ul class="dropdown-menu">
+                      <li><a class="dropdown-item" onclick="viewThing('${device.id}')">
+                        <i class="fa-solid fa-info" style="width: 16px;"></i> 查看</a>
+                      </li>
+                      <li id="${device.id}-rebootBtn" style="display: ${device.metadata && Number(device.metadata.is_online) === 1 ? 'block':'none'}">
+                        <a class="dropdown-item" onclick="conntrolThing('${device.credentials.identity}', 'reboot')">
+                          <i class="fa-solid fa-arrows-rotate" style="width: 16px;"></i> 重启
+                        </a>
+                      </li>
+                      <li id="${device.id}-editBtn">
+                        <a class="dropdown-item" onclick="editThing('${device.id}', '${device.name}')">
+                          <i class="fa-solid fa-pencil-alt" style="width: 16px;"></i> 修改
+                        </a>
+                      </li>
+                      <li id="${device.id}-deleteBtn">
+                        <a class="dropdown-item" onclick="deleteThing('${device.id}')">
+                          <i class="fa-solid fa-trash-can" style="width: 16px;"></i> 删除
+                        </a>
+                      </li>
+                    </ul>
+                  </div>
+                `;
+                const $thingCard = $(`
+                  <div class="col-sm-3 mb-3 mb-sm-0" id="${device.id}-thingCard">
+                    <div class="channel-thing-card card" id="${device.id}-thingCardContent" >
+                      <div class="card-body">
+                        <div class="row">
+                          <div class="col">
+                            ${imgSpan}
+                          </div>
+                          <div class="col">
+                            ${btnSpan}
+                          </div>
+                        </div>
+                        <div class="row" style="margin-top:50px">
+                          <h5 class="card-title truncate-text" title="${device.name}">${device.name}</h5>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                `);
+                $(`#thingsGrid`).append($thingCard);
+              }
+
               //根据在线类型获取设备列表
-              function getThingsList(onlineStatus) {
-                currentDevices = {};
+              function getThingsList(onlineStatus, isRender) {
                 fetch(`/ui/things/thingsInJSON?limit=1000&onlineStatus=${onlineStatus}`, {
                   method: "GET",
                 })
@@ -807,9 +813,9 @@ SPDX-License-Identifier: Apache-2.0 -->
                     const thingsData = JSON.parse(data).thingsData;
                     const things = thingsData.things.filter((thing)=>{
                       //identity 中有下划线则表示为多通道，默认在设备页面隐藏
-                      return !thing.credentials.identity.includes("_");
+                      return thing.credentials && !thing.credentials.identity.includes("_");
                     }) || [];
-                    currentDevices = {};
+
                     if (things.length) {
                       things.forEach(device => {
                         currentDevices[device.id] = {
@@ -822,7 +828,11 @@ SPDX-License-Identifier: Apache-2.0 -->
                           updated_at: device.updated_at,
                         };
                       });
+                      if (isRender) {
+                        updateThingsGrid(things);
+                      }
                     }
+                    intervalRefreshData = setInterval(refreshThingsData, 2000);
                   })
                   .catch(error => {
                     //
@@ -1172,7 +1182,7 @@ SPDX-License-Identifier: Apache-2.0 -->
                     metadata: {
                       product_name: thing.product_name,
                       is_online: "0",
-                      out_channel: thing.out_channel && thing.out_channel.channel ? thing.out_channel.channel.length : 0,
+                      out_channel: thing.out_channel && thing.out_channel.channel ? `${thing.out_channel.channel.length}` : "0",
                       out_channel_array: thing.out_channel && thing.out_channel.channel ? thing.out_channel.channel : [],
                       is_channel: "0",
                       aliase: thing.out_channel && thing.out_channel.channel && thing.out_channel.channel.length ? thing.device_aliase + "_" + thing.out_channel.channel[0].aliase : thing.device_aliase
@@ -1182,13 +1192,14 @@ SPDX-License-Identifier: Apache-2.0 -->
 
                 let query = [];
                 for(let i = 0; i < oriQuery.length; i++) {
-                  if (oriQuery[i].metadata.out_channel > 1) {
+                  if (Number(oriQuery[i].metadata.out_channel) > 1) {
                     //当out_channel存在且大于1时，说明有是多通道设备，则要保存为多个设备
                     // 1、先保存一个原样的
                     query.push(oriQuery[i])
                     // 2、根据out_channel的大小从下标2开始，生成多个通道设备
                     for (let j = 2; j <= oriQuery[i].metadata.out_channel_array.length; j++) {
-                      let newThing = oriQuery[i];
+                      let newThing = JSON.parse(JSON.stringify(oriQuery[i])); //深拷贝
+                      newThing.name = `${oriQuery[i].name}_${oriQuery[i].metadata.out_channel_array[j-1].aliase}`;
                       newThing.credentials.identity = `${oriQuery[i].credentials.identity}_${j}`;
                       newThing.credentials.secret = `${oriQuery[i].credentials.secret}_${j}`;
                       newThing.metadata.aliase = `${oriQuery[i].name}_${oriQuery[i].metadata.out_channel_array[j-1].aliase}`;
@@ -1200,7 +1211,7 @@ SPDX-License-Identifier: Apache-2.0 -->
                     query.push(oriQuery[i]);
                   }
                 }
-                  
+                
                 //获取当前domain的ID号
                 const domainID = sessionStorage.getItem("domainID");
                 fetch(`/ui/domains/${domainID}/domainInJSON`, {
@@ -1246,9 +1257,9 @@ SPDX-License-Identifier: Apache-2.0 -->
                             // 修改查询参数
                             currentUrl.searchParams.set('onlineStatus', reqOnlineStatus);
                             // 跳转到新的 URL
-                            window.location.href = currentUrl.toString();
+                            // window.location.href = currentUrl.toString();
                           })
-                      })
+                      });
                   })
               }
             </script> 

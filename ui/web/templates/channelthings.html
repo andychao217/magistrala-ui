@@ -107,7 +107,7 @@ SPDX-License-Identifier: Apache-2.0 -->
                                                                 {{ end }}
                                                               {{ end }}
                                                             >
-                                                              <a class="dropdown-item" onclick="conntrolThing('{{ $t.ID }}', '{{ $t.Credentials.Identity }}', 'reboot')">
+                                                              <a class="dropdown-item" onclick="conntrolThing('{{ $t.Credentials.Identity }}', 'reboot')">
                                                                 <i class="fa-solid fa-arrows-rotate" style="width: 16px;"></i> 重启
                                                               </a>
                                                             </li>
@@ -339,27 +339,16 @@ SPDX-License-Identifier: Apache-2.0 -->
               }
 
               //控制设备
-              function conntrolThing(thingID, thingIdentity, controlType) {
-                //获取当前domain的ID号
-                const domainID = sessionStorage.getItem("domainID");
-
-                fetch(`/ui/domains/${domainID}/domainInJSON`, {
-                  method: "GET",
-                })
-                  .then(response => {
-                    if (!response.ok) {
-                      throw new Error('Network response was not ok');
-                    }
-                    return response.json(); // 直接将流转换为JSON对象
-                  })
-                  .then(json => {
-                    const data = json.data;
-                    const domainData = JSON.parse(data).domainData;
-                    const defaultChannelId = domainData.metadata["comID"];
-                    if (domainID && defaultChannelId) {
-                      postMessage(defaultChannelId, controlType, thingIdentity)
-                    }
-                  })
+              function conntrolThing(thingIdentity, controlType) {
+                const userInfoStr = sessionStorage.getItem("userInfo");
+                let comID = "";
+                if (userInfoStr) {
+                  const userInfo = JSON.parse(userInfoStr);
+                  comID = userInfo.metadata.comID;
+                }
+                if (comID) {
+                  postMessage(comID, controlType, thingIdentity);
+                }
               }
 
               function changeOnlineStatus(thing){
@@ -473,7 +462,7 @@ SPDX-License-Identifier: Apache-2.0 -->
                                 </button>
                               </li>
                               <li id="${device.id}-rebootBtn" style="display: ${device.metadata && Number(device.metadata.is_online) === 1 ? 'block':'none'}">
-                                <a class="dropdown-item" onclick="conntrolThing('${device.id}', '${device.credentials.identity}', 'reboot')">
+                                <a class="dropdown-item" onclick="conntrolThing('${device.credentials.identity}', 'reboot')">
                                   <i class="fa-solid fa-arrows-rotate" style="width: 16px;"></i> 重启
                                 </a>
                               </li>
@@ -552,24 +541,25 @@ SPDX-License-Identifier: Apache-2.0 -->
                   const url = window.location.href; // 获取当前页面的URL
                   const address = new URL(url);
                   const port =  sessionStorage.getItem("socketBridgePort") || "63001";
+                  const identity = thingIdentity.split("_")[0];
                   const data = {
                     channelID: channelID,
-                    thingIdentity: thingIdentity,
+                    thingIdentity: identity,
                     host: address.hostname,
                   }
                   fetch(`http://${address.hostname}:${port}/rebootDevice`, {
-                      method: "POST",
-                      headers: {
-                        "Content-Type": "application/json",
-                      },
-                      body: JSON.stringify(data),
+                    method: "POST",
+                    headers: {
+                      "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify(data),
+                  })
+                    .then(response => {
+                      console.log("postMessage: ", response)
                     })
-                      .then(response => {
-                        console.log("postMessage: ", response)
-                      })
-                      .catch((error) => {
-                        console.error("error postMessage: ", error);
-                      });
+                    .catch((error) => {
+                      console.error("error postMessage: ", error);
+                    });
                 } else {
                   // protobuf.load('/proto/pbmsg.proto', function(err, root) {
                   //   if (err) throw err;

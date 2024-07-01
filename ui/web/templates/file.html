@@ -39,11 +39,7 @@ SPDX-License-Identifier: Apache-2.0 -->
               <div class="table-responsive table-container">
                 <div class="row">
                   <nav>
-                    <ol class="breadcrumb" id="breadcrumbNavigator">
-                      <li class="breadcrumb-item"><a href="#">Home</a></li>
-                      <li class="breadcrumb-item"><a href="#">Library</a></li>
-                      <li class="breadcrumb-item active" aria-current="page">Data</li>
-                    </ol>
+                    <ol class="breadcrumb" id="breadcrumbNavigator"></ol>
                   </nav>
                 </div>
                 <div class="row">
@@ -160,10 +156,10 @@ SPDX-License-Identifier: Apache-2.0 -->
         // }
 
         
-        loadFilesTable();
+        initLoadFilesTable();
 
         // 初始化加载文件列表
-        function loadFilesTable() {
+        function initLoadFilesTable() {
           const $fileTable = $('#fileTable');
           fetch(`${protocol}//${hostname}:9102/resourceTree?comID=${comID}`)
             .then(response => {
@@ -173,8 +169,10 @@ SPDX-License-Identifier: Apache-2.0 -->
               }
               return response.json(); // 直接将流转换为JSON对象
             }).then(data => {
+              currentFolderList = [];
               $fileTable.bootstrapTable({data: data.children || []});
               currentFolderList.push(data);
+              generateBreadCrumb(currentFolderList);
               rawTableData = data;
             }).catch(error => {
               console.error('Error:', error);
@@ -186,12 +184,12 @@ SPDX-License-Identifier: Apache-2.0 -->
         function fileNameTableFormatter(value, row, index) {
           if (row.isDir) {
             return `<div>
-                      <img src="/images/icon_folder.png" style="width: 16px; margin-right: 5px; margin-bottom: 3px;"/>
+                      <img src="/images/icon_folder.png" style="width: 16px; margin-bottom: 3px;"/>
                       <span data-key="${row.key}" onclick="onClickFolder(event)">${value}</span>
                     </div>`;
           } else {
             return `<div>
-                      <img src="/images/icon_mp3.png" style="width: 18px; margin-right: 5px; margin-bottom: 3px;"/>
+                      <img src="/images/icon_mp3.png" style="width: 16px; margin-bottom: 3px;"/>
                       <span>${value}</span>
                     </div>`;
           }
@@ -215,11 +213,50 @@ SPDX-License-Identifier: Apache-2.0 -->
           return null;
         }
 
-        //点击文件夹
-        function onClickFolder (e) {
+        //生成面包屑导航
+        function generateBreadCrumb(folderList) {
+          //监听currentFolderList变化，更新面包屑导航
+          const breadcrumbNavigator = $("#breadcrumbNavigator");
+          breadcrumbNavigator.empty();
+          folderList.forEach((folder, index) => {
+            let activeClass = "";
+            if (index === folderList.length - 1) {
+              activeClass = "active";
+            }
+            const li = $(`
+              <li 
+                class="breadcrumb-item ${activeClass}" 
+                data-key="${folder.key}" 
+                onclick="onClickBreadcrumbItem(event)"
+              >
+                ${folder.fileName}
+              </li>
+            `);
+            breadcrumbNavigator.append(li);
+          });
+        }
+
+        //点击breadCrumb
+        function onClickBreadcrumbItem(e) {
+          console.log(e.target);
+          const key = e.target.dataset.key;
+          const row = findObjectByKey(rawTableData,key);
+
+          //删除后面的所有文件夹
+          const rowIndex = currentFolderList.findIndex(item => item.key === key);
+          currentFolderList.splice(rowIndex + 1, currentFolderList.length - rowIndex);
+
+          generateBreadCrumb(currentFolderList);
+          const $fileTable = $('#fileTable');
+          $fileTable.bootstrapTable('load', row.children || []);
+        }
+
+        //点击表格中文件夹
+        function onClickFolder(e) {
           const key = e.target.dataset.key;
           const row = findObjectByKey(rawTableData,key);
           currentFolderList.push(row);
+          generateBreadCrumb(currentFolderList);
           const $fileTable = $('#fileTable');
           $fileTable.bootstrapTable('load', row.children || []);
         }
