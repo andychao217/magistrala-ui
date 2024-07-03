@@ -7,6 +7,19 @@ SPDX-License-Identifier: Apache-2.0 -->
     <head>
       <title>资源管理</title>
       {{ template "header" }}
+      <style>
+        #fileTableContainer {
+          height: calc(100vh - 270px);
+          overflow-y: auto;
+          margin-left: 5px;
+          margin-right: 5px;
+          border: thin solid lightgray;
+        }
+        #fileTableContainer > .bootstrap-table {
+          padding-left: 0px;
+          padding-right: 0px;
+        }
+      </style>
     </head>
     <body>
       <div 
@@ -31,21 +44,63 @@ SPDX-License-Identifier: Apache-2.0 -->
         </div>
       </div>
 
+      <div 
+        class="modal fade" 
+        id="createFolderModal" 
+        tabindex="-1" 
+        role="dialog" 
+        aria-labelledby="createFolderModalLabel"
+        data-bs-backdrop="static" 
+        data-bs-keyboard="false"  
+        aria-hidden="true"
+      >
+        <div class="modal-dialog" role="document">
+          <div class="modal-content" style="width: 530px;">
+            <div class="modal-header">
+              <h1 class="modal-title truncate-text" id="createFolderModal">新建文件夹</h1>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+              <form id="createFolderForm">
+                <div class="mb-3">
+                    <label for="createFolderName" class="form-label">文件夹名称: </label>
+                    <input 
+                      type="text" 
+                      class="form-control name-field" 
+                      name="createFolderName" 
+                      id="createFolderName" 
+                      placeholder="文件夹名称" 
+                    />
+                    <div id="createFolderNameError" class="text-danger"></div>
+                </div>
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">取消</button>
+                  <button type="submit" class="btn body-button" id="createFolderButton">确定</button>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+
       {{ template "navbar" . }}
       <div class="main-content pt-3">
         <div class="container-fluid">
           <div class="row-mb-3 p-3">
             <div class="col-lg-12 mx-auto">
               <div class="table-responsive table-container">
-                <div class="row">
-                  <nav>
-                    <ol class="breadcrumb" id="breadcrumbNavigator"></ol>
-                  </nav>
+                <div class="row" style="padding-left: 18px; padding-right: 18px; margin-bottom: 5px;">
+                  <button type="button" class="btn body-button" onclick="openModal('createFolder')" style="width: 110px;">新建文件夹</button>
                 </div>
                 <div class="row">
+                  <nav>
+                    <ol class="breadcrumb" id="breadcrumbNavigator" style="margin-left: 5px; margin-bottom: 5px;"></ol>
+                  </nav>
+                </div>
+                <div class="row" id="fileTableContainer">
                   <table 
                     id="fileTable"
-                    class="table table-bordered table-hover"
+                    class="table table-hover"
                     data-checkbox-header="true"
                     data-click-to-select="false"
                   >
@@ -73,16 +128,21 @@ SPDX-License-Identifier: Apache-2.0 -->
         </div>
       </div>
       <script>
+        const createFolderModal = new bootstrap.Modal(document.getElementById("createFolderModal"));
+        const $createFolderNameInputElement = $(`#createFolderName`);
         const protocol = window.location.protocol;
         const hostname = window.location.hostname;
         const userInfoStr = sessionStorage.getItem("userInfo");
+        const $fileTable = $('#fileTable');
+        $fileTable.bootstrapTable();
+
         let comID = "";
         if (userInfoStr) {
           const userInfo = JSON.parse(userInfoStr);
           comID = userInfo.metadata.comID;
         }
-        let currentFolderList = [], //当前选中文件夹列表
-            rawTableData = []; //表格元数据
+        let breadCrumbFolderList = [], //当前选中文件夹列表
+            currentFolderKey = ""; //当前文件夹key
 
         document.getElementById("filePreviewModal").addEventListener('hidden.bs.modal', () => {
           const audio = document.getElementById("audioPreview");
@@ -156,34 +216,39 @@ SPDX-License-Identifier: Apache-2.0 -->
         // }
 
         
-        initLoadFilesTable();
+        loadFilesTable("");
 
         // 初始化加载文件列表
-        function initLoadFilesTable() {
-          const $fileTable = $('#fileTable');
-          fetch(`${protocol}//${hostname}:9102/resourceTree?comID=${comID}`)
+        function loadFilesTable(folder) {
+          fetch(`${protocol}//${hostname}:9102/resourceList`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ path: folder, comID: comID })
+          })
             .then(response => {
               if (!response.ok) {
                   throw new Error("Network response was not ok");
-                  $fileTable.bootstrapTable({data: []});
+                  $fileTable.bootstrapTable('load', []);
               }
               return response.json(); // 直接将流转换为JSON对象
             }).then(data => {
-              currentFolderList = [];
-              $fileTable.bootstrapTable({data: data.children || []});
-              currentFolderList.push(data);
-              generateBreadCrumb(currentFolderList);
-              rawTableData = data;
+              breadCrumbFolderList = [];
+              $fileTable.bootstrapTable('load', data || []);
+              breadCrumbFolderList.push({fileName: "文件列表", key: ""});
+              generateBreadCrumb(breadCrumbFolderList);
+              currentFolderKey = "";
             }).catch(error => {
               console.error('Error:', error);
-              $fileTable.bootstrapTable({data: []});
+              $fileTable.bootstrapTable('load', []);
             });
         }
 
         //表格文件名称列
         function fileNameTableFormatter(value, row, index) {
           if (row.isDir) {
-            return `<div>
+            return `<div style="cursor: pointer">
                       <img src="/images/icon_folder.png" style="width: 16px; margin-bottom: 3px;"/>
                       <span data-key="${row.key}" onclick="onClickFolder(event)">${value}</span>
                     </div>`;
@@ -195,6 +260,7 @@ SPDX-License-Identifier: Apache-2.0 -->
           }
         }
 
+        //递归寻找对象
         function findObjectByKey(data, targetKey) {
           // 检查当前对象是否匹配目标key
           if (data.key === targetKey) {
@@ -215,7 +281,7 @@ SPDX-License-Identifier: Apache-2.0 -->
 
         //生成面包屑导航
         function generateBreadCrumb(folderList) {
-          //监听currentFolderList变化，更新面包屑导航
+          //监听breadCrumbFolderList变化，更新面包屑导航
           const breadcrumbNavigator = $("#breadcrumbNavigator");
           breadcrumbNavigator.empty();
           folderList.forEach((folder, index) => {
@@ -241,13 +307,12 @@ SPDX-License-Identifier: Apache-2.0 -->
           console.log(e.target);
           const key = e.target.dataset.key;
           const row = findObjectByKey(rawTableData,key);
-
+          currentFolderKey = row.key;
           //删除后面的所有文件夹
-          const rowIndex = currentFolderList.findIndex(item => item.key === key);
-          currentFolderList.splice(rowIndex + 1, currentFolderList.length - rowIndex);
+          const rowIndex = breadCrumbFolderList.findIndex(item => item.key === key);
+          breadCrumbFolderList.splice(rowIndex + 1, breadCrumbFolderList.length - rowIndex);
 
-          generateBreadCrumb(currentFolderList);
-          const $fileTable = $('#fileTable');
+          generateBreadCrumb(breadCrumbFolderList);
           $fileTable.bootstrapTable('load', row.children || []);
         }
 
@@ -255,9 +320,9 @@ SPDX-License-Identifier: Apache-2.0 -->
         function onClickFolder(e) {
           const key = e.target.dataset.key;
           const row = findObjectByKey(rawTableData,key);
-          currentFolderList.push(row);
-          generateBreadCrumb(currentFolderList);
-          const $fileTable = $('#fileTable');
+          currentFolderKey = row.key;
+          breadCrumbFolderList.push(row);
+          generateBreadCrumb(breadCrumbFolderList);
           $fileTable.bootstrapTable('load', row.children || []);
         }
 
@@ -311,7 +376,54 @@ SPDX-License-Identifier: Apache-2.0 -->
           $("#filePreviewModalContent").append($audio);
         }
 
-        
+        $createFolderNameInputElement.on('change blur keyup', function(event) {
+          const value = $(this).val();
+          if (value) {
+            $(`#createFolderNameError`).empty();
+          } else {
+            $(`#createFolderNameError`).html('请输入文件夹名称');
+          }
+        });
+
+        document.getElementById('createFolderForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+            const currentPath = currentFolderKey;
+            const folderName = $('#createFolderName').val();
+            if (!folderName) {
+              $(`#createFolderNameError`).html('请输入文件夹名称');
+              return;
+            } else {
+              fetch(`${protocol}//${hostname}:9102/createFolder`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ currentPath: "/"+currentPath, folderName: folderName })
+              })
+              .then(response => response.json())
+              .then(data => {
+                console.log('data123: ', data)
+                if (data.success) {
+                  createFolderModal.hide();
+                } else {
+                  alert('新建文件夹失败: ' + data.message);
+                }
+              })
+              .catch(error => {
+                  console.error('Error:', error);
+              });
+            }
+        });
+
+        function openModal(modal) {
+          if (modal === "createFolder") {
+            createFolderModal.show();
+            $("#createFolderName").val('');
+            $("#createFolderNameError").empty();
+          } else if (modal === "bulk") {
+            //
+          }
+        }
       </script>
     </body>
   </html>

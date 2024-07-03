@@ -364,7 +364,15 @@ SPDX-License-Identifier: Apache-2.0 -->
                                                   </div>
                                                 </div>
                                               </div>
-                                              <div class="row" style="margin-top: 50px;">
+                                              <div class="row">
+                                                {{ $length := len $t.Metadata.out_channel_array }}
+                                                {{if bigger $length 1}}
+                                                  <div class="row" style="position: absolute; bottom: 40px; padding-left: 24px;">
+                                                    {{ range $i, $o := $t.Metadata.out_channel_array }}
+                                                      <i class="fa-solid fa-{{ add $i 1 }} channelIcon" title="{{$t.Name}}_{{$o.aliase}}"></i>
+                                                    {{ end }}
+                                                  </div>
+                                                {{ end }}
                                                 <h5 class="card-title truncate-text" title="{{ $t.Name }}">{{ $t.Name }}</h5>
                                               </div>
                                             </div>
@@ -775,6 +783,17 @@ SPDX-License-Identifier: Apache-2.0 -->
                     </ul>
                   </div>
                 `;
+                const channelIconDiv = device.metadata && 
+                    device.metadata.out_channel_array && 
+                    device.metadata.out_channel_array.length > 1 ? 
+                    `
+                      <div class="row" style="position: absolute; bottom: 40px; padding-left: 24px;">
+                        ${device.metadata.out_channel_array.map(($o, $i) => {
+                          return `<i class="fa-solid fa-${$i+1} channelIcon" title="${device.name}_${$o.aliase}"></i>`
+                        }).join('')}
+                      </div>
+                    ` : 
+                    ``;
                 const $thingCard = $(`
                   <div class="col-sm-3 mb-3 mb-sm-0" id="${device.id}-thingCard">
                     <div class="channel-thing-card card" id="${device.id}-thingCardContent" >
@@ -788,6 +807,7 @@ SPDX-License-Identifier: Apache-2.0 -->
                           </div>
                         </div>
                         <div class="row" style="margin-top:50px">
+                          ${channelIconDiv}
                           <h5 class="card-title truncate-text" title="${device.name}">${device.name}</h5>
                         </div>
                       </div>

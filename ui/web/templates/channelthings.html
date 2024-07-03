@@ -116,8 +116,14 @@ SPDX-License-Identifier: Apache-2.0 -->
                                                       </div>
                                                     </div>
                                                   </div>
-                                                  <div class="row" style="margin-top: 50px;">
-                                                    <h5 class="card-title truncate-text" title="{{ $t.Metadata.aliase }}">{{ $t.Metadata.aliase }}</h5>
+                                                  <div class="row">
+                                                    {{ $length := len $t.Metadata.out_channel_array }}
+                                                    {{if bigger $length 1}}
+                                                      <h5 class="card-title truncate-text" title="{{ $t.Metadata.aliase }}">{{ $t.Metadata.aliase }}</h5>
+                                                    {{ else }}
+                                                      <h5 class="card-title truncate-text" title="{{ $t.Name }}">{{ $t.Name }}</h5>
+                                                    {{ end }}
+                                                    <!-- <h5 class="card-title truncate-text" title="{{ $t.Metadata.aliase }}">{{ $t.Metadata.aliase }}</h5> -->
                                                   </div>
                                                 </div>
                                               </div>
@@ -281,6 +287,8 @@ SPDX-License-Identifier: Apache-2.0 -->
 
                     //设备列表
                     connectThingsModalList.forEach((thing, index)=>{
+                      const thingName = thing.metadata.out_channel_array && thing.metadata.out_channel_array.length > 1 ? 
+                        thing.metadata.aliase : thing.name;
                       const $thingList = $(`
                         <li class="list-group-item newThingItemList" >
                           <input 
@@ -297,7 +305,7 @@ SPDX-License-Identifier: Apache-2.0 -->
                               src="/images/icon_channel.png" 
                               style="height: 16px; margin-top: -3px;"
                             >
-                            <span>${thing.metadata.aliase}</span>
+                            <span title="${thingName}">${thingName}</span>
                           </label>
                         </li>
                       `);
@@ -448,6 +456,8 @@ SPDX-License-Identifier: Apache-2.0 -->
                           </ul>
                         </div>
                       `;
+                      const thingName = device.metadata.out_channel_array && device.metadata.out_channel_array.length > 1 ? 
+                        device.metadata.aliase : device.name;
                       const $thingCard = $(`
                         <div class="col-sm-3 mb-3 mb-sm-0" id="${device.id}-thingCard">
                           <div class="channel-thing-card card" id="${device.id}-thingCardContent">
@@ -461,7 +471,7 @@ SPDX-License-Identifier: Apache-2.0 -->
                                 </div>
                               </div>
                               <div class="row" style="margin-top:50px">
-                                <h5 class="card-title truncate-text" title="${device.metadata.aliase}">${device.metadata.aliase}</h5>
+                                <h5 class="card-title truncate-text" title="${thingName}">${thingName}</h5>
                               </div>
                             </div>
                           </div>

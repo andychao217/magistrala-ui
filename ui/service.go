@@ -3027,6 +3027,9 @@ func parseTemplates(mfsdk sdk.SDK, prefix string) (tpl *template.Template, err e
 			}
 			return string(ret)
 		},
+		"bigger": func(a, b int) bool {
+			return a > b
+		},
 		"contains": func(data []string, substring string) bool {
 			return slices.Contains(data, substring)
 		},
