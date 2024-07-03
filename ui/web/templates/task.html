@@ -1,0 +1,37 @@
+<!-- Copyright (c) Abstract Machines
+SPDX-License-Identifier: Apache-2.0 -->
+
+{{ define "task" }}
+  <!doctype html>
+  <html lang="en">
+    <head>
+      <title>日程</title>
+      {{ template "header" }}
+    </head>
+    <body>
+      {{ template "navbar" . }}
+      <div class="main-content pt-3">
+        <div class="container-fluid">
+          <div class="row-mb-3 p-3">
+            <div class="col-lg-12 mx-auto">
+              <div class="table-responsive table-container">
+                日程
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <script>
+        const protocol = window.location.protocol;
+        const hostname = window.location.hostname;
+        const userInfoStr = sessionStorage.getItem("userInfo");
+
+        let comID = "";
+        if (userInfoStr) {
+          const userInfo = JSON.parse(userInfoStr);
+          comID = userInfo.metadata.comID;
+        }
+      </script>
+    </body>
+  </html>
+{{ end }}

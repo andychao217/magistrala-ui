@@ -868,6 +868,15 @@ func MakeHandler(svc ui.Service, r *chi.Mux, instanceID, prefix string, secureCo
 						opts...,
 					).ServeHTTP)
 				})
+
+				r.Route("/task", func(r chi.Router) {
+					r.Get("/", kithttp.NewServer(
+						listTaskEndpoint(svc),
+						decodeTaskRequest,
+						encodeResponse,
+						opts...,
+					).ServeHTTP)
+				})
 			})
 			r.Route("/domains", func(r chi.Router) {
 				r.Post("/login", kithttp.NewServer(
@@ -2580,6 +2589,17 @@ func decodeFileRequest(_ context.Context, r *http.Request) (interface{}, error) 
 	}
 
 	return fileReq{
+		Session: session,
+	}, nil
+}
+
+func decodeTaskRequest(_ context.Context, r *http.Request) (interface{}, error) {
+	session, err := sessionFromHeader(r)
+	if err != nil {
+		return nil, err
+	}
+
+	return taskReq{
 		Session: session,
 	}, nil
 }

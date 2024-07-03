@@ -5,7 +5,7 @@ SPDX-License-Identifier: Apache-2.0 -->
   <!doctype html>
   <html lang="en">
     <head>
-      <title>资源管理</title>
+      <title>资源</title>
       {{ template "header" }}
     </head>
     <body>
@@ -178,25 +178,6 @@ SPDX-License-Identifier: Apache-2.0 -->
           $("#filePreviewModalTitle").empty();
           $("#filePreviewModalContent").empty();
         });
-
-        // document.getElementById('uploadForm').addEventListener('submit', function(e) {
-        //   e.preventDefault();
-        //   const fileInput = document.getElementById('fileInput');
-        //   const file = fileInput.files[0];
-
-        //   let formData = new FormData();
-        //   formData.append('file', file);
-
-        //   fetch(`${protocol}//${hostname}:9102/upload`, {
-        //     method: 'POST',
-        //     body: formData
-        //   }).then(response => response.text()).then(data => {
-        //     console.log(data);
-        //     loadFiles();
-        //   }).catch(error => {
-        //     console.error('Error:', error);
-        //   });
-        // });
         
         loadFilesTable("");
 

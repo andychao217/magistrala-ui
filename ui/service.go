@@ -57,6 +57,7 @@ const (
 	membersActive           = "members"
 	invitationsActive       = "invitations"
 	fileActive              = "file"
+	taskActive              = "task"
 	domainInvitationsActive = "domaininvitations"
 )
 
@@ -380,6 +381,8 @@ type Service interface {
 	DeleteInvitation(token, userID, domainID string) error
 	// view file page
 	File(s Session) ([]byte, error)
+	// view task page
+	Task(s Session) ([]byte, error)
 
 	// Create a dashboard for a user.
 	CreateDashboard(ctx context.Context, token string, dashboardReq DashboardReq) ([]byte, error)
@@ -2834,6 +2837,31 @@ func (us *uiService) File(s Session) ([]byte, error) {
 
 	var btpl bytes.Buffer
 	if err := us.tpls.ExecuteTemplate(&btpl, "file", data); err != nil {
+		return []byte{}, errors.Wrap(ErrExecTemplate, err)
+	}
+
+	return btpl.Bytes(), nil
+}
+
+func (us *uiService) Task(s Session) ([]byte, error) {
+	crumbs := []breadcrumb{
+		{Name: taskActive},
+	}
+
+	data := struct {
+		NavbarActive   string
+		CollapseActive string
+		Breadcrumbs    []breadcrumb
+		Session        Session
+	}{
+		taskActive,
+		taskActive,
+		crumbs,
+		s,
+	}
+
+	var btpl bytes.Buffer
+	if err := us.tpls.ExecuteTemplate(&btpl, "task", data); err != nil {
 		return []byte{}, errors.Wrap(ErrExecTemplate, err)
 	}
 

@@ -48,7 +48,9 @@ SPDX-License-Identifier: Apache-2.0 -->
                         {{ else if eq .Name "Connect" }}
                             <span>关联</span>
                         {{ else if eq .Name "file" }}
-                            <span>资源管理</span>
+                            <span>资源</span>
+                        {{ else if eq .Name "task" }}
+                            <span>日程</span>
                         {{ else }}
                             <span>{{ .Name }}</span>
                         {{ end }}
@@ -93,7 +95,9 @@ SPDX-License-Identifier: Apache-2.0 -->
                             {{ else if eq .Name "Connect" }}
                                 <span>关联</span>
                             {{ else if eq .Name "file" }}
-                                <span>资源管理</span>
+                                <span>资源</span>
+                            {{ else if eq .Name "task" }}
+                                <span>日程</span>
                             {{ else }}
                                 <span>{{ .Name }}</span>
                             {{ end }}

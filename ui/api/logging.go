@@ -1884,6 +1884,18 @@ func (lm *loggingMiddleware) File(s ui.Session) (b []byte, err error) {
 	return lm.svc.File(s)
 }
 
+func (lm *loggingMiddleware) Task(s ui.Session) (b []byte, err error) {
+	defer func(begin time.Time) {
+		if err != nil {
+			lm.logger.Warn("View Task failed to complete successfully")
+			return
+		}
+		lm.logger.Info("View Task completed successfully")
+	}(time.Now())
+
+	return lm.svc.Task(s)
+}
+
 // ViewDashboard adds logging middleware to view dashboard method.
 func (lm *loggingMiddleware) ViewDashboard(ctx context.Context, s ui.Session, dashboardID string) (b []byte, err error) {
 	defer func(begin time.Time) {

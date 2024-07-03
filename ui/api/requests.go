@@ -1251,3 +1251,14 @@ func (req fileReq) validate() error {
 	}
 	return nil
 }
+
+type taskReq struct {
+	ui.Session
+}
+
+func (req taskReq) validate() error {
+	if req.Token == "" {
+		return errInvalidCredentials
+	}
+	return nil
+}

@@ -1061,6 +1061,15 @@ func (mm *metricsMiddleware) File(s ui.Session) ([]byte, error) {
 	return mm.svc.File(s)
 }
 
+func (mm *metricsMiddleware) Task(s ui.Session) ([]byte, error) {
+	defer func(begin time.Time) {
+		mm.counter.With("method", "view_task").Add(1)
+		mm.latency.With("method", "view_task").Observe(time.Since(begin).Seconds())
+	}(time.Now())
+
+	return mm.svc.Task(s)
+}
+
 // ViewDashboard adds metrics middleware to view dashboard method.
 func (mm *metricsMiddleware) ViewDashboard(ctx context.Context, s ui.Session, dashboardID string) (b []byte, err error) {
 	defer func(begin time.Time) {
