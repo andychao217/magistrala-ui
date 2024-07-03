@@ -206,3 +206,11 @@ function getDeviceIcon (deviceInfo) {
 	}
 	return src;
 };
+
+// 获取文件后缀名
+function getFileExtension(filename) {
+    // 使用 split 方法将文件名按 '.' 分割成数组
+    const parts = filename.split('.');
+    // 返回数组的最后一个元素，并转换为小写
+    return parts.length > 1 ? parts.pop().toLowerCase() : '';
+}

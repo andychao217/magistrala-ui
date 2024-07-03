@@ -369,7 +369,7 @@ SPDX-License-Identifier: Apache-2.0 -->
                                                 {{if bigger $length 1}}
                                                   <div class="row" style="position: absolute; bottom: 40px; padding-left: 24px;">
                                                     {{ range $i, $o := $t.Metadata.out_channel_array }}
-                                                      <i class="fa-solid fa-{{ add $i 1 }} channelIcon" title="{{$t.Name}}_{{$o.aliase}}"></i>
+                                                      <i class="fa-solid fa-{{ add $i 1 }} channelIcon" title="{{$o.aliase}}"></i>
                                                     {{ end }}
                                                   </div>
                                                 {{ end }}
@@ -789,7 +789,7 @@ SPDX-License-Identifier: Apache-2.0 -->
                     `
                       <div class="row" style="position: absolute; bottom: 40px; padding-left: 24px;">
                         ${device.metadata.out_channel_array.map(($o, $i) => {
-                          return `<i class="fa-solid fa-${$i+1} channelIcon" title="${device.name}_${$o.aliase}"></i>`
+                          return `<i class="fa-solid fa-${$i+1} channelIcon" title="${$o.aliase}"></i>`
                         }).join('')}
                       </div>
                     ` : 
@@ -852,7 +852,7 @@ SPDX-License-Identifier: Apache-2.0 -->
                         updateThingsGrid(things);
                       }
                     }
-                    intervalRefreshData = setInterval(refreshThingsData, 2000);
+                    intervalRefreshData = setInterval(refreshThingsData, 1500);
                   })
                   .catch(error => {
                     //

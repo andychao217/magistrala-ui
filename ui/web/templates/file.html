@@ -7,19 +7,6 @@ SPDX-License-Identifier: Apache-2.0 -->
     <head>
       <title>资源管理</title>
       {{ template "header" }}
-      <style>
-        #fileTableContainer {
-          height: calc(100vh - 270px);
-          overflow-y: auto;
-          margin-left: 5px;
-          margin-right: 5px;
-          border: thin solid lightgray;
-        }
-        #fileTableContainer > .bootstrap-table {
-          padding-left: 0px;
-          padding-right: 0px;
-        }
-      </style>
     </head>
     <body>
       <div 
@@ -60,24 +47,56 @@ SPDX-License-Identifier: Apache-2.0 -->
               <h1 class="modal-title truncate-text" id="createFolderModal">新建文件夹</h1>
               <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-            <div class="modal-body">
-              <form id="createFolderForm">
+            <form id="createFolderForm">
+              <div class="modal-body">
                 <div class="mb-3">
-                    <label for="createFolderName" class="form-label">文件夹名称: </label>
-                    <input 
-                      type="text" 
-                      class="form-control name-field" 
-                      name="createFolderName" 
-                      id="createFolderName" 
-                      placeholder="文件夹名称" 
-                    />
-                    <div id="createFolderNameError" class="text-danger"></div>
+                  <label for="createFolderName" class="form-label">文件夹名称: </label>
+                  <input 
+                    type="text" 
+                    class="form-control name-field" 
+                    name="createFolderName" 
+                    id="createFolderName" 
+                    placeholder="文件夹名称" 
+                  />
+                  <div id="createFolderNameError" class="text-danger"></div>
                 </div>
-                <div class="modal-footer">
-                  <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">取消</button>
-                  <button type="submit" class="btn body-button" id="createFolderButton">确定</button>
-                </div>
-              </form>
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">取消</button>
+                <button type="submit" class="btn body-button" id="createFolderButton">确定</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+
+      <div 
+        class="modal fade" 
+        id="uploadModal" 
+        tabindex="-1" 
+        role="dialog" 
+        aria-labelledby="uploadModalLabel"
+        data-bs-backdrop="static" 
+        data-bs-keyboard="false"  
+        aria-hidden="true"
+      >
+        <div class="modal-dialog" role="document">
+          <div class="modal-content" style="width: 530px;">
+            <div class="modal-header">
+              <h1 class="modal-title truncate-text" id="uploadModalModalTitle">上传文件</h1>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+              <div class="dropzone" id="dropzone">
+                <i class="fa-solid fa-upload" style="margin-right: 5px;"></i> 拖拽文件到此处或点击上传
+              </div>
+              <input type="file" id="fileInput" multiple style="display: none;" accept=".mp3, .wav">
+              <ul id="fileList"></ul>
+              <progress id="progressBar" value="0" max="100" style="width: 100%; display: none;"></progress>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">取消</button>
+              <button type="submit" class="btn body-button" id="uploadButton">上传</button>
             </div>
           </div>
         </div>
@@ -89,8 +108,11 @@ SPDX-License-Identifier: Apache-2.0 -->
           <div class="row-mb-3 p-3">
             <div class="col-lg-12 mx-auto">
               <div class="table-responsive table-container">
-                <div class="row" style="padding-left: 18px; padding-right: 18px; margin-bottom: 5px;">
+                <div class="row btn-group" style="padding-left: 18px; padding-right: 18px; margin-bottom: 5px;">
                   <button type="button" class="btn body-button" onclick="openModal('createFolder')" style="width: 110px;">新建文件夹</button>
+                  <button type="button" class="btn body-button" onclick="openModal('upload')" style="width: 60px;" id="uploadBtn">上传</button>
+                  <button type="button" class="btn body-button" onclick="deleteFile()" style="width: 60px;" id="deleteBtn">删除</button>
+                  <button type="button" class="btn body-button" onclick="onClickDownloadFileBtn()" style="width: 60px;" id="downloadBtn">下载</button>
                 </div>
                 <div class="row">
                   <nav>
@@ -108,19 +130,12 @@ SPDX-License-Identifier: Apache-2.0 -->
                       <tr>
                         <th data-field="state" data-checkbox="true"></th>
                         <th data-field="fileName" data-formatter="fileNameTableFormatter">文件名</th>
-                        <th data-field="size" data-formatter="fileSizeTableFormatter">大小(MB)</th>
-                        <th data-field="lastModified">修改时间</th>
+                        <th data-field="size" data-formatter="fileTableFormatter">大小(MB)</th>
+                        <th data-field="lastModified" data-formatter="fileTableFormatter">修改时间</th>
                         <th data-field="action" data-formatter="actionTableFormatter">操作</th>
                       </tr>
                     </thead>
                   </table>
-                  <!-- <h1>MinIO File Upload</h1>
-                  <form id="uploadForm" enctype="multipart/form-data">
-                      <input type="file" id="fileInput" name="file" />
-                      <button type="submit">Upload</button>
-                  </form>
-                  <h2>Uploaded Files</h2>
-                  <ul id="fileList"></ul> -->
                 </div>
               </div>
             </div>
@@ -129,12 +144,12 @@ SPDX-License-Identifier: Apache-2.0 -->
       </div>
       <script>
         const createFolderModal = new bootstrap.Modal(document.getElementById("createFolderModal"));
+        const uploadModal = new bootstrap.Modal(document.getElementById("uploadModal"));
         const $createFolderNameInputElement = $(`#createFolderName`);
+
         const protocol = window.location.protocol;
         const hostname = window.location.hostname;
         const userInfoStr = sessionStorage.getItem("userInfo");
-        const $fileTable = $('#fileTable');
-        $fileTable.bootstrapTable();
 
         let comID = "";
         if (userInfoStr) {
@@ -143,6 +158,18 @@ SPDX-License-Identifier: Apache-2.0 -->
         }
         let breadCrumbFolderList = [], //当前选中文件夹列表
             currentFolderKey = ""; //当前文件夹key
+
+        const $fileTable = $('#fileTable');
+        $fileTable.bootstrapTable({
+          selectItemName: 'selectedRows',
+          onCheck: updateButtonsState,
+          onUncheck: updateButtonsState,
+          onCheckAll: updateButtonsState,
+          onUncheckAll: function() {
+            $('#deleteBtn').prop('disabled', true);
+            $('#downloadBtn').prop('disabled', true);
+          }
+        });
 
         document.getElementById("filePreviewModal").addEventListener('hidden.bs.modal', () => {
           const audio = document.getElementById("audioPreview");
@@ -170,56 +197,39 @@ SPDX-License-Identifier: Apache-2.0 -->
         //     console.error('Error:', error);
         //   });
         // });
-
-        // function loadFiles() {
-        //   fetch(`${protocol}//${hostname}:9102/files`).then(response => response.text()).then(data => {
-        //     const fileList = document.getElementById('fileList');
-        //     fileList.innerHTML = '';
-        //     data.split('\n').forEach(file => {
-        //       if (file) {
-        //         let li = document.createElement('li');
-        //         li.textContent = file;
-
-        //         let downloadLink = document.createElement('a');
-        //         downloadLink.href = `${protocol}//${hostname}:9102/download/${file}`;
-        //         downloadLink.textContent = ' Download';
-        //         li.appendChild(downloadLink);
-
-        //         const deleteButton = document.createElement('button');
-        //         deleteButton.textContent = ' Delete';
-        //         deleteButton.addEventListener('click', function() {
-        //             deleteFile(file);
-        //         });
-
-        //         li.appendChild(deleteButton);
-        //         fileList.appendChild(li);
-        //       }
-        //     });
-        //   }).catch(error => {
-        //       console.error('Error:', error);
-        //   });
-        // }
-
-        // function deleteFile(fileName) {
-        //   fetch(`${protocol}//${hostname}:9102/delete/${fileName}`, {
-        //     method: 'DELETE'
-        //   }).then(response => {
-        //     if (response.ok) {
-        //       console.log('File deleted:', fileName);
-        //       loadFiles(); // 重新加载文件列表
-        //     } else {
-        //       console.error('Failed to delete file:', fileName);
-        //     }
-        //   }).catch(error => {
-        //     console.error('Error:', error);
-        //   });
-        // }
-
         
         loadFilesTable("");
 
+        // 更新批量操作按钮状态
+        function updateButtonsState() {
+          const selectedRows = $fileTable.bootstrapTable('getSelections');
+          const hasSelections = selectedRows.length > 0;
+          const selectedFolderRows = selectedRows.filter((row) => row.isDir);
+
+          $('#deleteBtn').prop('disabled', !hasSelections);
+
+          if (hasSelections) {
+            if (selectedFolderRows.length) {
+              $('#downloadBtn').prop('disabled', true);
+            } else {
+              $('#downloadBtn').prop('disabled', false);
+            }
+          } else {
+            $('#downloadBtn').prop('disabled', true);
+          }
+        }
+
         // 初始化加载文件列表
         function loadFilesTable(folder) {
+          $fileTable.bootstrapTable('uncheckAll');
+          $fileTable.bootstrapTable('load', []);
+          if (!folder) {
+            breadCrumbFolderList = [];
+            breadCrumbFolderList.push({fileName: "文件列表", key: ""});
+            currentFolderKey = "";
+            generateBreadCrumb(breadCrumbFolderList);
+          }
+
           fetch(`${protocol}//${hostname}:9102/resourceList`, {
             method: 'POST',
             headers: {
@@ -230,18 +240,12 @@ SPDX-License-Identifier: Apache-2.0 -->
             .then(response => {
               if (!response.ok) {
                   throw new Error("Network response was not ok");
-                  $fileTable.bootstrapTable('load', []);
               }
               return response.json(); // 直接将流转换为JSON对象
             }).then(data => {
-              breadCrumbFolderList = [];
               $fileTable.bootstrapTable('load', data || []);
-              breadCrumbFolderList.push({fileName: "文件列表", key: ""});
-              generateBreadCrumb(breadCrumbFolderList);
-              currentFolderKey = "";
             }).catch(error => {
               console.error('Error:', error);
-              $fileTable.bootstrapTable('load', []);
             });
         }
 
@@ -250,7 +254,7 @@ SPDX-License-Identifier: Apache-2.0 -->
           if (row.isDir) {
             return `<div style="cursor: pointer">
                       <img src="/images/icon_folder.png" style="width: 16px; margin-bottom: 3px;"/>
-                      <span data-key="${row.key}" onclick="onClickFolder(event)">${value}</span>
+                      <span data-key="${row.key}" data-filename="${row.fileName}" onclick="onClickFolder(event)">${value}</span>
                     </div>`;
           } else {
             return `<div>
@@ -258,25 +262,6 @@ SPDX-License-Identifier: Apache-2.0 -->
                       <span>${value}</span>
                     </div>`;
           }
-        }
-
-        //递归寻找对象
-        function findObjectByKey(data, targetKey) {
-          // 检查当前对象是否匹配目标key
-          if (data.key === targetKey) {
-            return data;
-          }
-          // 如果当前对象有children属性，递归搜索
-          if (data.children && data.children.length > 0) {
-            for (let i = 0; i < data.children.length; i++) {
-              const result = findObjectByKey(data.children[i], targetKey);
-              if (result) {
-                return result; // 如果找到匹配的对象，立即返回
-              }
-            }
-          }
-          // 如果没有找到匹配的对象，返回null
-          return null;
         }
 
         //生成面包屑导航
@@ -293,6 +278,7 @@ SPDX-License-Identifier: Apache-2.0 -->
               <li 
                 class="breadcrumb-item ${activeClass}" 
                 data-key="${folder.key}" 
+                data-filename="${folder.fileName}" 
                 onclick="onClickBreadcrumbItem(event)"
               >
                 ${folder.fileName}
@@ -306,32 +292,31 @@ SPDX-License-Identifier: Apache-2.0 -->
         function onClickBreadcrumbItem(e) {
           console.log(e.target);
           const key = e.target.dataset.key;
-          const row = findObjectByKey(rawTableData,key);
-          currentFolderKey = row.key;
+          currentFolderKey = key;
           //删除后面的所有文件夹
           const rowIndex = breadCrumbFolderList.findIndex(item => item.key === key);
           breadCrumbFolderList.splice(rowIndex + 1, breadCrumbFolderList.length - rowIndex);
 
           generateBreadCrumb(breadCrumbFolderList);
-          $fileTable.bootstrapTable('load', row.children || []);
+          loadFilesTable(key);
         }
 
         //点击表格中文件夹
         function onClickFolder(e) {
           const key = e.target.dataset.key;
-          const row = findObjectByKey(rawTableData,key);
-          currentFolderKey = row.key;
-          breadCrumbFolderList.push(row);
+          const fileName = e.target.dataset.filename;
+          currentFolderKey = key;
+          breadCrumbFolderList.push({fileName: fileName, key: key});
           generateBreadCrumb(breadCrumbFolderList);
-          $fileTable.bootstrapTable('load', row.children || []);
+          loadFilesTable(key);
         }
 
-        //表格文件大小列
-        function fileSizeTableFormatter(value, row, index) {
+        //表格文件大小、修改时间列
+        function fileTableFormatter(value, row, index) {
           if (row.isDir) {
-            return '';
+            return '-';
           } else {
-            return row.size;
+            return value;
           }
         }
 
@@ -376,6 +361,7 @@ SPDX-License-Identifier: Apache-2.0 -->
           $("#filePreviewModalContent").append($audio);
         }
 
+        //新建文件夹弹窗 名称输入框 表单校验事件
         $createFolderNameInputElement.on('change blur keyup', function(event) {
           const value = $(this).val();
           if (value) {
@@ -385,14 +371,21 @@ SPDX-License-Identifier: Apache-2.0 -->
           }
         });
 
+        //新建文件夹
         document.getElementById('createFolderForm').addEventListener('submit', function(event) {
             event.preventDefault();
-            const currentPath = currentFolderKey;
+            const currentPath = currentFolderKey ? currentFolderKey : `${comID}/resource`;
             const folderName = $('#createFolderName').val();
             if (!folderName) {
               $(`#createFolderNameError`).html('请输入文件夹名称');
               return;
             } else {
+              const tableData =  $fileTable.bootstrapTable('getData');
+              const fileNameList = tableData.filter(row => row.isDir).map(row => row.fileName);
+              if (fileNameList.length && fileNameList.includes(folderName)) {
+                $(`#createFolderNameError`).html('请不要输入重复的文件夹名称');
+                return;
+              }
               fetch(`${protocol}//${hostname}:9102/createFolder`, {
                 method: 'POST',
                 headers: {
@@ -402,27 +395,204 @@ SPDX-License-Identifier: Apache-2.0 -->
               })
               .then(response => response.json())
               .then(data => {
-                console.log('data123: ', data)
                 if (data.success) {
                   createFolderModal.hide();
+                  loadFilesTable(currentFolderKey);
                 } else {
                   alert('新建文件夹失败: ' + data.message);
                 }
               })
               .catch(error => {
                   console.error('Error:', error);
+                  alert('新建文件夹失败');
               });
             }
         });
 
+        //删除文件
+        function deleteFile() {
+          const selectedRows = $fileTable.bootstrapTable('getSelections');
+          if (selectedRows.length) {
+            const userConfirmed = confirm("你确定要删除所选数据吗？");
+            if (userConfirmed) {
+              const keyList = selectedRows.map(row => row.key);
+              fetch(`${protocol}//${hostname}:9102/delete`, {
+                method: 'DELETE',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ keyList: keyList })
+              })
+              .then(response => response.json())
+              .then(data => {
+                loadFilesTable(currentFolderKey);
+              })
+              .catch(error => {
+                loadFilesTable(currentFolderKey);
+                console.error('Error:', error);
+              });
+            }
+          } else {
+            alert('请选择要删除的数据');
+          }
+        }
+
+        //点击下载文件按钮
+        function onClickDownloadFileBtn() {
+          const selectedRows = $fileTable.bootstrapTable('getSelections');
+          if (selectedRows.length) {
+            selectedRows.forEach((row, index) => {
+              fetch(`${protocol}//${hostname}:9102/download`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ key: row.key })
+              })
+              .then(response => response.blob())
+              .then(blob => {
+                const extension = getFileExtension(row.fileName);
+                let contentType = 'application/octet-stream';
+                if (extension === 'mp3') {
+                  contentType = 'audio/mpeg';
+                } else if (extension === 'wav') {
+                  contentType = 'audio/wav';
+                }
+                downloadFile(blob, row.fileName, contentType);
+              });
+            });
+          }
+        }
+
+        //下载文件
+        function downloadFile(content, fileName, contentType) {
+          // 创建一个 Blob 对象
+          const blob = new Blob([content], { type: contentType });
+          // 创建一个 URL 对象
+          const url = window.URL.createObjectURL(blob);
+          // 创建一个 a 标签
+          const a = document.createElement('a');
+          a.href = url;
+          a.download = fileName;
+          // 将 a 标签添加到 DOM 中（这一步不是必须的，但可以确保兼容性）
+          document.body.appendChild(a);
+          // 触发点击事件
+          a.click();
+          // 移除 a 标签
+          document.body.removeChild(a);
+          // 释放 URL 对象
+          window.URL.revokeObjectURL(url);
+        }
+
+        const dropzone = document.getElementById('dropzone');
+        const fileInput = document.getElementById('fileInput');
+        const uploadButton = document.getElementById('uploadButton');
+        const progressBar = document.getElementById('progressBar');
+        const fileList = document.getElementById('fileList');
+        
+        //打开弹窗
         function openModal(modal) {
           if (modal === "createFolder") {
             createFolderModal.show();
             $("#createFolderName").val('');
             $("#createFolderNameError").empty();
-          } else if (modal === "bulk") {
-            //
+          } else if (modal === "upload") {
+            uploadModal.show();
+            fileInput.value = ''; // Clear the file input
+            fileList.innerHTML = ''; // Clear the file list
           }
+        }
+
+        dropzone.addEventListener('click', () => fileInput.click());
+        dropzone.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            dropzone.style.borderColor = '#20afbf';
+        });
+        dropzone.addEventListener('dragleave', () => {
+            dropzone.style.borderColor = '#cccccc';
+        });
+        dropzone.addEventListener('drop', (e) => {
+            e.preventDefault();
+            dropzone.style.borderColor = '#cccccc';
+            handleFiles(e.dataTransfer.files);
+        });
+        fileInput.addEventListener('change', (e) => {
+            handleFiles(e.target.files);
+        });
+        uploadButton.addEventListener('click', () => {
+          if (fileInput.files.length > 0) {
+            handleUpload(fileInput.files);
+          } else {
+            alert('请选择文件');
+          }
+        });
+
+        function handleFiles(files) {
+          const allowedTypes = ['audio/mpeg', 'audio/wav'];
+          for (const file of files) {
+            if (allowedTypes.includes(file.type)) {
+              const li = document.createElement('li');
+              li.className = 'fileItem';
+              li.textContent = file.name;
+
+              const deleteButton = document.createElement('button');
+              deleteButton.innerHTML = '<i class="fa-solid fa-xmark"></i>';
+              deleteButton.addEventListener('click', () => {
+                li.remove();
+                updateFileInput();
+              });
+
+              li.appendChild(deleteButton);
+              fileList.appendChild(li);
+            } else {
+              alert(`此文件类型不受支持, 请选择.mp3或者.wav类型的文件`);
+            }
+          }
+        }
+
+        function updateFileInput() {
+          const fileItems = fileList.querySelectorAll('.fileItem');
+          const files = Array.from(fileInput.files);
+          const newFiles = files.filter(file => {
+            return Array.from(fileItems).some(item => item.textContent.includes(file.name));
+          });
+          const dataTransfer = new DataTransfer();
+          newFiles.forEach(file => dataTransfer.items.add(file));
+          fileInput.files = dataTransfer.files;
+        }
+
+        function handleUpload(files) {
+          const formData = new FormData();
+          for (const file of files) {
+            formData.append('files', file);
+            const path = currentFolderKey ? currentFolderKey : `${comID}/resource`; // 或者从其他地方获取路径
+            formData.append('filePath', path);
+          }
+
+          
+          progressBar.style.display = 'block';
+          const xhr = new XMLHttpRequest();
+          xhr.open('POST', `${protocol}//${hostname}:9102/upload`, true);
+
+          xhr.upload.onprogress = (event) => {
+            if (event.lengthComputable) {
+              const percentComplete = (event.loaded / event.total) * 100;
+              progressBar.value = percentComplete;
+            }
+          };
+
+          xhr.onload = () => {
+            if (xhr.status === 200) {
+              uploadModal.hide();
+              loadFilesTable(currentFolderKey);
+            } else {
+              alert('上传失败');
+            }
+            progressBar.style.display = 'none';
+            progressBar.value = 0;
+          };
+
+          xhr.send(formData);
         }
       </script>
     </body>

@@ -185,12 +185,12 @@ SPDX-License-Identifier: Apache-2.0 -->
                     <span>分区</span>
                 </a>
             </li>
-            <li class="nav-item mb-2 mx-2" style="display: none;">
+            <li class="nav-item mb-2 mx-2">
                 {{ $navbarActive = "file" }}
                 <a
                     href="{{ printf "%s/file" pathPrefix }}"
                     id="file"
-                    class="nav-link sidebar-link"
+                    class="nav-link sidebar-link {{ if eq .NavbarActive $navbarActive }}active{{ end }}"
                 >
                     <img src="/images/icon_file.svg" style="height: 18px; margin-top: -3px; margin-right: 5px;">
                     <span>资源管理</span>
