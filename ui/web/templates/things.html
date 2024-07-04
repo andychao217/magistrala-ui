@@ -590,7 +590,7 @@ SPDX-License-Identifier: Apache-2.0 -->
                       const channelsData = JSON.parse(data).channelsData;
                       const channels = channelsData.groups;
                       const fetchPromises = channels.map((channel) => disconnectThingsAndChannels(thingID, channel.id));
-                      (fetchPromises).then(responses => {})
+                      Promise.all(fetchPromises).then(responses => {})
                         .then(jsonData => { handleDelete(thingID) })
                         .catch(error => {
                           // 如果有任何错误发生，这里会捕获到

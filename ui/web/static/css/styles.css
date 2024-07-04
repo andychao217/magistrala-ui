@@ -2,7 +2,7 @@
 SPDX-License-Identifier: Apache-2.0 */
 
 html {
-    min-width: 1200px;
+    min-width: 1280px;
     overflow-x: auto;
     overflow-y: hidden;
 }
@@ -955,12 +955,12 @@ table > thead > tr > th {
     margin-left: 5px;
     margin-right: 5px;
     border: thin solid lightgray;
-  }
-  #fileTableContainer > .bootstrap-table {
+}
+#fileTableContainer > .bootstrap-table {
     padding-left: 0px;
     padding-right: 0px;
-  }
-  .dropzone {
+}
+.dropzone {
     width: 450px;
     height: 200px;
     border: 2px dashed #cccccc;
@@ -972,17 +972,17 @@ table > thead > tr > th {
     margin: 20px auto;
     padding: 20px;
     cursor: pointer;
-  }
-  .dropzone:hover {
+}
+.dropzone:hover {
     border-color: var(--main-color);
-  }
-  #fileList {
+}
+#fileList {
     width: 450px;
     margin: 20px auto;
     padding: 0;
     list-style: none;
-  }
-  .fileItem {
+}
+.fileItem {
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -990,11 +990,73 @@ table > thead > tr > th {
     border: 1px solid #cccccc;
     border-radius: 5px;
     margin-bottom: 5px;
-  }
-  .fileItem button {
+}
+.fileItem button {
     color: dimgray;
     border: none;
     border-radius: 3px;
     cursor: pointer;
     background: none;
-  }
+}
+
+/* task page */
+.pignose-calendar {
+    width: 100%;
+    margin: 0px;
+    border: none;
+    box-shadow: none;
+    -webkit-box-shadow: none;
+    background-color: #edf8fb;
+}
+.pignose-calendar .pignose-calendar-top {
+    box-shadow: none;
+    -webkit-box-shadow: none;
+    background-color: #edf8fb;
+    padding: 1.6em 0;
+}
+.pignose-calendar .pignose-calendar-top .pignose-calendar-top-date {
+    padding: 1em 0 ;
+}
+.pignose-calendar .pignose-calendar-top .pignose-calendar-top-month {
+    margin-bottom: 0;
+}
+.pignose-calendar .pignose-calendar-top .pignose-calendar-top-month,
+.pignose-calendar .pignose-calendar-top .pignose-calendar-top-year {
+    font-size: 100%;
+}
+.pignose-calendar .pignose-calendar-header {
+    margin-top: 0.5em;
+}
+.pignose-calendar .pignose-calendar-body {
+    padding: 0 1.2em;
+}
+.pignose-calendar .pignose-calendar-unit.pignose-calendar-unit-sat a, 
+.pignose-calendar .pignose-calendar-unit.pignose-calendar-unit-sun a,
+.pignose-calendar .pignose-calendar-header .pignose-calendar-week.pignose-calendar-week-sat, 
+.pignose-calendar .pignose-calendar-header .pignose-calendar-week.pignose-calendar-week-sun {
+    color: #ff8a00;
+}
+.pignose-calendar-week .pignose-calendar-week-mon,
+.pignose-calendar-week .pignose-calendar-week-tue,
+.pignose-calendar-week .pignose-calendar-week-wed,
+.pignose-calendar-week .pignose-calendar-week-thu,
+.pignose-calendar-week .pignose-calendar-week-fri {
+    color: dimgray;
+}
+.tackCalendar {
+    width: 310px;    
+    /* -webkit-box-shadow: 0 3px 8px rgba(0, 0, 0, .25);
+    box-shadow: 0 3px 8px rgba(0, 0, 0, .25); */
+    background-color: #edf8fb;
+}
+.taskContent {
+    padding: 15px;
+}
+#taskDateTitle {
+    color: #20afbf;
+}
+#taskPageContainer {
+    display: flex; 
+    justify-content: space-between; 
+    padding: 0;
+}
