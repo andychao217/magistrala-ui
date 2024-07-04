@@ -41,7 +41,15 @@ SPDX-License-Identifier: Apache-2.0 -->
                                                     <div class="col-md-12 input-field password-field login-field">
                                                         <i class="fa-solid fa-lock me-2"></i>
                                                         <input class="p-3 w-100 me-2" type="password" name="password" id="password" placeholder="密码" />
-                                                        <span class="password-toggle-icon"><i title="显示密码" class="fa-solid fa-eye"></i></span>
+                                                        <span class="password-toggle-icon">
+                                                            <i 
+                                                                data-bs-toggle="tooltip" 
+                                                                data-bs-placement="bottom" 
+                                                                data-bs-title="显示密码" 
+                                                                title="显示密码" 
+                                                                class="fa-solid fa-eye"
+                                                            ></i>
+                                                        </span>
                                                     </div>
                                                     <div id="passwordError" class="text-danger"></div>
                                                 </div>
@@ -131,11 +139,11 @@ SPDX-License-Identifier: Apache-2.0 -->
                         if (inputType=== "password")  {
                             $("#password").attr("type", "text");
                             $('span.password-toggle-icon').empty();
-                            $("<i class='fa-solid fa-eye-slash' title='隐藏密码'></i>").appendTo('span.password-toggle-icon');
+                            $("<i class='fa-solid fa-eye-slash' title='隐藏密码' data-bs-toggle='tooltip' data-bs-placement='bottom' data-bs-title='隐藏密码'></i>").appendTo('span.password-toggle-icon');
                         } else {
                             $("#password").attr("type", "password");
                             $('span.password-toggle-icon').empty();
-                            $("<i class='fa-solid fa-eye' title='显示密码'></i>").appendTo('span.password-toggle-icon');
+                            $("<i class='fa-solid fa-eye' title='显示密码' data-bs-toggle='tooltip' data-bs-placement='bottom' data-bs-title='显示密码'></i>").appendTo('span.password-toggle-icon');
                         }
                     });
                 });

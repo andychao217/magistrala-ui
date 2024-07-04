@@ -99,7 +99,14 @@ SPDX-License-Identifier: Apache-2.0 -->
                                                                 </div>
                                                             </div>
                                                             <div class="row">
-                                                                <h5 class="card-title truncate-text">{{ $m.Name }}</h5>
+                                                                <h5 
+                                                                    class="card-title truncate-text"
+                                                                    data-bs-toggle="tooltip" 
+                                                                    data-bs-placement="bottom" 
+                                                                    data-bs-title="{{ $m.Name }}" 
+                                                                >
+                                                                    {{ $m.Name }}
+                                                                </h5>
                                                             </div>
                                                         </div>
                                                     </div>

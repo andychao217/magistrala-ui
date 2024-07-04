@@ -1044,19 +1044,33 @@ table > thead > tr > th {
     color: dimgray;
 }
 .tackCalendar {
-    width: 310px;    
+    width: 410px;    
     /* -webkit-box-shadow: 0 3px 8px rgba(0, 0, 0, .25);
     box-shadow: 0 3px 8px rgba(0, 0, 0, .25); */
     background-color: #edf8fb;
 }
 .taskContent {
     padding: 15px;
+    width: 100%;
+}
+.taskContentHeaderBar {
+    display: flex; 
+    justify-content: space-between; 
+    width: 100%;
+    height: 38px;
 }
 #taskDateTitle {
     color: #20afbf;
+    line-height: 38px;
 }
 #taskPageContainer {
     display: flex; 
     justify-content: space-between; 
     padding: 0;
+}
+.taskDateBadgeContainer {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    margin-left: 5px;
 }

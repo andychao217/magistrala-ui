@@ -119,11 +119,26 @@ SPDX-License-Identifier: Apache-2.0 -->
                                                   <div class="row">
                                                     {{ $length := len $t.Metadata.out_channel_array }}
                                                     {{if bigger $length 1}}
-                                                      <h5 class="card-title truncate-text" title="{{ $t.Metadata.aliase }}">{{ $t.Metadata.aliase }}</h5>
+                                                      <h5 
+                                                        class="card-title truncate-text" 
+                                                        data-bs-toggle="tooltip" 
+                                                        data-bs-placement="bottom" 
+                                                        data-bs-title="{{ $t.Metadata.aliase }}" 
+                                                        title="{{ $t.Metadata.aliase }}"
+                                                      >
+                                                        {{ $t.Metadata.aliase }}
+                                                      </h5>
                                                     {{ else }}
-                                                      <h5 class="card-title truncate-text" title="{{ $t.Name }}">{{ $t.Name }}</h5>
+                                                      <h5 
+                                                        class="card-title truncate-text" 
+                                                        data-bs-toggle="tooltip" 
+                                                        data-bs-placement="bottom" 
+                                                        data-bs-title="{{ $t.Name }}" 
+                                                        title="{{ $t.Name }}"
+                                                      >
+                                                        {{ $t.Name }}
+                                                      </h5>
                                                     {{ end }}
-                                                    <!-- <h5 class="card-title truncate-text" title="{{ $t.Metadata.aliase }}">{{ $t.Metadata.aliase }}</h5> -->
                                                   </div>
                                                 </div>
                                               </div>
@@ -203,7 +218,7 @@ SPDX-License-Identifier: Apache-2.0 -->
                     // 调用异步函数
                     processRequests();
                   } else {
-                      alert("请选择要添加的设备");
+                    showAlert("info", "请选择要添加的设备");
                   }
                 });
               });
@@ -305,7 +320,14 @@ SPDX-License-Identifier: Apache-2.0 -->
                               src="/images/icon_channel.png" 
                               style="height: 16px; margin-top: -3px;"
                             >
-                            <span title="${thingName}">${thingName}</span>
+                            <span 
+                              data-bs-toggle="tooltip" 
+                              data-bs-placement="bottom" 
+                              data-bs-title="${thingName}" 
+                              title="${thingName}"
+                            >
+                              ${thingName}
+                            </span>
                           </label>
                         </li>
                       `);
@@ -471,7 +493,15 @@ SPDX-License-Identifier: Apache-2.0 -->
                                 </div>
                               </div>
                               <div class="row" style="margin-top:50px">
-                                <h5 class="card-title truncate-text" title="${thingName}">${thingName}</h5>
+                                <h5 
+                                  class="card-title truncate-text"
+                                  data-bs-toggle="tooltip" 
+                                  data-bs-placement="bottom" 
+                                  data-bs-title="${thingName}" 
+                                  title="${thingName}"
+                                >
+                                  ${thingName}
+                                </h5>
                               </div>
                             </div>
                           </div>

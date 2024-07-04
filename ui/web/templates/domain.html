@@ -160,9 +160,9 @@ SPDX-License-Identifier: Apache-2.0 -->
                             if (!response.ok) {
                                 const errorMessage = response.headers.get("X-Error-Message");
                                 if (errorMessage) {
-                                    alert(errorMessage);
+                                    showAlert("danger", errorMessage);
                                 } else {
-                                    alert(`Error: ${response.status}`);
+                                    showAlert("danger", `Error: ${response.status}`);
                                 }
                             } else {
                                 window.location.reload();
@@ -170,7 +170,7 @@ SPDX-License-Identifier: Apache-2.0 -->
                         })
                         .catch((error) => {
                             console.error("error submitting form: ", error);
-                            alert(`错误: ${error}`, config.alertDiv);
+                            showAlert("danger", `错误: ${error}`, config.alertDiv);
                         });
                 }
 

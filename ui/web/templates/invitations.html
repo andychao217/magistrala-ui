@@ -201,8 +201,7 @@ SPDX-License-Identifier: Apache-2.0 -->
                       invitationModal.hide();
                       window.location.reload();
                     } else {
-                      // TODO: Handle error properly
-                      alert("抱歉，出错了");
+                      showAlert("danger", "抱歉，出错了");
                     }
                   })
                   .catch((error) => {

@@ -214,3 +214,31 @@ function getFileExtension(filename) {
     // 返回数组的最后一个元素，并转换为小写
     return parts.length > 1 ? parts.pop().toLowerCase() : '';
 }
+
+function showAlert(type, message) {
+    const toastPlacement = document.getElementById('toastPlacement');
+    const toast = new bootstrap.Toast(toastPlacement);
+    $('#toastPlacement').removeClass(function(index, className) {
+        return (className.match(/(^|\s)text-bg-\S+/g) || []).join(' ');
+    }).addClass(`text-bg-${type}`);;
+    const toastContent = $('#toastContent');
+    toastContent.html(message);
+    toast.show();
+}
+
+function showConfirmModal(content, callback) {
+    const confirmModal = new bootstrap.Modal(document.getElementById("confirmModal"));
+    if (content) {
+        $('#confirmModalContent').html(content);
+    }
+    // 绑定删除按钮的点击事件
+    $('#confirmModalConfirmBtn').off('click').on('click', function() {
+        // 执行回调函数
+        callback();
+        confirmModal.hide();
+    });
+    $('#confirmModalCancelBtn').on('click', function() {
+        confirmModal.hide();
+    });
+    confirmModal.show();
+}

@@ -76,8 +76,11 @@ SPDX-License-Identifier: Apache-2.0 -->
                 <span 
                     id="domainName" 
                     class="truncate-text-sidebar"
+                    data-bs-toggle="tooltip" 
+                    data-bs-placement="bottom" 
                     {{ if .Session.Domain.Name }}
                         title="{{ .Session.Domain.Name }}"
+                        data-bs-title="{{ .Session.Domain.Name }}"
                     {{ end }}
                 >
                     {{ if eq .Session.User.Role "admin"}}
@@ -257,8 +260,11 @@ SPDX-License-Identifier: Apache-2.0 -->
                             data-bs-display="static" 
                             aria-expanded="false" 
                             id="domainName"
+                            data-bs-toggle="tooltip" 
+                            data-bs-placement="bottom"
                             {{ if .Session.Domain.Name }}
                                 title="{{ .Session.Domain.Name }}"
+                                data-bs-title="{{ .Session.Domain.Name }}"
                             {{ end }}
                         >
                             {{ if eq .Session.User.Role "admin"}}
@@ -278,8 +284,11 @@ SPDX-License-Identifier: Apache-2.0 -->
                                 <span 
                                     class="drop-item truncate-text-topbar" 
                                     id="domainName"
+                                    data-bs-toggle="tooltip" 
+                                    data-bs-placement="bottom"
                                     {{ if .Session.Domain.Name }}
                                         title="{{ .Session.Domain.Name }}"
+                                        data-bs-title="{{ .Session.Domain.Name }}"
                                     {{ end }}
                                 >
                                     {{ if eq .Session.User.Role "admin"}}

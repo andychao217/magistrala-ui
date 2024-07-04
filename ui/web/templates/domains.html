@@ -58,7 +58,14 @@ SPDX-License-Identifier: Apache-2.0 -->
                                                             <!-- <span class="badge bg-secondary">{{ $d.Permission }}</span> -->
                                                         </div>
                                                         <div class="row">
-                                                            <h5 class="card-title truncate-text domain-title" data-domain_title="{{ $d.Name }}" title="{{ $d.Name }}">
+                                                            <h5 
+                                                                class="card-title truncate-text domain-title" 
+                                                                data-domain_title="{{ $d.Name }}" 
+                                                                data-bs-toggle="tooltip" 
+                                                                data-bs-placement="bottom" 
+                                                                data-bs-title="{{ $d.Name }}" 
+                                                                title="{{ $d.Name }}"
+                                                            >
                                                                 {{ if stringContains $d.Name "默认机构" }}
                                                                     默认机构
                                                                 {{ else }}

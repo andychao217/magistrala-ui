@@ -314,7 +314,10 @@ SPDX-License-Identifier: Apache-2.0 -->
 
             if (extension.toLowerCase() === 'mp3' || extension.toLowerCase() === 'wav') {
               return `<button 
-                        class="btn btn-link" 
+                        class="btn btn-link"
+                        data-bs-toggle="tooltip" 
+                        data-bs-placement="bottom" 
+                        data-bs-title="试听"  
                         title="试听" 
                         onclick="filePreview('${row.fileName}', '${row.key}')"
                         style="height:24px; margin-top: -15px;"
@@ -380,12 +383,12 @@ SPDX-License-Identifier: Apache-2.0 -->
                   createFolderModal.hide();
                   loadFilesTable(currentFolderKey);
                 } else {
-                  alert('新建文件夹失败: ' + data.message);
+                  showAlert("danger", '新建文件夹失败: ' + data.message);
                 }
               })
               .catch(error => {
                   console.error('Error:', error);
-                  alert('新建文件夹失败');
+                  showAlert("danger", '新建文件夹失败');
               });
             }
         });
@@ -394,8 +397,7 @@ SPDX-License-Identifier: Apache-2.0 -->
         function deleteFile() {
           const selectedRows = $fileTable.bootstrapTable('getSelections');
           if (selectedRows.length) {
-            const userConfirmed = confirm("你确定要删除所选数据吗？");
-            if (userConfirmed) {
+            showConfirmModal("你确定要删除所选数据吗？", () => {
               const keyList = selectedRows.map(row => row.key);
               fetch(`${protocol}//${hostname}:9102/delete`, {
                 method: 'DELETE',
@@ -412,9 +414,9 @@ SPDX-License-Identifier: Apache-2.0 -->
                 loadFilesTable(currentFolderKey);
                 console.error('Error:', error);
               });
-            }
+            });
           } else {
-            alert('请选择要删除的数据');
+            showAlert('info', '请选择要删除的数据');
           }
         }
 
@@ -470,6 +472,7 @@ SPDX-License-Identifier: Apache-2.0 -->
         const uploadButton = document.getElementById('uploadButton');
         const progressBar = document.getElementById('progressBar');
         const fileList = document.getElementById('fileList');
+        let selectedFiles = new DataTransfer();
         
         //打开弹窗
         function openModal(modal) {
@@ -481,6 +484,7 @@ SPDX-License-Identifier: Apache-2.0 -->
             uploadModal.show();
             fileInput.value = ''; // Clear the file input
             fileList.innerHTML = ''; // Clear the file list
+            selectedFiles = new DataTransfer();
           }
         }
 
@@ -496,15 +500,26 @@ SPDX-License-Identifier: Apache-2.0 -->
             e.preventDefault();
             dropzone.style.borderColor = '#cccccc';
             handleFiles(e.dataTransfer.files);
+
+            const files = Array.from(fileInput.files);
+            const dataTransfer = new DataTransfer();
+            files.push(...e.dataTransfer.files);
+            files.forEach(file => dataTransfer.items.add(file));
+            fileInput.files = dataTransfer.files;
+            selectedFiles = dataTransfer;
         });
         fileInput.addEventListener('change', (e) => {
             handleFiles(e.target.files);
+            
+            const files = Array.from(fileInput.files);
+            files.forEach(file => selectedFiles.items.add(file));
+            fileInput.files = selectedFiles.files;
         });
         uploadButton.addEventListener('click', () => {
           if (fileInput.files.length > 0) {
             handleUpload(fileInput.files);
           } else {
-            alert('请选择文件');
+            showAlert('info', '请选择文件');
           }
         });
 
@@ -526,7 +541,7 @@ SPDX-License-Identifier: Apache-2.0 -->
               li.appendChild(deleteButton);
               fileList.appendChild(li);
             } else {
-              alert(`此文件类型不受支持, 请选择.mp3或者.wav类型的文件`);
+              showAlert('warning', `此文件类型不受支持, 请选择.mp3或者.wav类型的文件`);
             }
           }
         }
@@ -540,6 +555,7 @@ SPDX-License-Identifier: Apache-2.0 -->
           const dataTransfer = new DataTransfer();
           newFiles.forEach(file => dataTransfer.items.add(file));
           fileInput.files = dataTransfer.files;
+          selectedFiles = dataTransfer;
         }
 
         function handleUpload(files) {
@@ -567,7 +583,7 @@ SPDX-License-Identifier: Apache-2.0 -->
               uploadModal.hide();
               loadFilesTable(currentFolderKey);
             } else {
-              alert('上传失败');
+              showAlert('danger', '上传失败');
             }
             progressBar.style.display = 'none';
             progressBar.value = 0;

@@ -16,8 +16,23 @@ SPDX-License-Identifier: Apache-2.0 -->
             <div class="col-lg-12 mx-auto">
               <div class="table-responsive table-container" id="taskPageContainer">
                 <div class="taskContent">
-                  <div class="row">
-                    <h5 id="taskDateTitle"></h5>
+                  <div class="taskContentHeaderBar">
+                    <div>
+                      <h5 style="display: flex;">
+                        <div>
+                          <span id="taskDateTitle"></span>
+                        </div>
+                        <div class="taskDateBadgeContainer">
+                          <span class="badge bg-warning rounded-pill" id="taskDateBadge" style="font-size:10px; min-width: 30px">2</span>
+                        </div>
+                      </h5>
+                    </div>
+                    <div>
+                      <div class="btn-group">
+                        <button type="button" class="btn body-button" style="width: 90px;">新建日程</button>
+                        <button type="button" class="btn body-button" style="width: 60px;">全部</button>
+                      </div>
+                    </div>
                   </div>
                 </div>
                 <div class="tackCalendar"></div>

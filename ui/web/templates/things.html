@@ -369,11 +369,25 @@ SPDX-License-Identifier: Apache-2.0 -->
                                                 {{if bigger $length 1}}
                                                   <div class="row" style="position: absolute; bottom: 40px; padding-left: 24px;">
                                                     {{ range $i, $o := $t.Metadata.out_channel_array }}
-                                                      <i class="fa-solid fa-{{ add $i 1 }} channelIcon" title="{{$o.aliase}}"></i>
+                                                      <i 
+                                                        class="fa-solid fa-{{ add $i 1 }} channelIcon" 
+                                                        data-bs-toggle="tooltip" 
+                                                        data-bs-placement="bottom" 
+                                                        data-bs-title="{{ $o.aliase }}" 
+                                                        title="{{ $o.aliase }}"
+                                                      ></i>
                                                     {{ end }}
                                                   </div>
                                                 {{ end }}
-                                                <h5 class="card-title truncate-text" title="{{ $t.Name }}">{{ $t.Name }}</h5>
+                                                <h5 
+                                                  class="card-title truncate-text" 
+                                                  data-bs-toggle="tooltip" 
+                                                  data-bs-placement="bottom" 
+                                                  data-bs-title="{{ $t.Name }}" 
+                                                  title="{{ $t.Name }}"
+                                                >
+                                                  {{ $t.Name }}
+                                                </h5>
                                               </div>
                                             </div>
                                           </div>
@@ -571,11 +585,7 @@ SPDX-License-Identifier: Apache-2.0 -->
 
               //删除
               function deleteThing(thingID) {
-                // 显示确认对话框
-                const userConfirmed = confirm("你确定要删除所选数据吗？");
-
-                // 根据用户的选择执行不同的操作
-                if (userConfirmed) {
+                showConfirmModal("你确定要删除所选数据吗？", () => {
                   fetch(`/ui/things/${thingID}/channelsInJSON?page=1&limit=1000`, {
                     method: "GET",
                   })
@@ -596,11 +606,8 @@ SPDX-License-Identifier: Apache-2.0 -->
                           // 如果有任何错误发生，这里会捕获到
                           console.error('An error occurred:', error);
                         });
-                    })
-                } else {
-                  console.log("用户点击了取消。");
-                  // 执行取消后的操作
-                }
+                    });
+                });
               }
 
               function handleDelete(thingID) {
@@ -789,7 +796,7 @@ SPDX-License-Identifier: Apache-2.0 -->
                     `
                       <div class="row" style="position: absolute; bottom: 40px; padding-left: 24px;">
                         ${device.metadata.out_channel_array.map(($o, $i) => {
-                          return `<i class="fa-solid fa-${$i+1} channelIcon" title="${$o.aliase}"></i>`
+                          return `<i class="fa-solid fa-${$i+1} channelIcon" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-title="${$o.aliase}" title="${$o.aliase}"></i>`
                         }).join('')}
                       </div>
                     ` : 
@@ -808,7 +815,15 @@ SPDX-License-Identifier: Apache-2.0 -->
                         </div>
                         <div class="row" style="margin-top:50px">
                           ${channelIconDiv}
-                          <h5 class="card-title truncate-text" title="${device.name}">${device.name}</h5>
+                          <h5 
+                            class="card-title truncate-text" 
+                            data-bs-toggle="tooltip" 
+                            data-bs-placement="bottom" 
+                            data-bs-title="${device.name}"
+                            title="${device.name}"
+                          >
+                            ${device.name}
+                          </h5>
                         </div>
                       </div>
                     </div>
@@ -1183,7 +1198,7 @@ SPDX-License-Identifier: Apache-2.0 -->
                         })
                         showNewThingsGrid(scanNewThingsList, selectedNewThingNames)
                       } else {
-                        alert("没有可添加设备")
+                        showAlert("info", "没有可添加设备");
                       }
                     })
               }
