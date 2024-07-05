@@ -7,6 +7,9 @@ SPDX-License-Identifier: Apache-2.0 -->
     <head>
       <title>日程</title>
       {{ template "header" }}
+      <style>
+        
+      </style>
     </head>
     <body>
       {{ template "navbar" . }}
@@ -23,17 +26,18 @@ SPDX-License-Identifier: Apache-2.0 -->
                           <span id="taskDateTitle"></span>
                         </div>
                         <div class="taskDateBadgeContainer">
-                          <span class="badge bg-warning rounded-pill" id="taskDateBadge" style="font-size:10px; min-width: 30px">2</span>
+                          <span class="badge bg-warning rounded-pill" id="taskDateBadge" style="font-size:10px; min-width: 30px">0</span>
                         </div>
                       </h5>
                     </div>
                     <div>
                       <div class="btn-group">
                         <button type="button" class="btn body-button" style="width: 90px;">新建日程</button>
-                        <button type="button" class="btn body-button" style="width: 60px;">全部</button>
+                        <button type="button" class="btn body-button" style="width: 60px;" id="allTasksToggleBtn">全部</button>
                       </div>
                     </div>
                   </div>
+                  <div class="taskContentList" id="taskContentList"></div>
                 </div>
                 <div class="tackCalendar"></div>
               </div>
@@ -52,7 +56,12 @@ SPDX-License-Identifier: Apache-2.0 -->
           comID = userInfo.metadata.comID;
         }
 
+        let isListAllTask = false, 
+            selectedDate = moment().format('YYYY-MM-DD');
+
         $(function() {
+          $('#taskDateTitle').html(selectedDate);
+
           $('.tackCalendar').pignoseCalendar({
             lang: 'ch',
             scheduleOptions: {
@@ -71,15 +80,189 @@ SPDX-License-Identifier: Apache-2.0 -->
               name: 'offer',
               date: '2024-07-05',
             }],
+            page: function(info, context) {
+              setTimeout(() => {
+                highlightTodayOnCalendar();
+              }, 0);
+            },
             select: function(dates, context) {
-              $('#taskDateTitle').html(moment(dates[0]).format('YYYY-MM-DD'));
-              // console.log('selected date', dates);
-              // console.log('selected context', context);
-              // console.log('events for this date', context.storage.schedules);
+              isListAllTask = false;
+              selectedDate = moment(dates[0]).format('YYYY-MM-DD');
+              $('#taskDateTitle').html(selectedDate);
+              $('#allTasksToggleBtn').html("全部");
+              highlightTodayOnCalendar();
+              getTaskList(selectedDate);
             }
           });
-          $('#taskDateTitle').html(moment().format('YYYY-MM-DD'));
+
+          $('#allTasksToggleBtn').click(function() {
+            onClickAllTasksToggleBtn();
+          });
+
+          highlightTodayOnCalendar();
+
+          getTaskList(selectedDate);
         });
+
+        // 点击全部/当天按钮时，切换任务列表
+        function onClickAllTasksToggleBtn() {
+          if (isListAllTask) {
+            isListAllTask = false;
+            $('#taskDateTitle').html(selectedDate);
+            $('#allTasksToggleBtn').html("全部");
+            getTaskList(selectedDate);
+          } else {
+            isListAllTask = true;
+            $('#taskDateTitle').html("全部日程");
+            $('#allTasksToggleBtn').html("当天");
+            getTaskList();
+          }
+        }
+
+        // 高亮当前日历中的今天
+        function highlightTodayOnCalendar() {
+          // 获取当前日期
+          const currentDate = moment().format('YYYY-MM-DD');
+
+          // 遍历所有具有特定类名的元素
+          $('.pignose-calendar-unit-date').each(function() {
+            const dataDate = $(this).data('date');
+            const classes = $(this).attr('class').split(' ');
+
+            // 检查类中是否包含 pignose-calendar-unit-active 或 pignose-calendar-unit-first-active
+            if (dataDate === currentDate) {
+              if (
+                !classes.includes('pignose-calendar-unit-active') && 
+                !classes.includes('pignose-calendar-unit-first-active')
+              ) {
+                // 修改 <a> 标签的 style.color 样式
+                $(this).find('a').css('color', '#f56c6c');
+              } else {
+                $(this).find('a').css('color', '#ffffff');
+              }
+            }
+          });
+        }
+
+        // 创建任务列表项
+        function getTaskList(date) {
+          $(`#taskContentList`).empty();
+          setTaskDateBadgeValue(0);
+;          const rawData = [
+            {id: 1, time: '16:27', name: '任务1', status: 'stopped', repeatType: '日重复', enabled: true},
+            {id: 2, time: '17:27', name: '任务2', status: 'running', repeatType: '日重复', enabled: true},
+            {id: 3, time: '18:27', name: '任务3', status: 'stopped', repeatType: '周重复', enabled: false},
+          ];
+          let taskList = [];
+          if (date) {
+            taskList = [rawData[0], rawData[1]];
+          } else {
+            taskList = [rawData[0], rawData[1], rawData[2]];
+          }
+          taskList.forEach(function(task) {
+            createTaskItem(task);
+          });
+          setTaskDateBadgeValue(taskList.length);
+        }
+
+        function createTaskItem(task) {
+          const taskSwitch = task.enabled ? 
+            `
+              <label class="switch">
+                <input class="switchCheckbox" type="checkbox" checked />
+                <span class="switchSlider"></span>
+              </label>
+            ` : 
+            `
+              <label class="switch">
+                <input class="switchCheckbox" type="checkbox" />
+                <span class="switchSlider"></span>
+              </label>
+            `;
+          const playBtnBox = task.status === 'running' ? 
+            `<i class="fa-solid fa-circle-stop" style="color: #f56c6c;"></i>` : 
+            `<i class="fa-solid fa-circle-play" style="color: #2ec6cc;"></i>`;
+          const btnGroup = task.status === 'running' ? 
+            `
+              <div class="runningTaskIndicatorContainer">
+                <image src="/images/icon_runningTask.gif" />
+              </div>
+            ` : 
+            `
+              <div class="dropdown" style="float: right; top: 5px;">
+                <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" style="color: dimgray;">
+                  <i class="fa-solid fa-ellipsis"></i>
+                </button>
+                <ul class="dropdown-menu">
+                  <li><a class="dropdown-item">
+                    <i class="fa-solid fa-rotate" style="width: 16px;"></i> 同步</a>
+                  </li>
+                  <li>
+                    <a class="dropdown-item">
+                      <i class="fa-solid fa-pencil-alt" style="width: 16px;"></i> 编辑
+                    </a>
+                  </li>
+                  <li>
+                    <a class="dropdown-item">
+                      <i class="fa-solid fa-copy" style="width: 16px;"></i> 复制
+                    </a>
+                  </li>
+                  <li>
+                    <a class="dropdown-item">
+                      <i class="fa-solid fa-trash-can" style="width: 16px;"></i> 删除
+                    </a>
+                  </li>
+                </ul>
+              </div>
+            `;
+          const $taskItem = $(`
+            <div class="taskItem">
+              <div style="display: flex; align-items: center;">
+                <div class="taskTime">${task.time}</div>
+                <div class="line" style="margin: 0px 50px;"></div>
+                <div>
+                  <div title="1" class="textEllipsis">${task.name}</div>
+                  <div title="${task.repeatType}" class="textEllipsis" style="height: 27px; color: rgb(174, 186, 194); font-size: 12px;">
+                    <i class="fa-solid fa-location-dot" style="margin-right: 3px;"></i>
+                    ${task.repeatType}
+                  </div>
+                </div>
+              </div>
+              <div style="min-width: 140px;">
+                <div style="display: inline-block; line-height: 35px;">
+                  ${taskSwitch}
+                </div>
+                <div class="playBtnBox">
+                  ${playBtnBox}
+                </div>
+                <div style="display: inline-block;">
+                  ${btnGroup}
+                </div>
+              </div>
+            </div>
+          `);
+          
+          $(`#taskContentList`).append($taskItem);
+        } 
+
+
+        let taskDateBadgeCurrentValue = 0,
+            taskDateBadgeTargetValue = 0,
+            taskDateBadgeIncrement = 1;
+
+        function updateDisplay() {
+          if (taskDateBadgeCurrentValue !== taskDateBadgeTargetValue) {
+            taskDateBadgeCurrentValue += taskDateBadgeIncrement;
+            $(`#taskDateBadge`).html(taskDateBadgeCurrentValue);
+            requestAnimationFrame(updateDisplay);
+          }
+        }
+
+        function setTaskDateBadgeValue(newValue) {
+          taskDateBadgeTargetValue = newValue;
+          taskDateBadgeIncrement = (taskDateBadgeTargetValue > taskDateBadgeCurrentValue) ? 1 : -1;
+          requestAnimationFrame(updateDisplay);
+        }
       </script>
     </body>
   </html>

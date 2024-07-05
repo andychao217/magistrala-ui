@@ -1044,7 +1044,7 @@ table > thead > tr > th {
     color: dimgray;
 }
 .tackCalendar {
-    width: 410px;    
+    width: 450px;    
     /* -webkit-box-shadow: 0 3px 8px rgba(0, 0, 0, .25);
     box-shadow: 0 3px 8px rgba(0, 0, 0, .25); */
     background-color: #edf8fb;
@@ -1073,4 +1073,114 @@ table > thead > tr > th {
     flex-direction: column;
     justify-content: center;
     margin-left: 5px;
+}
+/*taskList-task page*/
+.taskContentList {
+    margin-top: 10px;
+    width: 100%;
+    height: calc(100vh - 250px);
+    overflow-y: auto;
+}
+.taskContentList .taskItem:not(:last-child) {
+    margin-bottom: 10px;
+}
+.taskContentList .taskItem {
+    border-left: var(--border-radius) solid #00c6ff;
+    background-color: #e8f3fc;
+    border-radius: var(--border-radius);
+    padding: 5px 50px;
+    position: relative;
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-pack: justify;
+    -ms-flex-pack: justify;
+    justify-content: space-between;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    align-items: center;
+    line-height: 27px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    transition: box-shadow 0.3s ease;
+}
+.taskContentList .taskItem:hover {
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.25);
+}
+.taskContentList .taskItem .taskTime {
+    font-size: 19px;
+    font-weight: 600;
+}
+.taskContentList .taskItem .line {
+    width: 1px;
+    height: 25px;
+    background: -webkit-gradient(linear, left bottom, left top, from(hsla(0, 0%, 100%, 0)), color-stop(51%, rgba(24, 50, 57, .99)), to(hsla(0, 0%, 100%, 0)));
+    background: linear-gradient(0deg, hsla(0, 0%, 100%, 0), rgba(24, 50, 57, .99) 51%, hsla(0, 0%, 100%, 0));
+    opacity: .8;
+}
+.textEllipsis {
+    text-overflow: ellipsis;
+    word-break: keep-all;
+    overflow: hidden;
+    white-space: nowrap;
+}
+.taskContentList .taskItem .playBtnBox {
+    display: inline-block;
+    margin-left: 25px;
+    margin-right: 10px;
+    position: relative;
+    top: -8px;
+    cursor: pointer;
+}
+.runningTaskIndicatorContainer {
+    padding: 8px 15px 6px 0px; 
+    height: 38px; 
+    width: 58px; 
+    text-align: center; 
+    float: right;
+}
+
+/* switch component */
+.switch {
+    position: relative;
+    display: inline-block;
+    width: 40px;
+    height: 18px;
+}
+
+.switch input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+.switchSlider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #ccc;
+    transition: 0.4s;
+    border-radius: 18px;
+}
+
+.switchSlider:before {
+    position: absolute;
+    content: '';
+    height: 14px;
+    width: 14px;
+    left: 2px;
+    bottom: 2px;
+    background-color: white;
+    transition: 0.4s;
+    border-radius: 50%;
+}
+
+.switchCheckbox:checked + .switchSlider {
+    background-color: #2ec6cc;
+}
+
+.switchCheckbox:checked + .switchSlider:before {
+    transform: translateX(22px);
 }
