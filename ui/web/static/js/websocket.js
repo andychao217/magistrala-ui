@@ -7,6 +7,13 @@ function getHostname(url) {
 }
 
 function connectWebSocket(host, port, defaultChannelId) {
+    const userInfoStr = sessionStorage.getItem("userInfo");
+    let comID = "";
+    if (userInfoStr) {
+        const userInfo = JSON.parse(userInfoStr);
+        comID = userInfo.metadata.comID;
+    }
+
     // 假设WebSocket服务器在ws://your-websocket-server-url
     ws = new WebSocket(`ws://${host}:${port}/websocket`);
 
@@ -15,7 +22,7 @@ function connectWebSocket(host, port, defaultChannelId) {
         // 可以在这里发送初始消息等
         // getChannelsAndSendMessage(host)
         const topics = [`channels/${defaultChannelId}/messages`];
-        const message = { topics: topics.join(";"), host: hostName, thingSecret: "platform", message: "connect" };
+        const message = { topics: topics.join(";"), host: hostName, thingSecret: "platform"+comID, message: "connect" };
         ws.send(JSON.stringify(message));
     };
 
@@ -41,6 +48,12 @@ function connectWebSocket(host, port, defaultChannelId) {
 }
 
 function getChannelsAndSendMessage(ip) {
+    let domID = "";
+    if (userInfoStr) {
+        const userInfo = JSON.parse(userInfoStr);
+        domID = userInfo.metadata.domID;
+    }
+    
     fetch(`/ui/channels/channelsInJSON?page=1&limit=1000`, {
         method: "GET",
     })
@@ -55,7 +68,7 @@ function getChannelsAndSendMessage(ip) {
             const channelsData = JSON.parse(data).channelsData;
             const channels = channelsData.groups;
             const topics = channels.map((channel) => `channels/${channel.id}/messages`);
-            const message = { topics: topics.join(";"), host: hostName, thingSecret: "platform", message: "connect" };
+            const message = { topics: topics.join(";"), host: hostName, thingSecret: "platform"+domID, message: "connect" };
             ws.send(JSON.stringify(message));
         });
 }

@@ -365,19 +365,21 @@ SPDX-License-Identifier: Apache-2.0 -->
                                                 </div>
                                               </div>
                                               <div class="row">
-                                                {{ $length := len $t.Metadata.out_channel_array }}
-                                                {{if bigger $length 1}}
-                                                  <div class="row" style="position: absolute; bottom: 40px; padding-left: 24px;">
-                                                    {{ range $i, $o := $t.Metadata.out_channel_array }}
-                                                      <i 
-                                                        class="fa-solid fa-{{ add $i 1 }} channelIcon" 
-                                                        data-bs-toggle="tooltip" 
-                                                        data-bs-placement="bottom" 
-                                                        data-bs-title="{{ $o.aliase }}" 
-                                                        title="{{ $o.aliase }}"
-                                                      ></i>
-                                                    {{ end }}
-                                                  </div>
+                                                {{ if $t.Metadata.out_channel_array }}
+                                                  {{ $length := len $t.Metadata.out_channel_array }}
+                                                  {{if bigger $length 1}}
+                                                    <div class="row" style="position: absolute; bottom: 40px; padding-left: 24px;">
+                                                      {{ range $i, $o := $t.Metadata.out_channel_array }}
+                                                        <i 
+                                                          class="fa-solid fa-{{ add $i 1 }} channelIcon" 
+                                                          data-bs-toggle="tooltip" 
+                                                          data-bs-placement="bottom" 
+                                                          data-bs-title="{{ $o.aliase }}" 
+                                                          title="{{ $o.aliase }}"
+                                                        ></i>
+                                                      {{ end }}
+                                                    </div>
+                                                  {{ end }}
                                                 {{ end }}
                                                 <h5 
                                                   class="card-title truncate-text" 
@@ -876,6 +878,12 @@ SPDX-License-Identifier: Apache-2.0 -->
 
               //给设备发信息
               function postMessage(channelID, controlType, thingIdentity) {
+                const userInfoStr = sessionStorage.getItem("userInfo");
+                let comID = "";
+                if (userInfoStr) {
+                    const userInfo = JSON.parse(userInfoStr);
+                    comID = userInfo.metadata.comID;
+                }
                 if (controlType === "reboot") {
                   const url = window.location.href; // 获取当前页面的URL
                   const address = new URL(url);
@@ -884,6 +892,7 @@ SPDX-License-Identifier: Apache-2.0 -->
                     channelID: channelID,
                     thingIdentity: thingIdentity,
                     host: address.hostname,
+                    comID: comID,
                   }
                   fetch(`http://${address.hostname}:${port}/rebootDevice`, {
                       method: "POST",
@@ -922,7 +931,7 @@ SPDX-License-Identifier: Apache-2.0 -->
                   //   // 将 serializedMsg 包装在 Blob 中
                   //   let blob = new Blob([serializedMsg], { type: 'application/octet-stream' });
                   //   formData.append("message", blob, 'message.bin'); // 第三个参数是文件名，可以自定义
-                  //   formData.append("thingSecret", "platform");
+                  //   formData.append("thingSecret", "platform"+comID);
                   //   fetch(`/ui/channels/messages`, {
                   //     method: "POST",
                   //     body: formData,

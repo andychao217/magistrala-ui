@@ -117,27 +117,29 @@ SPDX-License-Identifier: Apache-2.0 -->
                                                     </div>
                                                   </div>
                                                   <div class="row">
-                                                    {{ $length := len $t.Metadata.out_channel_array }}
-                                                    {{if bigger $length 1}}
-                                                      <h5 
-                                                        class="card-title truncate-text" 
-                                                        data-bs-toggle="tooltip" 
-                                                        data-bs-placement="bottom" 
-                                                        data-bs-title="{{ $t.Metadata.aliase }}" 
-                                                        title="{{ $t.Metadata.aliase }}"
-                                                      >
-                                                        {{ $t.Metadata.aliase }}
-                                                      </h5>
-                                                    {{ else }}
-                                                      <h5 
-                                                        class="card-title truncate-text" 
-                                                        data-bs-toggle="tooltip" 
-                                                        data-bs-placement="bottom" 
-                                                        data-bs-title="{{ $t.Name }}" 
-                                                        title="{{ $t.Name }}"
-                                                      >
-                                                        {{ $t.Name }}
-                                                      </h5>
+                                                    {{ if $t.Metadata.out_channel_array}}
+                                                      {{ $length := len $t.Metadata.out_channel_array }}
+                                                      {{if bigger $length 1}}
+                                                        <h5 
+                                                          class="card-title truncate-text" 
+                                                          data-bs-toggle="tooltip" 
+                                                          data-bs-placement="bottom" 
+                                                          data-bs-title="{{ $t.Metadata.aliase }}" 
+                                                          title="{{ $t.Metadata.aliase }}"
+                                                        >
+                                                          {{ $t.Metadata.aliase }}
+                                                        </h5>
+                                                      {{ else }}
+                                                        <h5 
+                                                          class="card-title truncate-text" 
+                                                          data-bs-toggle="tooltip" 
+                                                          data-bs-placement="bottom" 
+                                                          data-bs-title="{{ $t.Name }}" 
+                                                          title="{{ $t.Name }}"
+                                                        >
+                                                          {{ $t.Name }}
+                                                        </h5>
+                                                      {{ end }}
                                                     {{ end }}
                                                   </div>
                                                 </div>
@@ -555,6 +557,12 @@ SPDX-License-Identifier: Apache-2.0 -->
               }
 
               function postMessage(channelID, controlType, thingIdentity) {
+                const userInfoStr = sessionStorage.getItem("userInfo");
+                let comID = "";
+                if (userInfoStr) {
+                    const userInfo = JSON.parse(userInfoStr);
+                    comID = userInfo.metadata.comID;
+                }
                 if (controlType === "reboot") {
                   const url = window.location.href; // 获取当前页面的URL
                   const address = new URL(url);
@@ -564,6 +572,7 @@ SPDX-License-Identifier: Apache-2.0 -->
                     channelID: channelID,
                     thingIdentity: identity,
                     host: address.hostname,
+                    comID: comID,
                   }
                   fetch(`http://${address.hostname}:${port}/rebootDevice`, {
                     method: "POST",
@@ -602,7 +611,7 @@ SPDX-License-Identifier: Apache-2.0 -->
                   //   // 将 serializedMsg 包装在 Blob 中
                   //   let blob = new Blob([serializedMsg], { type: 'application/octet-stream' });
                   //   formData.append("message", blob, 'message.bin'); // 第三个参数是文件名，可以自定义
-                  //   formData.append("thingSecret", "platform");
+                  //   formData.append("thingSecret", "platform"+comID);
                   //   fetch(`/ui/channels/messages`, {
                   //     method: "POST",
                   //     body: formData,
