@@ -17,6 +17,163 @@ SPDX-License-Identifier: Apache-2.0 -->
         <div class="container-fluid">
           <div class="row-mb-3 p-3">
             <div class="col-lg-12 mx-auto">
+
+              <!-- add task modal -->
+              <div class="modal fade" id="addTaskModal" tabindex="-1" role="dialog" aria-labelledby="addTaskModalLabel" aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                  <div class="modal-content" style="width: 570px;">
+                    <div class="modal-header">
+                      <h1 class="modal-title" id="addTaskModalLabel">新建日程</h1>
+                      <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <form method="post" id="addTaskForm">
+                      <div class="modal-body">
+                          <div class="form-group mb-3">
+                            <div class="mb-3 row">
+                              <label for="taskName" class="col-sm-2 col-form-label">日程名称</label>
+                              <div class="col-sm-10">
+                                <input type="text" class="form-control name-field" name="taskName" id="taskName" placeholder="请输入日程名称" required />
+                              </div>
+                              <div id="taskNameError" class="text-danger"></div>
+                            </div>
+                            <div class="mb-3 row">
+                              <label for="startTime" class="col-sm-2 col-form-label">开始时间</label>
+                              <div class="col-sm-10">
+                                <input 
+                                  type="text" 
+                                  class="form-control dateinput dateicon moredate" 
+                                  name="startTime" 
+                                  placeholder="请选择开始时间" 
+                                  data-formater="YYYY-MM-DD hh:mm:ss" 
+                                  id="startTime" 
+                                  required 
+                                />
+                              </div>
+                              <div id="startTimeError" class="text-danger"></div>
+                            </div>
+                            <div class="mb-3 row">
+                              <label for="playbackCycle" class="col-sm-2 col-form-label">播放周期</label>
+                              <div class="col-sm-10">
+                                <select class="form-control form-select" placeholder="请选择播放周期" name="playbackCycle" id="playbackCycle" required>
+                                  <option value="0" selected>请选择播放周期</option>
+                                  <option value="once">单次</option>
+                                  <option value="day">每天</option>
+                                  <option value="week">每周</option>
+                                  <option value="month">每月</option>
+                                  <option value="year">每年</option>
+                                </select>
+                                <div 
+                                  class="form-conrtol" 
+                                  id="weekCheckboxGroup" 
+                                  style="
+                                    border: none; 
+                                    padding-left: 0; 
+                                    padding-top: 10px; 
+                                    display: none;
+                                  "
+                                >
+                                  <div class="form-check form-check-inline">
+                                    <input class="form-check-input taskWeekCheckbox" type="checkbox" name="weeks[]" id="weekCheckbox1" value="mon">
+                                    <label class="form-check-label" for="weekCheckbox1">一</label>
+                                  </div>
+                                  <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="checkbox" name="weeks[]" id="weekCheckbox2" value="tue">
+                                    <label class="form-check-label" for="weekCheckbox2">二</label>
+                                  </div>
+                                  <div class="form-check form-check-inline">
+                                    <input class="form-check-input taskWeekCheckbox" type="checkbox" name="weeks[]" id="weekCheckbox3" value="wed">
+                                    <label class="form-check-label" for="weekCheckbox3">三</label>
+                                  </div>
+                                  <div class="form-check form-check-inline">
+                                    <input class="form-check-input taskWeekCheckbox" type="checkbox" name="weeks[]" id="weekCheckbox4" value="thu">
+                                    <label class="form-check-label" for="weekCheckbox4">四</label>
+                                  </div>
+                                  <div class="form-check form-check-inline">
+                                    <input class="form-check-input taskWeekCheckbox" type="checkbox" name="weeks[]" id="weekCheckbox5" value="fri">
+                                    <label class="form-check-label" for="weekCheckbox5">五</label>
+                                  </div>
+                                  <div class="form-check form-check-inline">
+                                    <input class="form-check-input taskWeekCheckbox" type="checkbox" name="weeks[]" id="weekCheckbox6" value="sat">
+                                    <label class="form-check-label" for="weekCheckbox6">六</label>
+                                  </div>
+                                  <div class="form-check form-check-inline">
+                                    <input class="form-check-input taskWeekCheckbox" type="checkbox" name="weeks[]" id="weekCheckbox7" value="sun">
+                                    <label class="form-check-label" for="weekCheckbox7">七</label>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                            <div class="mb-3 row">
+                              <div class="col-sm-12" style="text-align: center;">
+                                <div id="moreSettingBtn" style="cursor: pointer;">
+                                  <i class="fa-solid fa-chevron-down"></i>
+                                </div>
+                              </div>
+                            </div>
+                            <div class="mb-3" id="moreSettingContainer" style="display: none;">
+                              <div class="mb-3 row">
+                                <label for="endTime" class="col-sm-2 col-form-label">结束时间</label>
+                                <div class="col-sm-10">
+                                  <input 
+                                  type="text" 
+                                  class="form-control dateinput dateicon moredate" 
+                                  name="startTime" 
+                                  placeholder="请选择结束时间" 
+                                  data-formatter="YYYY-MM-DD hh:mm:ss" 
+                                  id="endTime" 
+                                  required 
+                                />
+                                </div>
+                                <div id="endTimeError" class="text-danger"></div>
+                              </div>
+                              <div class="mb-3 row">
+                                <label for="randomPlay" class="col-sm-2 col-form-label">随机播放</label>
+                                <div class="col-sm-10">
+                                  <div class="form-control form-check form-switch" style="border: none;">
+                                    <input class="form-check-input" type="checkbox" role="switch" name="randomPlay" id="randomPlay" />
+                                  </div>
+                                </div>
+                              </div>
+                              <div class="mb-3 row">
+                                <label for="volumeControl" class="col-sm-2 col-form-label">音量微调</label>
+                                <div class="col-sm-10" style="display: flex; margin-top: 7px;">
+                                  <input 
+                                    type="range" 
+                                    class="form-conrtol form-range" 
+                                    min="-7" 
+                                    max="7" 
+                                    step="1" 
+                                    id="volumeControl"
+                                    name="volumeControl"
+                                  />
+                                  <div id="volumeLabel" style="text-align: right; width: 30px; line-height: 25px;">0</div>
+                                </div>
+                              </div>
+                              <div class="mb-3 row">
+                                <label for="level" class="col-sm-2 col-form-label">优先级</label>
+                                <div class="col-sm-10">
+                                  <div class="btn-group form-conrtol" role="group">
+                                    <input type="radio" class="btn-check" name="level" id="level1" autocomplete="off" value="1" />
+                                    <label class="btn btn-outline-primary" for="level1">!</label>
+                                    <input type="radio" class="btn-check" name="level" id="level2" autocomplete="off" value="2" />
+                                    <label class="btn btn-outline-primary" for="level2">!!</label>
+                                    <input type="radio" class="btn-check" name="level" id="level3" autocomplete="off" value="3" />
+                                    <label class="btn btn-outline-primary" for="level3">!!!</label>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                          <div class="modal-footer">
+                              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">取消</button>
+                              <button type="submit" class="btn body-button">确定</button>
+                          </div>
+                      </div>
+                    </form>
+                  </div>
+                </div>
+              </div>
+
               <div class="table-responsive table-container" id="taskPageContainer">
                 <div class="taskContent">
                   <div class="taskContentHeaderBar">
@@ -32,7 +189,7 @@ SPDX-License-Identifier: Apache-2.0 -->
                     </div>
                     <div>
                       <div class="btn-group">
-                        <button type="button" class="btn body-button" style="width: 90px;">新建日程</button>
+                        <button type="button" class="btn body-button" style="width: 90px;" id="addTaskBtn">新建日程</button>
                         <button type="button" class="btn body-button" style="width: 60px;" id="allTasksToggleBtn">全部</button>
                       </div>
                     </div>
@@ -57,11 +214,14 @@ SPDX-License-Identifier: Apache-2.0 -->
         }
 
         let isListAllTask = false, 
-            selectedDate = moment().format('YYYY-MM-DD');
+            selectedDate = moment().format('YYYY-MM-DD'),
+            showMoreSetting = false;
 
+        const addTaskModal = new bootstrap.Modal(document.getElementById("addTaskModal"));
         $(function() {
           $('#taskDateTitle').html(selectedDate);
 
+          // 初始化日历
           $('.tackCalendar').pignoseCalendar({
             lang: 'ch',
             scheduleOptions: {
@@ -95,8 +255,44 @@ SPDX-License-Identifier: Apache-2.0 -->
             }
           });
 
+          // 点击全部/当天按钮时，切换任务列表
           $('#allTasksToggleBtn').click(function() {
             onClickAllTasksToggleBtn();
+          });
+
+          // 点击新建日程按钮时，显示新建日程模态框
+          $('#addTaskBtn').click(function() {
+            initAddTaskModal();
+            addTaskModal.show();
+          });
+
+          // 播放周期选择框变化时，改变周数选择框是否显示
+          $('#playbackCycle').change(function() {
+            const playbackCycleValue = $(this).val();
+            if (playbackCycleValue === 'week') {
+              $('#weekCheckboxGroup').show();
+            } else {
+              $('#weekCheckboxGroup').hide();
+            }
+          });
+
+          // 音量微调选择框变化时，改变音量标签
+          $('#volumeControl').change(function() {
+            const volumeControlValue = $(this).val();
+            $('#volumeLabel').html(volumeControlValue);
+          });
+
+          // 点击更多设置按钮时，切换显示更多设置
+          $('#moreSettingBtn').click(function() {
+            showMoreSetting = !showMoreSetting;
+            $('#moreSettingBtn').empty();
+            if (showMoreSetting) {
+              $('#moreSettingBtn').append($(`<i class="fa-solid fa-chevron-up"></i>`));
+              $('#moreSettingContainer').show();
+            } else {
+              $('#moreSettingBtn').append($(`<i class="fa-solid fa-chevron-down"></i>`));
+              $('#moreSettingContainer').hide();
+            }
           });
 
           highlightTodayOnCalendar();
@@ -250,6 +446,7 @@ SPDX-License-Identifier: Apache-2.0 -->
             taskDateBadgeTargetValue = 0,
             taskDateBadgeIncrement = 1;
 
+        // 更新任务数量
         function updateDisplay() {
           if (taskDateBadgeCurrentValue !== taskDateBadgeTargetValue) {
             taskDateBadgeCurrentValue += taskDateBadgeIncrement;
@@ -258,10 +455,44 @@ SPDX-License-Identifier: Apache-2.0 -->
           }
         }
 
+        // 设置任务数量
         function setTaskDateBadgeValue(newValue) {
           taskDateBadgeTargetValue = newValue;
           taskDateBadgeIncrement = (taskDateBadgeTargetValue > taskDateBadgeCurrentValue) ? 1 : -1;
           requestAnimationFrame(updateDisplay);
+        }
+
+        // 初始化添加任务模态框表单
+        function initAddTaskModal () {
+          $('#taskName').val('');
+          //一次绑定多个选择
+          $(".moredate").each(function(index, element) {
+            const mat = $(element).data("formatter");
+            jeDate(element, {
+              format: mat
+            });
+          });
+          $('#startTime').val('');
+          $('#endTime').val('');
+
+          $('#playbackCycle').val('');
+
+          $('#weekCheckboxGroup').hide();
+          $('.taskWeekCheckbox').prop('checked', false);
+
+          showMoreSetting = false;
+          $('#moreSettingBtn').empty();
+          $('#moreSettingBtn').append($(`<i class="fa-solid fa-chevron-down"></i>`));
+          $('#moreSettingContainer').hide();
+         
+          $('#randomPlay').prop('checked', false);
+
+          $('#volumeControl').val('0');
+          $('#volumeLabel').html(0);
+
+          $('#level1').prop('checked', false);
+          $('#level2').prop('checked', true);
+          $('#level3').prop('checked', false);
         }
       </script>
     </body>
