@@ -1186,3 +1186,9 @@ table > thead > tr > th {
 .switchCheckbox:checked + .switchSlider:before {
     transform: translateX(22px);
 }
+
+#moreSettingBtn{
+    background: whitesmoke;
+    cursor: pointer;
+    border-radius: 5px;
+}

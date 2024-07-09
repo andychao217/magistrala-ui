@@ -17,24 +17,23 @@ SPDX-License-Identifier: Apache-2.0 -->
         <div class="container-fluid">
           <div class="row-mb-3 p-3">
             <div class="col-lg-12 mx-auto">
-
-              <!-- add task modal -->
-              <div class="modal fade" id="addTaskModal" tabindex="-1" role="dialog" aria-labelledby="addTaskModalLabel" aria-hidden="true">
+              <!-- 新增、修改任务弹框 -->
+              <div class="modal fade" id="taskModal" tabindex="-1" role="dialog" aria-labelledby="taskModalLabel" aria-hidden="true">
                 <div class="modal-dialog" role="document">
                   <div class="modal-content" style="width: 570px;">
                     <div class="modal-header">
-                      <h1 class="modal-title" id="addTaskModalLabel">新建日程</h1>
+                      <h1 class="modal-title" id="taskModalLabel">新建日程</h1>
                       <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <form method="post" id="addTaskForm">
                       <div class="modal-body">
-                          <div class="form-group mb-3">
+                          <div class="form-group mb-3" style="padding: 0px 16px;">
                             <div class="mb-3 row">
                               <label for="taskName" class="col-sm-2 col-form-label">日程名称</label>
                               <div class="col-sm-10">
                                 <input type="text" class="form-control name-field" name="taskName" id="taskName" placeholder="请输入日程名称" required />
+                                <div id="taskNameError" class="text-danger" style="margin-top: 10px;"></div>
                               </div>
-                              <div id="taskNameError" class="text-danger"></div>
                             </div>
                             <div class="mb-3 row">
                               <label for="startTime" class="col-sm-2 col-form-label">开始时间</label>
@@ -47,9 +46,20 @@ SPDX-License-Identifier: Apache-2.0 -->
                                   data-formater="YYYY-MM-DD hh:mm:ss" 
                                   id="startTime" 
                                   required 
+                                  readonly
                                 />
+                                <div id="startTimeError" class="text-danger" style="margin-top: 10px;"></div>
                               </div>
-                              <div id="startTimeError" class="text-danger"></div>
+                            </div>
+                            <div class="mb-3 row">
+                              <label for="sourceName" class="col-sm-2 col-form-label">选择音源</label>
+                              <div class="col-sm-10" style="display: flex;">
+                                <input type="text" class="form-control name-field" name="sourceName" id="sourceName" placeholder="请选择音源" required readonly />
+                                <div style="width: 80px; text-align: right;">
+                                  <button type="button" class="btn body-button" id="selectSourceBtn">选择</button>
+                                </div>
+                              </div>
+                              <div class="col-sm-10 offset-sm-2 text-danger"  id="sourceNameError" style="margin-top: 10px;"></div>
                             </div>
                             <div class="mb-3 row">
                               <label for="playbackCycle" class="col-sm-2 col-form-label">播放周期</label>
@@ -77,7 +87,7 @@ SPDX-License-Identifier: Apache-2.0 -->
                                     <label class="form-check-label" for="weekCheckbox1">一</label>
                                   </div>
                                   <div class="form-check form-check-inline">
-                                    <input class="form-check-input" type="checkbox" name="weeks[]" id="weekCheckbox2" value="tue">
+                                    <input class="form-check-input taskWeekCheckbox" type="checkbox" name="weeks[]" id="weekCheckbox2" value="tue">
                                     <label class="form-check-label" for="weekCheckbox2">二</label>
                                   </div>
                                   <div class="form-check form-check-inline">
@@ -101,11 +111,12 @@ SPDX-License-Identifier: Apache-2.0 -->
                                     <label class="form-check-label" for="weekCheckbox7">七</label>
                                   </div>
                                 </div>
+                                <div id="playbackCycleError" class="text-danger" style="margin-top: 10px;"></div>
                               </div>
                             </div>
                             <div class="mb-3 row">
                               <div class="col-sm-12" style="text-align: center;">
-                                <div id="moreSettingBtn" style="cursor: pointer;">
+                                <div id="moreSettingBtn">
                                   <i class="fa-solid fa-chevron-down"></i>
                                 </div>
                               </div>
@@ -115,16 +126,29 @@ SPDX-License-Identifier: Apache-2.0 -->
                                 <label for="endTime" class="col-sm-2 col-form-label">结束时间</label>
                                 <div class="col-sm-10">
                                   <input 
-                                  type="text" 
-                                  class="form-control dateinput dateicon moredate" 
-                                  name="startTime" 
-                                  placeholder="请选择结束时间" 
-                                  data-formatter="YYYY-MM-DD hh:mm:ss" 
-                                  id="endTime" 
-                                  required 
-                                />
+                                    type="text" 
+                                    class="form-control dateinput dateicon moredate" 
+                                    name="endTime" 
+                                    placeholder="请选择结束时间" 
+                                    data-formatter="YYYY-MM-DD hh:mm:ss" 
+                                    id="endTime" 
+                                    required 
+                                    readonly
+                                  />
+                                  <div id="endTimeError" class="text-danger" style="margin-top: 10px;"></div>
                                 </div>
-                                <div id="endTimeError" class="text-danger"></div>
+                              </div>
+                              <div class="mb-3 row" id="repeatNumContainer">
+                                <label for="repeatNum" class="col-sm-2 col-form-label" style="line-height: 35px;">重复次数</label>
+                                <div class="col-sm-10" style="display: flex; margin-top: 7px;">
+                                  <select class="form-control form-select" placeholder="请选择重复次数" name="repeatNum" id="repeatNum">
+                                  </select>
+                                  <div style="margin-left: 10px; width: 32px;">
+                                    <div class="form-control form-check form-switch" style="border: none;">
+                                      <input class="form-check-input" type="checkbox" role="switch" name="repeatNumSwitch" id="repeatNumSwitch" />
+                                    </div>
+                                  </div>
+                                </div>
                               </div>
                               <div class="mb-3 row">
                                 <label for="randomPlay" class="col-sm-2 col-form-label">随机播放</label>
@@ -166,7 +190,7 @@ SPDX-License-Identifier: Apache-2.0 -->
                           </div>
                           <div class="modal-footer">
                               <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">取消</button>
-                              <button type="submit" class="btn body-button">确定</button>
+                              <button type="submit" class="btn body-button" id="taskModalConfirmBtn">确定</button>
                           </div>
                       </div>
                     </form>
@@ -174,7 +198,42 @@ SPDX-License-Identifier: Apache-2.0 -->
                 </div>
               </div>
 
+              <!-- 同步任务弹框 -->
+              <div class="modal fade" id="syncTaskModal" tabindex="-1" role="dialog" aria-labelledby="syncTaskModalLabel" aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                  <div class="modal-content" style="width: 500px;">
+                    <div class="modal-header">
+                      <h1 class="modal-title" id="syncTaskModalLabel">设备任务同步</h1>
+                      <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                      <div class="mb-3 row">
+                        <table 
+                          id="syncTaskTable"
+                          class="table table-hover"
+                          data-checkbox-header="false"
+                          data-click-to-select="false"
+                        >
+                          <thead>
+                            <tr>
+                              <th data-field="deviceName" data-formatter="deviceNameTableFormatter">设备</th>
+                              <th data-field="syncStatus" data-formatter="syncStatusTableFormatter">同步状态</th>
+                            </tr>
+                          </thead>
+                        </table>
+                      </div>
+                      <div class="modal-footer" style="display: block; text-align: center;">
+                        <button type="submit" class="btn body-button" id="oneClickSyncTaskBtn">一键同步</button>
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">取消</button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- 任务主页面 -->
               <div class="table-responsive table-container" id="taskPageContainer">
+                <!-- 任务列表 -->
                 <div class="taskContent">
                   <div class="taskContentHeaderBar">
                     <div>
@@ -196,6 +255,8 @@ SPDX-License-Identifier: Apache-2.0 -->
                   </div>
                   <div class="taskContentList" id="taskContentList"></div>
                 </div>
+
+                <!-- 任务日历侧边栏 -->
                 <div class="tackCalendar"></div>
               </div>
             </div>
@@ -203,6 +264,11 @@ SPDX-License-Identifier: Apache-2.0 -->
         </div>
       </div>
       <script>
+        const requiredMsg = '不能为空', 
+              endTimeBeforeStartTimeMsg = '结束时间不能早于开始时间',
+              playbackCycleWeekMsg = '当播放周期为每周时, 必须选择一周中的某一天或者某几天';
+        const taskModal = new bootstrap.Modal(document.getElementById("taskModal"));
+        const syncTaskModal = new bootstrap.Modal(document.getElementById("syncTaskModal"));
         const protocol = window.location.protocol;
         const hostname = window.location.hostname;
         const userInfoStr = sessionStorage.getItem("userInfo");
@@ -215,9 +281,10 @@ SPDX-License-Identifier: Apache-2.0 -->
 
         let isListAllTask = false, 
             selectedDate = moment().format('YYYY-MM-DD'),
-            showMoreSetting = false;
+            showMoreSettingModal = false, 
+            selectedFilesModal = [],
+            taskModalType = 'add';
 
-        const addTaskModal = new bootstrap.Modal(document.getElementById("addTaskModal"));
         $(function() {
           $('#taskDateTitle').html(selectedDate);
 
@@ -263,16 +330,22 @@ SPDX-License-Identifier: Apache-2.0 -->
           // 点击新建日程按钮时，显示新建日程模态框
           $('#addTaskBtn').click(function() {
             initAddTaskModal();
-            addTaskModal.show();
+            taskModal.show();
           });
 
           // 播放周期选择框变化时，改变周数选择框是否显示
-          $('#playbackCycle').change(function() {
+          $('#playbackCycle').on('change blur', function() {
             const playbackCycleValue = $(this).val();
-            if (playbackCycleValue === 'week') {
-              $('#weekCheckboxGroup').show();
+            if (!playbackCycleValue) {
+              $('#playbackCycleError').html(requiredMsg);
+              $('#playbackCycleError').show();
             } else {
-              $('#weekCheckboxGroup').hide();
+              $('#playbackCycleError').hide();
+              if (playbackCycleValue === 'week') {
+                $('#weekCheckboxGroup').show();
+              } else {
+                $('#weekCheckboxGroup').hide();
+              }
             }
           });
 
@@ -284,15 +357,232 @@ SPDX-License-Identifier: Apache-2.0 -->
 
           // 点击更多设置按钮时，切换显示更多设置
           $('#moreSettingBtn').click(function() {
-            showMoreSetting = !showMoreSetting;
+            showMoreSettingModal = !showMoreSettingModal;
             $('#moreSettingBtn').empty();
-            if (showMoreSetting) {
+            if (showMoreSettingModal) {
               $('#moreSettingBtn').append($(`<i class="fa-solid fa-chevron-up"></i>`));
               $('#moreSettingContainer').show();
             } else {
               $('#moreSettingBtn').append($(`<i class="fa-solid fa-chevron-down"></i>`));
               $('#moreSettingContainer').hide();
             }
+          });
+
+          // 验证表单日程名称是否为空
+          $('#taskName').on('change blur keyup', function(event) {
+            const value = $(this).val();
+            if (value) {
+              $(`#taskNameError`).empty();
+              $('#taskNameError').hide();
+            } else {
+              $(`#taskNameError`).html(requiredMsg);
+              $('#taskNameError').show();
+            }
+          });
+
+          // 验证表单音源名称是否为空
+          $('#sourceName').on('change blur keyup', function(event) {
+            const value = $(this).val();
+            if (value) {
+              $(`#sourceNameError`).empty();
+              $('#sourceNameError').hide();
+            } else {
+              $(`#sourceNameError`).html(requiredMsg);
+              $('#sourceNameError').show();
+            }
+          });
+
+          const startTimeFormatter = $(`#startTime`).data("formatter");
+          jeDate(`#startTime`, {
+            onClose:false,
+            format: startTimeFormatter,
+            clearfun:function(elem, val) {
+              $('#startTimeError').html(requiredMsg);
+              $('#startTimeError').show();
+            },
+            donefun: function(obj){
+              const startTime = obj.val;
+              const endTime = $(`#endTime`).val();
+              if (startTime) {
+                if (!endTime) {
+                  $(`#endTime`).val(startTime);
+                  $('#endTimeError').hide();
+                }
+                $('#startTimeError').hide();
+              } else {
+                $('#startTimeError').html(requiredMsg);
+                $('#startTimeError').show();
+              }
+            },
+          });
+          
+          const endTimeFormatter = $(`#endTime`).data("formatter");
+          jeDate(`#endTime`, {
+            onClose:false,
+            format: endTimeFormatter,
+            clearfun:function(elem, val) {
+              $('#endTimeError').html(requiredMsg);
+              $('#endTimeError').show();
+            },
+            donefun: function(obj){
+              const endTime = obj.val;
+              if (!endTime) {
+                $('#endTimeError').html(requiredMsg);
+                $('#endTimeError').show();
+              } else {
+                const startTime = $(`#startTime`).val();
+                if (!startTime) {
+                  $('#endTimeError').html('请先设置开始时间');
+                  $('#endTimeError').show();
+                  $('#endTime').val('');
+                } else {
+                  // 将时间字符串转换为 Date 对象
+                  const startTimeDate = new Date(startTime.replace(' ', 'T'));
+                  const endTimeDate = new Date(endTime.replace(' ', 'T'));
+
+                  // 比较两个 Date 对象
+                  if (endTimeDate < startTimeDate) {
+                    $(`#endTimeError`).html(endTimeBeforeStartTimeMsg);
+                    $('#endTimeError').show();
+                    $('#endTime').val('');
+                  } else {
+                    $('#endTimeError').hide();
+                  }
+                }
+              }
+            },
+          });
+          
+          // 当选择开始时间时，如果结束时间为空，则自动填充结束时间
+          $(`#startTime`).on('change blur', function(event) {
+            const startTime = $(this).val();
+            const endTime = $(`#endTime`).val();
+            if (startTime) {
+              if (!endTime) {
+                $(`#endTime`).val(startTime);
+              }
+            } else {
+              $(`#startTimeError`).html(requiredMsg);
+              $('#startTimeError').show();
+            }
+          });
+
+          $(`#endTime`).on('change blur', function(event) {
+            const endTime = $(this).val();
+            const startTime = $(`#startTime`).val();
+            if (endTime) {
+              // 将时间字符串转换为 Date 对象
+              const startTimeDate = new Date(startTime.replace(' ', 'T'));
+              const endTimeDate = new Date(endTime.replace(' ', 'T'));
+
+              // 比较两个 Date 对象
+              if (endTimeDate < startTimeDate) {
+                $(`#endTimeError`).html(endTimeBeforeStartTimeMsg);
+                $('#endTimeError').show();
+              } else {
+                $('#endTimeError').hide();
+              }
+            } else {
+              $(`#endTimeError`).html(requiredMsg);
+              $('#endTimeError').show();
+            }
+          });
+
+          $('.taskWeekCheckbox').change(function() {
+            let checkedWeeks = [];
+            $('.taskWeekCheckbox:checked').each(function() {
+                checkedWeeks.push($(this).val());
+            });
+            if (!checkedWeeks.length) {
+              $(`#playbackCycleError`).html(playbackCycleWeekMsg);
+              $('#playbackCycleError').show();
+            } else {
+              $('#playbackCycleError').hide();
+            }
+          });
+
+          // 点击新建日程表单的提交按钮时，验证表单数据是否合法
+          $(`#addTaskForm`).on('submit', function(e) {
+            e.preventDefault();
+            const taskName = $(`#taskName`).val();
+            const sourceName = $(`#sourceName`).val();
+            const startTime = $(`#startTime`).val();
+            const endTime = $(`#endTime`).val();
+            const playbackCycleValue = $(`#playbackCycle`).val();
+
+            if(!taskName || !sourceName || !playbackCycleValue || !startTime || !endTime ) {
+              if (!taskName) {
+                $(`#taskNameError`).html(requiredMsg);
+                $('#taskNameError').show();
+              } 
+              if (!sourceName) {
+                $(`#sourceNamerror`).html(requiredMsg);
+                $('#sourceNameError').show();
+              } 
+              if (!playbackCycleValue || playbackCycleValue === '0') {
+                $('#playbackCycleError').html(requiredMsg);
+                $('#playbackCycleError').show();
+              } 
+              if (!startTime) {
+                $(`#startTimeError`).html(requiredMsg);
+                $('#startTimeError').show();
+              }
+              if (!endTime) {
+                $(`#endTimeError`).html(requiredMsg);
+                $('#endTimeError').show();
+              }
+              return;
+            } else {
+              if (startTime && endTime) {
+                // 将时间字符串转换为 Date 对象
+                const startTimeDate = new Date(startTime.replace(' ', 'T'));
+                const endTimeDate = new Date(endTime.replace(' ', 'T'));
+                // 比较两个 Date 对象
+                if (endTimeDate < startTimeDate) {
+                  $(`#endTimeError`).html(endTimeBeforeStartTimeMsg);
+                  $('#endTimeError').show();
+                  return;
+                }
+              }
+              if (playbackCycleValue === 'week') {
+                let checkedWeeks = [];
+                $('.taskWeekCheckbox:checked').each(function() {
+                  checkedWeeks.push($(this).val());
+                });
+                if (!checkedWeeks.length) {
+                  $(`#playbackCycleError`).html(playbackCycleWeekMsg);
+                  $('#playbackCycleError').show();
+                  return;
+                }
+              }
+              
+              if (taskModalType === 'add') {
+                showAlert('success', '日程创建成功');
+              } else {
+                showAlert('success', '日程编辑成功');
+              }
+              taskModal.hide();
+            }
+          });
+
+          $('#repeatNumSwitch').on('change', function() {
+            if ($(this).is(':checked')) {
+              $('#endTime').prop('disabled', true);
+              $('#endTimeError').hide();
+            } else {
+              $('#endTime').prop('disabled', false);
+            }
+          });
+
+          $('#repeatNum').empty();
+          for(let i = 1; i <= 100; i++) {
+            const $option = $(`<option value="${i}">${i}</option>`);
+            $('#repeatNum').append($option);
+          }
+
+          const taskModalEl = document.getElementById('taskModal');
+          taskModalEl.addEventListener('hidden.bs.modal', event => {
+            initAddTaskModal();
           });
 
           highlightTodayOnCalendar();
@@ -365,19 +655,19 @@ SPDX-License-Identifier: Apache-2.0 -->
           const taskSwitch = task.enabled ? 
             `
               <label class="switch">
-                <input class="switchCheckbox" type="checkbox" checked />
+                <input class="switchCheckbox" type="checkbox" checked  data-id="${task.id}" onchange="enableOrDisableTask(this)" />
                 <span class="switchSlider"></span>
               </label>
             ` : 
             `
               <label class="switch">
-                <input class="switchCheckbox" type="checkbox" />
+                <input class="switchCheckbox" type="checkbox"  data-id="${task.id}" onchange="enableOrDisableTask(this)" />
                 <span class="switchSlider"></span>
               </label>
             `;
           const playBtnBox = task.status === 'running' ? 
-            `<i class="fa-solid fa-circle-stop" style="color: #f56c6c;"></i>` : 
-            `<i class="fa-solid fa-circle-play" style="color: #2ec6cc;"></i>`;
+            `<i class="fa-solid fa-circle-stop" style="color: #f56c6c;" data-id="${task.id}" onclick="stopTask(this)"></i>` : 
+            `<i class="fa-solid fa-circle-play" style="color: #2ec6cc;" data-id="${task.id}" onclick="playTask(this)"></i>`;
           const btnGroup = task.status === 'running' ? 
             `
               <div class="runningTaskIndicatorContainer">
@@ -390,21 +680,23 @@ SPDX-License-Identifier: Apache-2.0 -->
                   <i class="fa-solid fa-ellipsis"></i>
                 </button>
                 <ul class="dropdown-menu">
-                  <li><a class="dropdown-item">
-                    <i class="fa-solid fa-rotate" style="width: 16px;"></i> 同步</a>
+                  <li>
+                    <a class="dropdown-item" data-id="${task.name}" data-taskname="${task.name}" onclick="syncTask(this)">
+                      <i class="fa-solid fa-rotate" style="width: 16px;"></i> 同步
+                    </a>
                   </li>
                   <li>
-                    <a class="dropdown-item">
+                    <a class="dropdown-item" data-id="${task.id}" data-taskname="${task.name}" onclick="editTask(this)">
                       <i class="fa-solid fa-pencil-alt" style="width: 16px;"></i> 编辑
                     </a>
                   </li>
                   <li>
-                    <a class="dropdown-item">
+                    <a class="dropdown-item" data-id="${task.id}" data-taskname="${task.name}" onclick="syncTask(this)">
                       <i class="fa-solid fa-copy" style="width: 16px;"></i> 复制
                     </a>
                   </li>
                   <li>
-                    <a class="dropdown-item">
+                    <a class="dropdown-item" data-id="${task.id}" data-taskname="${task.name}" onclick="deleteTask(this)">
                       <i class="fa-solid fa-trash-can" style="width: 16px;"></i> 删除
                     </a>
                   </li>
@@ -441,7 +733,98 @@ SPDX-License-Identifier: Apache-2.0 -->
           $(`#taskContentList`).append($taskItem);
         } 
 
+        // 启用、禁用任务
+        function enableOrDisableTask(element) {
+          const taskId = $(element).data("id");
+          if ($(this).is(':checked')) {
+            showAlert('success', '启用成功！');
+          } else {
+            showAlert('success', '禁用成功！');
+          }
+        }
 
+        // 播放任务
+        function playTask(element) {
+          const taskId = $(element).data("id");
+          showAlert('success', '播放成功！');
+        }
+
+        // 停止任务
+        function stopTask(element) {
+          const taskId = $(element).data("id");
+          showAlert('success', '停止成功！');
+        }
+
+        // 同步任务
+        function syncTask(element) {
+          const taskId = $(element).data("id");
+          syncTaskModal.show();
+
+          const $syncTaskTable = $('#syncTaskTable');
+          $syncTaskTable.bootstrapTable({
+            data: [],
+          });
+
+          $('#oneClickSyncTaskBtn').on('click', () => {
+            syncTaskModal.hide();
+            showAlert('success', '同步成功！');
+          });
+        }
+
+        function deviceNameTableFormatter(value, row, index) {
+          if (row.isDir) {
+            return `<div style="cursor: pointer">
+                      <img src="/images/icon_folder.png" style="width: 16px; margin-bottom: 3px;"/>
+                      <span data-key="${row.key}" data-filename="${row.fileName}">${value}</span>
+                    </div>`;
+          } else {
+            return `<div>
+                      <img src="/images/icon_mp3.png" style="width: 16px; margin-bottom: 3px;"/>
+                      <span>${value}</span>
+                    </div>`;
+          }
+        }
+
+        function syncStatusTableFormatter(value, row, index) {
+          if (row.isDir) {
+            return `<div style="cursor: pointer">
+                      <img src="/images/icon_folder.png" style="width: 16px; margin-bottom: 3px;"/>
+                      <span data-key="${row.key}" data-filename="${row.fileName}">${value}</span>
+                    </div>`;
+          } else {
+            return `<div>
+                      <img src="/images/icon_mp3.png" style="width: 16px; margin-bottom: 3px;"/>
+                      <span>${value}</span>
+                    </div>`;
+          }
+        }
+
+        // 复制任务
+        function copyTask(element) {
+          const taskId = $(element).data("id");
+          showAlert('success', '复制成功！');
+        }
+
+        // 编辑任务
+        function editTask(element) {
+          const taskName = $(element).data("taskname");
+          $('#taskModalLabel').html('编辑日程');
+          taskModalType = 'edit';
+          $('#endTime').attr("disabled", true);
+          $('#repeatNumContainer').show();
+          $('#repeatNum').val('1');
+          $('#repeatNumSwitch').prop("checked", true );
+          taskModal.show();
+        }
+
+        // 删除任务
+        function deleteTask(element) {
+          const taskId = $(element).data("id");
+          showConfirmModal("你确定要删除所选数据吗？", () => {
+            showAlert('success', '删除成功！');
+          });
+        }
+        
         let taskDateBadgeCurrentValue = 0,
             taskDateBadgeTargetValue = 0,
             taskDateBadgeIncrement = 1;
@@ -464,23 +847,30 @@ SPDX-License-Identifier: Apache-2.0 -->
 
         // 初始化添加任务模态框表单
         function initAddTaskModal () {
-          $('#taskName').val('');
-          //一次绑定多个选择
-          $(".moredate").each(function(index, element) {
-            const mat = $(element).data("formatter");
-            jeDate(element, {
-              format: mat
-            });
-          });
-          $('#startTime').val('');
-          $('#endTime').val('');
+          taskModalType = 'add';
+          selectedFilesModal = [];
+          $('#taskModalLabel').html('新建日程');
 
-          $('#playbackCycle').val('');
+          $('#taskName').val('');
+          $('#taskNameError').hide();
+
+          $('#sourceName').val('');
+          $('#sourceNameError').hide();
+
+          $('#startTime').val('');
+          $('#startTimeError').hide();
+
+          $('#endTime').val('');
+          $('#endTimeError').hide();
+          $('#endTime').attr("disabled", false);
+
+          $('#playbackCycle').val('0');
+          $('#playbackCycleError').hide();
 
           $('#weekCheckboxGroup').hide();
           $('.taskWeekCheckbox').prop('checked', false);
 
-          showMoreSetting = false;
+          showMoreSettingModal = false;
           $('#moreSettingBtn').empty();
           $('#moreSettingBtn').append($(`<i class="fa-solid fa-chevron-down"></i>`));
           $('#moreSettingContainer').hide();
@@ -493,6 +883,8 @@ SPDX-License-Identifier: Apache-2.0 -->
           $('#level1').prop('checked', false);
           $('#level2').prop('checked', true);
           $('#level3').prop('checked', false);
+
+          $('#repeatNumContainer').hide();
         }
       </script>
     </body>
