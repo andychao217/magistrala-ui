@@ -22,7 +22,9 @@ SPDX-License-Identifier: Apache-2.0 -->
                 <div class="modal-dialog" role="document">
                   <div class="modal-content" style="width: 570px;">
                     <div class="modal-header">
-                      <h1 class="modal-title" id="taskModalLabel">新建日程</h1>
+                      <h1 class="modal-title" id="taskModalLabel">
+                        <i class="fa-solid fa-plus"></i> 新建日程
+                      </h1>
                       <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <form method="post" id="addTaskForm">
@@ -116,12 +118,12 @@ SPDX-License-Identifier: Apache-2.0 -->
                             </div>
                             <div class="mb-3 row">
                               <div class="col-sm-12" style="text-align: center;">
-                                <div id="moreSettingBtn">
+                                <div id="moreSettingBtnTaskModal" class="moreSettingBtn">
                                   <i class="fa-solid fa-chevron-down"></i>
                                 </div>
                               </div>
                             </div>
-                            <div class="mb-3" id="moreSettingContainer" style="display: none;">
+                            <div class="mb-3" id="moreSettingContainerTaskModal" style="display: none;">
                               <div class="mb-3 row">
                                 <label for="endTime" class="col-sm-2 col-form-label">结束时间</label>
                                 <div class="col-sm-10">
@@ -198,6 +200,64 @@ SPDX-License-Identifier: Apache-2.0 -->
                 </div>
               </div>
 
+              <!-- 选择音源弹框 -->
+              <div class="modal fade" id="sourceModal" tabindex="-1" role="dialog" aria-labelledby="sourceModalLabel" aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                  <div class="modal-content" style="width: 570px;">
+                    <div class="modal-header">
+                      <h1 class="modal-title" id="sourceModalLabel">音源列表</h1>
+                      <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                      <div class="mb-3" style="padding: 0px 16px;">
+                        <div class="mb-3">
+                          <div 
+                            style="
+                              border-radius: 5px;
+                              display: flex; 
+                              justify-content: space-between; 
+                              background: whitesmoke;
+                            "
+                          >
+                            <div style="line-height: 38px; margin-left: 10px;">文件列表</div>
+                            <div>
+                              <button 
+                                type="button" 
+                                class="btn btn-link" 
+                                style="text-decoration: none; color: #20afbf;"
+                              >
+                                <i class="fa-solid fa-plus"></i> 添加
+                              </button>
+                            </div>
+                          </div>
+                        </div>
+                        <div class="mb-3 row">
+                          <div class="col-sm-12" style="text-align: center;">
+                            <div id="moreSettingBtnSourceModal" class="moreSettingBtn">
+                              <i class="fa-solid fa-chevron-down"></i>
+                            </div>
+                          </div>
+                        </div>
+                        <div class="mb-3" id="moreSettingContainerSourceModal" style="display: none;">
+                          <div class="mb-3 row">
+                            <label for="backgroundSource" class="col-sm-2 col-form-label">背景音</label>
+                            <div class="col-sm-10">
+                              <select class="form-control form-select" placeholder="请选择背景音" name="backgroundSource" id="backgroundSource">
+                                <option value="0" selected>无</option>
+                              </select>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">取消</button>
+                        <button type="button" class="btn body-button" id="sourceModalConfirmBtn">确定</button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
               <!-- 同步任务弹框 -->
               <div class="modal fade" id="syncTaskModal" tabindex="-1" role="dialog" aria-labelledby="syncTaskModalLabel" aria-hidden="true">
                 <div class="modal-dialog" role="document">
@@ -223,7 +283,7 @@ SPDX-License-Identifier: Apache-2.0 -->
                         </table>
                       </div>
                       <div class="modal-footer" style="display: block; text-align: center;">
-                        <button type="submit" class="btn body-button" id="oneClickSyncTaskBtn">一键同步</button>
+                        <button type="button" class="btn body-button" id="oneClickSyncTaskBtn">一键同步</button>
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">取消</button>
                       </div>
                     </div>
@@ -248,8 +308,12 @@ SPDX-License-Identifier: Apache-2.0 -->
                     </div>
                     <div>
                       <div class="btn-group">
-                        <button type="button" class="btn body-button" style="width: 90px;" id="addTaskBtn">新建日程</button>
-                        <button type="button" class="btn body-button" style="width: 60px;" id="allTasksToggleBtn">全部</button>
+                        <button type="button" class="btn body-button" style="width: 110px;" id="addTaskBtn">
+                          <i class="fa-solid fa-plus"></i> 新建日程
+                        </button>
+                        <button type="button" class="btn body-button" style="width: 80px;" id="allTasksToggleBtn">
+                          <i class="fa-solid fa-list"></i> 全部
+                        </button>
                       </div>
                     </div>
                   </div>
@@ -267,21 +331,34 @@ SPDX-License-Identifier: Apache-2.0 -->
         const requiredMsg = '不能为空', 
               endTimeBeforeStartTimeMsg = '结束时间不能早于开始时间',
               playbackCycleWeekMsg = '当播放周期为每周时, 必须选择一周中的某一天或者某几天';
-        const taskModal = new bootstrap.Modal(document.getElementById("taskModal"));
-        const syncTaskModal = new bootstrap.Modal(document.getElementById("syncTaskModal"));
+        const taskModal = new bootstrap.Modal(document.getElementById("taskModal")); // 任务弹框
+        const syncTaskModal = new bootstrap.Modal(document.getElementById("syncTaskModal")); // 同步任务弹框
+        const sourceModal = new bootstrap.Modal(document.getElementById("sourceModal")); // 音源弹框
         const protocol = window.location.protocol;
         const hostname = window.location.hostname;
-        const userInfoStr = sessionStorage.getItem("userInfo");
-
+        const domainID = sessionStorage.getItem("domainID");
         let comID = "";
-        if (userInfoStr) {
-          const userInfo = JSON.parse(userInfoStr);
-          comID = userInfo.metadata.comID;
+        if (domainID) {
+          fetch(`/ui/domains/${domainID}/domainInJSON`, {
+            method: "GET",
+          })
+            .then(response => {
+              if (!response.ok) {
+                throw new Error('Network response was not ok');
+              }
+              return response.json(); // 直接将流转换为JSON对象
+            })
+            .then(json => {
+              const data = json.data;
+              const domainData = JSON.parse(data).domainData;
+              comID = domainData.metadata["comID"];
+            })
         }
 
         let isListAllTask = false, 
             selectedDate = moment().format('YYYY-MM-DD'),
-            showMoreSettingModal = false, 
+            showMoreSettingTaskModal = false, 
+            showMoreSettingSourceModal = false,
             selectedFilesModal = [],
             taskModalType = 'add';
 
@@ -316,7 +393,7 @@ SPDX-License-Identifier: Apache-2.0 -->
               isListAllTask = false;
               selectedDate = moment(dates[0]).format('YYYY-MM-DD');
               $('#taskDateTitle').html(selectedDate);
-              $('#allTasksToggleBtn').html("全部");
+              $('#allTasksToggleBtn').html(`<i class="fa-solid fa-list"></i> 全部`);
               highlightTodayOnCalendar();
               getTaskList(selectedDate);
             }
@@ -356,15 +433,15 @@ SPDX-License-Identifier: Apache-2.0 -->
           });
 
           // 点击更多设置按钮时，切换显示更多设置
-          $('#moreSettingBtn').click(function() {
-            showMoreSettingModal = !showMoreSettingModal;
-            $('#moreSettingBtn').empty();
-            if (showMoreSettingModal) {
-              $('#moreSettingBtn').append($(`<i class="fa-solid fa-chevron-up"></i>`));
-              $('#moreSettingContainer').show();
+          $('#moreSettingBtnTaskModal').click(function() {
+            showMoreSettingTaskModal = !showMoreSettingTaskModal;
+            $('#moreSettingBtnTaskModal').empty();
+            if (showMoreSettingTaskModal) {
+              $('#moreSettingBtnTaskModal').append($(`<i class="fa-solid fa-chevron-up"></i>`));
+              $('#moreSettingContainerTaskModal').show();
             } else {
-              $('#moreSettingBtn').append($(`<i class="fa-solid fa-chevron-down"></i>`));
-              $('#moreSettingContainer').hide();
+              $('#moreSettingBtnTaskModal').append($(`<i class="fa-solid fa-chevron-down"></i>`));
+              $('#moreSettingContainerTaskModal').hide();
             }
           });
 
@@ -392,6 +469,7 @@ SPDX-License-Identifier: Apache-2.0 -->
             }
           });
 
+          // 开始时间初始化
           const startTimeFormatter = $(`#startTime`).data("formatter");
           jeDate(`#startTime`, {
             onClose:false,
@@ -416,6 +494,7 @@ SPDX-License-Identifier: Apache-2.0 -->
             },
           });
           
+          // 结束时间初始化
           const endTimeFormatter = $(`#endTime`).data("formatter");
           jeDate(`#endTime`, {
             onClose:false,
@@ -565,6 +644,7 @@ SPDX-License-Identifier: Apache-2.0 -->
             }
           });
 
+          // 重复次数开关
           $('#repeatNumSwitch').on('change', function() {
             if ($(this).is(':checked')) {
               $('#endTime').prop('disabled', true);
@@ -574,6 +654,7 @@ SPDX-License-Identifier: Apache-2.0 -->
             }
           });
 
+          //重复次数下拉框生成
           $('#repeatNum').empty();
           for(let i = 1; i <= 100; i++) {
             const $option = $(`<option value="${i}">${i}</option>`);
@@ -583,6 +664,31 @@ SPDX-License-Identifier: Apache-2.0 -->
           const taskModalEl = document.getElementById('taskModal');
           taskModalEl.addEventListener('hidden.bs.modal', event => {
             initAddTaskModal();
+          });
+
+          $('#selectSourceBtn').click(function() {
+            sourceModal.show();
+            showMoreSettingSourceModal = false;
+            $('#moreSettingBtnSourceModal').empty();
+            $('#moreSettingBtnSourceModal').append($(`<i class="fa-solid fa-chevron-down"></i>`));
+            $('#moreSettingContainerSourceModal').hide();
+          });
+
+          // 点击更多设置按钮时，切换显示更多设置-音源弹框
+          $('#moreSettingBtnSourceModal').click(function() {
+            showMoreSettingSourceModal = !showMoreSettingSourceModal;
+            $('#moreSettingBtnSourceModal').empty();
+            if (showMoreSettingSourceModal) {
+              $('#moreSettingBtnSourceModal').append($(`<i class="fa-solid fa-chevron-up"></i>`));
+              $('#moreSettingContainerSourceModal').show();
+            } else {
+              $('#moreSettingBtnSourceModal').append($(`<i class="fa-solid fa-chevron-down"></i>`));
+              $('#moreSettingContainerSourceModal').hide();
+            }
+          });
+
+          $('#sourceModalConfirmBtn').click(function() {
+            sourceModal.hide();
           });
 
           highlightTodayOnCalendar();
@@ -595,12 +701,12 @@ SPDX-License-Identifier: Apache-2.0 -->
           if (isListAllTask) {
             isListAllTask = false;
             $('#taskDateTitle').html(selectedDate);
-            $('#allTasksToggleBtn').html("全部");
+            $('#allTasksToggleBtn').html(`<i class="fa-solid fa-list"></i> 全部`);
             getTaskList(selectedDate);
           } else {
             isListAllTask = true;
             $('#taskDateTitle').html("全部日程");
-            $('#allTasksToggleBtn').html("当天");
+            $('#allTasksToggleBtn').html(`<i class="fa-solid fa-list"></i> 当天`);
             getTaskList();
           }
         }
@@ -691,7 +797,7 @@ SPDX-License-Identifier: Apache-2.0 -->
                     </a>
                   </li>
                   <li>
-                    <a class="dropdown-item" data-id="${task.id}" data-taskname="${task.name}" onclick="syncTask(this)">
+                    <a class="dropdown-item" data-id="${task.id}" data-taskname="${task.name}" onclick="copyTask(this)">
                       <i class="fa-solid fa-copy" style="width: 16px;"></i> 复制
                     </a>
                   </li>
@@ -704,7 +810,7 @@ SPDX-License-Identifier: Apache-2.0 -->
               </div>
             `;
           const $taskItem = $(`
-            <div class="taskItem">
+            <div class="taskItem ${task.status === 'running' ? 'activeTask' : ''}" style="border-color: ${task.status === 'running' ? '#ff8a00' : '#00c6ff'}">
               <div style="display: flex; align-items: center;">
                 <div class="taskTime">${task.time}</div>
                 <div class="line" style="margin: 0px 50px;"></div>
@@ -771,6 +877,7 @@ SPDX-License-Identifier: Apache-2.0 -->
           });
         }
 
+        // 同步任务表格格式化-设备名称
         function deviceNameTableFormatter(value, row, index) {
           if (row.isDir) {
             return `<div style="cursor: pointer">
@@ -785,6 +892,7 @@ SPDX-License-Identifier: Apache-2.0 -->
           }
         }
 
+        // 同步状态表格格式化-同步状态
         function syncStatusTableFormatter(value, row, index) {
           if (row.isDir) {
             return `<div style="cursor: pointer">
@@ -870,10 +978,10 @@ SPDX-License-Identifier: Apache-2.0 -->
           $('#weekCheckboxGroup').hide();
           $('.taskWeekCheckbox').prop('checked', false);
 
-          showMoreSettingModal = false;
-          $('#moreSettingBtn').empty();
-          $('#moreSettingBtn').append($(`<i class="fa-solid fa-chevron-down"></i>`));
-          $('#moreSettingContainer').hide();
+          showMoreSettingTaskModal = false;
+          $('#moreSettingBtnTaskModal').empty();
+          $('#moreSettingBtnTaskModal').append($(`<i class="fa-solid fa-chevron-down"></i>`));
+          $('#moreSettingContainerTaskModal').hide();
          
           $('#randomPlay').prop('checked', false);
 

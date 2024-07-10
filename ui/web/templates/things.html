@@ -267,7 +267,9 @@ SPDX-License-Identifier: Apache-2.0 -->
                                     <div class="row buttons mb-3">
                                       <div class="col-4" role="group">
                                         <!-- <button type="button" class="btn body-button" onclick="openModal('single')">添加设备</button> -->
-                                        <button type="button" class="btn body-button" onclick="openModal('scan')">添加设备</button>
+                                        <button type="button" class="btn body-button" onclick="openModal('scan')">
+                                          <i class="fa-solid fa-plus"></i> 添加设备
+                                        </button>
                                       </div>
                                       <div class="btn-group col-4" role="group">
                                         <input type="radio" class="btn-check" name="btnOnlineStatus" id="btnAll" autocomplete="off" />
@@ -638,14 +640,25 @@ SPDX-License-Identifier: Apache-2.0 -->
 
               //控制设备
               function conntrolThing(thingIdentity, controlType) {
-                const userInfoStr = sessionStorage.getItem("userInfo");
-                let comID = "";
-                if (userInfoStr) {
-                  const userInfo = JSON.parse(userInfoStr);
-                  comID = userInfo.metadata.comID;
-                }
-                if (comID) {
-                  postMessage(comID, controlType, thingIdentity);
+                const domainID = sessionStorage.getItem("domainID");
+                if (domainID) {
+                  fetch(`/ui/domains/${domainID}/domainInJSON`, {
+                    method: "GET",
+                  })
+                    .then(response => {
+                      if (!response.ok) {
+                        throw new Error('Network response was not ok');
+                      }
+                      return response.json(); // 直接将流转换为JSON对象
+                    })
+                    .then(json => {
+                      const data = json.data;
+                      const domainData = JSON.parse(data).domainData;
+                      const comID = domainData.metadata["comID"];
+                      if (comID) {
+                        postMessage(comID, controlType, thingIdentity);
+                      }
+                    })
                 }
               }
 
@@ -878,12 +891,6 @@ SPDX-License-Identifier: Apache-2.0 -->
 
               //给设备发信息
               function postMessage(channelID, controlType, thingIdentity) {
-                const userInfoStr = sessionStorage.getItem("userInfo");
-                let comID = "";
-                if (userInfoStr) {
-                    const userInfo = JSON.parse(userInfoStr);
-                    comID = userInfo.metadata.comID;
-                }
                 if (controlType === "reboot") {
                   const url = window.location.href; // 获取当前页面的URL
                   const address = new URL(url);
@@ -892,7 +899,7 @@ SPDX-License-Identifier: Apache-2.0 -->
                     channelID: channelID,
                     thingIdentity: thingIdentity,
                     host: address.hostname,
-                    comID: comID,
+                    comID: channelID,
                   }
                   fetch(`http://${address.hostname}:${port}/rebootDevice`, {
                       method: "POST",
@@ -931,7 +938,7 @@ SPDX-License-Identifier: Apache-2.0 -->
                   //   // 将 serializedMsg 包装在 Blob 中
                   //   let blob = new Blob([serializedMsg], { type: 'application/octet-stream' });
                   //   formData.append("message", blob, 'message.bin'); // 第三个参数是文件名，可以自定义
-                  //   formData.append("thingSecret", "platform"+comID);
+                  //   formData.append("thingSecret", "platform"+channelID);
                   //   fetch(`/ui/channels/messages`, {
                   //     method: "POST",
                   //     body: formData,

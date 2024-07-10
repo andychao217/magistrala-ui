@@ -199,24 +199,37 @@ SPDX-License-Identifier: Apache-2.0 -->
                 $('#connect-things-btn').click(function() {
                   const channelID = "{{.ChannelID}}";
                   if (selectedThingsIds.length) {
-                    // 定义一个异步函数来处理顺序调用
                     async function processRequests() {
                       try {
-                        for (const thingID of selectedThingsIds) {
+                        const promises = selectedThingsIds.map(async (thingID) => {
                           const url = `/ui/channels/connect?channelID=${channelID}&thingID=${thingID}`;
                           const response = await fetch(url, {
                             method: "POST",
                           });
-                          const json = await response.json();
-                          console.error("处理fetch或JSON时出错:");
-                        }
-                        // 所有请求都成功返回，刷新页面
+                          return await response.json();
+                        });
+
+                        // 等待所有 Promise 完成（无论成功与否）
+                        const results = await Promise.allSettled(promises);
+
+                        // 处理所有的结果
+                        results.forEach((result) => {
+                          if (result.status === 'fulfilled') {
+                            console.log('成功:', result.value);
+                          } else if (result.status === 'rejected') {
+                            console.error('失败:', result.reason);
+                          }
+                        });
+
+                        // 所有请求都完成后，刷新页面
                         window.location.reload();
                       } catch (error) {
-                        // 捕获错误并刷新页面
+                        // 捕获意外错误（理论上不会走到这里，因为所有的 Promise 都已经处理）
+                        console.error("意外错误:", error);
                         window.location.reload();
                       }
                     }
+
                     // 调用异步函数
                     processRequests();
                   } else {
@@ -350,14 +363,25 @@ SPDX-License-Identifier: Apache-2.0 -->
 
               //控制设备
               function conntrolThing(thingIdentity, controlType) {
-                const userInfoStr = sessionStorage.getItem("userInfo");
-                let comID = "";
-                if (userInfoStr) {
-                  const userInfo = JSON.parse(userInfoStr);
-                  comID = userInfo.metadata.comID;
-                }
-                if (comID) {
-                  postMessage(comID, controlType, thingIdentity);
+                const domainID = sessionStorage.getItem("domainID");
+                if (domainID) {
+                  fetch(`/ui/domains/${domainID}/domainInJSON`, {
+                    method: "GET",
+                  })
+                    .then(response => {
+                      if (!response.ok) {
+                        throw new Error('Network response was not ok');
+                      }
+                      return response.json(); // 直接将流转换为JSON对象
+                    })
+                    .then(json => {
+                      const data = json.data;
+                      const domainData = JSON.parse(data).domainData;
+                      const defaultChannelId = domainData.metadata["comID"];
+                      if (domainID && defaultChannelId) {
+                        postMessage(comID, controlType, thingIdentity);
+                      }
+                    })
                 }
               }
 
@@ -557,12 +581,6 @@ SPDX-License-Identifier: Apache-2.0 -->
               }
 
               function postMessage(channelID, controlType, thingIdentity) {
-                const userInfoStr = sessionStorage.getItem("userInfo");
-                let comID = "";
-                if (userInfoStr) {
-                    const userInfo = JSON.parse(userInfoStr);
-                    comID = userInfo.metadata.comID;
-                }
                 if (controlType === "reboot") {
                   const url = window.location.href; // 获取当前页面的URL
                   const address = new URL(url);
@@ -572,7 +590,7 @@ SPDX-License-Identifier: Apache-2.0 -->
                     channelID: channelID,
                     thingIdentity: identity,
                     host: address.hostname,
-                    comID: comID,
+                    comID: channelID,
                   }
                   fetch(`http://${address.hostname}:${port}/rebootDevice`, {
                     method: "POST",
@@ -611,7 +629,7 @@ SPDX-License-Identifier: Apache-2.0 -->
                   //   // 将 serializedMsg 包装在 Blob 中
                   //   let blob = new Blob([serializedMsg], { type: 'application/octet-stream' });
                   //   formData.append("message", blob, 'message.bin'); // 第三个参数是文件名，可以自定义
-                  //   formData.append("thingSecret", "platform"+comID);
+                  //   formData.append("thingSecret", "platform"+channelID);
                   //   fetch(`/ui/channels/messages`, {
                   //     method: "POST",
                   //     body: formData,

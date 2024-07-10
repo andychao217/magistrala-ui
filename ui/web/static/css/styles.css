@@ -854,7 +854,7 @@ button.edit-btn {
 }
 
 .btn-check:checked+.btn, .btn.active, .btn.show, .btn:first-child:active, :not(.btn-check)+.btn:active {
-    color: #fff;
+    color: #fff !important;
     background-color: var(--main-color);
     border-color: var(--main-color);
 }
@@ -999,6 +999,21 @@ table > thead > tr > th {
     background: none;
 }
 
+.dropdown-menu.show {
+    backdrop-filter: blur(5px);
+    background: rgba(255, 255, 255, 0.1);
+}
+
+.dropdown-item {
+    color: gray;
+}
+.dropdown-item:focus, .dropdown-item:hover{
+    background: none;
+}
+.dropdown-item:hover{
+    cursor: pointer;
+}
+
 /* task page */
 .pignose-calendar {
     width: 100%;
@@ -1102,8 +1117,42 @@ table > thead > tr > th {
     align-items: center;
     line-height: 27px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    transition: box-shadow 0.3s ease;
+    transition: all 0.3s ease;
 }
+
+.taskContentList .taskItem::before {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 2px;
+    background: linear-gradient(to right, transparent, #00c6ff, transparent);
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 0.5s ease;
+}
+.taskContentList .taskItem.activeTask::before {
+    background: linear-gradient(to right, transparent, #ff8a00, transparent);
+}
+
+.taskContentList .taskItem:hover::before {
+    animation: slide-glow 0.5s linear forwards;
+}
+
+@keyframes slide-glow {
+    0% {
+        transform: scaleX(0);
+    }
+    50% {
+        transform: scaleX(1);
+    }
+    100% {
+        transform: scaleX(0);
+        transform-origin: right;
+    }
+}
+
 .taskContentList .taskItem:hover {
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.25);
 }
@@ -1187,7 +1236,7 @@ table > thead > tr > th {
     transform: translateX(22px);
 }
 
-#moreSettingBtn{
+.moreSettingBtn {
     background: whitesmoke;
     cursor: pointer;
     border-radius: 5px;
