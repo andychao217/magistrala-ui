@@ -3,7 +3,16 @@ SPDX-License-Identifier: Apache-2.0 -->
 
 {{ define "statusupdate" }}
     <!-- disable entity modal -->
-    <div class="modal fade" id="disableEntityModal" tabindex="-1" role="dialog" aria-labelledby="disableEntityModalLabel" aria-hidden="true">
+    <div 
+        class="modal fade" 
+        id="disableEntityModal" 
+        tabindex="-1" 
+        role="dialog" 
+        aria-labelledby="disableEntityModalLabel" 
+        aria-hidden="true"
+        data-bs-backdrop="static" 
+        data-bs-keyboard="false"  
+    >
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
                 <div class="modal-header">
@@ -29,7 +38,16 @@ SPDX-License-Identifier: Apache-2.0 -->
     </div>
 
     <!-- enable entity modal -->
-    <div class="modal fade" id="enableEntityModal" tabindex="-1" role="dialog" aria-labelledby="enableEntityModalLabel" aria-hidden="true">
+    <div 
+        class="modal fade" 
+        id="enableEntityModal" 
+        tabindex="-1"
+        role="dialog" 
+        aria-labelledby="enableEntityModalLabel" 
+        aria-hidden="true"
+        data-bs-backdrop="static" 
+        data-bs-keyboard="false"  
+    >
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
                 <div class="modal-header">
