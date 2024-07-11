@@ -1241,3 +1241,23 @@ table > thead > tr > th {
     cursor: pointer;
     border-radius: 5px;
 }
+.sourceModalList {
+    border: thin solid whitesmoke;
+    border-top: none;
+    border-bottom-left-radius: 5px;
+    border-bottom-right-radius: 5px;
+    max-height: 250px;
+    overflow-y: auto;
+}
+.sourceModalListItem {
+    display: flex;
+    justify-content: space-between;
+}
+.sourceModalListItem:hover {
+    background: lightgray;
+}
+.modalTableContainer {
+    max-height: 400px; 
+    overflow-y: auto;
+    border: thin solid whitesmoke;
+}

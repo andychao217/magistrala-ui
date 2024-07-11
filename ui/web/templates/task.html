@@ -66,8 +66,10 @@ SPDX-License-Identifier: Apache-2.0 -->
                               <label for="sourceName" class="col-sm-2 col-form-label">选择音源</label>
                               <div class="col-sm-10" style="display: flex;">
                                 <input type="text" class="form-control name-field" name="sourceName" id="sourceName" placeholder="请选择音源" required readonly />
-                                <div style="width: 80px; text-align: right;">
-                                  <button type="button" class="btn body-button" id="selectSourceBtn">选择</button>
+                                <div style="width: 110px; text-align: right;">
+                                  <button type="button" class="btn body-button" id="selectSourceBtn">
+                                    <i class="fa-solid fa-plus"></i> 选择
+                                  </button>
                                 </div>
                               </div>
                               <div class="col-sm-10 offset-sm-2 text-danger"  id="sourceNameError" style="margin-top: 10px;"></div>
@@ -224,7 +226,7 @@ SPDX-License-Identifier: Apache-2.0 -->
                   <div class="modal-content" style="width: 570px;">
                     <div class="modal-header">
                       <h1 class="modal-title" id="sourceModalLabel">音源列表</h1>
-                      <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                      <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" onclick="taskModal.show();"></button>
                     </div>
                     <div class="modal-body">
                       <div class="mb-3" style="padding: 0px 16px;">
@@ -243,11 +245,14 @@ SPDX-License-Identifier: Apache-2.0 -->
                                 type="button" 
                                 class="btn btn-link" 
                                 style="text-decoration: none; color: #20afbf;"
+                                id="addSourceModalFileBtn"
                               >
                                 <i class="fa-solid fa-plus"></i> 添加
                               </button>
                             </div>
                           </div>
+                          <ul class="list-group list-group-flush sourceModalList" id="sourceModalFileListContainer">
+                          </ul>
                         </div>
                         <div class="mb-3 row">
                           <div class="col-sm-12" style="text-align: center;">
@@ -257,6 +262,30 @@ SPDX-License-Identifier: Apache-2.0 -->
                           </div>
                         </div>
                         <div class="mb-3" id="moreSettingContainerSourceModal" style="display: none;">
+                          <div class="mb-3">
+                            <div 
+                              style="
+                                border-radius: 5px;
+                                display: flex; 
+                                justify-content: space-between; 
+                                background: whitesmoke;
+                              "
+                            >
+                              <div style="line-height: 38px; margin-left: 10px;">采播通道列表</div>
+                              <div>
+                                <button 
+                                  type="button" 
+                                  class="btn btn-link" 
+                                  style="text-decoration: none; color: #20afbf;"
+                                  id="addSourceModalDeviceBtn"
+                                >
+                                  <i class="fa-solid fa-plus"></i> 添加
+                                </button>
+                              </div>
+                            </div>
+                            <ul class="list-group list-group-flush sourceModalList" id="sourceModalDeviceListContainer">
+                            </ul>
+                          </div>
                           <div class="mb-3 row">
                             <label for="backgroundSource" class="col-sm-2 col-form-label">背景音</label>
                             <div class="col-sm-10">
@@ -268,8 +297,97 @@ SPDX-License-Identifier: Apache-2.0 -->
                         </div>
                       </div>
                       <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">取消</button>
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" onclick="taskModal.show();">取消</button>
                         <button type="button" class="btn body-button" id="sourceModalConfirmBtn">确定</button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- 选择文件弹框 -->
+              <div 
+                class="modal fade" 
+                id="filesModal" 
+                tabindex="-1" 
+                role="dialog" 
+                aria-labelledby="filesModalLabel" 
+                aria-hidden="true"
+                data-bs-backdrop="static" 
+                data-bs-keyboard="false"  
+              >
+                <div class="modal-dialog" role="document">
+                  <div class="modal-content" style="width: 570px;">
+                    <div class="modal-header">
+                      <h1 class="modal-title" id="filesModal">音频文件</h1>
+                      <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" onclick="sourceModal.show();"></button>
+                    </div>
+                    <div class="modal-body">
+                      <div class="mb-3">
+                        <nav>
+                          <ol class="breadcrumb" id="breadcrumbNavigator" style="margin-left: 5px; margin-bottom: 5px;"></ol>
+                        </nav>
+                      </div>
+                      <div class="mb-3 row modalTableContainer">
+                        <table 
+                          id="filesModalTable"
+                          class="table table-hover"
+                          data-checkbox-header="true"
+                          data-click-to-select="true"
+                        >
+                          <thead>
+                            <tr>
+                              <th data-field="state" data-checkbox="true" data-formatter="fileNameTableStateFormatter"></th>
+                              <th data-field="fileName" data-formatter="fileNameTableFormatter">文件名</th>
+                            </tr>
+                          </thead>
+                        </table>
+                      </div>
+                      <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" onclick="sourceModal.show();">取消</button>
+                        <button type="button" class="btn body-button" id="confirmFileBtn">确定</button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- 输入通道弹框 -->
+              <div 
+                class="modal fade" 
+                id="inputChannelsModal" 
+                tabindex="-1" 
+                role="dialog" 
+                aria-labelledby="inputChannelsModalLabel" 
+                aria-hidden="true"
+                data-bs-backdrop="static" 
+                data-bs-keyboard="false"  
+              >
+                <div class="modal-dialog" role="document">
+                  <div class="modal-content" style="width: 570px;">
+                    <div class="modal-header">
+                      <h1 class="modal-title" id="inputChannelsModal">输入通道</h1>
+                      <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" onclick="sourceModal.show();"></button>
+                    </div>
+                    <div class="modal-body">
+                      <div class="mb-3 row modalTableContainer">
+                        <table 
+                          id="inputChannelsModalTable"
+                          class="table table-hover"
+                          data-checkbox-header="true"
+                          data-click-to-select="true"
+                        >
+                          <thead>
+                            <tr>
+                              <th data-field="state" data-checkbox="true"></th>
+                              <th data-field="deviceName" data-formatter="inputChannelNameTableFormatter">设备</th>
+                            </tr>
+                          </thead>
+                        </table>
+                      </div>
+                      <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" onclick="sourceModal.show();">取消</button>
+                        <button type="button" class="btn body-button" id="confirmInputChannelsBtn">确定</button>
                       </div>
                     </div>
                   </div>
@@ -294,7 +412,7 @@ SPDX-License-Identifier: Apache-2.0 -->
                       <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
-                      <div class="mb-3 row">
+                      <div class="mb-3 row modalTableContainer">
                         <table 
                           id="syncTaskTable"
                           class="table table-hover"
@@ -358,12 +476,15 @@ SPDX-License-Identifier: Apache-2.0 -->
         const requiredMsg = '不能为空', 
               endTimeBeforeStartTimeMsg = '结束时间不能早于开始时间',
               playbackCycleWeekMsg = '当播放周期为每周时, 必须选择一周中的某一天或者某几天';
-        const taskModal = new bootstrap.Modal(document.getElementById("taskModal")); // 任务弹框
-        const syncTaskModal = new bootstrap.Modal(document.getElementById("syncTaskModal")); // 同步任务弹框
-        const sourceModal = new bootstrap.Modal(document.getElementById("sourceModal")); // 音源弹框
-        const protocol = window.location.protocol;
-        const hostname = window.location.hostname;
-        const domainID = sessionStorage.getItem("domainID");
+        const taskModal = new bootstrap.Modal(document.getElementById("taskModal")), // 任务弹框
+              syncTaskModal = new bootstrap.Modal(document.getElementById("syncTaskModal")), // 同步任务弹框
+              sourceModal = new bootstrap.Modal(document.getElementById("sourceModal")), // 音源弹框
+              filesModal = new bootstrap.Modal(document.getElementById("filesModal")), // 文件弹框
+              inputChannelsModal = new bootstrap.Modal(document.getElementById("inputChannelsModal")); // 输入通道弹框
+        const $filesModalTable = $('#filesModalTable');
+        const protocol = window.location.protocol,
+              hostname = window.location.hostname,
+              domainID = sessionStorage.getItem("domainID");
         let comID = "";
         if (domainID) {
           fetch(`/ui/domains/${domainID}/domainInJSON`, {
@@ -387,9 +508,14 @@ SPDX-License-Identifier: Apache-2.0 -->
             showMoreSettingTaskModal = false, 
             showMoreSettingSourceModal = false,
             selectedFilesModal = [],
+            selectedSourceObject = {
+              files:[],
+              devices: [],
+            },
             taskModalType = 'add';
 
         $(function() {
+          // 初始化设定页面标题为当天
           $('#taskDateTitle').html(selectedDate);
 
           // 初始化日历
@@ -437,7 +563,7 @@ SPDX-License-Identifier: Apache-2.0 -->
             taskModal.show();
           });
 
-          // 播放周期选择框变化时，改变周数选择框是否显示
+          // 播放周期选择框变化时，改变周数选择框是否显示-任务弹框
           $('#playbackCycle').on('change blur', function() {
             const playbackCycleValue = $(this).val();
             if (!playbackCycleValue) {
@@ -453,13 +579,13 @@ SPDX-License-Identifier: Apache-2.0 -->
             }
           });
 
-          // 音量微调选择框变化时，改变音量标签
+          // 音量微调选择框变化时，改变音量标签-任务弹框
           $('#volumeControl').change(function() {
             const volumeControlValue = $(this).val();
             $('#volumeLabel').html(volumeControlValue);
           });
 
-          // 点击更多设置按钮时，切换显示更多设置
+          // 点击更多设置按钮时，切换显示更多设置-任务弹框
           $('#moreSettingBtnTaskModal').click(function() {
             showMoreSettingTaskModal = !showMoreSettingTaskModal;
             $('#moreSettingBtnTaskModal').empty();
@@ -472,7 +598,7 @@ SPDX-License-Identifier: Apache-2.0 -->
             }
           });
 
-          // 验证表单日程名称是否为空
+          // 验证表单日程名称是否为空-任务弹框
           $('#taskName').on('change blur keyup', function(event) {
             const value = $(this).val();
             if (value) {
@@ -484,7 +610,7 @@ SPDX-License-Identifier: Apache-2.0 -->
             }
           });
 
-          // 验证表单音源名称是否为空
+          // 验证表单音源名称是否为空-任务弹框
           $('#sourceName').on('change blur keyup', function(event) {
             const value = $(this).val();
             if (value) {
@@ -496,7 +622,7 @@ SPDX-License-Identifier: Apache-2.0 -->
             }
           });
 
-          // 开始时间初始化
+          // 开始时间初始化-任务弹框
           const startTimeFormatter = $(`#startTime`).data("formatter");
           jeDate(`#startTime`, {
             onClose:false,
@@ -521,7 +647,7 @@ SPDX-License-Identifier: Apache-2.0 -->
             },
           });
           
-          // 结束时间初始化
+          // 结束时间初始化-任务弹框
           const endTimeFormatter = $(`#endTime`).data("formatter");
           jeDate(`#endTime`, {
             onClose:false,
@@ -559,7 +685,7 @@ SPDX-License-Identifier: Apache-2.0 -->
             },
           });
           
-          // 当选择开始时间时，如果结束时间为空，则自动填充结束时间
+          // 当选择开始时间时，如果结束时间为空，则自动填充结束时间-任务弹框
           $(`#startTime`).on('change blur', function(event) {
             const startTime = $(this).val();
             const endTime = $(`#endTime`).val();
@@ -573,6 +699,7 @@ SPDX-License-Identifier: Apache-2.0 -->
             }
           });
 
+          // 当选择结束时间时，如果开始时间为空，则自动填充开始时间-任务弹框
           $(`#endTime`).on('change blur', function(event) {
             const endTime = $(this).val();
             const startTime = $(`#startTime`).val();
@@ -594,6 +721,7 @@ SPDX-License-Identifier: Apache-2.0 -->
             }
           });
 
+          // 验证表单播放周期是否为空-任务弹框
           $('.taskWeekCheckbox').change(function() {
             let checkedWeeks = [];
             $('.taskWeekCheckbox:checked').each(function() {
@@ -607,7 +735,7 @@ SPDX-License-Identifier: Apache-2.0 -->
             }
           });
 
-          // 点击新建日程表单的提交按钮时，验证表单数据是否合法
+          // 点击新建日程表单的提交按钮时，验证表单数据是否合法-任务弹框
           $(`#addTaskForm`).on('submit', function(e) {
             e.preventDefault();
             const taskName = $(`#taskName`).val();
@@ -671,7 +799,7 @@ SPDX-License-Identifier: Apache-2.0 -->
             }
           });
 
-          // 重复次数开关
+          // 重复次数开关-任务弹框
           $('#repeatNumSwitch').on('change', function() {
             if ($(this).is(':checked')) {
               $('#endTime').prop('disabled', true);
@@ -681,24 +809,23 @@ SPDX-License-Identifier: Apache-2.0 -->
             }
           });
 
-          //重复次数下拉框生成
+          //重复次数下拉框生成-任务弹框
           $('#repeatNum').empty();
           for(let i = 1; i <= 100; i++) {
             const $option = $(`<option value="${i}">${i}</option>`);
             $('#repeatNum').append($option);
           }
 
-          const taskModalEl = document.getElementById('taskModal');
-          taskModalEl.addEventListener('hidden.bs.modal', event => {
-            initAddTaskModal();
-          });
-
+          //点击音源选择按钮-打开音源弹框
           $('#selectSourceBtn').click(function() {
-            sourceModal.show();
             showMoreSettingSourceModal = false;
             $('#moreSettingBtnSourceModal').empty();
             $('#moreSettingBtnSourceModal').append($(`<i class="fa-solid fa-chevron-down"></i>`));
             $('#moreSettingContainerSourceModal').hide();
+            createSourceModalFileList();
+            createSourceModalDeviceList();
+            taskModal.hide();
+            sourceModal.show();
           });
 
           // 点击更多设置按钮时，切换显示更多设置-音源弹框
@@ -714,12 +841,59 @@ SPDX-License-Identifier: Apache-2.0 -->
             }
           });
 
+          // 点击音源弹框中的关闭按钮时，隐藏音源弹框
           $('#sourceModalConfirmBtn').click(function() {
             sourceModal.hide();
+            taskModal.show();
           });
 
+          $filesModalTable.bootstrapTable({});
+          // 点击添加文件按钮打开文件弹框
+          $('#addSourceModalFileBtn').click(function() {
+            sourceModal.hide();
+            filesModal.show();
+            loadFilesTable("");
+          });
+          // 文件弹框中点击确认按钮时，隐藏文件弹框并更新音源弹框中的文件列表
+          $('#confirmFileBtn').click(function() {
+            filesModal.hide();
+            sourceModal.show();
+            const selectedRows = $filesModalTable.bootstrapTable('getSelections');
+            if (!selectedSourceObject.files.length) {
+              selectedSourceObject.files = selectedRows;
+            } else {
+              // 将b中在a中不存在的项找到
+              const itemsToAdd = selectedRows.filter(itemB => !selectedSourceObject.files.some(itemA => itemA.key === itemB.key));
+              // 将这些项添加到a中
+              const updatedFiles = selectedSourceObject.files.concat(itemsToAdd);
+              selectedSourceObject.files = updatedFiles;
+            }
+            createSourceModalFileList();
+          });
+
+          const $inputChannelsModalTable = $('#inputChannelsModalTable');
+          $inputChannelsModalTable.bootstrapTable({
+            data: [],
+          });
+          // 点击添加设备按钮打开设备弹框
+          $('#addSourceModalDeviceBtn').click(function() {
+            sourceModal.hide();
+            inputChannelsModal.show();
+            $inputChannelsModalTable.bootstrapTable('load', []);
+          });
+          // 设备弹框中点击确认按钮时，隐藏设备弹框并更新音源弹框中的设备列表
+          $('#confirmInputChannelsBtn').click(function() {
+            inputChannelsModal.hide();
+            sourceModal.show();
+            const selectedRows = $inputChannelsModalTable.bootstrapTable('getSelections');
+            selectedSourceObject.devices = selectedRows;
+            createSourceModalDeviceList();
+          });
+
+          // 高亮日历侧边栏中的今天
           highlightTodayOnCalendar();
 
+          // 获取任务列表
           getTaskList(selectedDate);
         });
 
@@ -784,6 +958,7 @@ SPDX-License-Identifier: Apache-2.0 -->
           setTaskDateBadgeValue(taskList.length);
         }
 
+        // 创建任务列表项
         function createTaskItem(task) {
           const taskSwitch = task.enabled ? 
             `
@@ -1020,6 +1195,240 @@ SPDX-License-Identifier: Apache-2.0 -->
           $('#level3').prop('checked', false);
 
           $('#repeatNumContainer').hide();
+
+          // 音源选择弹框相关
+          showMoreSettingSourceModal = false;
+          $('#moreSettingBtnSourceModal').empty();
+          $('#moreSettingBtnSourceModal').append($(`<i class="fa-solid fa-chevron-down"></i>`));
+          $('#moreSettingContainerSourceModal').hide();
+
+          $('#backgroundSource').empty();
+          $('#backgroundSource').append($(`<option value="0" selected>无</option>`));
+          selectedSourceObject = {
+            files:[],
+            devices: [],
+          };
+          
+          $('#sourceModalFileListContainer').empty();
+          $('#sourceModalDeviceListContainer').empty();
+        }
+      
+        // 生成音源文件列表-音源弹框
+        function createSourceModalFileList() {
+          $('#sourceModalFileListContainer').empty();
+          if (selectedSourceObject.files && selectedSourceObject.files.length) {
+            selectedSourceObject.files.forEach((file, index) => {
+              const $fileItem = $(`
+                <li class="list-group-item sourceModalListItem">
+                  <div>
+                    <span>${file.fileName}</span>
+                  </div>
+                  <div>
+                    <span
+                      title="复制"
+                      style="margin-right: 10px; color: #20afbf; cursor: pointer;"
+                      onclick="copyFileForSourceModal('${file.key}')"
+                    >
+                      <i class="fa-solid fa-copy"></i>
+                    </span>
+                    <span
+                      title="移除"
+                      style="color: #20afbf; cursor: pointer;"
+                      onclick="removeFileForSourceModal('${file.key}', '${index}')"
+                    >
+                      <i class="fa-solid fa-trash"></i>
+                    </span>
+                  </div>
+                </li>
+              `);
+              $('#sourceModalFileListContainer').append($fileItem);
+            });
+          }
+          updateBackgroundSourceOptions();
+        }
+
+        // 音源文件列表中复制文件-音源弹框
+        function copyFileForSourceModal(key) {
+          const targetFile = selectedSourceObject.files.find(file => String(file.key) === key);
+          const targetIndex = selectedSourceObject.files.findIndex(file => String(file.key) === key);
+          if (targetIndex !== -1) {
+            selectedSourceObject.files.splice(targetIndex, 0, targetFile);
+            createSourceModalFileList();
+          }
+        }
+
+        // 音源文件列表中移除文件-音源弹框
+        function removeFileForSourceModal(key, index) {
+          selectedSourceObject.files.splice(index, 1);
+          createSourceModalFileList();
+        }
+
+        // 生成音源设备列表-音源弹框
+        function createSourceModalDeviceList() {
+          $('#sourceModalDeviceListContainer').empty();
+          if (selectedSourceObject.devices && selectedSourceObject.devices.length) {
+            selectedSourceObject.devices.forEach((device, index) => {
+              const $deviceItem = $(`
+                <li class="list-group-item sourceModalListItem">
+                  <div>
+                    <img 
+                      src="/images/icon_channel.png" 
+                      style="height: 16px; margin-top: -3px; margin-right: 5px;"
+                    />
+                    <span>${device.name}</span>
+                  </div>
+                  <div>
+                    <span
+                      title="移除"
+                      style="color: #20afbf; cursor: pointer;"
+                      onclick="removeDeviceForSourceModal('${device.key}', '${index}')"
+                    >
+                      <i class="fa-solid fa-trash"></i>
+                    </span>
+                  </div>
+                </li>
+              `);
+              $('#sourceModalDeviceListContainer').append($deviceItem);
+            });
+          }
+          updateBackgroundSourceOptions();
+        }
+
+        // 音源设备列表中移除设备-音源弹框
+        function removeDeviceForSourceModal(key, index) {
+          selectedSourceObject.devices.splice(index, 1);
+          createSourceModalDeviceList();
+        }
+
+        // 更新音源选择弹框中背景音下拉框的选项-音源弹框
+        function updateBackgroundSourceOptions() {
+          $('#backgroundSource').empty();
+          $('#backgroundSource').append($(`<option value="0">无</option>`));
+          if (selectedSourceObject.files.length) {
+            $('#backgroundSource').append($(`<option value="file">文件</option>`));
+          }
+          if (selectedSourceObject.devices.length) {
+            selectedSourceObject.devices.forEach(device => {
+              $('#backgroundSource').append($(`<option value="${device.id}">${device.name}</option>`));
+            });
+          }
+        }
+
+        // 音源设备表格设备名称-设备弹框
+        function inputChannelNameTableFormatter(value, row, index) {
+          return `<div>
+                    <img src="/images/icon_channel.png" style="width: 16px; margin-bottom: 3px;"/>
+                    <span data-key="${row.key}" data-devicename="${row.deviceName}">${value}</span>
+                  </div>`;
+        }
+
+        let breadCrumbFolderList = [], //当前选中文件夹列表-文件弹框
+            currentFolderKey = ""; //当前文件夹key-文件弹框
+
+        // 初始化加载文件列表-文件弹框
+        function loadFilesTable(folder) {
+          // $filesModalTable.bootstrapTable('uncheckAll');
+          $filesModalTable.bootstrapTable('load', []);
+          if (!folder) {
+            breadCrumbFolderList = [];
+            breadCrumbFolderList.push({fileName: "文件列表", key: ""});
+            currentFolderKey = "";
+            generateBreadCrumb(breadCrumbFolderList);
+          }
+
+          fetch(`${protocol}//${hostname}:9102/resourceList`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ path: folder, comID: comID })
+          })
+            .then(response => {
+              if (!response.ok) {
+                  throw new Error("Network response was not ok");
+              }
+              return response.json(); // 直接将流转换为JSON对象
+            }).then(data => {
+              $filesModalTable.bootstrapTable('load', data || []);
+              if(selectedSourceObject.files && selectedSourceObject.files.length) {
+                const selectKeys = selectedSourceObject.files.map(file => file.key);
+                $filesModalTable.bootstrapTable('checkBy', {field: 'key', values: selectKeys});
+              }
+            }).catch(error => {
+              console.error('Error:', error);
+            });
+        }
+
+        // 禁用文件夹勾选框-文件弹框
+        function fileNameTableStateFormatter(value, row, index) {
+          if (row.isDir) {
+            return {
+              disabled: true
+            }
+          }
+          return value
+        }
+        
+        // 文件名称-文件弹框
+        function fileNameTableFormatter(value, row, index) {
+          if (row.isDir) {
+            return `<div style="cursor: pointer">
+                      <img src="/images/icon_folder.png" style="width: 16px; margin-bottom: 3px;"/>
+                      <span data-key="${row.key}" data-filename="${row.fileName}" onclick="onClickFolder(event)">${value}</span>
+                    </div>`;
+          } else {
+            return `<div>
+                      <img src="/images/icon_mp3.png" style="width: 16px; margin-bottom: 3px;"/>
+                      <span>${value}</span>
+                    </div>`;
+          }
+        }
+
+        //生成面包屑导航-文件弹框
+        function generateBreadCrumb(folderList) {
+          //监听breadCrumbFolderList变化，更新面包屑导航
+          const breadcrumbNavigator = $("#breadcrumbNavigator");
+          breadcrumbNavigator.empty();
+          folderList.forEach((folder, index) => {
+            let activeClass = "";
+            if (index === folderList.length - 1) {
+              activeClass = "active";
+            }
+            const li = $(`
+              <li 
+                class="breadcrumb-item ${activeClass}" 
+                data-key="${folder.key}" 
+                data-filename="${folder.fileName}" 
+                onclick="onClickBreadcrumbItem(event)"
+              >
+                ${folder.fileName}
+              </li>
+            `);
+            breadcrumbNavigator.append(li);
+          });
+        }
+
+        //点击breadCrumb-文件弹框
+        function onClickBreadcrumbItem(e) {
+          console.log(e.target);
+          const key = e.target.dataset.key;
+          currentFolderKey = key;
+          //删除后面的所有文件夹
+          const rowIndex = breadCrumbFolderList.findIndex(item => item.key === key);
+          breadCrumbFolderList.splice(rowIndex + 1, breadCrumbFolderList.length - rowIndex);
+
+          generateBreadCrumb(breadCrumbFolderList);
+          loadFilesTable(key);
+        }
+
+        //点击表格中文件夹-文件弹框
+        function onClickFolder(e) {
+          const key = e.target.dataset.key;
+          const fileName = e.target.dataset.filename;
+          currentFolderKey = key;
+          breadCrumbFolderList.push({fileName: fileName, key: key});
+          generateBreadCrumb(breadCrumbFolderList);
+          loadFilesTable(key);
         }
       </script>
     </body>
