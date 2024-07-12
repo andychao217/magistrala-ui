@@ -16,7 +16,7 @@ SPDX-License-Identifier: Apache-2.0 -->
             <li class="nav-item mb-2 mx-2">
                 {{ $navbarActive := "homepage" }}
                 <a href="{{ printf "%s/" pathPrefix }}" id="index" class="nav-link sidebar-link {{ if eq .NavbarActive $navbarActive }}active{{ end }}">
-                    <img src="/images/icon_organization_home_white.svg" style="height: 18px; margin-top: -3px; margin-right: 5px;">
+                    <img src="/images/icon_organization_home_white.svg" class="channel-icon" style="height: 18px;">
                     <span>首页</span>
                 </a>
             </li>
@@ -72,7 +72,7 @@ SPDX-License-Identifier: Apache-2.0 -->
                 id="domain-collapse-toggle"
                 style="margin-right: 20px;"
             >
-                <img src="/images/icon_mechanism.svg" style="height: 18px; margin-top: -3px; margin-right: 5px;">
+                <img src="/images/icon_mechanism.svg" class="channel-icon" style="height: 18px;">
                 <span 
                     id="domainName" 
                     class="truncate-text-sidebar"
@@ -106,7 +106,7 @@ SPDX-License-Identifier: Apache-2.0 -->
                     <li class="nav-item mb-2 mx-2">
                         {{ $navbarActive = "domain" }}
                         <a class="nav-link {{ if eq .NavbarActive $navbarActive }}active{{ end }}" id="domain" href="{{ printf "%s/domains/%s" pathPrefix .Session.Domain.ID }}">
-                            <img src="/images/icon_mechanism_active.svg" style="height: 18px; margin-top: -3px; margin-right: 5px;">
+                            <img src="/images/icon_mechanism_active.svg" class="channel-icon" style="height: 18px;">
                             <span>机构</span>
                         </a>
                     </li>
@@ -171,7 +171,7 @@ SPDX-License-Identifier: Apache-2.0 -->
                         disabled-item
                     {{ end }} {{ if eq .NavbarActive $navbarActive }}active{{ end }}"
                 >
-                    <img src="/images/icon_equipment.svg" style="height: 18px; margin-top: -3px; margin-right: 5px;">
+                    <img src="/images/icon_equipment.svg" class="channel-icon" style="height: 18px;">
                     <span>设备</span>
                 </a>
             </li>
@@ -184,7 +184,7 @@ SPDX-License-Identifier: Apache-2.0 -->
                         disabled-item
                     {{ end }} {{ if eq .NavbarActive $navbarActive }}active{{ end }}"
                 >
-                    <img src="/images/icon_organization_area_white.svg" style="height: 18px; margin-top: -3px; margin-right: 5px;">
+                    <img src="/images/icon_organization_area_white.svg" class="channel-icon" style="height: 18px;">
                     <span>分区</span>
                 </a>
             </li>
@@ -195,7 +195,7 @@ SPDX-License-Identifier: Apache-2.0 -->
                     id="file"
                     class="nav-link sidebar-link {{ if eq .NavbarActive $navbarActive }}active{{ end }}"
                 >
-                    <img src="/images/icon_file.svg" style="height: 18px; margin-top: -3px; margin-right: 5px;">
+                    <img src="/images/icon_file.svg" class="channel-icon" style="height: 18px;">
                     <span>资源</span>
                 </a>
             </li>
@@ -206,7 +206,7 @@ SPDX-License-Identifier: Apache-2.0 -->
                     id="task"
                     class="nav-link sidebar-link {{ if eq .NavbarActive $navbarActive }}active{{ end }}"
                 >
-                    <img src="/images/icon_calendar.svg" style="height: 18px; margin-top: -3px; margin-right: 5px;">
+                    <img src="/images/icon_calendar.svg" class="channel-icon" style="height: 18px;">
                     <span>日程</span>
                 </a>
             </li>

@@ -1261,3 +1261,21 @@ table > thead > tr > th {
     overflow-y: auto;
     border: thin solid whitesmoke;
 }
+.channel-icon {
+    height: 16px; 
+    margin-top: -3px; 
+    margin-right: 5px;
+}
+.playAreaBox {
+    background: #eee; 
+    height: 135px; 
+    border-radius: 5px; 
+    padding: 5px;
+}
+
+ul.gj-list img[src="/images/icon_organization_area.svg"],
+ul.gj-list img[src="/images/icon_channel.png"] {
+    width: 17px; /* 设置宽度 */
+    height: 17px; /* 设置高度 */
+    margin-top: -3px; /* 设置上边距 */
+}

@@ -128,6 +128,27 @@ SPDX-License-Identifier: Apache-2.0 -->
                               </div>
                             </div>
                             <div class="mb-3 row">
+                              <label for="playArea" class="col-sm-2 col-form-label">播放区域</label>
+                              <div class="col-sm-10">
+                                <div class="playAreaBox">
+                                  <div class="row g-1" style="margin-bottom: 5px;">
+                                    <div class="d-grid col-sm-6">
+                                      <button type="button" class="btn btn-light" style="color: dodgerblue;" id="playAreasAddBtn">
+                                        <i class="fa-solid fa-plus"></i> 添加
+                                      </button>
+                                    </div>
+                                    <div class="d-grid col-sm-6">
+                                      <button type="button" class="btn btn-light" style="color: dimgray;" id="playAreasDetailBtn">
+                                        <i class="fa-solid fa-ellipsis"></i> 详情
+                                      </button>
+                                    </div>
+                                  </div>
+                                  <div class="row row-cols-6 g-1" id="playAreaListsContainer"></div>
+                                </div>
+                                <div id="playAreaError" class="text-danger" style="margin-top: 10px;"></div>
+                              </div>
+                            </div>
+                            <div class="mb-3 row">
                               <div class="col-sm-12" style="text-align: center;">
                                 <div id="moreSettingBtnTaskModal" class="moreSettingBtn">
                                   <i class="fa-solid fa-chevron-down"></i>
@@ -207,6 +228,66 @@ SPDX-License-Identifier: Apache-2.0 -->
                           </div>
                       </div>
                     </form>
+                  </div>
+                </div>
+              </div>
+
+              <!-- 播放区域详情弹框 -->
+              <div 
+                class="modal fade" 
+                id="playAreasAddModal" 
+                tabindex="-1" 
+                role="dialog" 
+                aria-labelledby="playAreasAddModalLabel" 
+                aria-hidden="true"
+                data-bs-backdrop="static" 
+                data-bs-keyboard="false"  
+              >
+                <div class="modal-dialog" role="document">
+                  <div class="modal-content" style="width: 570px;">
+                    <div class="modal-header">
+                      <h1 class="modal-title" id="playAreasAddModal">播放区域</h1>
+                      <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" onclick="closePlayAreasAddModal();"></button>
+                    </div>
+                    <div class="modal-body">
+                      <div class="mb-3" style="max-height: 400px; overflow-y: auto;">
+                        <div id="playAreaTree"></div>
+                      </div>
+                      <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" onclick="closePlayAreasAddModal();">取消</button>
+                        <button type="button" class="btn body-button" id="confirmPlayAreasAddModalBtn">确定</button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- 播放区域详情弹框 -->
+              <div 
+                class="modal fade" 
+                id="playAreasDetailModal" 
+                tabindex="-1" 
+                role="dialog" 
+                aria-labelledby="playAreasDetailModalLabel" 
+                aria-hidden="true"
+                data-bs-backdrop="static" 
+                data-bs-keyboard="false"  
+              >
+                <div class="modal-dialog" role="document">
+                  <div class="modal-content" style="width: 570px;">
+                    <div class="modal-header">
+                      <h1 class="modal-title" id="playAreasDetailModal">播放区域</h1>
+                      <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" onclick="taskModal.show();"></button>
+                    </div>
+                    <div class="modal-body">
+                      <div class="mb-3" style="max-height: 400px; overflow-y: auto;">
+                        <div class="row row-cols-4 g-3" id="playAreasDetailListContainer"></div>
+                      </div>
+                      <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" onclick="taskModal.show();">取消</button>
+                        <button type="button" class="btn body-button" id="confirmPlayAreasDetailModalBtn">确定</button>
+                      </div>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -480,7 +561,9 @@ SPDX-License-Identifier: Apache-2.0 -->
               syncTaskModal = new bootstrap.Modal(document.getElementById("syncTaskModal")), // 同步任务弹框
               sourceModal = new bootstrap.Modal(document.getElementById("sourceModal")), // 音源弹框
               filesModal = new bootstrap.Modal(document.getElementById("filesModal")), // 文件弹框
-              inputChannelsModal = new bootstrap.Modal(document.getElementById("inputChannelsModal")); // 输入通道弹框
+              inputChannelsModal = new bootstrap.Modal(document.getElementById("inputChannelsModal")), // 输入通道弹框
+              playAreasAddModal = new bootstrap.Modal(document.getElementById("playAreasAddModal")), // 新增播放区域弹框
+              playAreasDetailModal = new bootstrap.Modal(document.getElementById("playAreasDetailModal")); // 播放区域详情弹框
         const $filesModalTable = $('#filesModalTable');
         const protocol = window.location.protocol,
               hostname = window.location.hostname,
@@ -508,11 +591,21 @@ SPDX-License-Identifier: Apache-2.0 -->
             showMoreSettingTaskModal = false, 
             showMoreSettingSourceModal = false,
             selectedFilesModal = [],
+            selectedPlayAreas = [],
+            playAreaTreeData = [],
+            $playAreaTree = null,
+            addPlayAreaModalIsOpenedFromDetailModal = false,
             selectedSourceObject = {
               files:[],
               devices: [],
             },
-            taskModalType = 'add';
+            taskModalType = 'add',
+            taskDateBadgeCurrentValue = 0,
+            taskDateBadgeTargetValue = 0,
+            taskDateBadgeIncrement = 1,
+            allThingsList = [],
+            breadCrumbFolderList = [], //当前选中文件夹列表-文件弹框
+            currentFolderKey = ""; //当前文件夹key-文件弹框;
 
         $(function() {
           // 初始化设定页面标题为当天
@@ -560,7 +653,50 @@ SPDX-License-Identifier: Apache-2.0 -->
           // 点击新建日程按钮时，显示新建日程模态框
           $('#addTaskBtn').click(function() {
             initAddTaskModal();
+            createPlayAreasList();
             taskModal.show();
+          });
+
+          // 点击添加播放区域按钮-任务弹框
+          $('#playAreasAddBtn').click(function() {
+            addPlayAreaModalIsOpenedFromDetailModal = false;
+            taskModal.hide();
+            playAreasAddModal.show();
+
+            $playAreaTree.uncheckAll();
+            $playAreaTree.collapseAll();  
+
+            const node = $playAreaTree.getNodeByText('全部');
+            $playAreaTree.expand(node);
+            if(selectedPlayAreas.length > 0) {
+              const selectedPlayAreasId = selectedPlayAreas.map(playArea => playArea.id);
+              selectedPlayAreasId.forEach(playAreaId => {
+                const node = $playAreaTree.getNodeById(playAreaId);
+                $playAreaTree.check(node);
+              });
+            }
+          });
+
+          // 点击添加播放区域弹框确定按钮-添加播放区域弹框
+          $('#confirmPlayAreasAddModalBtn').click(function() {
+            const checkedIds = $playAreaTree.getCheckedNodes().filter(id => !id.includes("group_"));
+            const checkedPlayAreas = allThingsList.filter(thing => checkedIds.includes(thing.id));
+            selectedPlayAreas = checkedPlayAreas.map(thing => thing);
+            closePlayAreasAddModal();
+          });
+
+          // 点击播放区域详情按钮-任务弹框
+          $('#playAreasDetailBtn').click(function() {
+            taskModal.hide();
+            playAreasDetailModal.show();
+            createPlayAreasDetailList();
+          });
+
+           // 点击播放区域详情弹框确定按钮-播放区域详情弹框
+           $('#confirmPlayAreasDetailModalBtn').click(function() {
+            playAreasDetailModal.hide();
+            taskModal.show();
+            createPlayAreasList();
           });
 
           // 播放周期选择框变化时，改变周数选择框是否显示-任务弹框
@@ -744,7 +880,7 @@ SPDX-License-Identifier: Apache-2.0 -->
             const endTime = $(`#endTime`).val();
             const playbackCycleValue = $(`#playbackCycle`).val();
 
-            if(!taskName || !sourceName || !playbackCycleValue || !startTime || !endTime ) {
+            if(!taskName || !sourceName || !playbackCycleValue || !startTime || !endTime || !selectedPlayAreas || !selectedPlayAreas.length) {
               if (!taskName) {
                 $(`#taskNameError`).html(requiredMsg);
                 $('#taskNameError').show();
@@ -764,6 +900,10 @@ SPDX-License-Identifier: Apache-2.0 -->
               if (!endTime) {
                 $(`#endTimeError`).html(requiredMsg);
                 $('#endTimeError').show();
+              }
+              if (!selectedPlayAreas || !selectedPlayAreas.length) {
+                $('#playAreaError').html(requiredMsg);
+                $('#playAreaError').show();
               }
               return;
             } else {
@@ -881,6 +1021,7 @@ SPDX-License-Identifier: Apache-2.0 -->
             inputChannelsModal.show();
             $inputChannelsModalTable.bootstrapTable('load', []);
           });
+          
           // 设备弹框中点击确认按钮时，隐藏设备弹框并更新音源弹框中的设备列表
           $('#confirmInputChannelsBtn').click(function() {
             inputChannelsModal.hide();
@@ -895,6 +1036,8 @@ SPDX-License-Identifier: Apache-2.0 -->
 
           // 获取任务列表
           getTaskList(selectedDate);
+
+          getPlayAreaTree();
         });
 
         // 点击全部/当天按钮时，切换任务列表
@@ -1134,10 +1277,6 @@ SPDX-License-Identifier: Apache-2.0 -->
             showAlert('success', '删除成功！');
           });
         }
-        
-        let taskDateBadgeCurrentValue = 0,
-            taskDateBadgeTargetValue = 0,
-            taskDateBadgeIncrement = 1;
 
         // 更新任务数量
         function updateDisplay() {
@@ -1145,6 +1284,203 @@ SPDX-License-Identifier: Apache-2.0 -->
             taskDateBadgeCurrentValue += taskDateBadgeIncrement;
             $(`#taskDateBadge`).html(taskDateBadgeCurrentValue);
             requestAnimationFrame(updateDisplay);
+          }
+        }
+
+        // 生成播放区域列表-任务弹框
+        function createPlayAreasList(){
+          $('#playAreaListsContainer').empty();
+          if (selectedPlayAreas.length > 0) {
+            const limit = selectedPlayAreas.length >= 4 ? 4 : selectedPlayAreas.length;
+            for (let i = 0; i < limit; i++) {
+              const $playArea = $(`
+                <div class="d-grid col-6" title="${selectedPlayAreas[i].metadata.aliase}">
+                  <button disabled type="button" class="btn btn-light truncate-text" style="color: #20afbf;">
+                    <img src="/images/icon_channel.png" class="channel-icon" />
+                    <span>${selectedPlayAreas[i].metadata.aliase}</span>
+                  </button>
+                </div>
+              `);
+              $('#playAreaListsContainer').append($playArea);
+            }
+          }
+        }
+
+        // 关闭添加播放区域弹框-添加播放区域弹框
+        function closePlayAreasAddModal() {
+          playAreasAddModal.hide();
+          if (addPlayAreaModalIsOpenedFromDetailModal) {
+            playAreasDetailModal.show();
+            createPlayAreasDetailList();
+          } else {
+            taskModal.show();
+          }
+          createPlayAreasList();
+        }
+
+        // 获取组装播放区域设备树-播放区域弹框
+        function getPlayAreaTree() {
+          playAreaTreeData = [{
+            id: "root",
+            key: 'group_root',
+            text: "全部",
+            flagUrl: null,
+            children: [
+              {
+                id: "unassigned",
+                key: "group_unassigned",
+                text: "未分区",
+                flagUrl: "/images/icon_organization_area.svg",
+                metadata: {
+                  "thing_ids": []
+                },
+                children: []
+              },
+            ]
+          }];
+          allThingsList = [];
+          // 获取所有设备
+          fetch(`/ui/things/thingsInJSON?page=1&limit=1000&onlineStatus=2`, {
+            method: "GET",
+          })
+            .then(response => {
+              if (!response.ok) {
+                throw new Error('Network response was not ok');
+              }
+              return response.json(); // 直接将流转换为JSON对象
+            })
+            .then(json => {
+              const data = json.data;
+              const thingsData = JSON.parse(data).thingsData;
+              const things = thingsData.things;
+              if (things.length) {
+                allThingsList = things.map((thing) => thing);
+              }
+              // 获取所有分区
+              fetch(`/ui/channels/channelsInJSON?page=1&limit=1000`, {
+                method: "GET",
+              })
+                .then((response) => {
+                    if (!response.ok) {
+                        throw new Error("Network response was not ok");
+                    }
+                    return response.json(); // 直接将流转换为JSON对象
+                })
+                .then((json) => {
+                    const data = json.data;
+                    const channelsData = JSON.parse(data).channelsData;
+                    const channels = channelsData.groups;
+                    if (channels.length) {
+                      channels.forEach((channel) => {
+                        const channelNode = {
+                          id: channel.id,
+                          text: channel.name,
+                          name: channel.name,
+                          key: `group_${channel.id}`,
+                          flagUrl: "/images/icon_organization_area.svg",
+                          metadata: channel.metadata,
+                          children: channel.metadata && channel.metadata.thing_ids && channel.metadata.thing_ids.length ? 
+                            channel.metadata.thing_ids.map((thingId) => {
+                              const targetThing = allThingsList.find((thing) => thingId === thing.id);
+                              if (targetThing && targetThing.id) {
+                                return {
+                                  id: targetThing.id,
+                                  text: targetThing.metadata.aliase,
+                                  name: targetThing.name,
+                                  key: `${targetThing.id}`,
+                                  flagUrl: "/images/icon_channel.png",
+                                  metadata: targetThing.metadata,
+                                }
+                              } else {
+                                return {}
+                              }
+                            }).filter((thing)=>thing.id) : [],
+                        };
+                        playAreaTreeData[0].children.push(channelNode);
+                      });
+                      const allConnectedThingsID = [...new Set(channels.flatMap(channel => channel.metadata.thing_ids))]; // 获取所有已连接分区的设备ID
+                      const allUnconnectedThings = allThingsList.filter((thing) => !allConnectedThingsID.includes(thing.id)); // 获取所有未连接分区的设备
+                      // 未分区
+                      allUnconnectedThings.forEach((thing) => {
+                        const thingNode = {
+                          id: thing.id,
+                          text: thing.metadata.aliase,
+                          name: thing.name,
+                          key: `${thing.id}`,
+                          flagUrl: "/images/icon_channel.png",
+                          metadata: thing.metadata,
+                        };
+                        playAreaTreeData[0].children[0].children.push(thingNode);
+                      });
+                    } else {
+                      //没有分区时，所有设备都属于未分区
+                      allThingsList.forEach((thing) => {
+                        const thingNode = {
+                          id: thing.id,
+                          text: thing.metadata.aliase,
+                          name: thing.name,
+                          key: `${thing.id}`,
+                          flagUrl: "/images/icon_channel.png",
+                          metadata: thing.metadata,
+                        };
+                        playAreaTreeData[0].children[0].children.push(thingNode);
+                      });
+                    }
+                    $playAreaTree = $('#playAreaTree').tree({
+                      primaryKey: 'key',
+                      uiLibrary: 'bootstrap5',
+                      dataSource: playAreaTreeData,
+                      checkboxes: true,
+                      imageUrlField: 'flagUrl'
+                    });
+                });
+            })
+            .catch(error => {});
+        }
+
+        // 打开添加播放区域弹框-播放区域详情弹框
+        function openPlayAreasAddModalFromDetailModal() {
+          addPlayAreaModalIsOpenedFromDetailModal = true;
+          playAreasDetailModal.hide();
+          playAreasAddModal.show();
+        }
+
+        // 生成播放区域详情列表-播放区域详情弹框
+        function createPlayAreasDetailList() {
+          $('#playAreasDetailListContainer').empty();
+          const $addPlayAreaCard = $(`
+            <div class="d-grid col-4" title="添加" style="cursor: pointer;">
+              <div class="channel-thing-card card" style="height:95px;" onclick="openPlayAreasAddModalFromDetailModal()">
+                <div class="card-body" style="text-align: center;">
+                  <i class="fa-solid fa-plus" style="font-size: 32px; color: #20afbf;"></i>
+                  <div class="truncate-text" style="font-size: 14px; width: 100%;">
+                    添加
+                  </div>
+                </div>
+              </div>
+            </div>
+          `);
+
+          if (selectedPlayAreas.length > 0) {
+            const limit = selectedPlayAreas.length;
+            for (let i = 0; i < limit; i++) {
+              const $playAreaDetailItem = $(`
+                <div class="d-grid col-4" title="${selectedPlayAreas[i].metadata.aliase}">
+                  <div class="channel-thing-card card" style="height:95px;">
+                    <div class="card-body" style="text-align: center;">
+                      <img src="/images/icon_channel.png" style="margin-bottom: 5px; width: 32px;" />
+                      <div class="truncate-text" style="font-size: 14px; width: 100%;">
+                        ${selectedPlayAreas[i].metadata.aliase}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              `);
+              $('#playAreasDetailListContainer').append($playAreaDetailItem);
+            }
+            $('#playAreasDetailListContainer').append($addPlayAreaCard);
+          } else {
+            $('#playAreasDetailListContainer').append($addPlayAreaCard);
           }
         }
 
@@ -1179,6 +1515,9 @@ SPDX-License-Identifier: Apache-2.0 -->
 
           $('#weekCheckboxGroup').hide();
           $('.taskWeekCheckbox').prop('checked', false);
+
+          selectedPlayAreas = [];
+          $('#playAreaError').hide();
 
           showMoreSettingTaskModal = false;
           $('#moreSettingBtnTaskModal').empty();
@@ -1271,10 +1610,7 @@ SPDX-License-Identifier: Apache-2.0 -->
               const $deviceItem = $(`
                 <li class="list-group-item sourceModalListItem">
                   <div>
-                    <img 
-                      src="/images/icon_channel.png" 
-                      style="height: 16px; margin-top: -3px; margin-right: 5px;"
-                    />
+                    <img src="/images/icon_channel.png" class="channel-icon" />
                     <span>${device.name}</span>
                   </div>
                   <div>
@@ -1322,12 +1658,8 @@ SPDX-License-Identifier: Apache-2.0 -->
                   </div>`;
         }
 
-        let breadCrumbFolderList = [], //当前选中文件夹列表-文件弹框
-            currentFolderKey = ""; //当前文件夹key-文件弹框
-
         // 初始化加载文件列表-文件弹框
         function loadFilesTable(folder) {
-          // $filesModalTable.bootstrapTable('uncheckAll');
           $filesModalTable.bootstrapTable('load', []);
           if (!folder) {
             breadCrumbFolderList = [];
