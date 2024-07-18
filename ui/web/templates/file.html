@@ -535,7 +535,7 @@ SPDX-License-Identifier: Apache-2.0 -->
             fileInput.files = selectedFiles.files;
         });
         uploadButton.addEventListener('click', () => {
-          if (fileInput.files.length > 0) {
+          if (fileInput.files.length) {
             handleUpload(fileInput.files);
           } else {
             showAlert('info', '请选择文件');

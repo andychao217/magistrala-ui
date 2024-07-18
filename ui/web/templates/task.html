@@ -7,9 +7,7 @@ SPDX-License-Identifier: Apache-2.0 -->
     <head>
       <title>日程</title>
       {{ template "header" }}
-      <style>
-        
-      </style>
+      <style></style>
     </head>
     <body>
       {{ template "navbar" . }}
@@ -29,7 +27,7 @@ SPDX-License-Identifier: Apache-2.0 -->
                 data-bs-keyboard="false"  
               >
                 <div class="modal-dialog" role="document">
-                  <div class="modal-content" style="width: 570px;">
+                  <div class="modal-content" style="width: 580px;">
                     <div class="modal-header">
                       <h1 class="modal-title" id="taskModalLabel">
                         <i class="fa-solid fa-plus"></i> 新建日程
@@ -244,7 +242,7 @@ SPDX-License-Identifier: Apache-2.0 -->
                 data-bs-keyboard="false"  
               >
                 <div class="modal-dialog" role="document">
-                  <div class="modal-content" style="width: 570px;">
+                  <div class="modal-content" style="width: 580px;">
                     <div class="modal-header">
                       <h1 class="modal-title" id="playAreasAddModal">播放区域</h1>
                       <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" onclick="closePlayAreasAddModal();"></button>
@@ -274,7 +272,7 @@ SPDX-License-Identifier: Apache-2.0 -->
                 data-bs-keyboard="false"  
               >
                 <div class="modal-dialog" role="document">
-                  <div class="modal-content" style="width: 570px;">
+                  <div class="modal-content" style="width: 580px;">
                     <div class="modal-header">
                       <h1 class="modal-title" id="playAreasDetailModal">播放区域</h1>
                       <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" onclick="taskModal.show();"></button>
@@ -304,7 +302,7 @@ SPDX-License-Identifier: Apache-2.0 -->
                 data-bs-keyboard="false"  
               >
                 <div class="modal-dialog" role="document">
-                  <div class="modal-content" style="width: 570px;">
+                  <div class="modal-content" style="width: 580px;">
                     <div class="modal-header">
                       <h1 class="modal-title" id="sourceModalLabel">音源列表</h1>
                       <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" onclick="taskModal.show();"></button>
@@ -343,7 +341,7 @@ SPDX-License-Identifier: Apache-2.0 -->
                           </div>
                         </div>
                         <div class="mb-3" id="moreSettingContainerSourceModal" style="display: none;">
-                          <div class="mb-3">
+                          <div class="mb-3" style="display: none;">
                             <div 
                               style="
                                 border-radius: 5px;
@@ -371,7 +369,7 @@ SPDX-License-Identifier: Apache-2.0 -->
                             <label for="backgroundSource" class="col-sm-2 col-form-label">背景音</label>
                             <div class="col-sm-10">
                               <select class="form-control form-select" placeholder="请选择背景音" name="backgroundSource" id="backgroundSource">
-                                <option value="0" selected>无</option>
+                                <option value="0">无</option>
                               </select>
                             </div>
                           </div>
@@ -398,7 +396,7 @@ SPDX-License-Identifier: Apache-2.0 -->
                 data-bs-keyboard="false"  
               >
                 <div class="modal-dialog" role="document">
-                  <div class="modal-content" style="width: 570px;">
+                  <div class="modal-content" style="width: 580px;">
                     <div class="modal-header">
                       <h1 class="modal-title" id="filesModal">音频文件</h1>
                       <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" onclick="sourceModal.show();"></button>
@@ -445,7 +443,7 @@ SPDX-License-Identifier: Apache-2.0 -->
                 data-bs-keyboard="false"  
               >
                 <div class="modal-dialog" role="document">
-                  <div class="modal-content" style="width: 570px;">
+                  <div class="modal-content" style="width: 580px;">
                     <div class="modal-header">
                       <h1 class="modal-title" id="inputChannelsModal">输入通道</h1>
                       <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" onclick="sourceModal.show();"></button>
@@ -547,7 +545,7 @@ SPDX-License-Identifier: Apache-2.0 -->
                 </div>
 
                 <!-- 任务日历侧边栏 -->
-                <div class="tackCalendar"></div>
+                <div class="taskCalendar"></div>
               </div>
             </div>
           </div>
@@ -564,10 +562,13 @@ SPDX-License-Identifier: Apache-2.0 -->
               inputChannelsModal = new bootstrap.Modal(document.getElementById("inputChannelsModal")), // 输入通道弹框
               playAreasAddModal = new bootstrap.Modal(document.getElementById("playAreasAddModal")), // 新增播放区域弹框
               playAreasDetailModal = new bootstrap.Modal(document.getElementById("playAreasDetailModal")); // 播放区域详情弹框
-        const $filesModalTable = $('#filesModalTable');
+        const $filesModalTable = $('#filesModalTable'); // 文件弹框表格
         const protocol = window.location.protocol,
               hostname = window.location.hostname,
-              domainID = sessionStorage.getItem("domainID");
+              port =  sessionStorage.getItem("socketBridgePort") || "63001";
+              domainID = sessionStorage.getItem("domainID"), // 当前机构ID
+              userInfoStr = sessionStorage.getItem("userInfo");
+              userInfo = JSON.parse(userInfoStr);
         let comID = "";
         if (domainID) {
           fetch(`/ui/domains/${domainID}/domainInJSON`, {
@@ -583,67 +584,36 @@ SPDX-License-Identifier: Apache-2.0 -->
               const data = json.data;
               const domainData = JSON.parse(data).domainData;
               comID = domainData.metadata["comID"];
+              loadTaskLists();
             })
         }
 
-        let isListAllTask = false, 
-            selectedDate = moment().format('YYYY-MM-DD'),
-            showMoreSettingTaskModal = false, 
-            showMoreSettingSourceModal = false,
-            selectedFilesModal = [],
-            selectedPlayAreas = [],
-            playAreaTreeData = [],
-            $playAreaTree = null,
-            addPlayAreaModalIsOpenedFromDetailModal = false,
+        let isListAllTask = false, // 是否显示全部任务
+            selectedDate = moment().format('YYYY-MM-DD'), // 当前选中日期
+            showMoreSettingTaskModal = false,  // 是否显示更多设置弹框-任务弹框
+            showMoreSettingSourceModal = false, // 是否显示更多设置弹框-音源弹框
+            selectedFilesModal = [], // 文件弹框选中文件列表
+            selectedPlayAreas = [], // 播放区域弹框选中播放区域列表
+            playAreaTreeData = [], // 播放区域树数据
+            $playAreaTree = null, // 播放区域树
+            addPlayAreaModalIsOpenedFromDetailModal = false, // 是否从播放区域详情弹框打开添加播放区域弹框
             selectedSourceObject = {
-              files:[],
-              devices: [],
+              files:[], // 音源弹框选中音源对象
+              devices: [], // 音源弹框选中设备对象
             },
-            taskModalType = 'add',
-            taskDateBadgeCurrentValue = 0,
-            taskDateBadgeTargetValue = 0,
-            taskDateBadgeIncrement = 1,
-            allThingsList = [],
+            taskModalType = 'add', // 任务弹框类型-add:新建日程, edit:编辑日程
+            taskDateBadgeCurrentValue = 0, // 任务页面左上角日期徽章当前值
+            taskDateBadgeTargetValue = 0, // 任务页面左上角日期徽章目标值
+            taskDateBadgeIncrement = 1, // 任务页面左上角日期徽章增长步长
+            allThingsList = [], // 所有设备列表
             breadCrumbFolderList = [], //当前选中文件夹列表-文件弹框
-            currentFolderKey = ""; //当前文件夹key-文件弹框;
+            currentFolderKey = "", //当前文件夹key-文件弹框;
+            originalTaskList = [], //原始任务列表
+            allTaskList = []; //全部任务列表
 
         $(function() {
           // 初始化设定页面标题为当天
           $('#taskDateTitle').html(selectedDate);
-
-          // 初始化日历
-          $('.tackCalendar').pignoseCalendar({
-            lang: 'ch',
-            scheduleOptions: {
-              colors: {
-                offer: '#67c23a',
-                ad: '#f56c6c'
-              }
-            },
-            schedules: [{
-              name: 'offer',
-              date: '2024-07-01'
-            }, {
-              name: 'ad',
-              date: '2024-07-03'
-            }, {
-              name: 'offer',
-              date: '2024-07-05',
-            }],
-            page: function(info, context) {
-              setTimeout(() => {
-                highlightTodayOnCalendar();
-              }, 0);
-            },
-            select: function(dates, context) {
-              isListAllTask = false;
-              selectedDate = moment(dates[0]).format('YYYY-MM-DD');
-              $('#taskDateTitle').html(selectedDate);
-              $('#allTasksToggleBtn').html(`<i class="fa-solid fa-list"></i> 全部`);
-              highlightTodayOnCalendar();
-              getTaskList(selectedDate);
-            }
-          });
 
           // 点击全部/当天按钮时，切换任务列表
           $('#allTasksToggleBtn').click(function() {
@@ -668,7 +638,7 @@ SPDX-License-Identifier: Apache-2.0 -->
 
             const node = $playAreaTree.getNodeByText('全部');
             $playAreaTree.expand(node);
-            if(selectedPlayAreas.length > 0) {
+            if(selectedPlayAreas) {
               const selectedPlayAreasId = selectedPlayAreas.map(playArea => playArea.id);
               selectedPlayAreasId.forEach(playAreaId => {
                 const node = $playAreaTree.getNodeById(playAreaId);
@@ -930,12 +900,105 @@ SPDX-License-Identifier: Apache-2.0 -->
                 }
               }
               
+              let queryData = {}, successMsg = '';
               if (taskModalType === 'add') {
-                showAlert('success', '日程创建成功');
+                queryData = {};
+                successMsg= '日程创建成功';
               } else {
-                showAlert('success', '日程编辑成功');
+                const taskUUID = $('#taskModalConfirmBtn').data("uuid");
+                const task = originalTaskList.find(task => task.uuid === taskUUID);
+                queryData = {...task};
+                queryData.uuid = taskUUID;
+                successMsg= '日程编辑成功';
               }
-              taskModal.hide();
+              queryData.username = userInfo.credentials.identity;
+              // 任务名称
+              queryData.name = $('#taskName').val();
+              // 任务开始时间
+              queryData.start_date = $('#startTime').val();
+              // 播放周期
+              const playbackCycle = $('#playbackCycle').val();
+              if (playbackCycle === 'once') {
+                // 单次
+                queryData.repeat = 0;
+              } else if (playbackCycle === 'day') {
+                // 日重复
+                queryData.repeat = 1;
+              } else if (playbackCycle === 'week') {
+                // 周重复
+                queryData.repeat = 2;
+                const weekArray = [];
+                for (let i = 1; i <= 7; i++) {
+                  if ($(`#weekCheckbox${i}`).is(':checked')) {
+                    weekArray.push(i);
+                  }
+                }
+                queryData.wday = weekArray.join(',');
+              } else if (playbackCycle === 'month') {
+                // 月重复
+                queryData.repeat = 3;
+              } else if (playbackCycle === 'year') {
+                // 年重复
+                queryData.repeat = 4;
+              }
+              // 音源
+              if (selectedSourceObject && selectedSourceObject.files.length) {
+                queryData.source = 0;
+                const songsArray = selectedSourceObject.files.map(file => {
+                  return file.key.replace(comID, 'oss://resource')
+                });
+                queryData.songs = songsArray.join(',');
+              }
+              // 背景音
+              const background = $('#backgroundSource').val();
+              if (background) {
+                if (background === 'file') {
+                  queryData.background = 0;
+                }
+              }
+              // 播放范围
+              const out_channel_array = selectedPlayAreas.map((area) => {
+                const identity = area.credentials.identity;
+                if (!identity.includes("_")) {
+                  return `${identity}_1`;
+                } else {
+                  return identity
+                }
+              });
+              queryData.out_channel = out_channel_array.join(',');
+              // 结束时间
+              queryData.end_date = $('#endTime').val();
+              // 重复次数
+              queryData.cyclic_times = Number($('#repeatNum').val());
+              if ($(`#repeatNumSwitch`).is(':checked')) {
+                const startTime = moment(queryData.start_date);
+                const endTime = moment(queryData.end_date);
+                const durationInSeconds = endTime.diff(startTime, 'seconds');
+                queryData.duration = durationInSeconds;
+              }
+              // 随机播放
+              queryData.song_play_type = 0;
+              if ($(`#randomPlay`).is(':checked')) {
+                queryData.song_play_type = 1;
+              }
+              // 音量微调
+              queryData.master_volume = Number($('#volumeControl').val());
+               // 优先级
+              for (let i = 1; i <= 3; i++) {
+                if ($(`#level${i}`).is(':checked')) {
+                  queryData.priority = i;
+                }
+              }
+              // 回调函数
+              const callback = ()=>{
+                showAlert('success', successMsg);
+                taskModal.hide();
+              }
+              if (taskModalType === 'add') {
+                httpAddTask(queryData, callback);
+              } else {
+                httpUpdateTask(queryData, callback);
+              }
             }
           });
 
@@ -985,6 +1048,22 @@ SPDX-License-Identifier: Apache-2.0 -->
           $('#sourceModalConfirmBtn').click(function() {
             sourceModal.hide();
             taskModal.show();
+            if (selectedSourceObject) {
+              if (
+                selectedSourceObject.files && selectedSourceObject.files.length &&
+                selectedSourceObject.devices && selectedSourceObject.devices.length
+              ) {
+                $('#sourceName').val('文件 + 采播');
+              } else {
+                if (selectedSourceObject.files && selectedSourceObject.files.length) {
+                  $('#sourceName').val('文件');
+                }
+                if (selectedSourceObject.devices && selectedSourceObject.devices.length) {
+                  $('#sourceName').val('采播');
+                }
+              }
+              
+            }
           });
 
           $filesModalTable.bootstrapTable({});
@@ -994,6 +1073,7 @@ SPDX-License-Identifier: Apache-2.0 -->
             filesModal.show();
             loadFilesTable("");
           });
+
           // 文件弹框中点击确认按钮时，隐藏文件弹框并更新音源弹框中的文件列表
           $('#confirmFileBtn').click(function() {
             filesModal.hide();
@@ -1034,11 +1114,182 @@ SPDX-License-Identifier: Apache-2.0 -->
           // 高亮日历侧边栏中的今天
           highlightTodayOnCalendar();
 
-          // 获取任务列表
-          getTaskList(selectedDate);
-
+          // 获取播放区域列表树
           getPlayAreaTree();
         });
+
+        // 获取任务列表
+        function loadTaskLists() {
+          allTaskList = [];
+          originalTaskList = [];
+          let schedules = [];
+          fetch(`${protocol}//${hostname}:${port}/taskList`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ path: '', comID: comID })
+          })
+            .then(response => {
+              if (!response.ok) {
+                  throw new Error("Network response was not ok");
+              }
+              return response.json(); // 直接将流转换为JSON对象
+            }).then(data => {
+              if (data && data.length) {
+                originalTaskList = data.map((task) => task);
+                allTaskList = data.map((task) => {
+                  const taskObj = { ...task };
+                  taskObj.repeat = task.repeat || 0;
+                  taskObj.repeatName = handleTaskRepeatType(task);
+                  taskObj.taskStartDate = task.start_date ? task.start_date.split(' ')[0] : '';
+                  taskObj.taskEndDate = task.end_date ? task.end_date.split(' ')[0] : '2099-12-31';
+                  taskObj.datesArray = handleTaskDatesArray(taskObj);
+                  return taskObj;
+                });
+                
+                const runningTasksDates = allTaskList.filter(task => task.running).map(task => task.datesArray);
+                const runningTasksDatesFlatArray = runningTasksDates.flat(Infinity); // 将嵌套数组扁平化
+                const runningTasksDatesUniqueArray = [...new Set(runningTasksDatesFlatArray)]; // 去除重复元素
+                const runningTasksScheules = runningTasksDatesUniqueArray.map(date => {
+                  return {
+                    name: 'ad',
+                    date: date, 
+                  }
+                });
+
+                const stoppedTasksDates = allTaskList.filter(task => !task.running && 
+                  !runningTasksDates.includes(task.startDate)).map(task => task.datesArray);
+                const stoppedTasksDatesFlatArray = stoppedTasksDates.flat(Infinity); // 将嵌套数组扁平化
+                const stoppedTasksDatesUniqueArray = [...new Set(stoppedTasksDatesFlatArray)]; // 去除重复元素
+                const stoppedTasksScheules = stoppedTasksDatesUniqueArray.map(date => {
+                  return {
+                    name: 'offer',
+                    date: date, 
+                  }
+                });
+
+                schedules = [...stoppedTasksScheules, ...runningTasksScheules];
+                initTaskCalender(schedules);
+                createTaskList(selectedDate);
+              }
+            }).catch(error => {
+              console.error('Error:', error);
+              initTaskCalender(schedules);
+              createTaskList(selectedDate);
+            });
+        }
+
+        // 初始化日历
+        function initTaskCalender(schedules) {
+          // 初始化日历
+          $('.taskCalendar').pignoseCalendar({
+            lang: 'ch',
+            date: moment(selectedDate),
+            scheduleOptions: {
+              colors: {
+                offer: '#67c23a',
+                ad: '#f56c6c'
+              }
+            },
+            schedules: schedules,
+            page: function(info, context) {
+              setTimeout(() => {
+                highlightTodayOnCalendar();
+              }, 0);
+            },
+            select: function(dates, context) {
+              if (dates[0]) {
+                isListAllTask = false;
+                selectedDate = moment(dates[0]).format('YYYY-MM-DD');
+                $('#taskDateTitle').html(selectedDate);
+                $('#allTasksToggleBtn').html(`<i class="fa-solid fa-list"></i> 全部`);
+                createTaskList(selectedDate);
+              } else {
+                isListAllTask = true;
+                $('#taskDateTitle').html("全部日程");
+                $('#allTasksToggleBtn').html(`<i class="fa-solid fa-list"></i> 当天`);
+                createTaskList();
+              }
+              highlightTodayOnCalendar();
+            },
+            click: function(event, context) {
+              var $this = $(this);
+              event.preventDefault();
+              var $element = context.element;
+              var $calendar = context.calendar;
+              console.log(context);
+            }
+          });
+        }
+
+        // 生成任务reapeatName
+        function handleTaskRepeatType(task) {
+          if (task.repeat === 0) {
+            return '单次';
+          } else if (task.repeat === 1) {
+            return '日重复';
+          } else if (task.repeat === 2) {
+            return '周重复';
+          } else if (task.repeat === 3) {
+            return '月重复';
+          } else if (task.repeat === 4) {
+            return '年重复';
+          }
+          return '单次';
+        }
+
+        // 生成符合任务的dateArray
+        function handleTaskDatesArray(task) {
+          const startDate = new Date(task.taskStartDate);
+          const endDate = new Date(task.taskEndDate);
+          const datesArray = [];
+
+          if (task.repeat === 0) {
+            datesArray.push(task.taskStartDate);
+          } else if (task.repeat === 1) {
+            // 日重复
+            for (let d = new Date(startDate); d <= endDate; d.setDate(d.getDate() + 1)) {
+              datesArray.push(d.toISOString().split('T')[0]);
+            }
+          } else if (task.repeat === 2) {
+            // 周重复
+            for (let d = new Date(startDate); d <= endDate; d.setDate(d.getDate() + 1)) {
+              if (task.wday.split(',').includes(String(d.getDay()))) {
+                datesArray.push(d.toISOString().split('T')[0]);
+              }
+            }
+          } else if (task.repeat === 3) {
+            // 月重复
+            let currentDate = new Date(startDate.getFullYear(), startDate.getMonth(), startDate.getDate());
+            while (currentDate <= endDate) {
+              const year = currentDate.getFullYear();
+              const month = String(currentDate.getMonth() + 1).padStart(2, '0');
+              const day = String(startDate.getDate()).padStart(2, '0');
+              const formattedDate = `${year}-${month}-${day}`;
+              const checkDate = new Date(formattedDate);
+              if (checkDate.getDate() === startDate.getDate()) {
+                datesArray.push(formattedDate);
+              }
+              currentDate.setMonth(currentDate.getMonth() + 1);
+            }
+          } else if (task.repeat === 4) {
+            // 年重复
+            let currentDate = new Date(startDate.getFullYear(), startDate.getMonth(), startDate.getDate());
+            while (currentDate <= endDate) {
+              const year = currentDate.getFullYear();
+              const month = String(startDate.getMonth() + 1).padStart(2, '0');
+              const day = String(startDate.getDate()).padStart(2, '0');
+              const formattedDate = `${year}-${month}-${day}`;
+              const checkDate = new Date(formattedDate);
+              if (checkDate.getDate() === startDate.getDate() && checkDate <= endDate) {
+                datesArray.push(formattedDate);
+              }
+              currentDate.setFullYear(currentDate.getFullYear() + 1);
+            }
+          }
+          return datesArray;
+        }
 
         // 点击全部/当天按钮时，切换任务列表
         function onClickAllTasksToggleBtn() {
@@ -1046,12 +1297,17 @@ SPDX-License-Identifier: Apache-2.0 -->
             isListAllTask = false;
             $('#taskDateTitle').html(selectedDate);
             $('#allTasksToggleBtn').html(`<i class="fa-solid fa-list"></i> 全部`);
-            getTaskList(selectedDate);
+            $('.taskCalendar').pignoseCalendar('set', selectedDate);
+            createTaskList(selectedDate);
           } else {
             isListAllTask = true;
             $('#taskDateTitle').html("全部日程");
             $('#allTasksToggleBtn').html(`<i class="fa-solid fa-list"></i> 当天`);
-            getTaskList();
+            $('.pignose-calendar-unit-date').each(function() {
+              $(this).removeClass('pignose-calendar-unit-active');
+              $(this).removeClass('pignose-calendar-unit-first-active');
+            });
+            createTaskList();
           }
         }
 
@@ -1081,19 +1337,14 @@ SPDX-License-Identifier: Apache-2.0 -->
         }
 
         // 创建任务列表项
-        function getTaskList(date) {
+        function createTaskList(date) {
           $(`#taskContentList`).empty();
           setTaskDateBadgeValue(0);
-;          const rawData = [
-            {id: 1, time: '16:27', name: '任务1', status: 'stopped', repeatType: '日重复', enabled: true},
-            {id: 2, time: '17:27', name: '任务2', status: 'running', repeatType: '日重复', enabled: true},
-            {id: 3, time: '18:27', name: '任务3', status: 'stopped', repeatType: '周重复', enabled: false},
-          ];
           let taskList = [];
           if (date) {
-            taskList = [rawData[0], rawData[1]];
+            taskList = allTaskList.filter((task)=>task.datesArray.includes(date));
           } else {
-            taskList = [rawData[0], rawData[1], rawData[2]];
+            taskList = allTaskList.map((task) => task);
           }
           taskList.forEach(function(task) {
             createTaskItem(task);
@@ -1103,23 +1354,23 @@ SPDX-License-Identifier: Apache-2.0 -->
 
         // 创建任务列表项
         function createTaskItem(task) {
-          const taskSwitch = task.enabled ? 
+          const taskSwitch = !task.manual_only ? 
             `
               <label class="switch">
-                <input class="switchCheckbox" type="checkbox" checked  data-id="${task.id}" onchange="enableOrDisableTask(this)" />
+                <input class="switchCheckbox" type="checkbox" checked  data-uuid="${task.uuid}" onchange="enableOrDisableTask(this)" />
                 <span class="switchSlider"></span>
               </label>
             ` : 
             `
               <label class="switch">
-                <input class="switchCheckbox" type="checkbox"  data-id="${task.id}" onchange="enableOrDisableTask(this)" />
+                <input class="switchCheckbox" type="checkbox"  data-uuid="${task.uuid}" onchange="enableOrDisableTask(this)" />
                 <span class="switchSlider"></span>
               </label>
             `;
-          const playBtnBox = task.status === 'running' ? 
-            `<i class="fa-solid fa-circle-stop" style="color: #f56c6c;" data-id="${task.id}" onclick="stopTask(this)"></i>` : 
-            `<i class="fa-solid fa-circle-play" style="color: #2ec6cc;" data-id="${task.id}" onclick="playTask(this)"></i>`;
-          const btnGroup = task.status === 'running' ? 
+          const playBtnBox = task.running ? 
+            `<i class="fa-solid fa-circle-stop" style="color: #f56c6c;" data-uuid="${task.uuid}" onclick="stopTask(this)"></i>` : 
+            `<i class="fa-solid fa-circle-play" style="color: #2ec6cc;" data-uuid="${task.uuid}" onclick="playTask(this)"></i>`;
+          const btnGroup = task.running ? 
             `
               <div class="runningTaskIndicatorContainer">
                 <image src="/images/icon_runningTask.gif" />
@@ -1131,23 +1382,23 @@ SPDX-License-Identifier: Apache-2.0 -->
                   <i class="fa-solid fa-ellipsis"></i>
                 </button>
                 <ul class="dropdown-menu">
-                  <li>
-                    <a class="dropdown-item" data-id="${task.name}" data-taskname="${task.name}" onclick="syncTask(this)">
+                  <li style="display: none;">
+                    <a class="dropdown-item" data-uuid="${task.uuid}" onclick="syncTask(this)">
                       <i class="fa-solid fa-rotate" style="width: 16px;"></i> 同步
                     </a>
                   </li>
                   <li>
-                    <a class="dropdown-item" data-id="${task.id}" data-taskname="${task.name}" onclick="editTask(this)">
+                    <a class="dropdown-item" data-uuid="${task.uuid}" onclick="editTask(this)">
                       <i class="fa-solid fa-pencil-alt" style="width: 16px;"></i> 编辑
                     </a>
                   </li>
                   <li>
-                    <a class="dropdown-item" data-id="${task.id}" data-taskname="${task.name}" onclick="copyTask(this)">
+                    <a class="dropdown-item" data-uuid="${task.uuid}" onclick="copyTask(this)">
                       <i class="fa-solid fa-copy" style="width: 16px;"></i> 复制
                     </a>
                   </li>
                   <li>
-                    <a class="dropdown-item" data-id="${task.id}" data-taskname="${task.name}" onclick="deleteTask(this)">
+                    <a class="dropdown-item" data-uuid="${task.uuid}" onclick="deleteTask(this)">
                       <i class="fa-solid fa-trash-can" style="width: 16px;"></i> 删除
                     </a>
                   </li>
@@ -1155,15 +1406,15 @@ SPDX-License-Identifier: Apache-2.0 -->
               </div>
             `;
           const $taskItem = $(`
-            <div class="taskItem ${task.status === 'running' ? 'activeTask' : ''}" style="border-color: ${task.status === 'running' ? '#ff8a00' : '#00c6ff'}">
+            <div class="taskItem ${task.running ? 'activeTask' : ''}">
               <div style="display: flex; align-items: center;">
-                <div class="taskTime">${task.time}</div>
+                <div class="taskTime">${task.start_date ? task.start_date.split(" ")[1].match(/^\d{2}:\d{2}/)[0] : ''}</div>
                 <div class="line" style="margin: 0px 50px;"></div>
                 <div>
-                  <div title="1" class="textEllipsis">${task.name}</div>
-                  <div title="${task.repeatType}" class="textEllipsis" style="height: 27px; color: rgb(174, 186, 194); font-size: 12px;">
+                  <div title="${task.name}" class="textEllipsis taskName">${task.name}</div>
+                  <div title="${task.repeatName}" class="textEllipsis" style="height: 27px; color: rgb(174, 186, 194); font-size: 12px;">
                     <i class="fa-solid fa-location-dot" style="margin-right: 3px;"></i>
-                    ${task.repeatType}
+                    ${task.repeatName}
                   </div>
                 </div>
               </div>
@@ -1184,31 +1435,86 @@ SPDX-License-Identifier: Apache-2.0 -->
           $(`#taskContentList`).append($taskItem);
         } 
 
+        // 发送HTTP请求，添加日程任务
+        function httpAddTask(query, callback) {
+          fetch(`${protocol}//${hostname}:${port}/addTask`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ path: '', comID: comID, task: query })
+          })
+            .then(response => {
+              if (!response.ok) {
+                  throw new Error("Network response was not ok");
+              }
+              return response.json(); // 直接将流转换为JSON对象
+            }).then(data => {
+              loadTaskLists();
+              if (callback && typeof callback === 'function') {
+                callback();
+              }
+            }).catch(error => {
+              console.error('Error:', error);
+            });
+        }
+
+        // 发送HTTP请求，更新日程任务
+        function httpUpdateTask(query, callback) {
+          fetch(`${protocol}//${hostname}:${port}/updateTask`, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ path: '', comID: comID, task: query })
+          })
+            .then(response => {
+              if (!response.ok) {
+                  throw new Error("Network response was not ok");
+              }
+              return response.json(); // 直接将流转换为JSON对象
+            }).then(data => {
+              loadTaskLists();
+              if (callback && typeof callback === 'function') {
+                callback();
+              }
+            }).catch(error => {
+              console.error('Error:', error);
+            });
+        }
+
         // 启用、禁用任务
         function enableOrDisableTask(element) {
-          const taskId = $(element).data("id");
-          if ($(this).is(':checked')) {
-            showAlert('success', '启用成功！');
+          const taskUUID = $(element).data("uuid");
+          const task = originalTaskList.find(task => task.uuid === taskUUID);
+          let queryData = {...task}
+          if ($(element).is(':checked')) {
+            queryData.manual_only = false;
           } else {
-            showAlert('success', '禁用成功！');
+            queryData.manual_only = true;
           }
+          httpUpdateTask(queryData);
         }
 
         // 播放任务
         function playTask(element) {
-          const taskId = $(element).data("id");
-          showAlert('success', '播放成功！');
+          const taskUUID = $(element).data("uuid");
+          const task = originalTaskList.find(task => task.uuid === taskUUID);
+          let queryData = {...task, running: true};
+          httpUpdateTask(queryData);
         }
 
         // 停止任务
         function stopTask(element) {
-          const taskId = $(element).data("id");
-          showAlert('success', '停止成功！');
+          const taskUUID = $(element).data("uuid");
+          const task = originalTaskList.find(task => task.uuid === taskUUID);
+          let queryData = {...task, running: false};
+          httpUpdateTask(queryData);
         }
 
         // 同步任务
         function syncTask(element) {
-          const taskId = $(element).data("id");
+          const taskUUID = $(element).data("uuid");
           syncTaskModal.show();
 
           const $syncTaskTable = $('#syncTaskTable');
@@ -1254,27 +1560,164 @@ SPDX-License-Identifier: Apache-2.0 -->
 
         // 复制任务
         function copyTask(element) {
-          const taskId = $(element).data("id");
-          showAlert('success', '复制成功！');
+          const taskUUID = $(element).data("uuid");
+          const task = originalTaskList.find(task => task.uuid === taskUUID);
+          fetch(`${protocol}//${hostname}:${port}/copyTask`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ path: '', comID: comID, task: task })
+          })
+            .then(response => {
+              if (!response.ok) {
+                  throw new Error("Network response was not ok");
+              }
+              return response.json(); // 直接将流转换为JSON对象
+            }).then(data => {
+              showAlert('success', '复制成功！');
+              loadTaskLists();
+            }).catch(error => {
+              console.error('Error:', error);
+            });
         }
 
         // 编辑任务
         function editTask(element) {
-          const taskName = $(element).data("taskname");
+          initAddTaskModal();
+
+          const taskUUID = $(element).data("uuid");
+          const task = originalTaskList.find(task => task.uuid === taskUUID);
+          $('#taskModalConfirmBtn').attr('data-uuid', taskUUID);
           $('#taskModalLabel').html('编辑日程');
           taskModalType = 'edit';
-          $('#endTime').attr("disabled", true);
+
+          // 任务名称
+          $('#taskName').val(task.name);
+          // 任务开始时间
+          $('#startTime').val(task.start_date);
+          // 任务结束时间
+          $('#endTime').val(task.end_date || task.start_date);
+
+          // 播放周期
+          if (task.repeat === 0) {
+            // 单次
+            $('#playbackCycle').val('once');
+          } else if (task.repeat === 1) {
+            // 日重复
+            $('#playbackCycle').val('day');
+          } else if (task.repeat === 2) {
+            // 周重复
+            $('#playbackCycle').val('week');
+            $('#weekCheckboxGroup').show();
+            const weekArray = task.wday ? task.wday.split(',') : [];
+            for (let i = 1; i <= 7; i++) {
+              $(`#weekCheckbox${i}`).prop('checked', false);
+              if (weekArray.includes(String(i))) {
+                $(`#weekCheckbox${i}`).prop('checked', true);
+              }
+            }
+          } else if (task.repeat === 3) {
+            // 月重复
+            $('#playbackCycle').val('month');
+          } else if (task.repeat === 4) {
+            // 年重复
+            $('#playbackCycle').val('year');
+          } else {
+            // 单次
+            $('#playbackCycle').val('once');
+          }
+
+          // 将字符串按逗号分割成数组
+          const ossArray = task.songs ? task.songs.split(',') : [];
+          // 处理每个元素，生成需要的对象格式
+          const resultArray = ossArray.map(item => {
+            // 去掉开头的 "oss://"
+            const key = item.replace("oss://", "");
+            // 提取文件名
+            const fileName = key.substring(key.lastIndexOf('/') + 1);
+            return { fileName, key: `${comID}/${key}` };
+          });
+          //播放文件
+          selectedSourceObject.files = resultArray.map(item => item);
+          if (
+            selectedSourceObject.files && selectedSourceObject.files.length && 
+            selectedSourceObject.devices && selectedSourceObject.devices.length
+          ) {
+            $('#sourceName').val('文件 + 采播');
+          } else {
+            if (selectedSourceObject.files && selectedSourceObject.files.length) {
+              $('#sourceName').val('文件');
+              $('#backgroundSource').append($(`<option value="file">文件</option>`));
+              $('#backgroundSource').val('file');
+            } else if (selectedSourceObject.devices && selectedSourceObject.devices.length) {
+              $('#sourceName').val('采播');
+            }
+          }
+
+          // 播放范围
+          const out_channel_array = task.out_channel ? task.out_channel.split(',').map((channel)=>{
+            if(channel.includes('_1')){
+              return channel.split('_')[0];
+            } else {
+              return channel;
+            }
+          }) : [];
+          selectedPlayAreas = allThingsList.filter(thing => out_channel_array.includes(thing.credentials.identity));
+          createPlayAreasList();
+          
+          // 重复次数
+          $('#endTime').prop('disabled', true);
           $('#repeatNumContainer').show();
-          $('#repeatNum').val('1');
-          $('#repeatNumSwitch').prop("checked", true );
+          $('#repeatNum').val(task.cyclic_times)
+          $('#repeatNumSwitch').prop('checked', true);
+          if (task.duration) {
+            $('#repeatNumSwitch').prop('checked', false);
+          }
+
+          // 随机播放
+          $('#randomPlay').prop('checked', false);
+          if (task.song_play_type === 1) {
+            $('#randomPlay').prop('checked', true);
+          }
+
+          // 音量微调
+          $('#volumeControl').val(task.master_volume);
+          $('#volumeLabel').html(task.master_volume);
+          
+          // 优先级
+          for (let i = 1; i <= 3; i++) {
+            $(`#level${i}`).prop('checked', false);
+            if (task.priority === i) {
+              $(`#level${i}`).prop('checked', true);
+            }
+          }
+
           taskModal.show();
         }
 
         // 删除任务
         function deleteTask(element) {
-          const taskId = $(element).data("id");
+          const taskUUID = $(element).data("uuid");
           showConfirmModal("你确定要删除所选数据吗？", () => {
-            showAlert('success', '删除成功！');
+            fetch(`${protocol}//${hostname}:${port}/deleteTask`, {
+              method: 'DELETE',
+              headers: {
+                  'Content-Type': 'application/json'
+              },
+              body: JSON.stringify({ path: '', comID: comID, uuid: taskUUID })
+            })
+              .then(response => {
+                if (!response.ok) {
+                    throw new Error("Network response was not ok");
+                }
+                return response.json(); // 直接将流转换为JSON对象
+              }).then(data => {
+                showAlert('success', '删除成功！');
+                loadTaskLists();
+              }).catch(error => {
+                console.error('Error:', error);
+              });
           });
         }
 
@@ -1290,7 +1733,7 @@ SPDX-License-Identifier: Apache-2.0 -->
         // 生成播放区域列表-任务弹框
         function createPlayAreasList(){
           $('#playAreaListsContainer').empty();
-          if (selectedPlayAreas.length > 0) {
+          if (selectedPlayAreas.length) {
             const limit = selectedPlayAreas.length >= 4 ? 4 : selectedPlayAreas.length;
             for (let i = 0; i < limit; i++) {
               const $playArea = $(`
@@ -1398,8 +1841,18 @@ SPDX-License-Identifier: Apache-2.0 -->
                         };
                         playAreaTreeData[0].children.push(channelNode);
                       });
-                      const allConnectedThingsID = [...new Set(channels.flatMap(channel => channel.metadata.thing_ids))]; // 获取所有已连接分区的设备ID
-                      const allUnconnectedThings = allThingsList.filter((thing) => !allConnectedThingsID.includes(thing.id)); // 获取所有未连接分区的设备
+                      // 获取所有已连接分区的设备ID
+                      const allConnectedThingsID = [...new Set(channels.flatMap(channel => {
+                        // 检查 channel.metadata 是否存在以及 channel.metadata.thing_ids 是否存在
+                        if (channel.metadata && Array.isArray(channel.metadata.thing_ids)) {
+                          return channel.metadata.thing_ids;
+                        } else {
+                          // 如果不存在，返回一个空数组，不会影响 flatMap 的结果
+                          return [];
+                        }
+                      }))];
+                      // 获取所有未连接分区的设备
+                      const allUnconnectedThings = allThingsList.filter((thing) => !allConnectedThingsID.includes(thing.id)); 
                       // 未分区
                       allUnconnectedThings.forEach((thing) => {
                         const thingNode = {
@@ -1431,7 +1884,11 @@ SPDX-License-Identifier: Apache-2.0 -->
                       uiLibrary: 'bootstrap5',
                       dataSource: playAreaTreeData,
                       checkboxes: true,
-                      imageUrlField: 'flagUrl'
+                      imageUrlField: 'flagUrl',
+                      icons: {
+                        expand: '<i class="fa-solid fa-angle-down"></i>',
+                        collapse: '<i class="fa-solid fa-angle-up"></i>'
+                      }
                     });
                 });
             })
@@ -1450,7 +1907,7 @@ SPDX-License-Identifier: Apache-2.0 -->
           $('#playAreasDetailListContainer').empty();
           const $addPlayAreaCard = $(`
             <div class="d-grid col-4" title="添加" style="cursor: pointer;">
-              <div class="channel-thing-card card" style="height:95px;" onclick="openPlayAreasAddModalFromDetailModal()">
+              <div class="hoverCard card" style="height:95px;" onclick="openPlayAreasAddModalFromDetailModal()">
                 <div class="card-body" style="text-align: center;">
                   <i class="fa-solid fa-plus" style="font-size: 32px; color: #20afbf;"></i>
                   <div class="truncate-text" style="font-size: 14px; width: 100%;">
@@ -1461,12 +1918,12 @@ SPDX-License-Identifier: Apache-2.0 -->
             </div>
           `);
 
-          if (selectedPlayAreas.length > 0) {
+          if (selectedPlayAreas.length) {
             const limit = selectedPlayAreas.length;
             for (let i = 0; i < limit; i++) {
               const $playAreaDetailItem = $(`
                 <div class="d-grid col-4" title="${selectedPlayAreas[i].metadata.aliase}">
-                  <div class="channel-thing-card card" style="height:95px;">
+                  <div class="hoverCard card" style="height:95px;">
                     <div class="card-body" style="text-align: center;">
                       <img src="/images/icon_channel.png" style="margin-bottom: 5px; width: 32px;" />
                       <div class="truncate-text" style="font-size: 14px; width: 100%;">
@@ -1543,6 +2000,7 @@ SPDX-License-Identifier: Apache-2.0 -->
 
           $('#backgroundSource').empty();
           $('#backgroundSource').append($(`<option value="0" selected>无</option>`));
+          $('#backgroundSource').val('0');
           selectedSourceObject = {
             files:[],
             devices: [],
@@ -1550,6 +2008,8 @@ SPDX-License-Identifier: Apache-2.0 -->
           
           $('#sourceModalFileListContainer').empty();
           $('#sourceModalDeviceListContainer').empty();
+
+          $('#taskModalConfirmBtn').attr('data-uuid', "");
         }
       
         // 生成音源文件列表-音源弹框
@@ -1742,7 +2202,6 @@ SPDX-License-Identifier: Apache-2.0 -->
 
         //点击breadCrumb-文件弹框
         function onClickBreadcrumbItem(e) {
-          console.log(e.target);
           const key = e.target.dataset.key;
           currentFolderKey = key;
           //删除后面的所有文件夹

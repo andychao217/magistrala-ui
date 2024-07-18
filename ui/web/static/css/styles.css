@@ -115,6 +115,10 @@ html {
     padding: 0.5em 0.5em 0.5em 1em;
     border-radius: var(--border-radius);
 }
+.sidebar .nav-item:hover {
+    border-radius: 5px;
+    background: var(--bs-teal);
+}
 
 .topbar {
     background: #e1f2f6;
@@ -807,16 +811,16 @@ button.edit-btn {
 }
 
 .card,
-.channel-thing-card {
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+.hoverCard {
+    /* box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); */
     transition: box-shadow 0.3s ease;
 }
 
-.channel-thing-card {
+.hoverCard {
     height: 150px;
 }
 
-.channel-thing-card:hover {
+.hoverCard:hover {
     box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
     cursor: pointer;
 } 
@@ -1058,14 +1062,13 @@ table > thead > tr > th {
 .pignose-calendar-week .pignose-calendar-week-fri {
     color: dimgray;
 }
-.tackCalendar {
+.taskCalendar {
     width: 450px;    
     /* -webkit-box-shadow: 0 3px 8px rgba(0, 0, 0, .25);
     box-shadow: 0 3px 8px rgba(0, 0, 0, .25); */
     background-color: #edf8fb;
 }
 .taskContent {
-    padding: 15px;
     width: 100%;
 }
 .taskContentHeaderBar {
@@ -1073,6 +1076,9 @@ table > thead > tr > th {
     justify-content: space-between; 
     width: 100%;
     height: 38px;
+    margin-top: 15px;
+    padding-left: 15px;
+    padding-right: 15px;
 }
 #taskDateTitle {
     color: #20afbf;
@@ -1092,10 +1098,10 @@ table > thead > tr > th {
 }
 /*taskList-task page*/
 .taskContentList {
-    margin-top: 10px;
     width: 100%;
     height: calc(100vh - 250px);
     overflow-y: auto;
+    padding: 15px;
 }
 .taskContentList .taskItem:not(:last-child) {
     margin-bottom: 15px;
@@ -1116,8 +1122,12 @@ table > thead > tr > th {
     -ms-flex-align: center;
     align-items: center;
     line-height: 27px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    /* box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1); */
     transition: all 0.3s ease;
+}
+.taskContentList .taskItem.activeTask {
+    border-color:#ff8a00;
+    background-color: lightgoldenrodyellow;
 }
 
 .taskContentList .taskItem::before {
@@ -1154,11 +1164,15 @@ table > thead > tr > th {
 }
 
 .taskContentList .taskItem:hover {
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.25);
+    box-shadow: 0 3px 6px rgba(0, 0, 0, 0.25);
 }
 .taskContentList .taskItem .taskTime {
     font-size: 19px;
     font-weight: 600;
+    width: 50px;
+}
+.taskContentList .taskItem .taskName {
+    max-width: 200px;
 }
 .taskContentList .taskItem .line {
     width: 1px;
@@ -1273,9 +1287,27 @@ table > thead > tr > th {
     padding: 5px;
 }
 
+#playAreaTree {
+    border: thin solid whitesmoke;
+    border-radius: 5px
+}
+
 ul.gj-list img[src="/images/icon_organization_area.svg"],
 ul.gj-list img[src="/images/icon_channel.png"] {
     width: 17px; /* 设置宽度 */
     height: 17px; /* 设置高度 */
     margin-top: -3px; /* 设置上边距 */
+}
+
+.list-group-item>[data-role="wrapper"]:hover {
+    background: lightblue;
+}
+.gj-tree-bootstrap-5 ul.gj-list-bootstrap li.active {
+    color: #000;
+    background-color: lightblue;
+}
+.gj-checkbox-material-icons input[type=checkbox]:indeterminate+span:after,
+.gj-checkbox-material-icons input[type=checkbox]:checked+span:after {
+    background: #007aff;
+    color: white;
 }

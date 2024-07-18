@@ -68,7 +68,7 @@ SPDX-License-Identifier: Apache-2.0 -->
                                         {{ range $i, $t := .Things }}
                                             <div class="col-sm-3 mb-3 mb-sm-0" id="{{ $t.ID }}-thingCard">
                                               <div 
-                                                class="channel-thing-card card"  
+                                                class="hoverCard card"  
                                                 id="{{ $t.ID }}-thingCardContent"
                                                 {{ if $t.Metadata.is_online }}
                                                   {{ if eq $t.Metadata.is_online "1" }}
@@ -199,28 +199,29 @@ SPDX-License-Identifier: Apache-2.0 -->
                 $('#connect-things-btn').click(function() {
                   const channelID = "{{.ChannelID}}";
                   if (selectedThingsIds.length) {
+                    // 延迟函数，返回一个在指定毫秒后解决的 Promise
+                    function delay(ms) {
+                      return new Promise(resolve => setTimeout(resolve, ms));
+                    }
+
                     async function processRequests() {
                       try {
-                        const promises = selectedThingsIds.map(async (thingID) => {
+                        for (const thingID of selectedThingsIds) {
                           const url = `/ui/channels/connect?channelID=${channelID}&thingID=${thingID}`;
-                          const response = await fetch(url, {
-                            method: "POST",
-                          });
-                          return await response.json();
-                        });
-
-                        // 等待所有 Promise 完成（无论成功与否）
-                        const results = await Promise.allSettled(promises);
-
-                        // 处理所有的结果
-                        results.forEach((result) => {
-                          if (result.status === 'fulfilled') {
-                            console.log('成功:', result.value);
-                          } else if (result.status === 'rejected') {
-                            console.error('失败:', result.reason);
+                          const query = {thing_ids: selectedThingsIds}
+                          try {
+                            const response = await fetch(url, {
+                              method: "POST",
+                            });
+                            const result = await response.json();
+                            console.log('成功:', result);
+                          } catch (error) {
+                            console.error('失败:', error);
                           }
-                        });
-
+                          
+                          // 每个请求之间等待10毫秒
+                          await delay(100);
+                        }
                         // 所有请求都完成后，刷新页面
                         window.location.reload();
                       } catch (error) {
@@ -508,7 +509,7 @@ SPDX-License-Identifier: Apache-2.0 -->
                         device.metadata.aliase : device.name;
                       const $thingCard = $(`
                         <div class="col-sm-3 mb-3 mb-sm-0" id="${device.id}-thingCard">
-                          <div class="channel-thing-card card" id="${device.id}-thingCardContent">
+                          <div class="hoverCard card" id="${device.id}-thingCardContent">
                             <div class="card-body">
                               <div class="row">
                                 <div class="col">

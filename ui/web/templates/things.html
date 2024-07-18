@@ -286,7 +286,7 @@ SPDX-License-Identifier: Apache-2.0 -->
                                       {{ range $i, $t := .Things }}
                                         <div class="col-sm-3 mb-3 mb-sm-0" id="{{ $t.ID }}-thingCard">
                                           <div 
-                                            class="channel-thing-card card"  
+                                            class="hoverCard card"  
                                             id="{{ $t.ID }}-thingCardContent"
                                             {{ if $t.Metadata.is_online }}
                                               {{ if eq $t.Metadata.is_online "1" }}
@@ -818,7 +818,7 @@ SPDX-License-Identifier: Apache-2.0 -->
                     ``;
                 const $thingCard = $(`
                   <div class="col-sm-3 mb-3 mb-sm-0" id="${device.id}-thingCard">
-                    <div class="channel-thing-card card" id="${device.id}-thingCardContent" >
+                    <div class="hoverCard card" id="${device.id}-thingCardContent" >
                       <div class="card-body">
                         <div class="row">
                           <div class="col">
