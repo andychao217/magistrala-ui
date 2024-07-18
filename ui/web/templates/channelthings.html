@@ -592,8 +592,9 @@ SPDX-License-Identifier: Apache-2.0 -->
                     thingIdentity: identity,
                     host: address.hostname,
                     comID: channelID,
+                    controlType: 'reboot',
                   }
-                  fetch(`http://${address.hostname}:${port}/rebootDevice`, {
+                  fetch(`http://${address.hostname}:${port}/controlDevice`, {
                     method: "POST",
                     headers: {
                       "Content-Type": "application/json",
