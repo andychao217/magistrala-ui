@@ -1018,7 +1018,9 @@ SPDX-License-Identifier: Apache-2.0 -->
                   $('#dns1Error').empty();
                   $('#dns2Error').empty();
 
-                  const deviceName = e.target.dataset.device_name;
+                  // event.currentTarget：指向事件监听器所附加的元素，即 <div> 元素。
+                  // event.target：指向触发事件的实际元素，即 <span> 或 <img> 元素。
+                  const deviceName = e.currentTarget.dataset.device_name;
                   const deviceInfo = scanNewThingsList.find((item)=>item.device_name === deviceName); 
                   let ip = deviceInfo.netcfg.static_ip, 
                       gateway = deviceInfo.netcfg.static_gateway,

@@ -993,6 +993,7 @@ SPDX-License-Identifier: Apache-2.0 -->
               const callback = ()=>{
                 showAlert('success', successMsg);
                 taskModal.hide();
+                loadTaskLists();
               }
               if (taskModalType === 'add') {
                 httpAddTask(queryData, callback);
@@ -1054,15 +1055,17 @@ SPDX-License-Identifier: Apache-2.0 -->
                 selectedSourceObject.devices && selectedSourceObject.devices.length
               ) {
                 $('#sourceName').val('文件 + 采播');
+                $('#sourceNameError').hide();
               } else {
                 if (selectedSourceObject.files && selectedSourceObject.files.length) {
                   $('#sourceName').val('文件');
+                  $('#sourceNameError').hide();
                 }
                 if (selectedSourceObject.devices && selectedSourceObject.devices.length) {
                   $('#sourceName').val('采播');
+                  $('#sourceNameError').hide();
                 }
               }
-              
             }
           });
 
@@ -1435,24 +1438,86 @@ SPDX-License-Identifier: Apache-2.0 -->
           $(`#taskContentList`).append($taskItem);
         } 
 
+        // 给设备发控制指令
+        function controlDevice(task, controlType, callback) {
+          const out_channel_array = task.out_channel.split(",");
+          const out_channel_unique_array = [...new Set(out_channel_array.map((item) => item.split('_')[0]))];
+          if (controlType === 'play') {
+            //手动启动任务时，开始时间+3秒
+            const originalStarTime = moment();
+            const newStartTime = originalStarTime.add(3, 'seconds');
+            task.start_date = newStartTime.format("YYYY-MM-DD HH:mm:ss");
+          }
+          let queryData = {
+            channelID: comID,
+            host: hostname,
+            comID: comID,
+            controlType: controlType,
+            uuid: task.uuid,
+            username: userInfo.credentials.identity,
+            task: task,
+          };
+          async function processRequests() {
+            try {
+              const promises = out_channel_unique_array.map(async (thingIdentity) => {
+                const url = `${protocol}//${hostname}:${port}/controlDevice`;
+                const data = {...queryData, thingIdentity: thingIdentity};
+                const response = await fetch(url, {
+                  method: "POST",
+                  headers: {
+                    "Content-Type": "application/json",
+                  },
+                  body: JSON.stringify(data),
+                });
+                return await response.json();
+              });
+              // 等待所有 Promise 完成（无论成功与否）
+              const results = await Promise.allSettled(promises);
+              // 处理所有的结果
+              results.forEach((result) => {
+                if (result.status === 'fulfilled') {
+                  console.log('成功:', result.value);
+                } else if (result.status === 'rejected') {
+                  console.error('失败:', result.reason);
+                }
+              });
+
+              if (
+                (controlType === 'play' || controlType === 'stop') && 
+                callback && typeof callback === 'function'
+              ) {
+                callback();
+              }
+            } catch (error) {
+              // 捕获意外错误（理论上不会走到这里，因为所有的 Promise 都已经处理）
+              console.error("意外错误:", error);
+            }
+          }
+
+          // 调用异步函数
+          processRequests();
+        }
+
         // 发送HTTP请求，添加日程任务
         function httpAddTask(query, callback) {
           fetch(`${protocol}//${hostname}:${port}/addTask`, {
             method: 'POST',
             headers: {
-                'Content-Type': 'application/json'
+              'Content-Type': 'application/json'
             },
             body: JSON.stringify({ path: '', comID: comID, task: query })
           })
             .then(response => {
               if (!response.ok) {
-                  throw new Error("Network response was not ok");
+                throw new Error("Network response was not ok");
               }
               return response.json(); // 直接将流转换为JSON对象
             }).then(data => {
-              loadTaskLists();
               if (callback && typeof callback === 'function') {
                 callback();
+              }
+              if (data.task && data.task.uuid) {
+                controlDevice(data.task, 'add');
               }
             }).catch(error => {
               console.error('Error:', error);
@@ -1474,9 +1539,11 @@ SPDX-License-Identifier: Apache-2.0 -->
               }
               return response.json(); // 直接将流转换为JSON对象
             }).then(data => {
-              loadTaskLists();
               if (callback && typeof callback === 'function') {
                 callback();
+              }
+              if (data.task && data.task.uuid) {
+                controlDevice(data.task, 'edit');
               }
             }).catch(error => {
               console.error('Error:', error);
@@ -1493,23 +1560,29 @@ SPDX-License-Identifier: Apache-2.0 -->
           } else {
             queryData.manual_only = true;
           }
-          httpUpdateTask(queryData);
+          httpUpdateTask(queryData, loadTaskLists);
         }
 
         // 播放任务
         function playTask(element) {
           const taskUUID = $(element).data("uuid");
           const task = originalTaskList.find(task => task.uuid === taskUUID);
-          let queryData = {...task, running: true};
-          httpUpdateTask(queryData);
+          const callback = () => {
+            let queryData = {...task, running: true};
+            httpUpdateTask(queryData, loadTaskLists);
+          }
+          controlDevice(task, 'play', callback);
         }
 
         // 停止任务
         function stopTask(element) {
           const taskUUID = $(element).data("uuid");
           const task = originalTaskList.find(task => task.uuid === taskUUID);
-          let queryData = {...task, running: false};
-          httpUpdateTask(queryData);
+          const callback = ()=>{
+            let queryData = {...task, running: false};
+            httpUpdateTask(queryData, loadTaskLists);
+          }
+          controlDevice(task, 'stop', callback);
         }
 
         // 同步任务
@@ -1577,6 +1650,9 @@ SPDX-License-Identifier: Apache-2.0 -->
             }).then(data => {
               showAlert('success', '复制成功！');
               loadTaskLists();
+              if (data.task && data.task.uuid) {
+                controlDevice(task, 'copy');
+              }
             }).catch(error => {
               console.error('Error:', error);
             });
@@ -1715,6 +1791,9 @@ SPDX-License-Identifier: Apache-2.0 -->
               }).then(data => {
                 showAlert('success', '删除成功！');
                 loadTaskLists();
+                if (data.task && data.task.uuid) {
+                  controlDevice(task, 'delete');
+                }
               }).catch(error => {
                 console.error('Error:', error);
               });
@@ -2164,9 +2243,9 @@ SPDX-License-Identifier: Apache-2.0 -->
         // 文件名称-文件弹框
         function fileNameTableFormatter(value, row, index) {
           if (row.isDir) {
-            return `<div style="cursor: pointer">
+            return `<div style="cursor: pointer" data-key="${row.key}" data-filename="${row.fileName}" onclick="onClickFolder(event)">
                       <img src="/images/icon_folder.png" style="width: 16px; margin-bottom: 3px;"/>
-                      <span data-key="${row.key}" data-filename="${row.fileName}" onclick="onClickFolder(event)">${value}</span>
+                      <span>${value}</span>
                     </div>`;
           } else {
             return `<div>
@@ -2202,7 +2281,7 @@ SPDX-License-Identifier: Apache-2.0 -->
 
         //点击breadCrumb-文件弹框
         function onClickBreadcrumbItem(e) {
-          const key = e.target.dataset.key;
+          const key = e.currentTarget.dataset.key;
           currentFolderKey = key;
           //删除后面的所有文件夹
           const rowIndex = breadCrumbFolderList.findIndex(item => item.key === key);
@@ -2212,10 +2291,12 @@ SPDX-License-Identifier: Apache-2.0 -->
           loadFilesTable(key);
         }
 
-        //点击表格中文件夹-文件弹框
         function onClickFolder(e) {
-          const key = e.target.dataset.key;
-          const fileName = e.target.dataset.filename;
+          // Use event.currentTarget to get the element that the event listener is attached to
+          // event.currentTarget：指向事件监听器所附加的元素，即 <div> 元素。
+          // event.target：指向触发事件的实际元素，即 <span> 或 <img> 元素。
+          const key = e.currentTarget.dataset.key;
+          const fileName = e.currentTarget.dataset.filename;
           currentFolderKey = key;
           breadCrumbFolderList.push({fileName: fileName, key: key});
           generateBreadCrumb(breadCrumbFolderList);

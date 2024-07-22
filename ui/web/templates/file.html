@@ -252,9 +252,9 @@ SPDX-License-Identifier: Apache-2.0 -->
         //表格文件名称列
         function fileNameTableFormatter(value, row, index) {
           if (row.isDir) {
-            return `<div style="cursor: pointer">
+            return `<div style="cursor: pointer" data-key="${row.key}" data-filename="${row.fileName}" onclick="onClickFolder(event)">
                       <img src="/images/icon_folder.png" style="width: 16px; margin-bottom: 3px;"/>
-                      <span data-key="${row.key}" data-filename="${row.fileName}" onclick="onClickFolder(event)">${value}</span>
+                      <span>${value}</span>
                     </div>`;
           } else {
             return `<div>
@@ -290,8 +290,7 @@ SPDX-License-Identifier: Apache-2.0 -->
 
         //点击breadCrumb
         function onClickBreadcrumbItem(e) {
-          console.log(e.target);
-          const key = e.target.dataset.key;
+          const key = e.currentTarget.dataset.key;
           currentFolderKey = key;
           //删除后面的所有文件夹
           const rowIndex = breadCrumbFolderList.findIndex(item => item.key === key);
@@ -303,8 +302,11 @@ SPDX-License-Identifier: Apache-2.0 -->
 
         //点击表格中文件夹
         function onClickFolder(e) {
-          const key = e.target.dataset.key;
-          const fileName = e.target.dataset.filename;
+          // Use event.currentTarget to get the element that the event listener is attached to
+          // event.currentTarget：指向事件监听器所附加的元素，即 <div> 元素。
+          // event.target：指向触发事件的实际元素，即 <span> 或 <img> 元素。
+          const key = e.currentTarget.dataset.key;
+          const fileName = e.currentTarget.dataset.filename;
           currentFolderKey = key;
           breadCrumbFolderList.push({fileName: fileName, key: key});
           generateBreadCrumb(breadCrumbFolderList);
@@ -325,12 +327,7 @@ SPDX-License-Identifier: Apache-2.0 -->
           if (row.isDir) {
             return '';
           } else {
-            //获取文件后缀名
-            function getFileExtension(filename) {
-              return filename.split('.').pop();
-            }
             const extension = getFileExtension(row.fileName);
-
             if (extension.toLowerCase() === 'mp3' || extension.toLowerCase() === 'wav') {
               return `<button 
                         class="btn btn-link"
@@ -353,12 +350,16 @@ SPDX-License-Identifier: Apache-2.0 -->
         function filePreview(fileName, key) {
           const filePreviewModal = new bootstrap.Modal(document.getElementById("filePreviewModal"));
           filePreviewModal.show();
-
           $("#filePreviewModalTitle").html(fileName);
+          let sourceType = "audio/mpeg";
+          const extension = getFileExtension(fileName);
+          if (extension.toLowerCase() === 'wav') {
+            sourceType = "audio/wav";
+          }
           $audio = $(`
             <audio controls autoplay style="width: 500px;" id="audioPreview">
-              <source src="${protocol}//${hostname}:9102/previewFile?key=${key}" type="audio/mpeg">
-               您的浏览器不支持 audio 元素。
+              <source src="${protocol}//${hostname}:9102/previewFile?key=${key}" type="${sourceType}">
+              您的浏览器不支持 audio 元素。
             </audio>
           `);
           $("#filePreviewModalContent").append($audio);
