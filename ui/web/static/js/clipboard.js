@@ -3,8 +3,8 @@
 
 //function to copy the ID to the clipboard
 function copyToClipboard(button) {
-    var clientIDElement = button.previousElementSibling.firstChild;
-    var clientId = clientIDElement.textContent;
+    const clientIDElement = button.previousElementSibling.firstChild;
+    const clientId = clientIDElement.textContent;
 
     navigator.clipboard.writeText(clientId).then(
         function () {

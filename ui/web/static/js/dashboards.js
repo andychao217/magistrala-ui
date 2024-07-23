@@ -43,7 +43,7 @@ const cardCountElem = document.getElementById("cards-count");
 const cardTotalElem = document.getElementById("cards-total");
 let currentPage = 1;
 let limit = 30;
-var total, pageCount;
+let total, pageCount;
 
 const addCards = (pageIndex) => {
     setTimeout(() => {

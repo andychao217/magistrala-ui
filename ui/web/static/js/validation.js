@@ -69,7 +69,7 @@ function validatePassword(password, errorDiv, fieldName, event) {
     removeErrorMessage(errorDiv, fieldName);
     if (password.trim().length < minLength) {
         event.preventDefault();
-        var errorMessage = `密码长度至少为${minLength}个字符`;
+        const errorMessage = `密码长度至少为${minLength}个字符`;
         displayErrorMessage(errorMessage, errorDiv, fieldName);
         return false;
     }
@@ -92,7 +92,7 @@ function validateJSON(data, errorDiv, fieldName, event) {
 
 function validateStringArray(tags, errorDiv, fieldName, event) {
     removeErrorMessage(errorDiv, fieldName);
-    var tagsArray;
+    let tagsArray;
     try {
         if (tags.trim() !== "") {
             tagsArray = JSON.parse(tags);

@@ -304,11 +304,11 @@ SPDX-License-Identifier: Apache-2.0 -->
 		</div>
 	</div>
 	<script>
-		var editChannelButton = document.getElementById("edit-channels");
+		const editChannelButton = document.getElementById("edit-channels");
 		editChannelButton.addEventListener("click", () => {
-			var selectElement = document.getElementById("channels-select");
-			var channelsOptions = selectElement.querySelectorAll("option");
-			var channels = JSON.parse("{{ toSlice .Bootstrap.Channels }}");
+			const selectElement = document.getElementById("channels-select");
+			const channelsOptions = selectElement.querySelectorAll("option");
+			const channels = JSON.parse("{{ toSlice .Bootstrap.Channels }}");
 			channelsOptions.forEach((option) => {
 				if (channels.includes(option.value)) {
 					option.selected = true;
@@ -316,8 +316,8 @@ SPDX-License-Identifier: Apache-2.0 -->
 			});
 		})
 
-		var content = "{{ .Bootstrap.Content }}";
-		var parsedContent = JSON.parse(content);
+		const content = "{{ .Bootstrap.Content }}";
+		const parsedContent = JSON.parse(content);
 
 		// attachFormatJsonWithPrettifyListener({
 		// 	id: "content",

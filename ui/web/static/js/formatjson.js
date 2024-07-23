@@ -6,7 +6,7 @@ function syntaxHighlight(json) {
     return json.replace(
         /("(\\u[a-zA-Z0-9]{4}|\\[^u]|[^\\"])*"(\s*:)?|\b(true|false|null)\b|-?\d+(?:\.\d*)?(?:[eE][+\-]?\d+)?)/g,
         function (match) {
-            var cls = "number";
+            let cls = "number";
             if (/^"/.test(match)) {
                 if (/:$/.test(match)) {
                     cls = "key";
@@ -25,7 +25,7 @@ function syntaxHighlight(json) {
 
 function attachFormatJsonWithPrettifyListener(config) {
     document.addEventListener("DOMContentLoaded", function () {
-        var meta = JSON.parse(config.data);
+        const meta = JSON.parse(config.data);
         document.getElementById(config.id).innerHTML = syntaxHighlight(
             JSON.stringify(meta, null, 2),
         );
@@ -33,7 +33,7 @@ function attachFormatJsonWithPrettifyListener(config) {
 }
 
 function codeMirrorEditor(config) {
-    var editor = CodeMirror.fromTextArea(document.getElementById(config.textArea), {
+    const editor = CodeMirror.fromTextArea(document.getElementById(config.textArea), {
         mode: "application/json",
         matchBrackets: true,
         autoCloseBrackets: true,

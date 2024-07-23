@@ -76,9 +76,9 @@ function disconnectThingsAndChannels(thingID, channelID) {
 
 function containsLoginInUrl() {
     // 获取完整的URL
-    var url = window.location.href;
+    const url = window.location.href;
     // 或者只获取路径部分（不包含域名和查询字符串）
-    // var url = window.location.pathname;
+    // const url = window.location.pathname;
 
     // 检查URL是否包含"login"或者"register"
     if (url.indexOf("login") !== -1 || url.indexOf("register") !== -1) {

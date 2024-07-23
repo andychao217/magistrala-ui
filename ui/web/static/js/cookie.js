@@ -3,10 +3,10 @@
 
 // getCookie retrieves a cookie by name from the browser cookies.
 function getCookie(name) {
-    var nameEQ = name + "=";
-    var cookies = document.cookie.split(";");
-    for (var i = 0; i < cookies.length; i++) {
-        var cookie = cookies[i];
+    const nameEQ = name + "=";
+    const cookies = document.cookie.split(";");
+    for (let i = 0; i < cookies.length; i++) {
+        const cookie = cookies[i];
         while (cookie.charAt(0) == " ") {
             cookie = cookie.substring(1, cookie.length);
         }
@@ -18,8 +18,8 @@ function getCookie(name) {
 }
 
 function clearAllCookies() {
-    var cookies = document.cookie.split(";");
-    for (var i = 0; i < cookies.length; i++) {
+    const cookies = document.cookie.split(";");
+    for (let i = 0; i < cookies.length; i++) {
         document.cookie = cookies[i] + "=; expires=" + new Date(0).toUTCString();
     }
 }

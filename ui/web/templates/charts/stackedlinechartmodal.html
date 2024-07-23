@@ -241,7 +241,7 @@ SPDX-License-Identifier: Apache-2.0 -->
         // Create an object to store the form data
         let chartData = {};
         let formData = new FormData(form);
-        for (var pair of formData.entries()) {
+        for (const pair of formData.entries()) {
           chartData[pair[0]] = pair[1];
         }
 
@@ -255,7 +255,7 @@ SPDX-License-Identifier: Apache-2.0 -->
           return;
         }
 
-        var widgetID = "stackedLineChart-" + Date.now();
+        const widgetID = "stackedLineChart-" + Date.now();
 
         chartData["Type"] = "stackedLineChart";
         addWidget(chartData, widgetID);

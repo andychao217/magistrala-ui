@@ -1,7 +1,7 @@
 // Copyright (c) Abstract Machines
 // SPDX-License-Identifier: Apache-2.0
 const gridClass = ".grid";
-var grid = initGrid(layout);
+let grid = initGrid(layout);
 
 // Editable canvas is used to make the canvas editable allowing the user to add widgets and be able to move the
 // widgets around the canvas
@@ -208,12 +208,12 @@ const resizeObserver = new ResizeObserver((entries) => {
 
         if (widgetRightPosition < gridRightPosition - 5) {
             // Calculate the change in width and height
-            var widthChange = target.clientWidth - previousSize.width;
-            var heightChange = target.clientHeight - previousSize.height;
-            var itemContentWidth =
+            const widthChange = target.clientWidth - previousSize.width;
+            const heightChange = target.clientHeight - previousSize.height;
+            const itemContentWidth =
                 parseInt(window.getComputedStyle(contentEl).getPropertyValue("width")) +
                 widthChange;
-            var itemContentHeight =
+            const itemContentHeight =
                 parseInt(window.getComputedStyle(contentEl).getPropertyValue("height")) +
                 heightChange;
 

@@ -110,8 +110,8 @@ class TimeSeriesBarChart extends Echart {
 
     #generateScript() {
         return `
-    		var barChart = echarts.init(document.getElementById("${this.ID}"));
-			var option = {
+    		const barChart = echarts.init(document.getElementById("${this.ID}"));
+			const option = {
 				title: {
 					text: '${this.chartData.title}',
 					left: 'center',
@@ -150,7 +150,7 @@ class TimeSeriesBarChart extends Echart {
 
     		barChart.setOption(option);
     
-			var chartData = {
+			const chartData = {
 				channel: '${this.chartData.channel}',
 				publisher: '${this.chartData.thing}',
 				name: '${this.chartData.valueName}',
@@ -213,8 +213,8 @@ class DonutChart extends Echart {
 
     #generateScript() {
         return `
-    var donut = echarts.init(document.getElementById("${this.ID}"));
-    var option = {
+    const donut = echarts.init(document.getElementById("${this.ID}"));
+    const option = {
         title:{
           text:'${this.chartData.title}',
           left: 'center',
@@ -270,8 +270,8 @@ class DoubleBarChart extends Echart {
     #generateScript() {
         let seriesName = this.chartData.seriesName.split(",");
         return `
-    var doubleBarChart = echarts.init(document.getElementById("${this.ID}"));
-    var option = {
+    const doubleBarChart = echarts.init(document.getElementById("${this.ID}"));
+    const option = {
       title: {
         text: '${this.chartData.title}',
         left: 'left'
@@ -360,9 +360,9 @@ class DynamicDataChart extends Echart {
 
     #generateScript() {
         return `
-    var dynamicDataChart = echarts.init(document.getElementById("${this.ID}"));
-    var app = {};
-    var categories = (function () {
+    const dynamicDataChart = echarts.init(document.getElementById("${this.ID}"));
+    const app = {};
+    const categories = (function () {
         let now = new Date();
         let res = [];
         let len = 10;
@@ -372,7 +372,7 @@ class DynamicDataChart extends Echart {
         }
         return res;
     })();
-    var categories2 = (function () {
+    const categories2 = (function () {
         let res = [];
         let len = 10;
         while (len--) {
@@ -380,7 +380,7 @@ class DynamicDataChart extends Echart {
         }
         return res;
     })();
-    var data = (function () {
+    const data = (function () {
         
         let res = [];
         let len = 10;
@@ -389,7 +389,7 @@ class DynamicDataChart extends Echart {
         }
         return res;
     })();
-    var data2 = (function () {
+    const data2 = (function () {
         let res = [];
         let len = 0;
         while (len < 10) {
@@ -398,7 +398,7 @@ class DynamicDataChart extends Echart {
         }
         return res;
     })();
-    var option = {
+    const option = {
         title: {
             text: '${this.chartData.title}',
             left:'left'
@@ -598,8 +598,8 @@ class GaugeChart extends Echart {
     #generateScript() {
         return `
   (function() {
-    var gaugeChart = echarts.init(document.getElementById("${this.ID}"));
-    var option = {
+    const gaugeChart = echarts.init(document.getElementById("${this.ID}"));
+    const option = {
       title: {
         text: "${this.chartData.title}",
         left: "center",
@@ -657,8 +657,8 @@ class HorizontalBarChart extends Echart {
 
     #generateScript() {
         return `
-      var horizontalBarChart = echarts.init(document.getElementById("${this.ID}"));
-      var option = {
+      const horizontalBarChart = echarts.init(document.getElementById("${this.ID}"));
+      const option = {
           title:{
             text: '${this.chartData.title}',
             left: 'center'
@@ -722,8 +722,8 @@ class TimeSeriesLineChart extends Echart {
 
     #generateScript() {
         return `
-    var lineChart = echarts.init(document.getElementById("${this.ID}")); 
-    var option = {
+    const lineChart = echarts.init(document.getElementById("${this.ID}")); 
+    const option = {
       title: {
         text: '${this.chartData.title}',
         left: 'center',
@@ -762,7 +762,7 @@ class TimeSeriesLineChart extends Echart {
     };
 
     lineChart.setOption(option);
-    var chartdata = {
+    const chartdata = {
       channel:'${this.chartData.channel}',
       publisher:'${this.chartData.thing}',
       name:'${this.chartData.valueName}',
@@ -850,9 +850,9 @@ class MultiBarChart extends Echart {
     #generateScript() {
         let seriesName = this.chartData.seriesName.split(",");
         return `
-    var multiBarChart = echarts.init(document.getElementById("${this.ID}"));
-    var app = {}
-    var posList = [
+    const multiBarChart = echarts.init(document.getElementById("${this.ID}"));
+    const app = {}
+    const posList = [
         'left',
         'right',
         'top',
@@ -929,7 +929,7 @@ class MultiBarChart extends Echart {
         });
         }
     };
-    var labelOption = {
+    const labelOption = {
         show: true,
         position: app.config.position,
         distance: app.config.distance,
@@ -942,7 +942,7 @@ class MultiBarChart extends Echart {
         name: {}
         }
     };
-    var option = {
+    const option = {
         title: {
           text: '${this.chartData.title}',
           left: 'left'
@@ -1042,8 +1042,8 @@ class MultiGaugeChart extends Echart {
     #generateScript() {
         let gaugeLabel = this.chartData.gaugeLabel.split(",");
         return `
-    var multiGaugeChart = echarts.init(document.getElementById("${this.ID}"));
-    var gaugeData = [
+    const multiGaugeChart = echarts.init(document.getElementById("${this.ID}"));
+    const gaugeData = [
     {
       value: 20,
       name: '${gaugeLabel[0]}',
@@ -1078,7 +1078,7 @@ class MultiGaugeChart extends Echart {
       }
     }
   ];
-  var option = {
+  const option = {
     title: {
       text: '${this.chartData.title}',
       left: 'center'
@@ -1149,8 +1149,8 @@ class MultipleLineChart extends Echart {
     #generateScript() {
         let seriesName = this.chartData.seriesName.split(",");
         return `
-    var multipleLineChart = echarts.init(document.getElementById("${this.ID}"));
-    var option = {
+    const multipleLineChart = echarts.init(document.getElementById("${this.ID}"));
+    const option = {
       title: {
         text: '${this.chartData.title}',
         left: 'left'
@@ -1203,8 +1203,8 @@ class PieChart extends Echart {
 
     #generateScript() {
         return `
-    var pieChart = echarts.init(document.getElementById("${this.ID}"));
-    var option = {
+    const pieChart = echarts.init(document.getElementById("${this.ID}"));
+    const option = {
         title: {
             text: '${this.chartData.title}',
             left: 'center',
@@ -1252,8 +1252,8 @@ class SharedDatasetChart extends Echart {
     #generateScript() {
         let seriesName = this.chartData.seriesName.split(",");
         return `
-    var sharedDataset = echarts.init(document.getElementById("${this.ID}"));
-    var option = {
+    const sharedDataset = echarts.init(document.getElementById("${this.ID}"));
+    const option = {
       title: {
         text: '${this.chartData.title}',
         left: 'left'
@@ -1367,8 +1367,8 @@ class SpeedGaugeChart extends Echart {
 
     #generateScript() {
         return `
-    var speedGaugeChart = echarts.init(document.getElementById("${this.ID}"));
-    var option = {
+    const speedGaugeChart = echarts.init(document.getElementById("${this.ID}"));
+    const option = {
         title: {
           text: '${this.chartData.title}',
           left: 'center',
@@ -1456,8 +1456,8 @@ class StackedLineChart extends Echart {
     #generateScript() {
         let seriesName = this.chartData.seriesName.split(",");
         return `
-    var stackedLineChart = echarts.init(document.getElementById("${this.ID}"));
-    var option = {
+    const stackedLineChart = echarts.init(document.getElementById("${this.ID}"));
+    const option = {
         title: {
           text: "${this.chartData.title}",
           left: 'left',
@@ -1529,8 +1529,8 @@ class StepChart extends Echart {
     #generateScript() {
         let seriesName = this.chartData.seriesName.split(",");
         return `
-    var stepChart = echarts.init(document.getElementById("${this.ID}"));
-    var option = {
+    const stepChart = echarts.init(document.getElementById("${this.ID}"));
+    const option = {
       title: {
         text: '${this.chartData.title}',
         left: 'left'
@@ -1599,8 +1599,8 @@ class TempGaugeChart extends Echart {
 
     #generateScript() {
         return `
-			var tempGaugeChart = echarts.init(document.getElementById("${this.ID}"));
-			var option = {
+			const tempGaugeChart = echarts.init(document.getElementById("${this.ID}"));
+			const option = {
 				title: {
 					text: '${this.chartData.title}',
 					left: 'center',
@@ -1776,7 +1776,7 @@ class ValueCard extends Chart {
     #generateScript() {
         return `
 			(function() {
-				var valueCard = document.getElementById("${this.ID}");
+				const valueCard = document.getElementById("${this.ID}");
 
 				async function getData() {
 					try {

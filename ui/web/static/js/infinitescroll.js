@@ -40,17 +40,17 @@ function getEntities(config, name) {
 }
 
 function infiniteScroll(config) {
-    var selectElement = document.getElementById(config.itemSelect);
-    var singleOptionHeight = selectElement.querySelector("option").offsetHeight;
-    var selectBoxHeight = selectElement.offsetHeight;
-    var numOptionsBeforeLoad = 2;
-    var lastScrollTop = 0;
-    var currentPageNo = 1;
-    var currentScroll = 0;
+    const selectElement = document.getElementById(config.itemSelect);
+    const singleOptionHeight = selectElement.querySelector("option").offsetHeight;
+    const selectBoxHeight = selectElement.offsetHeight;
+    const numOptionsBeforeLoad = 2;
+    let lastScrollTop = 0;
+    let currentPageNo = 1;
+    let currentScroll = 0;
 
     selectElement.addEventListener("scroll", function () {
-        var st = selectElement.scrollTop;
-        var totalHeight = selectElement.querySelectorAll("option").length * singleOptionHeight;
+        const st = selectElement.scrollTop;
+        const totalHeight = selectElement.querySelectorAll("option").length * singleOptionHeight;
 
         if (st > lastScrollTop) {
             currentScroll = st + selectBoxHeight;
@@ -81,7 +81,7 @@ function fetchData(config) {
         },
     ).then((response) => response.json())
 	.then((data) => {
-		var selectElement = document.getElementById(config.itemSelect);
+		const selectElement = document.getElementById(config.itemSelect);
 		data.data.forEach((entity) => {
 			const option = document.createElement("option");
 			option.value = entity.id;

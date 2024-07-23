@@ -1,4 +1,4 @@
-var ws = null;
+let ws = null;
 const hostName = getHostname(window.location);
 
 function getHostname(url) {
@@ -14,14 +14,36 @@ function connectWebSocket(host, port, defaultChannelId) {
         console.log("WebSocket is open now.");
         // 可以在这里发送初始消息等
         // getChannelsAndSendMessage(host)
-        const topics = [`channels/${defaultChannelId}/messages`];
-        const message = { topics: topics.join(";"), host: hostName, thingSecret: "platform"+defaultChannelId, message: "connect" };
+        const topics = [
+            `channels/${defaultChannelId}/messages/common/app`,
+            `channels/${defaultChannelId}/messages/common/device`
+        ];
+        const message = { 
+            topics: topics, 
+            host: hostName, 
+            thingSecret: "platform" + defaultChannelId, 
+            message: "connect" 
+        };
         ws.send(JSON.stringify(message));
     };
 
     ws.onmessage = function (event) {
         console.log("Received data from server: ", event.data);
         // 处理从服务器接收到的数据
+        const url = window.location.href;
+        if (url.indexOf("task") !== -1) {
+            // 当前为日程页面
+            const data = JSON.parse(event.data);
+            if (data.msgName === "TASK_START") {
+                const task = originalTaskList.find(task => task.uuid === data.task.uuid);
+                const queryData = {...task, running: true};
+                httpUpdateTask(queryData, loadTaskLists);
+            } else if (data.msgName === "TASK_STOP") {
+                let task = originalTaskList.find(task => task.uuid === data.uuid);
+                const queryData = {...task, running: false};
+                httpUpdateTask(queryData, loadTaskLists);
+            }
+        }
     };
 
     ws.onclose = function (event) {
@@ -69,10 +91,7 @@ function getChannelsAndSendMessage(ip) {
 $(function () {
     // DOM 加载完成后执行的代码
     if (!containsLoginInUrl()) {
-        //获取当前domain的ID号
-        // const domainLinkElement = document.getElementById("domain");
-        // const domainHrefValue = domainLinkElement.href;
-        // const domainID = domainHrefValue.split("/").pop();
+        // 获取当前domain的ID号
         const domainID = sessionStorage.getItem("domainID");
         if (domainID) {
             fetch(`/ui/domains/${domainID}/domainInJSON`, {

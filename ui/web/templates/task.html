@@ -1161,18 +1161,17 @@ SPDX-License-Identifier: Apache-2.0 -->
                   }
                 });
 
-                const stoppedTasksDates = allTaskList.filter(task => !task.running && 
-                  !runningTasksDates.includes(task.startDate)).map(task => task.datesArray);
+                const stoppedTasksDates = allTaskList.filter(task => !task.running).map(task => task.datesArray);
                 const stoppedTasksDatesFlatArray = stoppedTasksDates.flat(Infinity); // 将嵌套数组扁平化
                 const stoppedTasksDatesUniqueArray = [...new Set(stoppedTasksDatesFlatArray)]; // 去除重复元素
-                const stoppedTasksScheules = stoppedTasksDatesUniqueArray.map(date => {
+                const stoppedTasksScheules = stoppedTasksDatesUniqueArray.filter((date)=> !runningTasksDatesUniqueArray.includes(date)).map(date => {
                   return {
                     name: 'offer',
                     date: date, 
                   }
                 });
 
-                schedules = [...stoppedTasksScheules, ...runningTasksScheules];
+                schedules = [...runningTasksScheules, ...stoppedTasksScheules];
                 initTaskCalender(schedules);
                 createTaskList(selectedDate);
               }
@@ -1217,10 +1216,10 @@ SPDX-License-Identifier: Apache-2.0 -->
               highlightTodayOnCalendar();
             },
             click: function(event, context) {
-              var $this = $(this);
+              const $this = $(this);
               event.preventDefault();
-              var $element = context.element;
-              var $calendar = context.calendar;
+              const $element = context.element;
+              const $calendar = context.calendar;
               console.log(context);
             }
           });
@@ -1442,12 +1441,6 @@ SPDX-License-Identifier: Apache-2.0 -->
         function controlDevice(task, controlType, callback) {
           const out_channel_array = task.out_channel.split(",");
           const out_channel_unique_array = [...new Set(out_channel_array.map((item) => item.split('_')[0]))];
-          if (controlType === 'play') {
-            //手动启动任务时，开始时间+3秒
-            const originalStarTime = moment();
-            const newStartTime = originalStarTime.add(3, 'seconds');
-            task.start_date = newStartTime.format("YYYY-MM-DD HH:mm:ss");
-          }
           let queryData = {
             channelID: comID,
             host: hostname,
@@ -1455,8 +1448,14 @@ SPDX-License-Identifier: Apache-2.0 -->
             controlType: controlType,
             uuid: task.uuid,
             username: userInfo.credentials.identity,
-            task: task,
+            task: {...task},
           };
+          if (controlType === 'play') {
+            //手动启动任务时，开始时间+3秒
+            const originalStarTime = moment();
+            const newStartTime = originalStarTime.add(3, 'seconds');
+            queryData.task.start_date = newStartTime.format("YYYY-MM-DD HH:mm:ss");
+          }
           async function processRequests() {
             try {
               const promises = out_channel_unique_array.map(async (thingIdentity) => {

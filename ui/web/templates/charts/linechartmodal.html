@@ -242,7 +242,7 @@ SPDX-License-Identifier: Apache-2.0 -->
       // Create an object to store the form data
       const chartData = {};
       let formData = new FormData(form);
-      for (var pair of formData.entries()) {
+      for (const pair of formData.entries()) {
         if (pair[0] === "startTime" || pair[0] === "stopTime") {
           const inputDate = new Date(pair[1]);
           chartData[pair[0]] = inputDate.getTime();
@@ -278,7 +278,7 @@ SPDX-License-Identifier: Apache-2.0 -->
         invalidTimeInput.classList.add("was-validated");
       }
 
-      var widgetID = "lineChart-" + Date.now();
+      const widgetID = "lineChart-" + Date.now();
 
       chartData["Type"] = "lineChart";
       addWidget(chartData, widgetID);
