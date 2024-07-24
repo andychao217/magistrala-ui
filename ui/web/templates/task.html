@@ -945,7 +945,7 @@ SPDX-License-Identifier: Apache-2.0 -->
 						if (selectedSourceObject && selectedSourceObject.files.length) {
 							queryData.source = 0;
 							const songsArray = selectedSourceObject.files.map(file => {
-								return file.key.replace(comID, 'oss://resource')
+								return file.key.replace(`${comID}/`, 'oss://')
 							});
 							queryData.songs = songsArray.join(',');
 						}
@@ -996,7 +996,7 @@ SPDX-License-Identifier: Apache-2.0 -->
 							loadTaskLists();
 						}
 						if (taskModalType === 'add') {
-							httpAddTask(queryData, true, callback);
+							httpAddTask(queryData, callback);
 						} else {
 							httpUpdateTask(queryData, true, callback);
 						}
