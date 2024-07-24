@@ -36,14 +36,23 @@ function connectWebSocket(host, port, defaultChannelId) {
             const data = JSON.parse(event.data);
             console.log("event123: ", event);
             console.log("data123: ", data);
+            console.log("originalTaskList123: ", originalTaskList);
             if (data.msgName === "TASK_START") {
-                const task = originalTaskList.find(task => task.uuid === data.data.task.uuid);
-                const queryData = {...task, running: true};
-                httpUpdateTask(queryData, false, loadTaskLists);
+                const task = originalTaskList.find(task => task.uuid === data?.data?.task?.uuid);
+                const queryData = {...task};
+                if (task && task.uuid) {
+                    queryData.running = true;
+                    httpUpdateTask(queryData, false, loadTaskLists(false));
+                }
             } else if (data.msgName === "TASK_STOP") {
-                let task = originalTaskList.find(task => task.uuid === data.data.uuid);
-                const queryData = {...task, running: false};
-                httpUpdateTask(queryData, false,loadTaskLists);
+                const task = originalTaskList.find(task => task.uuid === data?.data?.uuid);
+                const queryData = {...task};
+                if (task && task.uuid) {
+                    queryData.running = false;
+                    httpUpdateTask(queryData, false, loadTaskLists(false));
+                }
+            } else if (data.msgName === "TASK_SYNC_STATUS_GET_REPLY") {
+               
             }
         }
     };

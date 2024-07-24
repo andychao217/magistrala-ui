@@ -190,7 +190,7 @@ function getDeviceIcon (deviceInfo) {
 		src = 'icon_device1.svg';
 	}
 	if (product_name.indexOf('2102') > -1 || product_name.indexOf('2110') > -1 || product_name.indexOf('2112') > -1) {
-		src = 'icon_device2.png';
+		src = 'icon_device2.svg';
 	}
 	if (product_name.indexOf('3302') > -1) {
 		src = 'icon_device3.svg';

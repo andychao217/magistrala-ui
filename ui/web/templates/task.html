@@ -170,7 +170,7 @@ SPDX-License-Identifier: Apache-2.0 -->
 														<div id="endTimeError" class="text-danger" style="margin-top: 10px;"></div>
 													</div>
 												</div>
-												<div class="mb-3 row" id="repeatNumContainer">
+												<div class="mb-3 row">
 													<label for="repeatNum" class="col-sm-2 col-form-label" style="line-height: 35px;">重复次数</label>
 													<div class="col-sm-10" style="display: flex; margin-top: 7px;">
 														<select class="form-control form-select" placeholder="请选择重复次数" name="repeatNum" id="repeatNum">
@@ -506,7 +506,7 @@ SPDX-License-Identifier: Apache-2.0 -->
 												</thead>
 											</table>
 										</div>
-										<div class="modal-footer" style="display: block; text-align: center;">
+										<div class="modal-footer" style="display: block; text-align: center; border-top: none;">
 											<button type="button" class="btn body-button" id="oneClickSyncTaskBtn">一键同步</button>
 											<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">取消</button>
 										</div>
@@ -556,13 +556,14 @@ SPDX-License-Identifier: Apache-2.0 -->
 					endTimeBeforeStartTimeMsg = '结束时间不能早于开始时间',
 					playbackCycleWeekMsg = '当播放周期为每周时, 必须选择一周中的某一天或者某几天';
 			const taskModal = new bootstrap.Modal(document.getElementById("taskModal")), // 任务弹框
-					syncTaskModal = new bootstrap.Modal(document.getElementById("syncTaskModal")), // 同步任务弹框
+				  	syncTaskModal = new bootstrap.Modal(document.getElementById("syncTaskModal")), // 同步任务弹框
 					sourceModal = new bootstrap.Modal(document.getElementById("sourceModal")), // 音源弹框
 					filesModal = new bootstrap.Modal(document.getElementById("filesModal")), // 文件弹框
 					inputChannelsModal = new bootstrap.Modal(document.getElementById("inputChannelsModal")), // 输入通道弹框
 					playAreasAddModal = new bootstrap.Modal(document.getElementById("playAreasAddModal")), // 新增播放区域弹框
 					playAreasDetailModal = new bootstrap.Modal(document.getElementById("playAreasDetailModal")); // 播放区域详情弹框
-			const $filesModalTable = $('#filesModalTable'); // 文件弹框表格
+			const $filesModalTable = $('#filesModalTable'), // 文件弹框表格
+					$syncTaskTable = $('#syncTaskTable'); // 同步任务弹框表格
 			const protocol = window.location.protocol,
 					hostname = window.location.hostname,
 					port =  sessionStorage.getItem("socketBridgePort") || "63001";
@@ -584,7 +585,7 @@ SPDX-License-Identifier: Apache-2.0 -->
 						const data = json.data;
 						const domainData = JSON.parse(data).domainData;
 						comID = domainData.metadata["comID"];
-						loadTaskLists();
+						loadTaskLists(true);
 					});
 			}
 
@@ -609,6 +610,7 @@ SPDX-License-Identifier: Apache-2.0 -->
 				breadCrumbFolderList = [], //当前选中文件夹列表-文件弹框
 				currentFolderKey = "", //当前文件夹key-文件弹框;
 				originalTaskList = [], //原始任务列表
+				syncStatusTableList = [], //同步状态列表
 				allTaskList = []; //全部任务列表
 
 			$(function() {
@@ -993,7 +995,7 @@ SPDX-License-Identifier: Apache-2.0 -->
 						const callback = ()=>{
 							showAlert('success', successMsg);
 							taskModal.hide();
-							loadTaskLists();
+							loadTaskLists(true);
 						}
 						if (taskModalType === 'add') {
 							httpAddTask(queryData, callback);
@@ -1122,7 +1124,7 @@ SPDX-License-Identifier: Apache-2.0 -->
 			});
 
 			// 获取任务列表
-			function loadTaskLists() {
+			function loadTaskLists(notifyDevice) {
 				allTaskList = [];
 				originalTaskList = [];
 				let schedules = [];
@@ -1174,7 +1176,9 @@ SPDX-License-Identifier: Apache-2.0 -->
 							schedules = [...runningTasksScheules, ...stoppedTasksScheules];
 							initTaskCalender(schedules);
 							createTaskList(selectedDate);
-							controlDevice("taskStatGet");
+							if (notifyDevice) {
+								controlDevice("taskStatGet");
+							}
 						}
 					}).catch(error => {
 						console.error('Error:', error);
@@ -1385,7 +1389,7 @@ SPDX-License-Identifier: Apache-2.0 -->
 								<i class="fa-solid fa-ellipsis"></i>
 							</button>
 							<ul class="dropdown-menu">
-								<li style="display: none;">
+								<li style="display: none">
 									<a class="dropdown-item" data-uuid="${task.uuid}" onclick="syncTask(this)">
 										<i class="fa-solid fa-rotate" style="width: 16px;"></i> 同步
 									</a>
@@ -1501,10 +1505,7 @@ SPDX-License-Identifier: Apache-2.0 -->
 								}
 							});
 
-							if (
-								(controlType === 'play' || controlType === 'stop') && 
-								callback && typeof callback === 'function'
-							) {
+							if (callback && typeof callback === 'function') {
 								callback();
 							}
 						} catch (error) {
@@ -1580,7 +1581,7 @@ SPDX-License-Identifier: Apache-2.0 -->
 				} else {
 					queryData.manual_only = true;
 				}
-				httpUpdateTask(queryData, true, loadTaskLists);
+				httpUpdateTask(queryData, true, loadTaskLists(true));
 			}
 
 			// 播放任务
@@ -1599,14 +1600,26 @@ SPDX-License-Identifier: Apache-2.0 -->
 
 			// 同步任务
 			function syncTask(element) {
+				syncStatusTableList = [];
 				const taskUUID = $(element).data("uuid");
-				syncTaskModal.show();
+				const task = originalTaskList.find(task => task.uuid === taskUUID);
+				
+				const callback = () => {
+					// 从out_channel中获取identity并去重
+					const out_channel_array = task.out_channel ? 
+						Array.from(new Set(task.out_channel.split(',').map(channel => channel.split('_')[0])))
+						: [];
+					syncStatusTableList = allThingsList.filter((thing) => out_channel_array.includes(thing.credentials.identity))
+					$syncTaskTable.bootstrapTable({
+						data: syncStatusTableList,
+					});
 
-				const $syncTaskTable = $('#syncTaskTable');
-				$syncTaskTable.bootstrapTable({
-					data: [],
-				});
+					syncTaskModal.show();
+				}
 
+				controlDevice("taskSyncStatusGet", task, callback);
+
+				// 点击一键同步按钮
 				$('#oneClickSyncTaskBtn').on('click', () => {
 					syncTaskModal.hide();
 					showAlert('success', '同步成功！');
@@ -1615,32 +1628,34 @@ SPDX-License-Identifier: Apache-2.0 -->
 
 			// 同步任务表格格式化-设备名称
 			function deviceNameTableFormatter(value, row, index) {
-				if (row.isDir) {
-					return `<div style="cursor: pointer">
-								<img src="/images/icon_folder.png" style="width: 16px; margin-bottom: 3px;"/>
-								<span data-key="${row.key}" data-filename="${row.fileName}">${value}</span>
-							</div>`;
-				} else {
-					return `<div>
-								<img src="/images/icon_mp3.png" style="width: 16px; margin-bottom: 3px;"/>
-								<span>${value}</span>
-							</div>`;
-				}
+				const deviceIcon = getDeviceIcon(row);
+				return `<div class="truncate-text" style="max-width: 250px;" title="${row.name}">
+							<img 
+								src="/images/${deviceIcon}" 
+								style="
+									width: 28px; 
+									height:28px; 
+									margin-bottom: 3px;
+								"
+							/>
+							<span>${row.name}</span>
+						</div>`;
 			}
 
 			// 同步状态表格格式化-同步状态
 			function syncStatusTableFormatter(value, row, index) {
-				if (row.isDir) {
-					return `<div style="cursor: pointer">
-								<img src="/images/icon_folder.png" style="width: 16px; margin-bottom: 3px;"/>
-								<span data-key="${row.key}" data-filename="${row.fileName}">${value}</span>
-							</div>`;
-				} else {
-					return `<div>
-								<img src="/images/icon_mp3.png" style="width: 16px; margin-bottom: 3px;"/>
-								<span>${value}</span>
-							</div>`;
+				let syncStatusName = '未知状态', color = '#e6a23c';
+				if (row.syncStatus === 0) {
+					syncStatusName = '同步完成';
+					color = '#67c23a';
+				} else if (row.syncStatus === 1) {
+					syncStatusName = '正在同步';
+					color = '#f56c6c';
+				} else if (row.syncStatus === 2) {
+					syncStatusName = '同步失败';
+					color = '';
 				}
+				return `<div style="color: ${color}">${syncStatusName}</div>`;
 			}
 
 			// 复制任务
@@ -1661,7 +1676,7 @@ SPDX-License-Identifier: Apache-2.0 -->
 						return response.json(); // 直接将流转换为JSON对象
 					}).then(data => {
 						showAlert('success', '复制成功！');
-						loadTaskLists();
+						loadTaskLists(true);
 						if (data.task && data.task.uuid) {
 							controlDevice('copy', task);
 						}
@@ -1756,7 +1771,6 @@ SPDX-License-Identifier: Apache-2.0 -->
 				
 				// 重复次数
 				$('#endTime').prop('disabled', true);
-				$('#repeatNumContainer').show();
 				$('#repeatNum').val(task.cyclic_times)
 				$('#repeatNumSwitch').prop('checked', true);
 				if (task.duration) {
@@ -1802,7 +1816,7 @@ SPDX-License-Identifier: Apache-2.0 -->
 						return response.json(); // 直接将流转换为JSON对象
 					}).then(data => {
 						showAlert('success', '删除成功！');
-						loadTaskLists();
+						loadTaskLists(true);
 						if (data.task && data.task.uuid) {
 							controlDevice('delete', task);
 						}
@@ -2081,8 +2095,6 @@ SPDX-License-Identifier: Apache-2.0 -->
 				$('#level2').prop('checked', true);
 				$('#level3').prop('checked', false);
 
-				$('#repeatNumContainer').hide();
-
 				// 音源选择弹框相关
 				showMoreSettingSourceModal = false;
 				$('#moreSettingBtnSourceModal').empty();
@@ -2099,6 +2111,9 @@ SPDX-License-Identifier: Apache-2.0 -->
 				
 				$('#sourceModalFileListContainer').empty();
 				$('#sourceModalDeviceListContainer').empty();
+
+				$('#repeatNum').val(1)
+				$('#repeatNumSwitch').prop('checked', false);
 
 				$('#taskModalConfirmBtn').attr('data-uuid', "");
 			}
