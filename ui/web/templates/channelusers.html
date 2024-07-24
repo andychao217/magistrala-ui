@@ -387,33 +387,32 @@ SPDX-License-Identifier: Apache-2.0 -->
                 </div>
             </div>
             <script>
-              let pathPrefix = "{{ pathPrefix }}";
-              const userModal = new bootstrap.Modal(
-                document.getElementById("addUserModal"),
-              );
-              function openUserModal() {
-                userModal.show();
-              }
+                let pathPrefix = "{{ pathPrefix }}";
+                const userModal = new bootstrap.Modal(document.getElementById("addUserModal"));
+                function openUserModal() {
+                    userModal.show();
+                }
 
-              function openTab(relation) {
-                event.preventDefault();
-                let channelID = '{{.ChannelID}}';
-                window.location.href = `${pathPrefix}/channels/${channelID}/users?relation=${relation}`;
-              }
+                function openTab(relation) {
+                    event.preventDefault();
+                    let channelID = '{{.ChannelID}}';
+                    window.location.href = `${pathPrefix}/channels/${channelID}/users?relation=${relation}`;
+                }
 
-              function viewUser(identity) {
-                window.location.href = `${pathPrefix}/domains/members?identity=${identity}`;
-              }
-            </script>      <script type="module">
-              import { fetchIndividualEntity } from "/js/infinitescroll.js";
+                function viewUser(identity) {
+                    window.location.href = `${pathPrefix}/domains/members?identity=${identity}`;
+                }
+            </script>      
+            <script type="module">
+                import { fetchIndividualEntity } from "/js/infinitescroll.js";
 
-              fetchIndividualEntity({
-                input: "userFilter",
-                itemSelect: "infiniteScroll",
-                item: "members",
-                domain: '{{.Session.Domain.ID}}',
-                pathPrefix: pathPrefix,
-              });
+                fetchIndividualEntity({
+                    input: "userFilter",
+                    itemSelect: "infiniteScroll",
+                    item: "members",
+                    domain: '{{.Session.Domain.ID}}',
+                    pathPrefix: pathPrefix,
+                });
             </script>
         </body>
     </html>

@@ -3,9 +3,7 @@ SPDX-License-Identifier: Apache-2.0 -->
 
 {{ define "tablefooter" }}
     {{ $currentPage := .CurrentPage }}
-    {{ $totalPages :=
-        .Pages
-    }}
+    {{ $totalPages := .Pages }}
     <nav class="border-top" aria-label="Page navigation example">
         <ul class="pagination justify-content-end mt-3">
             {{ $prevPage := sub $currentPage 1 }}
@@ -48,56 +46,56 @@ SPDX-License-Identifier: Apache-2.0 -->
         </ul>
     </nav>
     <script>
-      const currentPage = '{{ .CurrentPage }}';
-      const selectedLimit = '{{ .Limit }}';
-      let selectedStatus;
+		const currentPage = '{{ .CurrentPage }}';
+		const selectedLimit = '{{ .Limit }}';
+		let selectedStatus;
 
-      function updateQueryParameters(newParams, element) {
-        const params = new URLSearchParams(window.location.search);
-        for (const key in newParams) {
-          if (Object.prototype.hasOwnProperty.call(newParams, key)) {
-            params.set(key, newParams[key]);
-          }
-        }
-        const newQueryStr = params.toString();
-        const href = `?${newQueryStr}`;
-        // 增加判空处理，减少报错
-        if (element) {
-          element.setAttribute("href", href);
-        }
-      }
+		function updateQueryParameters(newParams, element) {
+			const params = new URLSearchParams(window.location.search);
+			for (const key in newParams) {
+				if (Object.prototype.hasOwnProperty.call(newParams, key)) {
+					params.set(key, newParams[key]);
+				}
+			}
+			const newQueryStr = params.toString();
+			const href = `?${newQueryStr}`;
+			// 增加判空处理，减少报错
+			if (element) {
+				element.setAttribute("href", href);
+			}
+		}
 
-      const itemsPerPage = document.querySelectorAll(".itemsPerPage a");
-      itemsPerPage.forEach(item => {
-        const newParams = { page: currentPage, limit: item.textContent };
-        if (selectedStatus) {
-          newParams.status = selectedStatus;
-        }
-        updateQueryParameters(newParams, item);
-      });
+		const itemsPerPage = document.querySelectorAll(".itemsPerPage a");
+		itemsPerPage.forEach(item => {
+			const newParams = { page: currentPage, limit: item.textContent };
+			if (selectedStatus) {
+				newParams.status = selectedStatus;
+			}
+			updateQueryParameters(newParams, item);
+		});
 
-      const paginationLinks = document.querySelectorAll(".pagination a");
-      paginationLinks.forEach(function (item) {
-        const hrefParams = new URLSearchParams(item.getAttribute("href"));
-        let newParams = { page: hrefParams.get("page") };
-        if (selectedLimit) {
-          newParams.limit = selectedLimit;
-        }
-        if (selectedStatus) {
-          newParams.status = selectedStatus;
-        }
-
-        updateQueryParameters(newParams, item);
-      });
-    </script> {{ if isset "StatusOptions" . }}
+		const paginationLinks = document.querySelectorAll(".pagination a");
+		paginationLinks.forEach(function (item) {
+			const hrefParams = new URLSearchParams(item.getAttribute("href"));
+			let newParams = { page: hrefParams.get("page") };
+			if (selectedLimit) {
+				newParams.limit = selectedLimit;
+			}
+			if (selectedStatus) {
+				newParams.status = selectedStatus;
+			}
+			updateQueryParameters(newParams, item);
+		});
+    </script> 
+	{{ if isset "StatusOptions" . }}
     <script>
-      selectedStatus = '{{.Status}}';
-      const statusOptions = JSON.parse('{{ toSlice .StatusOptions }}');
-      statusOptions.forEach(status => {
-        const statusElement = document.getElementById(status + "Status");
-        const newParams = { page: currentPage, limit: selectedLimit, status: status };
-        updateQueryParameters(newParams, statusElement);
-      });
+		selectedStatus = '{{.Status}}';
+		const statusOptions = JSON.parse('{{ toSlice .StatusOptions }}');
+		statusOptions.forEach(status => {
+			const statusElement = document.getElementById(status + "Status");
+			const newParams = { page: currentPage, limit: selectedLimit, status: status };
+			updateQueryParameters(newParams, statusElement);
+		});
     </script>
     {{ end }}
 {{ end }}

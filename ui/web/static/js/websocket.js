@@ -34,14 +34,16 @@ function connectWebSocket(host, port, defaultChannelId) {
         if (url.indexOf("task") !== -1) {
             // 当前为日程页面
             const data = JSON.parse(event.data);
+            console.log("event123: ", event);
+            console.log("data123: ", data);
             if (data.msgName === "TASK_START") {
-                const task = originalTaskList.find(task => task.uuid === data.task.uuid);
+                const task = originalTaskList.find(task => task.uuid === data.data.task.uuid);
                 const queryData = {...task, running: true};
-                httpUpdateTask(queryData, loadTaskLists);
+                httpUpdateTask(queryData, false, loadTaskLists);
             } else if (data.msgName === "TASK_STOP") {
-                let task = originalTaskList.find(task => task.uuid === data.uuid);
+                let task = originalTaskList.find(task => task.uuid === data.data.uuid);
                 const queryData = {...task, running: false};
-                httpUpdateTask(queryData, loadTaskLists);
+                httpUpdateTask(queryData, false,loadTaskLists);
             }
         }
     };

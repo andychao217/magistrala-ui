@@ -133,35 +133,35 @@ SPDX-License-Identifier: Apache-2.0 -->
                 </div>
             </div>    
             <script type="module">
-              import { 
-                attachEditRowListener, 
-                updateName, 
-                updateDescription, 
-                // updateMetadata
-              } from "/js/update.js";
-              attachEditRowListener({
-                entity: "channels",
-                id: "{{ .Entity.ID }}",
-                rows: {
-                  name:updateName,
-                  description: updateDescription,
-                },
-                errorDiv: "error-message",
-                fields:{
-                  name: "name-field",
-                },
-                pathPrefix: "{{ pathPrefix }}",
-              });
-            //   updateMetadata({
-            //     textArea: "metadataTextArea",
-            //     field:"metadata",
-            //     alertDiv: "metadataError",
-            //     fieldName: "metadata-field",
-            //     id: "{{ .Entity.ID }}",
-            //     entity: "channels",
-            //     button: "save-metadata",
-            //     pathPrefix: "{{ pathPrefix }}",
-            //   });
+                import { 
+                    attachEditRowListener, 
+                    updateName, 
+                    updateDescription, 
+                    // updateMetadata
+                } from "/js/update.js";
+                attachEditRowListener({
+                    entity: "channels",
+                    id: "{{ .Entity.ID }}",
+                    rows: {
+                        name:updateName,
+                        description: updateDescription,
+                    },
+                    errorDiv: "error-message",
+                    fields:{
+                        name: "name-field",
+                    },
+                    pathPrefix: "{{ pathPrefix }}",
+                });
+                //   updateMetadata({
+                //     textArea: "metadataTextArea",
+                //     field:"metadata",
+                //     alertDiv: "metadataError",
+                //     fieldName: "metadata-field",
+                //     id: "{{ .Entity.ID }}",
+                //     entity: "channels",
+                //     button: "save-metadata",
+                //     pathPrefix: "{{ pathPrefix }}",
+                //   });
             </script>
         </body>
     </html>

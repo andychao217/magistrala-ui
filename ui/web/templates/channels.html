@@ -19,14 +19,14 @@ SPDX-License-Identifier: Apache-2.0 -->
                                 <div class="buttons">
                                     <!-- add channel modal -->
                                     <div 
-                                      class="modal fade" 
-                                      id="addChannelModal" 
-                                      tabindex="-1" 
-                                      role="dialog" 
-                                      aria-labelledby="addChannelModalLabel" 
-                                      aria-hidden="true"
-                                      data-bs-backdrop="static" 
-                                      data-bs-keyboard="false"  
+										class="modal fade" 
+										id="addChannelModal" 
+										tabindex="-1" 
+										role="dialog" 
+										aria-labelledby="addChannelModalLabel" 
+										aria-hidden="true"
+										data-bs-backdrop="static" 
+										data-bs-keyboard="false"  
                                     >
                                         <div class="modal-dialog" role="document">
                                             <div class="modal-content">
@@ -75,14 +75,14 @@ SPDX-License-Identifier: Apache-2.0 -->
 
                                     <!-- add channels modal -->
                                     <div 
-                                      class="modal fade" 
-                                      id="addChannelsModal" 
-                                      tabindex="-1" 
-                                      role="dialog" 
-                                      aria-labelledby="addChannelsModalLabel" 
-                                      aria-hidden="true"
-                                      data-bs-backdrop="static" 
-                                      data-bs-keyboard="false"  
+										class="modal fade" 
+										id="addChannelsModal" 
+										tabindex="-1" 
+										role="dialog" 
+										aria-labelledby="addChannelsModalLabel" 
+										aria-hidden="true"
+										data-bs-backdrop="static" 
+										data-bs-keyboard="false"  
                                     >
                                         <div class="modal-dialog" role="document">
                                             <div class="modal-content">
@@ -113,102 +113,103 @@ SPDX-License-Identifier: Apache-2.0 -->
 
                                     <!-- edit channel modal -->
                                     <div 
-                                      class="modal fade" 
-                                      id="editChannelModal" 
-                                      tabindex="-1" 
-                                      role="dialog" 
-                                      aria-labelledby="editChannelModalLabel" 
-                                      aria-hidden="true"
-                                      data-bs-backdrop="static" 
-                                      data-bs-keyboard="false"  
+										class="modal fade" 
+										id="editChannelModal" 
+										tabindex="-1" 
+										role="dialog" 
+										aria-labelledby="editChannelModalLabel" 
+										aria-hidden="true"
+										data-bs-backdrop="static" 
+										data-bs-keyboard="false"  
                                     >
-                                      <div class="modal-dialog" role="document">
-                                          <div class="modal-content">
-                                              <div class="modal-header">
-                                                  <h1 class="modal-title" id="editChannelModalLabel">修改分区</h1>
-                                                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                              </div>
-                                              <form method="post" id="editChannelForm">
-                                                  <div class="modal-body">
-                                                      <div id="editAlertMessage"></div>
-                                                      <div class="mb-3">
-                                                          <label for="name" class="form-label">名称</label>
-                                                          <input type="text" class="form-control name-field" name="name" id="editName" placeholder="分区名称" />
-                                                          <div id="editNameError" class="text-danger"></div>
-                                                      </div>
-                                                      <div class="mb-3" style="display: none;">
-                                                          <label for="id" class="form-label">ID</label>
-                                                          <input type="text" class="form-control id-field" name="id" id="editId" placeholder="分区ID" readonly />
-                                                      </div>
-                                                      <div class="mb-3" style="display: none;">
-                                                          <label for="description" class="form-label">描述</label>
-                                                          <input type="text" class="form-control" name="description" id="editDescription" placeholder="分区描述" />
-                                                      </div>
-                                                  </div>
-                                                  <div class="modal-footer">
-                                                      <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">取消</button>
-                                                      <button type="submit" class="btn body-button" id="edit-channel-button">确定</button>
-                                                  </div>
-                                              </form>
-                                          </div>
-                                      </div>
-                                  </div>
+                                    	<div class="modal-dialog" role="document">
+                                        	<div class="modal-content">
+												<div class="modal-header">
+													<h1 class="modal-title" id="editChannelModalLabel">修改分区</h1>
+													<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+												</div>
+												<form method="post" id="editChannelForm">
+													<div class="modal-body">
+														<div id="editAlertMessage"></div>
+														<div class="mb-3">
+															<label for="name" class="form-label">名称</label>
+															<input type="text" class="form-control name-field" name="name" id="editName" placeholder="分区名称" />
+															<div id="editNameError" class="text-danger"></div>
+														</div>
+														<div class="mb-3" style="display: none;">
+															<label for="id" class="form-label">ID</label>
+															<input type="text" class="form-control id-field" name="id" id="editId" placeholder="分区ID" readonly />
+														</div>
+														<div class="mb-3" style="display: none;">
+															<label for="description" class="form-label">描述</label>
+															<input type="text" class="form-control" name="description" id="editDescription" placeholder="分区描述" />
+														</div>
+													</div>
+													<div class="modal-footer">
+														<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">取消</button>
+														<button type="submit" class="btn body-button" id="edit-channel-button">确定</button>
+													</div>
+												</form>
+                                          	</div>
+                                      	</div>
+                                  	</div>
                                 </div>
                                 <div class="table-responsive table-container">
                                     <!-- {{ template "tableheader" . }} -->
                                     <div class="row buttons mb-3">
-                                      <div class="col-4" role="group">
-                                        <button type="button" class="btn body-button" onclick="openModal('single')">
-                                          <i class="fa-solid fa-plus"></i> 添加分区
-                                        </button>
-                                      </div>
+										<div class="col-4" role="group">
+											<button type="button" class="btn body-button" onclick="openModal('single')">
+												<i class="fa-solid fa-plus"></i> 添加分区
+											</button>
+										</div>
                                     </div>
                                     <div class="row">
-                                      {{ range $i, $c := .Channels }}
-                                        <div class="col-sm-3 mb-3 mb-sm-0" onclick="viewChannel('{{ $c.ID }}', event)">
-                                          <div class="hoverCard card">
-                                            <div class="card-body">
-                                              <div class="row">
-                                                <div class="col">
-                                                  <img src="/images/icon_organization_area.svg" alt="" style="height: 38px; float: left;">
-                                                </div>
-                                                <div class="col">
-                                                  <div class="dropdown" style="float: right;">
-                                                    <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                                      <i class="fa-solid fa-ellipsis"></i>
-                                                    </button>
-                                                    <ul class="dropdown-menu">
-                                                      <!-- <li><a class="dropdown-item" onclick="viewChannel('{{ $c.ID }}')"><i class="fa-solid fa-info" style="width: 16px;"></i> 查看</a></li> -->
-                                                      <li>
-                                                        <a class="dropdown-item" onclick="deleteChannel('{{ $c.ID }}')">
-                                                          <i class="fa-solid fa-trash-can" style="width: 16px;"></i> 删除
-                                                        </a>
-                                                      </li>
-                                                      <li>
-                                                        <a class="dropdown-item" onclick="editChannel('{{ $c.ID }}', '{{ $c.Name }}', '{{ $c.Description }}')">
-                                                          <i class="fa-solid fa-pencil-alt" style="width: 16px;"></i> 修改
-                                                        </a>
-                                                      </li>
-                                                    </ul>
-                                                  </div>
-                                                </div>
-                                              </div>
-                                              <div class="row">
-                                                <h5 
-                                                  class="card-title truncate-text"
-                                                  data-bs-toggle="tooltip" 
-                                                  data-bs-placement="bottom" 
-                                                  data-bs-title="{{ $c.Name }}" 
-                                                  title="{{ $c.Name }}"
-                                                >
-                                                  {{ $c.Name }}
-                                                </h5>
-                                              </div>
-                                            </div>
-                                          </div>
-                                        </div>
-                                      {{ end }}
-                                    <!-- {{ template "tablefooter" . }} -->
+										{{ range $i, $c := .Channels }}
+										<div class="col-sm-3 mb-3 mb-sm-0" onclick="viewChannel('{{ $c.ID }}', event)">
+											<div class="hoverCard card">
+												<div class="card-body">
+													<div class="row">
+														<div class="col">
+															<img src="/images/icon_organization_area.svg" alt="" style="height: 38px; float: left;">
+														</div>
+														<div class="col">
+															<div class="dropdown" style="float: right;">
+																<button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+																	<i class="fa-solid fa-ellipsis"></i>
+																</button>
+																<ul class="dropdown-menu">
+																	<!-- <li><a class="dropdown-item" onclick="viewChannel('{{ $c.ID }}')"><i class="fa-solid fa-info" style="width: 16px;"></i> 查看</a></li> -->
+																	<li>
+																		<a class="dropdown-item" onclick="deleteChannel('{{ $c.ID }}')">
+																			<i class="fa-solid fa-trash-can" style="width: 16px;"></i> 删除
+																		</a>
+																	</li>
+																	<li>
+																		<a class="dropdown-item" onclick="editChannel('{{ $c.ID }}', '{{ $c.Name }}', '{{ $c.Description }}')">
+																			<i class="fa-solid fa-pencil-alt" style="width: 16px;"></i> 修改
+																		</a>
+																	</li>
+																</ul>
+															</div>
+														</div>
+													</div>
+													<div class="row">
+														<h5 
+															class="card-title truncate-text"
+															data-bs-toggle="tooltip" 
+															data-bs-placement="bottom" 
+															data-bs-title="{{ $c.Name }}" 
+															title="{{ $c.Name }}"
+														>
+															{{ $c.Name }}
+														</h5>
+													</div>
+												</div>
+											</div>
+										</div>
+										{{ end }}
+                                   		<!-- {{ template "tablefooter" . }} -->
+									</div>
                                 </div>
                             </div>
                         </div>
@@ -216,154 +217,154 @@ SPDX-License-Identifier: Apache-2.0 -->
                 </div>
             </div>
             <script>
-              const channelModal = new bootstrap.Modal(document.getElementById("addChannelModal"));
-              const channelsModal = new bootstrap.Modal(document.getElementById("addChannelsModal"));
-              const editChannelModal = new bootstrap.Modal(document.getElementById("editChannelModal"));
+				const channelModal = new bootstrap.Modal(document.getElementById("addChannelModal"));
+				const channelsModal = new bootstrap.Modal(document.getElementById("addChannelsModal"));
+				const editChannelModal = new bootstrap.Modal(document.getElementById("editChannelModal"));
 
-              function openModal(modal) {
-                if (modal === "single") {
-                  channelModal.show();
-                } else if (modal === "bulk") {
-                  channelsModal.show();
-                }
-              }
+				function openModal(modal) {
+					if (modal === "single") {
+						channelModal.show();
+					} else if (modal === "bulk") {
+						channelsModal.show();
+					}
+				}
 
-              function editChannel(id, name, description) {
-                editChannelModal.show();
-                $("#editName").val(name);
-                $("#editId").val(id);
-                $("#editDescription").val(description);
-              }
+				function editChannel(id, name, description) {
+					editChannelModal.show();
+					$("#editName").val(name);
+					$("#editId").val(id);
+					$("#editDescription").val(description);
+				}
 
-              function viewChannel(id, event) {
-                // 使用 event 对象进行判断或其他操作
-                if (
-                  event.target.classList.contains('dropdown-item') || 
-                  event.target.classList.contains('dropdown-toggle')
-                ) {
-                  // 阻止事件冒泡或默认行为
-                  event.stopPropagation();
-                } else {
-                  const onlineStatus = "1";
-                  sessionStorage.setItem("onlineStatus", onlineStatus);
-                  window.location.href = `/ui/channels/${id}/things?limit=1000&onlineStatus=${onlineStatus}`;
-                }
-              }
+				function viewChannel(id, event) {
+					// 使用 event 对象进行判断或其他操作
+					if (
+						event.target.classList.contains('dropdown-item') || 
+						event.target.classList.contains('dropdown-toggle')
+					) {
+						// 阻止事件冒泡或默认行为
+						event.stopPropagation();
+					} else {
+						const onlineStatus = "1";
+						sessionStorage.setItem("onlineStatus", onlineStatus);
+						window.location.href = `/ui/channels/${id}/things?limit=1000&onlineStatus=${onlineStatus}`;
+					}
+				}
 
-              //删除
-              function deleteChannel(channelID) {
-                // 显示确认对话框
-                showConfirmModal("你确定要删除所选数据吗？", ()=>{
-                  fetch(`/ui/channels/${channelID}/thingsInJSON?page=1&limit=1000`, {
-                    method: "GET",
-                  })
-                  .then(response => {
-                      if (!response.ok) {
-                          throw new Error('Network response was not ok');
-                      }
-                      return response.json(); // 直接将流转换为JSON对象
-                  })
-                  .then(json => {
-                    const data = json.data;
-                    const thingsData = JSON.parse(data).thingsData;
-                    const things = thingsData.things;
-                    const fetchPromises = things.map((thing) => disconnectThingsAndChannels(thing.id, channelID));
-                    Promise.all(fetchPromises).then(responses => {})
-                      .then(jsonData => { handleDelete(channelID) })
-                      .catch(error => {
-                        // 如果有任何错误发生，这里会捕获到
-                        console.error('An error occurred:', error);
-                      });
-                  });
-                });
-              }
+				//删除
+				function deleteChannel(channelID) {
+					// 显示确认对话框
+					showConfirmModal("你确定要删除所选数据吗？", ()=>{
+						fetch(`/ui/channels/${channelID}/thingsInJSON?page=1&limit=1000`, {
+							method: "GET",
+						})
+						.then(response => {
+							if (!response.ok) {
+								throw new Error('Network response was not ok');
+							}
+							return response.json(); // 直接将流转换为JSON对象
+						})
+						.then(json => {
+							const data = json.data;
+							const thingsData = JSON.parse(data).thingsData;
+							const things = thingsData.things;
+							const fetchPromises = things.map((thing) => disconnectThingsAndChannels(thing.id, channelID));
+							Promise.all(fetchPromises).then(responses => {})
+								.then(jsonData => { handleDelete(channelID) })
+								.catch(error => {
+									// 如果有任何错误发生，这里会捕获到
+									console.error('An error occurred:', error);
+								});
+						});
+					});
+				}
 
-              function handleDelete(channelID) {
-                fetch(`/ui/channels/${channelID}`, {
-                  method: "DELETE",
-                })
-                .then(function (response) {
-                  if (!response.ok) {
-                    const errorMessage = response.headers.get("X-Error-Message");
-                    if (errorMessage) {
-                      console.log(errorMessage);
-                    } else {
-                      console.log(`Error: ${response.status}`);
-                    }
-                  } else {
-                    window.location.reload();
-                  }
-                })
-                .catch((error) => {
-                  window.location.reload();
-                  console.error("error submitting form: ", error);
-                });
-              }
+				function handleDelete(channelID) {
+					fetch(`/ui/channels/${channelID}`, {
+						method: "DELETE",
+					})
+					.then(function (response) {
+						if (!response.ok) {
+							const errorMessage = response.headers.get("X-Error-Message");
+							if (errorMessage) {
+								console.log(errorMessage);
+							} else {
+								console.log(`Error: ${response.status}`);
+							}
+						} else {
+							window.location.reload();
+						}
+					})
+					.catch((error) => {
+						window.location.reload();
+						console.error("error submitting form: ", error);
+					});
+				}
             </script>     
             <script type="module">
-              import { 
-                attachValidationListener, 
-                validateName, 
-                validateID, 
-                validateJSON 
-              } from "/js/validation.js";
-              import { submitCreateForm } from "/js/forms.js";
-              import { fetchIndividualEntity } from "/js/infinitescroll.js";
+				import { 
+					attachValidationListener, 
+					validateName, 
+					validateID, 
+					validateJSON 
+				} from "/js/validation.js";
+				import { submitCreateForm } from "/js/forms.js";
+				import { fetchIndividualEntity } from "/js/infinitescroll.js";
 
-              attachValidationListener({
-                buttonId: "create-channel-button",
-                errorDivs: {
-                  name: "nameError",
-                  // id: "idError",
-                  // metadata: "metadataError",
-                },
-                validations: {
-                  name: validateName,
-                  // id: validateID,
-                  // metadata: validateJSON,
-                },
-                fields: {
-                  name: "name-field",
-                  // id: "id-field",
-                  // metadata: "metadata-field",
-                },
-              });
+				attachValidationListener({
+					buttonId: "create-channel-button",
+					errorDivs: {
+						name: "nameError",
+						// id: "idError",
+						// metadata: "metadataError",
+					},
+					validations: {
+						name: validateName,
+						// id: validateID,
+						// metadata: validateJSON,
+					},
+					fields: {
+						name: "name-field",
+						// id: "id-field",
+						// metadata: "metadata-field",
+					},
+				});
 
-              submitCreateForm({
-                url: '{{ printf "%s/channels" pathPrefix }}',
-                formId: "channelform",
-                alertDiv: "alertMessage",
-                modal: channelModal,
-                type: "addChannel",
-              });
+				submitCreateForm({
+					url: '{{ printf "%s/channels" pathPrefix }}',
+					formId: "channelform",
+					alertDiv: "alertMessage",
+					modal: channelModal,
+					type: "addChannel",
+				});
 
-              submitCreateForm({
-                url: '{{ printf "%s/channels/bulk" pathPrefix }}',
-                formId: "bulkchannelsform",
-                alertDiv: "alertBulkMessage",
-                modal: channelsModal,
-              });
+				submitCreateForm({
+					url: '{{ printf "%s/channels/bulk" pathPrefix }}',
+					formId: "bulkchannelsform",
+					alertDiv: "alertBulkMessage",
+					modal: channelsModal,
+				});
 
-              attachValidationListener({
-                buttonId: "edit-channel-button",
-                errorDivs: {
-                  editName: "editNameError",
-                },
-                validations: {
-                  editName: validateName,
-                },
-                fields: {
-                  editName: "name-field",
-                },
-              });
-              
-              submitCreateForm({
-                url: '{{ printf "%s/channels" pathPrefix }}',
-                formId: "editChannelForm",
-                alertDiv: "editAlertMessage",
-                modal: editChannelModal,
-                type: "edit"
-              });
+				attachValidationListener({
+					buttonId: "edit-channel-button",
+					errorDivs: {
+						editName: "editNameError",
+					},
+					validations: {
+						editName: validateName,
+					},
+					fields: {
+						editName: "name-field",
+					},
+				});
+				
+				submitCreateForm({
+					url: '{{ printf "%s/channels" pathPrefix }}',
+					formId: "editChannelForm",
+					alertDiv: "editAlertMessage",
+					modal: editChannelModal,
+					type: "edit"
+				});
             </script>
         </body>
     </html>

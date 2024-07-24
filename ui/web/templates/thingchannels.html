@@ -116,25 +116,25 @@ SPDX-License-Identifier: Apache-2.0 -->
                 </div>
             </div>
             <script>
-              const channelModal = new bootstrap.Modal(document.getElementById("addChannelModal"));
-              function openChannelModal() {
-                channelModal.show();
-              }
+                const channelModal = new bootstrap.Modal(document.getElementById("addChannelModal"));
+                function openChannelModal() {
+                    channelModal.show();
+                }
 
-              function viewChannel(id) {
-                let pathPrefix = "{{ pathPrefix }}";
-                window.location.href = `${pathPrefix}/channels/${id}`;
-              }
+                function viewChannel(id) {
+                    let pathPrefix = "{{ pathPrefix }}";
+                    window.location.href = `${pathPrefix}/channels/${id}`;
+                }
             </script>  
             <script type="module">
-              import { fetchIndividualEntity } from "/js/infinitescroll.js";
+                import { fetchIndividualEntity } from "/js/infinitescroll.js";
 
-              fetchIndividualEntity({
-                input: "channelFilter",
-                itemSelect: "infiniteScroll",
-                item: "channels",
-                pathPrefix: "{{ pathPrefix }}",
-              });
+                fetchIndividualEntity({
+                    input: "channelFilter",
+                    itemSelect: "infiniteScroll",
+                    item: "channels",
+                    pathPrefix: "{{ pathPrefix }}",
+                });
             </script>
         </body>
     </html>

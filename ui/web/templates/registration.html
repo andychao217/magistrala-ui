@@ -108,29 +108,29 @@ SPDX-License-Identifier: Apache-2.0 -->
                 });
             </script>
             <script>
-              const nameField = document.querySelector(".name-field");
-              const passwordField = document.getElementById("password");
-              const emailField = document.querySelector(".email-field");
-              const registrationError = document.getElementById("registrationError");
+                const nameField = document.querySelector(".name-field");
+                const passwordField = document.getElementById("password");
+                const emailField = document.querySelector(".email-field");
+                const registrationError = document.getElementById("registrationError");
 
-              document.getElementById("register-button").addEventListener("click", () => {
-                registrationError.innerHTML = "";
-              });
-              // Code for toggling the visibility of the password
-              $('span.password-toggle-icon').click(function() {
-                let inputType =  $("#password").attr("type");
-                if (inputType=== "password")  {
-                  $("#password").attr("type", "text");
-                  $('span.password-toggle-icon').empty();
-                  $("<i class='fa-solid fa-eye-slash' title='隐藏密码' data-bs-toggle='tooltip' data-bs-placement='bottom' data-bs-title='隐藏密码'></i>").appendTo('span.password-toggle-icon');
-                } else {
-                  $("#password").attr("type", "password");
-                  $('span.password-toggle-icon').empty();
-                  $("<i class='fa-solid fa-eye' title='显示密码' data-bs-toggle='tooltip' data-bs-placement='bottom' data-bs-title='显示密码'></i>").appendTo('span.password-toggle-icon');
-                }
-              });
+                document.getElementById("register-button").addEventListener("click", () => {
+                    registrationError.innerHTML = "";
+                });
+                // Code for toggling the visibility of the password
+                $('span.password-toggle-icon').click(function() {
+                    let inputType =  $("#password").attr("type");
+                    if (inputType=== "password")  {
+                        $("#password").attr("type", "text");
+                        $('span.password-toggle-icon').empty();
+                        $("<i class='fa-solid fa-eye-slash' title='隐藏密码' data-bs-toggle='tooltip' data-bs-placement='bottom' data-bs-title='隐藏密码'></i>").appendTo('span.password-toggle-icon');
+                    } else {
+                        $("#password").attr("type", "password");
+                        $('span.password-toggle-icon').empty();
+                        $("<i class='fa-solid fa-eye' title='显示密码' data-bs-toggle='tooltip' data-bs-placement='bottom' data-bs-title='显示密码'></i>").appendTo('span.password-toggle-icon');
+                    }
+                });
 
-              function submitRegistrationForm() {
+            function submitRegistrationForm() {
                 event.preventDefault();
                 const form = event.target;
 
@@ -143,29 +143,29 @@ SPDX-License-Identifier: Apache-2.0 -->
 
                 let pathPrefix = "{{ pathPrefix }}";
                 fetch( `${pathPrefix}/register`, {
-                  method: "POST",
-                  body: formData,
+                    method: "POST",
+                    body: formData,
                 })
-                  .then((response) => {
+                    .then((response) => {
                     switch (response.status) {
-                      case 409:
-                        emailField.classList.add("border-red");
-                        errorMessage = "用户已存在";
-                        showError(errorMessage);
+                        case 409:
+                            emailField.classList.add("border-red");
+                            errorMessage = "用户已存在";
+                            showError(errorMessage);
                         break;
-                      default:
-                        window.location.href = `${pathPrefix}/tokens/secure`;
+                        default:
+                            window.location.href = `${pathPrefix}/tokens/secure`;
                         break;
                     }
-                  })
-                  .catch((error) => {
-                    console.error("error submitting login form: ", error);
-                  });
-              }
+                    })
+                    .catch((error) => {
+                        console.error("error submitting login form: ", error);
+                    });
+            }
 
-              function showError(errorMessage) {
+            function showError(errorMessage) {
                 registrationError.innerHTML = errorMessage;
-              }
+            }
             </script>
         </body>
     </html>

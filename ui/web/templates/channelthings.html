@@ -27,19 +27,19 @@ SPDX-License-Identifier: Apache-2.0 -->
                                             <div class="modal-dialog modal-dialog-centered">
                                                 <div class="modal-content">
                                                     <div class="modal-header">
-                                                      <h1 class="modal-title" id="connectThingModalLabel">分区关联设备</h1>
-                                                      <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                      	<h1 class="modal-title" id="connectThingModalLabel">分区关联设备</h1>
+                                                      	<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                                     </div>
                                                     <div class="modal-body">
-                                                      <div class="row">
-                                                        <p>请选择要关联的设备: </p>
-                                                        <ul class="list-group" id="connectThingsList" style="padding-left: 10px; max-height: 400px; overflow-y: auto;">
-                                                        </ul>
-                                                      </div>
+														<div class="row">
+															<p>请选择要关联的设备: </p>
+															<ul class="list-group" id="connectThingsList" style="padding-left: 10px; max-height: 400px; overflow-y: auto;">
+															</ul>
+														</div>
                                                     </div>
                                                     <div class="modal-footer">
-                                                      <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">取消</button>
-                                                      <button type="button" class="btn body-button" id="connect-things-btn">关联</button>
+                                                      	<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">取消</button>
+                                                      	<button type="button" class="btn body-button" id="connect-things-btn">关联</button>
                                                     </div>
                                                 </div>
                                             </div>
@@ -47,104 +47,104 @@ SPDX-License-Identifier: Apache-2.0 -->
                                     </div>
                                     <!-- {{ template "tableheader" . }} -->
                                     <div class="row buttons mb-3">
-                                      <div class="col-4" role="group">
-                                        <button type="button" class="btn body-button" onclick="openConnectThingModal()" {{ if not $shareButton }}disabled{{ end }}>
-                                          <i class="fa-solid fa-link"></i> 分区关联设备
-                                        </button>
-                                      </div>
-                                      <div class="btn-group col-4" role="group">
-                                        <input type="radio" class="btn-check" name="btnOnlineStatus" id="btnAll" autocomplete="off" />
-                                        <label class="btn btn-outline-primary" for="btnAll">全部</label>
-                                      
-                                        <input type="radio" class="btn-check" name="btnOnlineStatus" id="btnOnline" autocomplete="off" />
-                                        <label class="btn btn-outline-primary" for="btnOnline">在线</label>
-                                      
-                                        <input type="radio" class="btn-check" name="btnOnlineStatus" id="btnOffline" autocomplete="off" />
-                                        <label class="btn btn-outline-primary" for="btnOffline">离线</label>
-                                      </div>
+										<div class="col-4" role="group">
+											<button type="button" class="btn body-button" onclick="openConnectThingModal()" {{ if not $shareButton }}disabled{{ end }}>
+												<i class="fa-solid fa-link"></i> 分区关联设备
+											</button>
+										</div>
+										<div class="btn-group col-4" role="group">
+											<input type="radio" class="btn-check" name="btnOnlineStatus" id="btnAll" autocomplete="off" />
+											<label class="btn btn-outline-primary" for="btnAll">全部</label>
+											
+											<input type="radio" class="btn-check" name="btnOnlineStatus" id="btnOnline" autocomplete="off" />
+											<label class="btn btn-outline-primary" for="btnOnline">在线</label>
+											
+											<input type="radio" class="btn-check" name="btnOnlineStatus" id="btnOffline" autocomplete="off" />
+											<label class="btn btn-outline-primary" for="btnOffline">离线</label>
+										</div>
                                     </div>
                                     {{ $channelID := .ChannelID }}
-                                      <div class="row" id="thingsGrid">
+                                    <div class="row" id="thingsGrid">
                                         {{ range $i, $t := .Things }}
-                                            <div class="col-sm-3 mb-3 mb-sm-0" id="{{ $t.ID }}-thingCard">
-                                              <div 
-                                                class="hoverCard card"  
-                                                id="{{ $t.ID }}-thingCardContent"
-                                                {{ if $t.Metadata.is_online }}
-                                                  {{ if eq $t.Metadata.is_online "1" }}
-                                                    style="background: white;"
-                                                  {{ else }}
-                                                    style="background: lightgray;"
-                                                  {{ end }}
-                                                {{ end }}
-                                              >
-                                                <div class="card-body">
-                                                  <div class="row">
-                                                    <div class="col">
-                                                      <img id="{{ $t.ID }}-thingIcon" src="/images/icon_channel.png" alt="" style="height: 38px; float: left;">
-                                                    </div>
-                                                    <div class="col">
-                                                      <div class="dropdown" style="float: right;">
-                                                        <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                                          <i class="fa-solid fa-ellipsis"></i>
-                                                        </button>
-                                                        <ul class="dropdown-menu">
-                                                          <form action="{{ printf "%s/channels/%s/things/disconnect?item=channels" pathPrefix $channelID }}" method="post">
-                                                            <li><a class="dropdown-item" onclick="viewThing('{{ $t.ID }}')"><i class="fa-solid fa-info" style="width: 16px;"></i> 查看</a></li>
-                                                            <li>
-                                                              <input type="hidden" name="thingID" value="{{ $t.ID }}" />
-                                                              <button type="submit" class="dropdown-item" {{ if not $shareButton }}disabled{{ end }}>
-                                                                <i class="fa-solid fa-link-slash" style="width: 16px;"></i> 移除设备
-                                                              </button>
-                                                            </li>
-                                                            <li
-                                                              id="{{ $t.ID }}-rebootBtn"
-                                                              {{ if $t.Metadata.is_online }}
-                                                                {{ if eq $t.Metadata.is_online "1" }}
-                                                                  style="display: block;"
-                                                                {{ else }}
-                                                                  style="display: none;"
-                                                                {{ end }}
-                                                              {{ end }}
-                                                            >
-                                                              <a class="dropdown-item" onclick="conntrolThing('{{ $t.Credentials.Identity }}', 'reboot')">
-                                                                <i class="fa-solid fa-arrows-rotate" style="width: 16px;"></i> 重启
-                                                              </a>
-                                                            </li>
-                                                          </form>
-                                                        </ul>
-                                                      </div>
-                                                    </div>
-                                                  </div>
-                                                  <div class="row">
-                                                    {{ if $t.Metadata.out_channel_array}}
-                                                      {{ $length := len $t.Metadata.out_channel_array }}
-                                                      {{if bigger $length 1}}
-                                                        <h5 
-                                                          class="card-title truncate-text" 
-                                                          data-bs-toggle="tooltip" 
-                                                          data-bs-placement="bottom" 
-                                                          data-bs-title="{{ $t.Metadata.aliase }}" 
-                                                          title="{{ $t.Metadata.aliase }}"
-                                                        >
-                                                          {{ $t.Metadata.aliase }}
-                                                        </h5>
-                                                      {{ else }}
-                                                        <h5 
-                                                          class="card-title truncate-text" 
-                                                          data-bs-toggle="tooltip" 
-                                                          data-bs-placement="bottom" 
-                                                          data-bs-title="{{ $t.Name }}" 
-                                                          title="{{ $t.Name }}"
-                                                        >
-                                                          {{ $t.Name }}
-                                                        </h5>
-                                                      {{ end }}
-                                                    {{ end }}
-                                                  </div>
-                                                </div>
-                                              </div>
-                                            </div>
+										<div class="col-sm-3 mb-3 mb-sm-0" id="{{ $t.ID }}-thingCard">
+											<div 
+												class="hoverCard card"  
+												id="{{ $t.ID }}-thingCardContent"
+												{{ if $t.Metadata.is_online }}
+													{{ if eq $t.Metadata.is_online "1" }}
+													style="background: white;"
+													{{ else }}
+													style="background: lightgray;"
+													{{ end }}
+												{{ end }}
+											>
+												<div class="card-body">
+													<div class="row">
+														<div class="col">
+															<img id="{{ $t.ID }}-thingIcon" src="/images/icon_channel.png" alt="" style="height: 38px; float: left;">
+														</div>
+														<div class="col">
+															<div class="dropdown" style="float: right;">
+																<button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+																	<i class="fa-solid fa-ellipsis"></i>
+																</button>
+																<ul class="dropdown-menu">
+																	<form action="{{ printf "%s/channels/%s/things/disconnect?item=channels" pathPrefix $channelID }}" method="post">
+																		<li><a class="dropdown-item" onclick="viewThing('{{ $t.ID }}')"><i class="fa-solid fa-info" style="width: 16px;"></i> 查看</a></li>
+																		<li>
+																			<input type="hidden" name="thingID" value="{{ $t.ID }}" />
+																			<button type="submit" class="dropdown-item" {{ if not $shareButton }}disabled{{ end }}>
+																				<i class="fa-solid fa-link-slash" style="width: 16px;"></i> 移除设备
+																			</button>
+																		</li>
+																		<li
+																			id="{{ $t.ID }}-rebootBtn"
+																			{{ if $t.Metadata.is_online }}
+																				{{ if eq $t.Metadata.is_online "1" }}
+																					style="display: block;"
+																				{{ else }}
+																					style="display: none;"
+																				{{ end }}
+																			{{ end }}
+																		>
+																			<a class="dropdown-item" onclick="conntrolThing('{{ $t.Credentials.Identity }}', 'reboot')">
+																				<i class="fa-solid fa-arrows-rotate" style="width: 16px;"></i> 重启
+																			</a>
+																		</li>
+																	</form>
+																</ul>
+															</div>
+														</div>
+													</div>
+													<div class="row">
+													{{ if $t.Metadata.out_channel_array}}
+														{{ $length := len $t.Metadata.out_channel_array }}
+															{{if bigger $length 1}}
+																<h5 
+																	class="card-title truncate-text" 
+																	data-bs-toggle="tooltip" 
+																	data-bs-placement="bottom" 
+																	data-bs-title="{{ $t.Metadata.aliase }}" 
+																	title="{{ $t.Metadata.aliase }}"
+																>
+																	{{ $t.Metadata.aliase }}
+																</h5>
+															{{ else }}
+																<h5 
+																	class="card-title truncate-text" 
+																	data-bs-toggle="tooltip" 
+																	data-bs-placement="bottom" 
+																	data-bs-title="{{ $t.Name }}" 
+																	title="{{ $t.Name }}"
+																>
+																	{{ $t.Name }}
+																</h5>
+														{{ end }}
+													{{ end }}
+													</div>
+												</div>
+											</div>
+										</div>
                                         {{ end }}
                                     </div>
                                     <!-- {{ template "tablefooter" . }} -->
@@ -155,461 +155,461 @@ SPDX-License-Identifier: Apache-2.0 -->
                 </div>
             </div>
             <script>
-              let currentDevices = {}, 
-                  newDevices = {}, 
-                  connectThingsModalList = [],  //关联设备弹框列表
-                  selectedThingsIds = []; //关联设备弹框选中id
+				let currentDevices = {}, 
+					newDevices = {}, 
+					connectThingsModalList = [],  //关联设备弹框列表
+					selectedThingsIds = []; //关联设备弹框选中id
 
-              $(document).ready(function() {
-                const currentUrl = window.location.href; // 获取当前页面的URL
-                const urlObj = new URL(currentUrl);
-                const onlineStatusValue = (currentUrl.match(/onlineStatus=(\d+)/) || [])[1] || sessionStorage.getItem("onlineStatus") || '1'; // 从URL获取onlineStatus的值
-                sessionStorage.setItem("onlineStatus", onlineStatusValue);
-                getThingsList(onlineStatusValue);
+				$(document).ready(function() {
+					const currentUrl = window.location.href; // 获取当前页面的URL
+					const urlObj = new URL(currentUrl);
+					const onlineStatusValue = (currentUrl.match(/onlineStatus=(\d+)/) || [])[1] || sessionStorage.getItem("onlineStatus") || '1'; // 从URL获取onlineStatus的值
+					sessionStorage.setItem("onlineStatus", onlineStatusValue);
+					getThingsList(onlineStatusValue);
 
-                if (onlineStatusValue === '1') {
-                  $('#btnAll').prop('checked', false);
-                  $('#btnOnline').prop('checked', true);
-                  $('#btnOffline').prop('checked', false);
-                } else if (onlineStatusValue === '0') {
-                  $('#btnAll').prop('checked', false);
-                  $('#btnOnline').prop('checked', false);
-                  $('#btnOffline').prop('checked', true);
-                } else {
-                  $('#btnAll').prop('checked', true);
-                  $('#btnOnline').prop('checked', false);
-                  $('#btnOffline').prop('checked', false);
-                }
+					if (onlineStatusValue === '1') {
+						$('#btnAll').prop('checked', false);
+						$('#btnOnline').prop('checked', true);
+						$('#btnOffline').prop('checked', false);
+					} else if (onlineStatusValue === '0') {
+						$('#btnAll').prop('checked', false);
+						$('#btnOnline').prop('checked', false);
+						$('#btnOffline').prop('checked', true);
+					} else {
+						$('#btnAll').prop('checked', true);
+						$('#btnOnline').prop('checked', false);
+						$('#btnOffline').prop('checked', false);
+					}
 
-                $('input[name="btnOnlineStatus"]').change(function() {
-                  let reqOnlineStatus = '2'; //all
-                  if (this.id === 'btnOnline') {
-                    reqOnlineStatus = '1'; //online
-                  } else if (this.id === 'btnOffline') {
-                    reqOnlineStatus = '0'; //offline
-                  }
-                  sessionStorage.setItem("onlineStatus", reqOnlineStatus);
-                  $(`#thingsGrid`).empty();
-                  currentDevices = {}, newDevices = {};
-                  refreshThingsData();
-                });
+					$('input[name="btnOnlineStatus"]').change(function() {
+						let reqOnlineStatus = '2'; //all
+						if (this.id === 'btnOnline') {
+							reqOnlineStatus = '1'; //online
+						} else if (this.id === 'btnOffline') {
+							reqOnlineStatus = '0'; //offline
+						}
+						sessionStorage.setItem("onlineStatus", reqOnlineStatus);
+						$(`#thingsGrid`).empty();
+						currentDevices = {}, newDevices = {};
+						refreshThingsData();
+					});
 
-                const intervalRefreshData = setInterval(refreshThingsData, 2000);
+					const intervalRefreshData = setInterval(refreshThingsData, 2000);
 
-                $('#connect-things-btn').click(function() {
-                  const channelID = "{{.ChannelID}}";
-                  if (selectedThingsIds.length) {
-                    // 延迟函数，返回一个在指定毫秒后解决的 Promise
-                    function delay(ms) {
-                      return new Promise(resolve => setTimeout(resolve, ms));
-                    }
+					$('#connect-things-btn').click(function() {
+						const channelID = "{{.ChannelID}}";
+						if (selectedThingsIds.length) {
+							// 延迟函数，返回一个在指定毫秒后解决的 Promise
+							function delay(ms) {
+								return new Promise(resolve => setTimeout(resolve, ms));
+							}
 
-                    async function processRequests() {
-                      try {
-                        for (const thingID of selectedThingsIds) {
-                          const url = `/ui/channels/connect?channelID=${channelID}&thingID=${thingID}`;
-                          const query = {thing_ids: selectedThingsIds}
-                          try {
-                            const response = await fetch(url, {
-                              method: "POST",
-                            });
-                            const result = await response.json();
-                            console.log('成功:', result);
-                          } catch (error) {
-                            console.error('失败:', error);
-                          }
-                          
-                          // 每个请求之间等待10毫秒
-                          await delay(100);
-                        }
-                        // 所有请求都完成后，刷新页面
-                        window.location.reload();
-                      } catch (error) {
-                        // 捕获意外错误（理论上不会走到这里，因为所有的 Promise 都已经处理）
-                        console.error("意外错误:", error);
-                        window.location.reload();
-                      }
-                    }
+							async function processRequests() {
+								try {
+									for (const thingID of selectedThingsIds) {
+										const url = `/ui/channels/connect?channelID=${channelID}&thingID=${thingID}`;
+										const query = {thing_ids: selectedThingsIds}
+										try {
+											const response = await fetch(url, {
+												method: "POST",
+											});
+											const result = await response.json();
+											console.log('成功:', result);
+										} catch (error) {
+											console.error('失败:', error);
+										}
+										
+										// 每个请求之间等待10毫秒
+										await delay(100);
+									}
+									// 所有请求都完成后，刷新页面
+									window.location.reload();
+								} catch (error) {
+									// 捕获意外错误（理论上不会走到这里，因为所有的 Promise 都已经处理）
+									console.error("意外错误:", error);
+									window.location.reload();
+								}
+							}
 
-                    // 调用异步函数
-                    processRequests();
-                  } else {
-                    showAlert("info", "请选择要添加的设备");
-                  }
-                });
-              });
+							// 调用异步函数
+							processRequests();
+						} else {
+							showAlert("info", "请选择要添加的设备");
+						}
+					});
+				});
 
-              //关联设备弹框设备列表-勾选设备
-              function onSelectNewThing(e) {
-                e.stopPropagation();
-                const checkbox = e.target;
-                const isChecked = checkbox.checked;
-                const value = e.target.value;
-                //判断是否全选，全反选
-                if (value === 'selectAll') {
-                  if (isChecked) {
-                    selectedThingsIds = connectThingsModalList.map((item)=>{
-                      return item.id;
-                    });
-                    connectThingsModalList.forEach((item)=>{
-                      $(`#checkbox_${item.id}`).prop("checked", true);
-                    });
-                  } else {
-                    selectedThingsIds = [];
-                    connectThingsModalList.forEach((item)=>{
-                      $(`#checkbox_${item.id}`).prop("checked", false);
-                    });
-                  }
-                } else {
-                  if (isChecked) {
-                    if (!selectedThingsIds.includes(value)) {
-                      selectedThingsIds.push(value);
-                    }
-                  } else {
-                    selectedThingsIds = selectedThingsIds.filter((id)=> id !== value)
-                  }
-                }
-                
-                if (selectedThingsIds.length) {
-                  $("#connect-things-btn").removeAttr("disabled");
-                  //判断全选框是否半勾选
-                  if (selectedThingsIds.length === connectThingsModalList.length) {
-                    $(`#checkbox_selectAll`).prop("checked", true);
-                    $(`#checkbox_selectAll`).prop("indeterminate", false);
-                  } else {
-                    $(`#checkbox_selectAll`).prop("indeterminate", true);
-                    $(`#checkbox_selectAll`).prop("checked", false);
-                  }
-                } else {
-                  $("#connect-things-btn").attr("disabled", true);
-                  $(`#checkbox_selectAll`).prop("indeterminate", false);
-                  $(`#checkbox_selectAll`).prop("checked", false);
-                }
-              }
+				//关联设备弹框设备列表-勾选设备
+				function onSelectNewThing(e) {
+					e.stopPropagation();
+					const checkbox = e.target;
+					const isChecked = checkbox.checked;
+					const value = e.target.value;
+					//判断是否全选，全反选
+					if (value === 'selectAll') {
+						if (isChecked) {
+							selectedThingsIds = connectThingsModalList.map((item)=>{
+							return item.id;
+						});
+							connectThingsModalList.forEach((item)=>{
+							$(`#checkbox_${item.id}`).prop("checked", true);
+						});
+						} else {
+							selectedThingsIds = [];
+							connectThingsModalList.forEach((item)=>{
+								$(`#checkbox_${item.id}`).prop("checked", false);
+							});
+						}
+					} else {
+						if (isChecked) {
+							if (!selectedThingsIds.includes(value)) {
+								selectedThingsIds.push(value);
+							}
+						} else {
+							selectedThingsIds = selectedThingsIds.filter((id)=> id !== value)
+						}
+					}
+				
+					if (selectedThingsIds.length) {
+						$("#connect-things-btn").removeAttr("disabled");
+						//判断全选框是否半勾选
+						if (selectedThingsIds.length === connectThingsModalList.length) {
+							$(`#checkbox_selectAll`).prop("checked", true);
+							$(`#checkbox_selectAll`).prop("indeterminate", false);
+						} else {
+							$(`#checkbox_selectAll`).prop("indeterminate", true);
+							$(`#checkbox_selectAll`).prop("checked", false);
+						}
+					} else {
+						$("#connect-things-btn").attr("disabled", true);
+						$(`#checkbox_selectAll`).prop("indeterminate", false);
+						$(`#checkbox_selectAll`).prop("checked", false);
+					}
+				}
 
-              //打开关联设备弹框
-              function openConnectThingModal() {
-                const thingModal = new bootstrap.Modal(document.getElementById("connectThingModal"));
-                thingModal.show();
+				//打开关联设备弹框
+				function openConnectThingModal() {
+					const thingModal = new bootstrap.Modal(document.getElementById("connectThingModal"));
+					thingModal.show();
 
-                connectThingsModalList = [], selectedThingsIds = [];
+					connectThingsModalList = [], selectedThingsIds = [];
 
-                fetch(`/ui/entities?item=things`,{ method: "GET" })
-                  .then((response) => response.json())
-                  .then((data) => {
-                    connectThingsModalList = data.data;
-                    $(`#connectThingsList`).empty();
-                    //全选按钮
-                    const $selectAll = $(`
-                        <li class="list-group-item newThingItemList">
-                          <input 
-                            class="form-check-input" 
-                            type="checkbox" 
-                            value="selectAll" 
-                            id="checkbox_selectAll"
-                            onchange="onSelectNewThing(event)"
-                          />
-                          <label class="form-check-label" for="checkbox_selectAll" style="margin-left:5px">
-                            全选
-                          </label>
-                        </li>
-                      `);
-                    $(`#connectThingsList`).append($selectAll);
+					fetch(`/ui/entities?item=things`,{ method: "GET" })
+						.then((response) => response.json())
+						.then((data) => {
+							connectThingsModalList = data.data;
+							$(`#connectThingsList`).empty();
+							//全选按钮
+							const $selectAll = $(`
+								<li class="list-group-item newThingItemList">
+									<input 
+										class="form-check-input" 
+										type="checkbox" 
+										value="selectAll" 
+										id="checkbox_selectAll"
+										onchange="onSelectNewThing(event)"
+									/>
+									<label class="form-check-label" for="checkbox_selectAll" style="margin-left:5px">
+										全选
+									</label>
+								</li>
+							`);
+							$(`#connectThingsList`).append($selectAll);
 
-                    //设备列表
-                    connectThingsModalList.forEach((thing, index)=>{
-                      const thingName = thing.metadata.out_channel_array && thing.metadata.out_channel_array.length > 1 ? 
-                        thing.metadata.aliase : thing.name;
-                      const $thingList = $(`
-                        <li class="list-group-item newThingItemList" >
-                          <input 
-                            class="form-check-input" 
-                            type="checkbox" 
-                            value="${thing.id}" 
-                            id="checkbox_${thing.id}"
-                            onchange="onSelectNewThing(event)"
-                            name="checkbox_${thing.id}" 
-                            ${selectedThingsIds.includes(thing.id) ? `checked` : ``}
-                          />
-                          <label for="checkbox_${thing.id}" class="form-check-label">
-                            <img 
-                              src="/images/icon_channel.png" 
-                              style="height: 16px; margin-top: -3px;"
-                            />
-                            <span 
-                              data-bs-toggle="tooltip" 
-                              data-bs-placement="bottom" 
-                              data-bs-title="${thingName}" 
-                              title="${thingName}"
-                            >
-                              ${thingName}
-                            </span>
-                          </label>
-                        </li>
-                      `);
-                      $(`#connectThingsList`).append($thingList);
-                    })
+							//设备列表
+							connectThingsModalList.forEach((thing, index)=>{
+								const thingName = thing.metadata.out_channel_array && thing.metadata.out_channel_array.length > 1 ? 
+									thing.metadata.aliase : thing.name;
+								const $thingList = $(`
+									<li class="list-group-item newThingItemList" >
+										<input 
+											class="form-check-input" 
+											type="checkbox" 
+											value="${thing.id}" 
+											id="checkbox_${thing.id}"
+											onchange="onSelectNewThing(event)"
+											name="checkbox_${thing.id}" 
+											${selectedThingsIds.includes(thing.id) ? `checked` : ``}
+										/>
+										<label for="checkbox_${thing.id}" class="form-check-label">
+											<img 
+												src="/images/icon_channel.png" 
+												style="height: 16px; margin-top: -3px;"
+											/>
+											<span 
+												data-bs-toggle="tooltip" 
+												data-bs-placement="bottom" 
+												data-bs-title="${thingName}" 
+												title="${thingName}"
+											>
+												${thingName}
+											</span>
+										</label>
+									</li>
+								`);
+								$(`#connectThingsList`).append($thingList);
+							})
 
-                    $("#connect-things-btn").attr("disabled", true);
-                    $(`#checkbox_selectAll`).prop("indeterminate", false);
-                    $(`#checkbox_selectAll`).prop("checked", false);
-                  })
-                  .catch((error) => console.error("Error:", error));
-              }
+							$("#connect-things-btn").attr("disabled", true);
+							$(`#checkbox_selectAll`).prop("indeterminate", false);
+							$(`#checkbox_selectAll`).prop("checked", false);
+						})
+						.catch((error) => console.error("Error:", error));
+				}
 
-              //查看详情
-              function viewThing(id) {
-                window.location.href = '{{printf "%s/things/" pathPrefix}}' + id;
-              }
+				//查看详情
+				function viewThing(id) {
+					window.location.href = '{{printf "%s/things/" pathPrefix}}' + id;
+				}
 
-              //控制设备
-              function conntrolThing(thingIdentity, controlType) {
-                const domainID = sessionStorage.getItem("domainID");
-                if (domainID) {
-                  fetch(`/ui/domains/${domainID}/domainInJSON`, {
-                    method: "GET",
-                  })
-                    .then(response => {
-                      if (!response.ok) {
-                        throw new Error('Network response was not ok');
-                      }
-                      return response.json(); // 直接将流转换为JSON对象
-                    })
-                    .then(json => {
-                      const data = json.data;
-                      const domainData = JSON.parse(data).domainData;
-                      const defaultChannelId = domainData.metadata["comID"];
-                      if (domainID && defaultChannelId) {
-                        postMessage(comID, controlType, thingIdentity);
-                      }
-                    })
-                }
-              }
+				//控制设备
+				function conntrolThing(thingIdentity, controlType) {
+					const domainID = sessionStorage.getItem("domainID");
+					if (domainID) {
+						fetch(`/ui/domains/${domainID}/domainInJSON`, {
+							method: "GET",
+						})
+							.then(response => {
+								if (!response.ok) {
+									throw new Error('Network response was not ok');
+								}
+								return response.json(); // 直接将流转换为JSON对象
+							})
+							.then(json => {
+								const data = json.data;
+								const domainData = JSON.parse(data).domainData;
+								const defaultChannelId = domainData.metadata["comID"];
+								if (domainID && defaultChannelId) {
+									postMessage(comID, controlType, thingIdentity);
+								}
+							})
+					}
+				}
 
-              function changeOnlineStatus(thing){
-                const onlineStatus = thing.metadata && thing.metadata.is_online === "1";
-                if (onlineStatus) {
-                  $(`#${thing.id}-thingCardContent`).css('background', 'white');
-                  $(`#${thing.id}-rebootBtn`).css('display', 'block');
-                  $(`#${thing.id}-deleteBtn`).css('display', 'none');
-                } else {
-                  $(`#${thing.id}-thingCardContent`).css('background', 'lightgray');
-                  $(`#${thing.id}-rebootBtn`).css('display', 'none');
-                  $(`#${thing.id}-deleteBtn`).css('display', 'block');
-                }
-              }
+				function changeOnlineStatus(thing){
+					const onlineStatus = thing.metadata && thing.metadata.is_online === "1";
+					if (onlineStatus) {
+						$(`#${thing.id}-thingCardContent`).css('background', 'white');
+						$(`#${thing.id}-rebootBtn`).css('display', 'block');
+						$(`#${thing.id}-deleteBtn`).css('display', 'none');
+					} else {
+						$(`#${thing.id}-thingCardContent`).css('background', 'lightgray');
+						$(`#${thing.id}-rebootBtn`).css('display', 'none');
+						$(`#${thing.id}-deleteBtn`).css('display', 'block');
+					}
+				}
 
-              //轮询刷新thingslist，以实现监听things在线状态的
-              function refreshThingsData() {
-                // 获取当前页面的完整URL
-                const currentUrl = window.location.href;
-                // 创建URL对象
-                const urlObj = new URL(currentUrl);
-                // 使用URL对象的searchParams属性获取URLSearchParams对象
-                const searchParams = urlObj.searchParams;
-                // 使用get方法从URLSearchParams对象中获取page和limit的值
-                const page = searchParams.get('page') || 1;
-                const limit = searchParams.get('limit') || 1000;
-                const reqOnlineStatus = sessionStorage.getItem("onlineStatus") || 1;
-                fetch(`${urlObj.pathname}InJSON?page=${page}&limit=${limit}&onlineStatus=${reqOnlineStatus}`, {
-                  method: "GET",
-                })
-                  .then(response => {
-                    if (!response.ok) {
-                      throw new Error('Network response was not ok');
-                    }
-                    return response.json(); // 直接将流转换为JSON对象
-                  })
-                  .then(json => {
-                    const data = json.data;
-                    const thingsData = JSON.parse(data).thingsData;
-                    const things = thingsData.things;
-                    newDevices = {};
-                      // 所有在线\离线
-                    if (things.length) {
-                      things.forEach(device => {
-                        newDevices[device.id] = {
-                          id: device.id,
-                          name: device.name,
-                          credentials: device.credentials,
-                          metadata: device.metadata,
-                          status: device.status,
-                          created_at: device.created_at,
-                          updated_at: device.updated_at,
-                        };
-                      });
-                      updateThingsGrid(things);
-                    } else {
-                      currentDevices = {};
-                      $(`#thingsGrid`).empty();
-                    };
-                  })
-                  .catch(error => {
-                    // console.error('处理fetch或JSON时出错:', error);
-                  });
-              }
-              
-              function updateThingsGrid(devices) {
-                const $thingsGrid = $('#thingsGrid');
-                const currentDevicesLength = Object.keys(currentDevices).length;
-                const newDevicesLength = Object.keys(newDevices).length;
-                const urlObj = new URL(window.location.href);
-                const match = urlObj.pathname.match(/\/channels\/([^\/]+)\/things/);
-                let channelID = '';
-                if (match) {
-                  channelID = match[1];
-                }
+				//轮询刷新thingslist，以实现监听things在线状态的
+				function refreshThingsData() {
+					// 获取当前页面的完整URL
+					const currentUrl = window.location.href;
+					// 创建URL对象
+					const urlObj = new URL(currentUrl);
+					// 使用URL对象的searchParams属性获取URLSearchParams对象
+					const searchParams = urlObj.searchParams;
+					// 使用get方法从URLSearchParams对象中获取page和limit的值
+					const page = searchParams.get('page') || 1;
+					const limit = searchParams.get('limit') || 1000;
+					const reqOnlineStatus = sessionStorage.getItem("onlineStatus") || 1;
+					fetch(`${urlObj.pathname}InJSON?page=${page}&limit=${limit}&onlineStatus=${reqOnlineStatus}`, {
+						method: "GET",
+					})
+						.then(response => {
+							if (!response.ok) {
+								throw new Error('Network response was not ok');
+							}
+							return response.json(); // 直接将流转换为JSON对象
+						})
+						.then(json => {
+							const data = json.data;
+							const thingsData = JSON.parse(data).thingsData;
+							const things = thingsData.things;
+							newDevices = {};
+							// 所有在线\离线
+							if (things.length) {
+								things.forEach(device => {
+									newDevices[device.id] = {
+										id: device.id,
+										name: device.name,
+										credentials: device.credentials,
+										metadata: device.metadata,
+										status: device.status,
+										created_at: device.created_at,
+										updated_at: device.updated_at,
+									};
+								});
+								updateThingsGrid(things);
+							} else {
+								currentDevices = {};
+								$(`#thingsGrid`).empty();
+							};
+						})
+						.catch(error => {
+							// console.error('处理fetch或JSON时出错:', error);
+						});
+				}
+				
+				function updateThingsGrid(devices) {
+					const $thingsGrid = $('#thingsGrid');
+					const currentDevicesLength = Object.keys(currentDevices).length;
+					const newDevicesLength = Object.keys(newDevices).length;
+					const urlObj = new URL(window.location.href);
+					const match = urlObj.pathname.match(/\/channels\/([^\/]+)\/things/);
+					let channelID = '';
+					if (match) {
+						channelID = match[1];
+					}
 
-                if (currentDevicesLength > newDevicesLength) {
-                  // 移除不在(查询在线时刚离线的，查询离线时刚上线的)的设备\
-                  Object.keys(currentDevices).forEach((curId)=>{
-                    if (
-                      (typeof newDevices === 'object' && Object.entries(newDevices).length === 0) || 
-                      (newDevices[curId] === null || newDevices[curId] === undefined) ||
-                      (typeof newDevices[curId] === 'object' && Object.entries(newDevices[curId]).length === 0)
-                    ) {
-                      // 移除不在(查询在线时离线的，查询离线时上线的)的设备
-                      $(`#${curId}-thingCard`).remove();
-                    }
-                  })
-                } else if (currentDevicesLength < newDevicesLength) {
-                  // 新增(查询在线时刚上线的，查询离线时刚离线的)的设备]
-                  Object.keys(newDevices).forEach((newId)=>{
-                    if (
-                      (typeof currentDevices === 'object' && Object.entries(currentDevices).length === 0) || 
-                      (currentDevices[newId] === null || currentDevices[newId] === undefined) ||
-                      (typeof currentDevices[newId] === 'object' && Object.entries(currentDevices[newId]).length === 0)
-                    ) {
-                      const device = newDevices[newId];
-                      const imgSpan = `<img id="${device.id}-thingIcon" src="/images/icon_channel.png" alt="" style="height: 38px; float: left;">`;
-                      const btnSpan = `
-                        <div class="dropdown" style="float: right;">
-                          <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                            <i class="fa-solid fa-ellipsis"></i>
-                          </button>
-                          <ul class="dropdown-menu">
-                            <form action="/ui/channels/${channelID}/things/disconnect?item=channels" method="post">
-                              <li><a class="dropdown-item" onclick="viewThing('${device.id}')"><i class="fa-solid fa-info" style="width: 16px;"></i> 查看</a></li>
-                              <li>
-                                <input type="hidden" name="thingID" value="${device.id}" />
-                                <button type="submit" class="dropdown-item">
-                                  <i class="fa-solid fa-link-slash" style="width: 16px;"></i> 移除设备
-                                </button>
-                              </li>
-                              <li id="${device.id}-rebootBtn" style="display: ${device.metadata && Number(device.metadata.is_online) === 1 ? 'block':'none'}">
-                                <a class="dropdown-item" onclick="conntrolThing('${device.credentials.identity}', 'reboot')">
-                                  <i class="fa-solid fa-arrows-rotate" style="width: 16px;"></i> 重启
-                                </a>
-                              </li>
-                            </form>
-                          </ul>
-                        </div>
-                      `;
-                      const thingName = device.metadata.out_channel_array && device.metadata.out_channel_array.length > 1 ? 
-                        device.metadata.aliase : device.name;
-                      const $thingCard = $(`
-                        <div class="col-sm-3 mb-3 mb-sm-0" id="${device.id}-thingCard">
-                          <div class="hoverCard card" id="${device.id}-thingCardContent">
-                            <div class="card-body">
-                              <div class="row">
-                                <div class="col">
-                                  ${imgSpan}
-                                </div>
-                                <div class="col">
-                                  ${btnSpan}
-                                </div>
-                              </div>
-                              <div class="row" style="margin-top:50px">
-                                <h5 
-                                  class="card-title truncate-text"
-                                  data-bs-toggle="tooltip" 
-                                  data-bs-placement="bottom" 
-                                  data-bs-title="${thingName}" 
-                                  title="${thingName}"
-                                >
-                                  ${thingName}
-                                </h5>
-                              </div>
-                            </div>
-                          </div>
-                        </div>
-                      `);
-                      $(`#thingsGrid`).append($thingCard);
-                      changeOnlineStatus(device);
-                    }
-                  })
-                }
+					if (currentDevicesLength > newDevicesLength) {
+						// 移除不在(查询在线时刚离线的，查询离线时刚上线的)的设备\
+						Object.keys(currentDevices).forEach((curId)=>{
+							if (
+								(typeof newDevices === 'object' && Object.entries(newDevices).length === 0) || 
+								(newDevices[curId] === null || newDevices[curId] === undefined) ||
+								(typeof newDevices[curId] === 'object' && Object.entries(newDevices[curId]).length === 0)
+							) {
+								// 移除不在(查询在线时离线的，查询离线时上线的)的设备
+								$(`#${curId}-thingCard`).remove();
+							}
+						})
+					} else if (currentDevicesLength < newDevicesLength) {
+						// 新增(查询在线时刚上线的，查询离线时刚离线的)的设备]
+						Object.keys(newDevices).forEach((newId)=>{
+							if (
+								(typeof currentDevices === 'object' && Object.entries(currentDevices).length === 0) || 
+								(currentDevices[newId] === null || currentDevices[newId] === undefined) ||
+								(typeof currentDevices[newId] === 'object' && Object.entries(currentDevices[newId]).length === 0)
+							) {
+								const device = newDevices[newId];
+								const imgSpan = `<img id="${device.id}-thingIcon" src="/images/icon_channel.png" alt="" style="height: 38px; float: left;">`;
+								const btnSpan = `
+									<div class="dropdown" style="float: right;">
+										<button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+											<i class="fa-solid fa-ellipsis"></i>
+										</button>
+										<ul class="dropdown-menu">
+										<form action="/ui/channels/${channelID}/things/disconnect?item=channels" method="post">
+											<li><a class="dropdown-item" onclick="viewThing('${device.id}')"><i class="fa-solid fa-info" style="width: 16px;"></i> 查看</a></li>
+											<li>
+												<input type="hidden" name="thingID" value="${device.id}" />
+												<button type="submit" class="dropdown-item">
+													<i class="fa-solid fa-link-slash" style="width: 16px;"></i> 移除设备
+												</button>
+											</li>
+											<li id="${device.id}-rebootBtn" style="display: ${device.metadata && Number(device.metadata.is_online) === 1 ? 'block':'none'}">
+												<a class="dropdown-item" onclick="conntrolThing('${device.credentials.identity}', 'reboot')">
+													<i class="fa-solid fa-arrows-rotate" style="width: 16px;"></i> 重启
+												</a>
+											</li>
+										</form>
+										</ul>
+									</div>
+								`;
+								const thingName = device.metadata.out_channel_array && device.metadata.out_channel_array.length > 1 ? 
+								device.metadata.aliase : device.name;
+								const $thingCard = $(`
+									<div class="col-sm-3 mb-3 mb-sm-0" id="${device.id}-thingCard">
+										<div class="hoverCard card" id="${device.id}-thingCardContent">
+											<div class="card-body">
+												<div class="row">
+													<div class="col">
+														${imgSpan}
+													</div>
+													<div class="col">
+														${btnSpan}
+													</div>
+												</div>
+												<div class="row" style="margin-top:50px">
+													<h5 
+														class="card-title truncate-text"
+														data-bs-toggle="tooltip" 
+														data-bs-placement="bottom" 
+														data-bs-title="${thingName}" 
+														title="${thingName}"
+													>
+														${thingName}
+													</h5>
+												</div>
+											</div>
+										</div>
+									</div>
+								`);
+								$(`#thingsGrid`).append($thingCard);
+								changeOnlineStatus(device);
+							}
+						})
+					}
 
-                currentDevices = {};
-                currentDevices = newDevices;
-              }
+					currentDevices = {};
+					currentDevices = newDevices;
+				}
 
-              //根据在线类型获取设备列表
-              function getThingsList(onlineStatus) {
-                const urlObj = new URL(window.location.href);
-                currentDevices = {};
-                fetch(`${urlObj.pathname}InJSON?limit=1000&onlineStatus=${onlineStatus}`, {
-                  method: "GET",
-                })
-                  .then(response => {
-                    if (!response.ok) {
-                      throw new Error('Network response was not ok');
-                    }
-                    return response.json(); // 直接将流转换为JSON对象
-                  })
-                  .then(json => {
-                    const data = json.data;
-                    const thingsData = JSON.parse(data).thingsData;
-                    const things = thingsData.things || [];
-                    currentDevices = {};
-                    if (things.length) {
-                      things.forEach(device => {
-                        currentDevices[device.id] = {
-                          id: device.id,
-                          name: device.name,
-                          credentials: device.credentials,
-                          metadata: device.metadata,
-                          status: device.status,
-                          created_at: device.created_at,
-                          updated_at: device.updated_at,
-                        };
-                      });
-                    }
-                  })
-                  .catch(error => {
-                    //
-                  });
-              }
+				//根据在线类型获取设备列表
+				function getThingsList(onlineStatus) {
+					const urlObj = new URL(window.location.href);
+					currentDevices = {};
+					fetch(`${urlObj.pathname}InJSON?limit=1000&onlineStatus=${onlineStatus}`, {
+						method: "GET",
+					})
+						.then(response => {
+							if (!response.ok) {
+								throw new Error('Network response was not ok');
+							}
+							return response.json(); // 直接将流转换为JSON对象
+						})
+						.then(json => {
+							const data = json.data;
+							const thingsData = JSON.parse(data).thingsData;
+							const things = thingsData.things || [];
+							currentDevices = {};
+							if (things.length) {
+								things.forEach(device => {
+									currentDevices[device.id] = {
+										id: device.id,
+										name: device.name,
+										credentials: device.credentials,
+										metadata: device.metadata,
+										status: device.status,
+										created_at: device.created_at,
+										updated_at: device.updated_at,
+									};
+								});
+							}
+						})
+						.catch(error => {
+						//
+						});
+				}
 
-              function postMessage(channelID, controlType, thingIdentity) {
-                if (controlType === "reboot") {
-                  const url = window.location.href; // 获取当前页面的URL
-                  const address = new URL(url);
-                  const port =  sessionStorage.getItem("socketBridgePort") || "63001";
-                  const identity = thingIdentity.split("_")[0];
-                  const data = {
-                    channelID: channelID,
-                    thingIdentity: identity,
-                    host: address.hostname,
-                    comID: channelID,
-                    controlType: 'reboot',
-                  }
-                  fetch(`http://${address.hostname}:${port}/controlDevice`, {
-                    method: "POST",
-                    headers: {
-                      "Content-Type": "application/json",
-                    },
-                    body: JSON.stringify(data),
-                  })
-                    .then(response => {
-                      console.log("postMessage: ", response)
-                    })
-                    .catch((error) => {
-                      console.error("error postMessage: ", error);
-                    });
-                } else {
-                }
-              }
+				function postMessage(channelID, controlType, thingIdentity) {
+					if (controlType === "reboot") {
+						const url = window.location.href; // 获取当前页面的URL
+						const address = new URL(url);
+						const port =  sessionStorage.getItem("socketBridgePort") || "63001";
+						const identity = thingIdentity.split("_")[0];
+						const data = {
+							channelID: channelID,
+							thingIdentity: identity,
+							host: address.hostname,
+							comID: channelID,
+							controlType: 'reboot',
+						}
+						fetch(`http://${address.hostname}:${port}/controlDevice`, {
+							method: "POST",
+							headers: {
+								"Content-Type": "application/json",
+							},
+							body: JSON.stringify(data),
+						})
+							.then(response => {
+								console.log("postMessage: ", response)
+							})
+							.catch((error) => {
+								console.error("error postMessage: ", error);
+							});
+					} else {
+					}
+				}
             </script>
         </body>
     </html>

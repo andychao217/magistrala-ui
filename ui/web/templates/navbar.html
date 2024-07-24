@@ -419,83 +419,77 @@ SPDX-License-Identifier: Apache-2.0 -->
     <script src="/js/listUtils.js"></script>
     <script src="/js/cookie.js"></script>
     <script defer>
-      try {
-        const userID = '{{.Session.User.ID}}';
-        const role = '{{.Session.User.Role}}';
-        const loginStatus = '{{.Session.LoginStatus}}';
-        let domainID, domainName, domainPermissions;
+        try {
+            const userID = '{{.Session.User.ID}}';
+            const role = '{{.Session.User.Role}}';
+            const loginStatus = '{{.Session.LoginStatus}}';
+            let domainID, domainName, domainPermissions;
 
-        if (role !== "admin") {
-            document.getElementById("users-nav-items").style.display = "none";
-            document.getElementById("domain-collapse").style.display = "none";
-        } else {
-            document.getElementById("domain-collapse-toggle").setAttribute('data-bs-toggle', 'collapse');
-            document.getElementById("domain-collapse-toggle").classList.add('dropdown-toggle');
-        }
-        if (loginStatus === "domain") {
-            domainPermissions = '{{.Session.Domain.Permissions}}';
-            domainID = '{{.Session.Domain.ID}}';
-        }
-
-        if (loginStatus !== "domain") {
-            document.getElementById("domain-nav-item").style.display = "none";
-            document.getElementById("things-nav-items").style.display = "none";
-            document.getElementById("index-nav-items").style.display = "none";
-            document.getElementById("domain-header-dropdown").style.display = "none";
-        } else {
-            document.getElementById("domains-sidebar-link").style.display = "none";
-            if (!domainPermissions.includes("admin")) {
-                document.getElementById("domainInvitations").style.display = "none";
+            if (role !== "admin") {
+                document.getElementById("users-nav-items").style.display = "none";
+                document.getElementById("domain-collapse").style.display = "none";
+            } else {
+                document.getElementById("domain-collapse-toggle").setAttribute('data-bs-toggle', 'collapse');
+                document.getElementById("domain-collapse-toggle").classList.add('dropdown-toggle');
             }
-        }
-      } catch (error) {
-        console.error("Error loading session details:", error);
-      }
+            if (loginStatus === "domain") {
+                domainPermissions = '{{.Session.Domain.Permissions}}';
+                domainID = '{{.Session.Domain.ID}}';
+            }
 
-      const createDomainModal = new bootstrap.Modal(document.getElementById("createDomainModal"));
-      function openCreateDomainModal() {
-        createDomainModal.show();
-      }
-      // Toggle the side navigation
-      // document.querySelectorAll("#sidebarToggle, #sidebarToggleTop")
-      document.querySelectorAll("#sidebarToggleTop").forEach(function (element) {
-        element.addEventListener("click", function (e) {
-          document.body.classList.toggle("sidebar-toggled");
-          document.querySelector(".sidebar").classList.toggle("toggled");
+            if (loginStatus !== "domain") {
+                document.getElementById("domain-nav-item").style.display = "none";
+                document.getElementById("things-nav-items").style.display = "none";
+                document.getElementById("index-nav-items").style.display = "none";
+                document.getElementById("domain-header-dropdown").style.display = "none";
+            } else {
+                document.getElementById("domains-sidebar-link").style.display = "none";
+                if (!domainPermissions.includes("admin")) {
+                    document.getElementById("domainInvitations").style.display = "none";
+                }
+            }
+        } catch (error) {
+            console.error("Error loading session details:", error);
+        }
+
+        const createDomainModal = new bootstrap.Modal(document.getElementById("createDomainModal"));
+        function openCreateDomainModal() {
+            createDomainModal.show();
+        }
+        // Toggle the side navigation
+        // document.querySelectorAll("#sidebarToggle, #sidebarToggleTop")
+        document.querySelectorAll("#sidebarToggleTop").forEach(function (element) {
+            element.addEventListener("click", function (e) {
+                document.body.classList.toggle("sidebar-toggled");
+                document.querySelector(".sidebar").classList.toggle("toggled");
+            });
         });
-      });
 
-      // Close any open menu accordions when window is resized below 768px
-      window.addEventListener("resize", function () {
-        // Toggle the side navigation when window is resized below 480px
-        if (
-          window.innerWidth < 480 &&
-          !document.querySelector(".sidebar").classList.contains("toggled")
-        ) {
-          document.body.classList.add("sidebar-toggled");
-          document.querySelector(".sidebar").classList.add("toggled");
-        }
-      });
-
-      function logout() {
-        fetch('{{ printf "%s/logout" pathPrefix }}', {
-          method: "GET",
-        })
-          .then((response) => {
-            if (response.status === 200) {
-              clearAllCookies();
-              window.location.href = '{{ printf "%s/login" pathPrefix }}';
+        // Close any open menu accordions when window is resized below 768px
+        window.addEventListener("resize", function () {
+            // Toggle the side navigation when window is resized below 480px
+            if (
+                window.innerWidth < 480 &&
+                !document.querySelector(".sidebar").classList.contains("toggled")
+            ) {
+                document.body.classList.add("sidebar-toggled");
+                document.querySelector(".sidebar").classList.add("toggled");
             }
-          })
-          .catch((error) => {
-            console.error("error logging out: ", error);
-          });
-      }
+        });
 
-    //   codeMirrorEditor({
-    //     textArea: "domain-metadata",
-    //     button: "create-domain-button",
-    //     value: {},
-    //   });
+        function logout() {
+            fetch('{{ printf "%s/logout" pathPrefix }}', {
+                method: "GET",
+            })
+                .then((response) => {
+                    if (response.status === 200) {
+                        clearAllCookies();
+                        window.location.href = '{{ printf "%s/login" pathPrefix }}';
+                    }
+                })
+                .catch((error) => {
+                    console.error("error logging out: ", error);
+                });
+        }
     </script>
 {{ end }}
