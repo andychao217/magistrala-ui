@@ -390,12 +390,12 @@ SPDX-License-Identifier: Apache-2.0 -->
             </div>
             <script>
                 let pathPrefix = "{{ pathPrefix }}";
-                const userModal = new bootstrap.Modal(
-                    document.getElementById("addUserModal"),
-                );
+                const userModal = new bootstrap.Modal(document.getElementById("addUserModal"));
+
                 function openUserModal() {
                     userModal.show();
                 }
+
                 function openTab(relation) {
                     let groupID = "{{ .GroupID }}";
                     event.preventDefault();

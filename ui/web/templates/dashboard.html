@@ -91,11 +91,9 @@ SPDX-License-Identifier: Apache-2.0 -->
                 </div>
             </div>
             <script>
-              const layout = '{{ .Dashboard.Layout }}';
-              const dashboardID = '{{ .Dashboard.ID }}';
-            //   const metadata = '{{ .Dashboard.Metadata }}';
-            //   let metadataBuffer = {};
-              const pathPrefix = '{{ pathPrefix }}';
+                const layout = '{{ .Dashboard.Layout }}',
+                      dashboardID = '{{ .Dashboard.ID }}',
+                      pathPrefix = '{{ pathPrefix }}';
             </script>
             <script src="https://cdn.jsdelivr.net/npm/muuri@0.9.5/dist/muuri.min.js"></script>
             <script src="/js/charts.js"></script>

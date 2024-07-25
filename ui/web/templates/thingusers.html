@@ -209,8 +209,9 @@ SPDX-License-Identifier: Apache-2.0 -->
                 </div>
             </div>
             <script>
-				let pathPrefix = "{{ pathPrefix }}";
-				const userModal = new bootstrap.Modal(document.getElementById("addUserModal"));
+				const pathPrefix = "{{ pathPrefix }}",
+                      userModal = new bootstrap.Modal(document.getElementById("addUserModal"));
+
 				function openUserModal() {
 					userModal.show();
 				}

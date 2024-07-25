@@ -62,35 +62,31 @@ SPDX-License-Identifier: Apache-2.0 -->
                 </div>
             </div>
             <script>
-              document.addEventListener("DOMContentLoaded", function () {
-                const form = document.querySelector("form");
-
-                form.addEventListener("submit", function (e) {
-                  e.preventDefault();
-
-                  const formData = new FormData(form);
-
-                  const xhr = new XMLHttpRequest();
-                  xhr.open("POST", '{{ printf "%s/bootstraps/%s/terminal/input" pathPrefix .ThingID }}');
-                  xhr.onload = function () {
-                    if (xhr.status === 200) {
-                        const response = JSON.parse(xhr.responseText);
-
-                        // Update the HTML dynamically with the response
-                        const terminal = document.querySelector(".terminal");
-                        const commandDiv = document.createElement("div");
-                        commandDiv.textContent = response.command;
-                        const resultDiv = document.createElement("div");
-                        resultDiv.textContent = response.result;
-                        terminal.appendChild(commandDiv);
-                        terminal.appendChild(resultDiv);
-                    } else {
-                      // Handle error
-                    }
-                  };
-                  xhr.send(formData);
+                document.addEventListener("DOMContentLoaded", function () {
+                    const form = document.querySelector("form");
+                    form.addEventListener("submit", function (e) {
+                        e.preventDefault();
+                        const formData = new FormData(form);
+                        const xhr = new XMLHttpRequest();
+                        xhr.open("POST", '{{ printf "%s/bootstraps/%s/terminal/input" pathPrefix .ThingID }}');
+                        xhr.onload = function () {
+                            if (xhr.status === 200) {
+                                const response = JSON.parse(xhr.responseText);
+                                // Update the HTML dynamically with the response
+                                const terminal = document.querySelector(".terminal");
+                                const commandDiv = document.createElement("div");
+                                commandDiv.textContent = response.command;
+                                const resultDiv = document.createElement("div");
+                                resultDiv.textContent = response.result;
+                                terminal.appendChild(commandDiv);
+                                terminal.appendChild(resultDiv);
+                            } else {
+                                // Handle error
+                            }
+                        };
+                        xhr.send(formData);
+                    });
                 });
-              });
             </script>
         </body>
     </html>

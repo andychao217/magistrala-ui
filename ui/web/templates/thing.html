@@ -144,18 +144,16 @@ SPDX-License-Identifier: Apache-2.0 -->
                         </div>
                     </div>
                 </div>
-
                 <!-- status update modals -->
                 {{ template "statusupdate" . }}
-
             </div> 
             <script type="module">
                 import { 
                 attachEditRowListener, 
-                updateName, 
-                updateSecret, 
-                updateTags, 
-                // updateMetadata 
+                    updateName, 
+                    updateSecret, 
+                    updateTags, 
+                    // updateMetadata 
                 } from "/js/update.js";
 
                 attachEditRowListener({

@@ -375,6 +375,7 @@ SPDX-License-Identifier: Apache-2.0 -->
 													{{ end }}
 												{{ end }}
 												<h5 
+													id="{{ $t.ID }}-deviceName"
 													class="card-title truncate-text" 
 													data-bs-toggle="tooltip" 
 													data-bs-placement="bottom" 
@@ -664,6 +665,8 @@ SPDX-License-Identifier: Apache-2.0 -->
 						$(`#${thing.id}-thingCardContent`).css('background', 'lightgray');
 						$(`#${thing.id}-rebootBtn`).css('display', 'none');
 					}
+					$(`#${thing.id}-deviceName`).html(thing.name);
+					$(`#${thing.id}-deviceName`).prop("title", thing.name);
 				}
 
 				//轮询刷新thingslist，以实现监听things在线状态的
@@ -1271,9 +1274,9 @@ SPDX-License-Identifier: Apache-2.0 -->
 				} from "/js/validation.js";
 				import { submitCreateForm } from "/js/forms.js";
 
-				const thingModal = new bootstrap.Modal(document.getElementById("addThingModal"));
-				const thingsModal = new bootstrap.Modal(document.getElementById("addThingsModal"));
-				const editThingModal = new bootstrap.Modal(document.getElementById("editThingModal"));
+				const thingModal = new bootstrap.Modal(document.getElementById("addThingModal")),
+					  thingsModal = new bootstrap.Modal(document.getElementById("addThingsModal")),
+					  editThingModal = new bootstrap.Modal(document.getElementById("editThingModal"));
 
 				attachValidationListener({
 					buttonId: "create-thing-button",

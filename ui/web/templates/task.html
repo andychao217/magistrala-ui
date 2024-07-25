@@ -553,23 +553,23 @@ SPDX-License-Identifier: Apache-2.0 -->
 		</div>
 		<script>
 			const requiredMsg = '不能为空', 
-					endTimeBeforeStartTimeMsg = '结束时间不能早于开始时间',
-					playbackCycleWeekMsg = '当播放周期为每周时, 必须选择一周中的某一天或者某几天';
-			const taskModal = new bootstrap.Modal(document.getElementById("taskModal")), // 任务弹框
-				  	syncTaskModal = new bootstrap.Modal(document.getElementById("syncTaskModal")), // 同步任务弹框
-					sourceModal = new bootstrap.Modal(document.getElementById("sourceModal")), // 音源弹框
-					filesModal = new bootstrap.Modal(document.getElementById("filesModal")), // 文件弹框
-					inputChannelsModal = new bootstrap.Modal(document.getElementById("inputChannelsModal")), // 输入通道弹框
-					playAreasAddModal = new bootstrap.Modal(document.getElementById("playAreasAddModal")), // 新增播放区域弹框
-					playAreasDetailModal = new bootstrap.Modal(document.getElementById("playAreasDetailModal")); // 播放区域详情弹框
-			const $filesModalTable = $('#filesModalTable'), // 文件弹框表格
-					$syncTaskTable = $('#syncTaskTable'); // 同步任务弹框表格
-			const protocol = window.location.protocol,
-					hostname = window.location.hostname,
-					port =  sessionStorage.getItem("socketBridgePort") || "63001";
-					domainID = sessionStorage.getItem("domainID"), // 当前机构ID
-					userInfoStr = sessionStorage.getItem("userInfo");
-					userInfo = JSON.parse(userInfoStr);
+				  endTimeBeforeStartTimeMsg = '结束时间不能早于开始时间',
+				  playbackCycleWeekMsg = '当播放周期为每周时, 必须选择一周中的某一天或者某几天',
+				  taskModal = new bootstrap.Modal(document.getElementById("taskModal")), // 任务弹框
+				  syncTaskModal = new bootstrap.Modal(document.getElementById("syncTaskModal")), // 同步任务弹框
+				  sourceModal = new bootstrap.Modal(document.getElementById("sourceModal")), // 音源弹框
+				  filesModal = new bootstrap.Modal(document.getElementById("filesModal")), // 文件弹框
+				  inputChannelsModal = new bootstrap.Modal(document.getElementById("inputChannelsModal")), // 输入通道弹框
+				  playAreasAddModal = new bootstrap.Modal(document.getElementById("playAreasAddModal")), // 新增播放区域弹框
+				  playAreasDetailModal = new bootstrap.Modal(document.getElementById("playAreasDetailModal")), // 播放区域详情弹框
+				  $filesModalTable = $('#filesModalTable'), // 文件弹框表格
+				  $syncTaskTable = $('#syncTaskTable'), // 同步任务弹框表格
+				  protocol = window.location.protocol,
+				  hostname = window.location.hostname,
+				  port =  sessionStorage.getItem("socketBridgePort") || "63001",
+				  domainID = sessionStorage.getItem("domainID"), // 当前机构ID
+				  userInfoStr = sessionStorage.getItem("userInfo"),
+				  userInfo = JSON.parse(userInfoStr);
 			let comID = "";
 			if (domainID) {
 				fetch(`/ui/domains/${domainID}/domainInJSON`, {

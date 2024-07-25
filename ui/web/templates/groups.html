@@ -166,8 +166,8 @@ SPDX-License-Identifier: Apache-2.0 -->
                 </div>
             </div>
             <script>
-                const groupModal = new bootstrap.Modal(document.getElementById("addGroupModal"));
-                const groupsModal = new bootstrap.Modal(document.getElementById("addGroupsModal"));
+                const groupModal = new bootstrap.Modal(document.getElementById("addGroupModal")),
+                      groupsModal = new bootstrap.Modal(document.getElementById("addGroupsModal"));
 
                 function openModal(modal) {
                     if (modal === "single") {
@@ -182,7 +182,11 @@ SPDX-License-Identifier: Apache-2.0 -->
                 }
             </script>      
             <script type="module">
-                import { attachValidationListener, validateName, validateJSON } from "/js/validation.js";
+                import { 
+                    attachValidationListener, 
+                    validateName, 
+                    validateJSON 
+                } from "/js/validation.js";
                 import { submitCreateForm } from "/js/forms.js";
                 import { fetchIndividualEntity } from "/js/infinitescroll.js";
 

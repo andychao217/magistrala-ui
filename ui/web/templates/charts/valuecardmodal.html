@@ -2,206 +2,206 @@
 SPDX-License-Identifier: Apache-2.0 -->
 
 {{ define "valuecardmodal" }}
-  <!-- Modal -->
-  <div
-    class="modal fade"
-    id="valueCardModal"
-    tabindex="-1"
-    role="dialog"
-    aria-labelledby="valueCardModalLabel"
-    aria-hidden="true"
-  >
-    <div class="modal-dialog modal-dialog-centered">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title" id="valueCardModalLabel">值卡片</h5>
-          <button
-            type="button"
-            class="btn-close"
-            data-bs-dismiss="modal"
-            aria-label="Close"
-          ></button>
-        </div>
-        <div class="modal-body">
-          <!-- Tab Navs -->
-          <ul class="nav nav-tabs mb-3" id="chartTab" role="tablist">
-            <li class="nav-item" role="presentation">
-              <button
-                class="nav-link active"
-                id="data-tab"
-                data-bs-toggle="tab"
-                data-bs-target="#valueCardData"
-                type="button"
-                role="tab"
-                aria-controls="data"
-                aria-selected="true"
-              >
-                数据
-              </button>
-            </li>
-            <li class="nav-item" role="presentation">
-              <button
-                class="nav-link"
-                id="appearance-tab"
-                data-bs-toggle="tab"
-                data-bs-target="#valueCardAppearance"
-                type="button"
-                role="tab"
-                aria-controls="appearance"
-                aria-selected="false"
-              >
-                样式
-              </button>
-            </li>
-          </ul>
-          <form id="create-valueCard-form">
-            <div class="tab-content" id="myTabContent">
-              <!-- Data Tab -->
-              <div
-                class="tab-pane fade show active"
-                id="valueCardData"
-                role="tabpanel"
-                aria-labelledby="data-tab"
-              >
-                <div class="mb-3">
-                  <label for="channel-id" class="form-label">分区ID</label>
-                  <input
-                    type="text"
-                    pattern="{{ .UUIDPattern }}"
-                    class="form-control mb-3"
-                    name="channel"
-                    id="channel-id"
-                    placeholder="输入分区ID"
-                    required
-                  />
-                  <div class="invalid-feedback">请输入正确的ID</div>
-                </div>
-                <div class="mb-3">
-                  <label for="thing-id" class="form-label">设备ID</label>
-                  <input
-                    type="text"
-                    pattern="{{ .UUIDPattern }}"
-                    class="form-control mb-3"
-                    name="thing"
-                    id="thing-id"
-                    placeholder="输入设备ID"
-                    required
-                  />
-                  <div class="invalid-feedback">请输入正确的ID</div>
-                </div>
-                <div class="mb-3">
-                  <label for="value-name" class="form-label">值名称</label>
-                  <input
-                    type="text"
-                    class="form-control mb-3"
-                    name="valueName"
-                    id="value-name"
-                    placeholder="输入值名称, 比如: 温度"
-                    required
-                  />
-                </div>
-                <div class="mb-3">
-                  <label for="update-interval" class="form-label">更新间隔</label>
-                  <input
-                    type="text"
-                    pattern="^\d+$"
-                    class="form-control mb-3"
-                    name="updateInterval"
-                    id="update-interval"
-                    placeholder="使用毫秒输入更新间隔"
-                    required
-                  />
-                  <div class="invalid-feedback">请输入更新间隔</div>
-                </div>
-              </div>
-              <!-- Appearance Tab -->
-              <div
-                class="tab-pane fade"
-                id="valueCardAppearance"
-                role="tabpanel"
-                aria-labelledby="appearance-tab"
-              >
-                <div class="mb-3">
-                  <label for="title" class="form-label">标题</label>
-                  <input
-                    type="text"
-                    class="form-control"
-                    name="title"
-                    id="title"
-                    placeholder="输入图表标题"
-                  />
-                </div>
-                <div class="mb-3">
-                  <label for="thing-name" class="form-label">设备名称</label>
-                  <input
-                    type="text"
-                    class="form-control mb-3"
-                    name="thingName"
-                    id="thing-name"
-                    placeholder="输入设备名称"
-                  />
-                </div>
-                <div class="mb-3">
-                  <label for="value-units" class="form-label">单位</label>
-                  <input
-                    type="text"
-                    class="form-control mb-3"
-                    name="valueUnits"
-                    id="value-units"
-                    placeholder="输入单位"
-                  />
-                </div>
-              </div>
-            </div>
-          </form>
-        </div>
-        <div class="modal-footer">
-          <button
-            type="button"
-            class="btn btn-secondary"
-            id="close-valueCard-button"
-            data-bs-dismiss="modal"
-          >
-            关闭
-          </button>
-          <button type="button" class="btn body-button" id="create-valueCard-button">
-           创建图表
-          </button>
-        </div>
-      </div>
-    </div>
-  </div>
-  <script>
-    // Value card form
-    document.getElementById("create-valueCard-button").addEventListener("click", function () {
-      const form = document.getElementById("create-valueCard-form");
-      if (!form.checkValidity()) {
-        form.classList.add("was-validated");
-        return;
-      }
+<!-- Modal -->
+<div
+	class="modal fade"
+	id="valueCardModal"
+	tabindex="-1"
+	role="dialog"
+	aria-labelledby="valueCardModalLabel"
+	aria-hidden="true"
+>
+	<div class="modal-dialog modal-dialog-centered">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title" id="valueCardModalLabel">值卡片</h5>
+				<button
+					type="button"
+					class="btn-close"
+					data-bs-dismiss="modal"
+					aria-label="Close"
+				></button>
+			</div>
+			<div class="modal-body">
+				<!-- Tab Navs -->
+				<ul class="nav nav-tabs mb-3" id="chartTab" role="tablist">
+					<li class="nav-item" role="presentation">
+						<button
+							class="nav-link active"
+							id="data-tab"
+							data-bs-toggle="tab"
+							data-bs-target="#valueCardData"
+							type="button"
+							role="tab"
+							aria-controls="data"
+							aria-selected="true"
+						>
+						数据
+						</button>
+					</li>
+					<li class="nav-item" role="presentation">
+						<button
+							class="nav-link"
+							id="appearance-tab"
+							data-bs-toggle="tab"
+							data-bs-target="#valueCardAppearance"
+							type="button"
+							role="tab"
+							aria-controls="appearance"
+							aria-selected="false"
+						>
+						样式
+						</button>
+					</li>
+				</ul>
+				<form id="create-valueCard-form">
+					<div class="tab-content" id="myTabContent">
+						<!-- Data Tab -->
+						<div
+							class="tab-pane fade show active"
+							id="valueCardData"
+							role="tabpanel"
+							aria-labelledby="data-tab"
+						>
+							<div class="mb-3">
+								<label for="channel-id" class="form-label">分区ID</label>
+								<input
+									type="text"
+									pattern="{{ .UUIDPattern }}"
+									class="form-control mb-3"
+									name="channel"
+									id="channel-id"
+									placeholder="输入分区ID"
+									required
+								/>
+								<div class="invalid-feedback">请输入正确的ID</div>
+							</div>
+							<div class="mb-3">
+								<label for="thing-id" class="form-label">设备ID</label>
+								<input
+									type="text"
+									pattern="{{ .UUIDPattern }}"
+									class="form-control mb-3"
+									name="thing"
+									id="thing-id"
+									placeholder="输入设备ID"
+									required
+								/>
+								<div class="invalid-feedback">请输入正确的ID</div>
+							</div>
+							<div class="mb-3">
+								<label for="value-name" class="form-label">值名称</label>
+								<input
+									type="text"
+									class="form-control mb-3"
+									name="valueName"
+									id="value-name"
+									placeholder="输入值名称, 比如: 温度"
+									required
+								/>
+							</div>
+							<div class="mb-3">
+								<label for="update-interval" class="form-label">更新间隔</label>
+								<input
+									type="text"
+									pattern="^\d+$"
+									class="form-control mb-3"
+									name="updateInterval"
+									id="update-interval"
+									placeholder="使用毫秒输入更新间隔"
+									required
+								/>
+								<div class="invalid-feedback">请输入更新间隔</div>
+							</div>
+						</div>
+						<!-- Appearance Tab -->
+						<div
+							class="tab-pane fade"
+							id="valueCardAppearance"
+							role="tabpanel"
+							aria-labelledby="appearance-tab"
+						>
+							<div class="mb-3">
+								<label for="title" class="form-label">标题</label>
+								<input
+									type="text"
+									class="form-control"
+									name="title"
+									id="title"
+									placeholder="输入图表标题"
+								/>
+							</div>
+							<div class="mb-3">
+								<label for="thing-name" class="form-label">设备名称</label>
+								<input
+									type="text"
+									class="form-control mb-3"
+									name="thingName"
+									id="thing-name"
+									placeholder="输入设备名称"
+								/>
+							</div>
+							<div class="mb-3">
+								<label for="value-units" class="form-label">单位</label>
+								<input
+									type="text"
+									class="form-control mb-3"
+									name="valueUnits"
+									id="value-units"
+									placeholder="输入单位"
+								/>
+							</div>
+						</div>
+					</div>
+				</form>
+			</div>
+			<div class="modal-footer">
+				<button
+					type="button"
+					class="btn btn-secondary"
+					id="close-valueCard-button"
+					data-bs-dismiss="modal"
+				>
+					关闭
+				</button>
+				<button type="button" class="btn body-button" id="create-valueCard-button">
+					创建图表
+				</button>
+			</div>
+		</div>
+	</div>
+</div>
+<script>
+	// Value card form
+	document.getElementById("create-valueCard-button").addEventListener("click", function () {
+		const form = document.getElementById("create-valueCard-form");
+		if (!form.checkValidity()) {
+			form.classList.add("was-validated");
+			return;
+		}
 
-      // Create an object to store the form data
-      let chartData = {};
-      let formData = new FormData(form);
-      for (const pair of formData.entries()) {
-        chartData[pair[0]] = pair[1];
-      }
+		// Create an object to store the form data
+		let chartData = {};
+		let formData = new FormData(form);
+		for (const pair of formData.entries()) {
+			chartData[pair[0]] = pair[1];
+		}
 
-      const widgetID = "valueCard-" + Date.now();
+		const widgetID = "valueCard-" + Date.now();
 
-      chartData["Type"] = "valueCard";
-      addWidget(chartData, widgetID);
-      metadataBuffer[widgetID] = chartData;
+		chartData["Type"] = "valueCard";
+		addWidget(chartData, widgetID);
+		metadataBuffer[widgetID] = chartData;
 
-      form.reset();
-      form.classList.remove("was-validated");
-      bootstrap.Modal.getInstance(document.getElementById("valueCardModal")).hide();
-    });
+		form.reset();
+		form.classList.remove("was-validated");
+		bootstrap.Modal.getInstance(document.getElementById("valueCardModal")).hide();
+	});
 
-    document.getElementById("close-valueCard-button").addEventListener("click", function () {
-      const form = document.getElementById("create-valueCard-form");
-      form.reset();
-      form.classList.remove("was-validated");
-    });
-  </script>
+	document.getElementById("close-valueCard-button").addEventListener("click", function () {
+		const form = document.getElementById("create-valueCard-form");
+		form.reset();
+		form.classList.remove("was-validated");
+	});
+</script>
 {{ end }}

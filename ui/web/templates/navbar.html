@@ -420,9 +420,10 @@ SPDX-License-Identifier: Apache-2.0 -->
     <script src="/js/cookie.js"></script>
     <script defer>
         try {
-            const userID = '{{.Session.User.ID}}';
-            const role = '{{.Session.User.Role}}';
-            const loginStatus = '{{.Session.LoginStatus}}';
+            const userID = '{{.Session.User.ID}}',
+                  role = '{{.Session.User.Role}}',
+                  loginStatus = '{{.Session.LoginStatus}}',
+                  createDomainModal = new bootstrap.Modal(document.getElementById("createDomainModal"));
             let domainID, domainName, domainPermissions;
 
             if (role !== "admin") {
@@ -451,11 +452,7 @@ SPDX-License-Identifier: Apache-2.0 -->
         } catch (error) {
             console.error("Error loading session details:", error);
         }
-
-        const createDomainModal = new bootstrap.Modal(document.getElementById("createDomainModal"));
-        function openCreateDomainModal() {
-            createDomainModal.show();
-        }
+       
         // Toggle the side navigation
         // document.querySelectorAll("#sidebarToggle, #sidebarToggleTop")
         document.querySelectorAll("#sidebarToggleTop").forEach(function (element) {
@@ -476,6 +473,10 @@ SPDX-License-Identifier: Apache-2.0 -->
                 document.querySelector(".sidebar").classList.add("toggled");
             }
         });
+
+        function openCreateDomainModal() {
+            createDomainModal.show();
+        }
 
         function logout() {
             fetch('{{ printf "%s/logout" pathPrefix }}', {

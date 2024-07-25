@@ -46,8 +46,8 @@ SPDX-License-Identifier: Apache-2.0 -->
         </ul>
     </nav>
     <script>
-		const currentPage = '{{ .CurrentPage }}';
-		const selectedLimit = '{{ .Limit }}';
+		const currentPage = '{{ .CurrentPage }}',
+              selectedLimit = '{{ .Limit }}';
 		let selectedStatus;
 
 		function updateQueryParameters(newParams, element) {
@@ -91,6 +91,7 @@ SPDX-License-Identifier: Apache-2.0 -->
     <script>
 		selectedStatus = '{{.Status}}';
 		const statusOptions = JSON.parse('{{ toSlice .StatusOptions }}');
+        
 		statusOptions.forEach(status => {
 			const statusElement = document.getElementById(status + "Status");
 			const newParams = { page: currentPage, limit: selectedLimit, status: status };

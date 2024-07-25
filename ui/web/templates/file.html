@@ -150,13 +150,12 @@ SPDX-License-Identifier: Apache-2.0 -->
 			</div>
 		</div>
 		<script>
-			const createFolderModal = new bootstrap.Modal(document.getElementById("createFolderModal"));
-			const uploadModal = new bootstrap.Modal(document.getElementById("uploadModal"));
-			const $createFolderNameInputElement = $(`#createFolderName`);
-
-			const protocol = window.location.protocol;
-			const hostname = window.location.hostname;
-			const domainID = sessionStorage.getItem("domainID");
+			const createFolderModal = new bootstrap.Modal(document.getElementById("createFolderModal")),
+				  uploadModal = new bootstrap.Modal(document.getElementById("uploadModal")),
+				  $createFolderNameInputElement = $(`#createFolderName`),
+				  protocol = window.location.protocol,
+				  hostname = window.location.hostname,
+				  domainID = sessionStorage.getItem("domainID");
 			let comID = "";
 			if (domainID) {
 				fetch(`/ui/domains/${domainID}/domainInJSON`, {
@@ -486,11 +485,11 @@ SPDX-License-Identifier: Apache-2.0 -->
 				window.URL.revokeObjectURL(url);
 			}
 
-			const dropzone = document.getElementById('dropzone');
-			const fileInput = document.getElementById('fileInput');
-			const uploadButton = document.getElementById('uploadButton');
-			const progressBar = document.getElementById('progressBar');
-			const fileList = document.getElementById('fileList');
+			const dropzone = document.getElementById('dropzone'),
+				  fileInput = document.getElementById('fileInput'),
+				  uploadButton = document.getElementById('uploadButton'),
+				  progressBar = document.getElementById('progressBar'),
+				  fileList = document.getElementById('fileList');
 			let selectedFiles = new DataTransfer();
 		
 			//打开弹窗

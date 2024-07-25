@@ -87,8 +87,10 @@ SPDX-License-Identifier: Apache-2.0 -->
             </div>
             <script>
                 $(document).ready(function() {
-                    const curDomainID = sessionStorage.getItem("domainID");
-                    const userInfoStr = sessionStorage.getItem("userInfo");
+                    const curDomainID = sessionStorage.getItem("domainID"),
+                          userInfoStr = sessionStorage.getItem("userInfo"),
+                          role = '{{.Session.User.Role}}';
+
                     if(userInfoStr) {
                         const userInfo = JSON.parse(userInfoStr);
                          //如果sessionStorage中domainID为空说明刚进入系统，则默认进入userInfo中保存的domain
@@ -119,8 +121,7 @@ SPDX-License-Identifier: Apache-2.0 -->
                             console.error('处理fetch或JSON时出错:', error);
                         });
                     }
-
-                    const role = '{{.Session.User.Role}}';
+                    
                     if (role === 'admin') {
                         const domainTitles = $('h5.domain-title');
                         domainTitles.each(function() {

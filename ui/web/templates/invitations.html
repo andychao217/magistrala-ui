@@ -151,10 +151,14 @@ SPDX-License-Identifier: Apache-2.0 -->
                 </div>
             </div>
             <script>
-                const invitationModal = new bootstrap.Modal(document.getElementById("invitationModal"));
-                const table = document.getElementById("invitations-table");
-                const rows = table.querySelectorAll("tbody tr");
-                const navbarActive = '{{.NavbarActive}}';
+                const invitationModal = new bootstrap.Modal(document.getElementById("invitationModal")),
+                      table = document.getElementById("invitations-table"),
+                      rows = table.querySelectorAll("tbody tr"),
+                      navbarActive = '{{.NavbarActive}}',
+                      userID = '{{.Session.User.ID}}',
+                      domainPermissions = '{{.Session.Domain.Permissions}}',
+                      loginStatus= '{{.Session.LoginStatus}}',
+                      invitationForm = document.getElementById("invitation-form");
 
                 function openInvitationModal() {
                     const domainsSelect = document.getElementById("domains-select");
@@ -164,10 +168,6 @@ SPDX-License-Identifier: Apache-2.0 -->
                     }
                     invitationModal.show();
                 }
-
-                let userID = '{{.Session.User.ID}}';
-                let domainPermissions = '{{.Session.Domain.Permissions}}';
-                let loginStatus= '{{.Session.LoginStatus}}'
 
                 rows.forEach(function (row) {
                     const inviter = row.querySelector(".inviter").textContent.trim();
@@ -189,12 +189,10 @@ SPDX-License-Identifier: Apache-2.0 -->
                     }
                 });
 
-
                 if ((navbarActive === "invitations") && (loginStatus === "user" || !domainPermissions.includes("admin"))) {
                     document.getElementById("invite-button").style.display = "none";
                 }
 
-                const invitationForm = document.getElementById("invitation-form");
                 invitationForm.addEventListener("submit", (event) => {
                     event.preventDefault();
                     const formData = new FormData(invitationForm);

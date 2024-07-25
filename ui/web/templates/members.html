@@ -121,16 +121,17 @@ SPDX-License-Identifier: Apache-2.0 -->
                 </div>
             </div>
             <script>
-                const memberModal = new bootstrap.Modal(document.getElementById("addMemberModal"));
-
-                function openMemberModal() {
-                    memberModal.show();
-                }
-                let userRole = '{{.Session.User.Role}}';
+                const userRole = '{{.Session.User.Role}}',
+                      memberModal = new bootstrap.Modal(document.getElementById("addMemberModal"));
+                      
                 if (userRole == "admin") {
                     document.getElementById("add-member-button").style.display = "block";
                 } else {
                     document.getElementById("add-member-button").style.display = "none";
+                }
+
+                function openMemberModal() {
+                    memberModal.show();
                 }
 
                 function viewMember(identity) {

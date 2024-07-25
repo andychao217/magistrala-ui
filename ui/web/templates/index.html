@@ -79,17 +79,16 @@ SPDX-License-Identifier: Apache-2.0 -->
                 </div>
             </div>
             <script type="text/javascript">
-				const enabledUsers = parseInt("{{.Summary.EnabledUsers}}");
-				const disabledUsers = parseInt("{{.Summary.DisabledUsers}}");
-				const enabledThings = parseInt("{{.Summary.EnabledThings}}");
-				const disabledThings = parseInt("{{.Summary.DisabledThings}}");
-				const enabledChannels = parseInt("{{.Summary.EnabledChannels}}");
-				const disabledChannels = parseInt("{{.Summary.DisabledChannels}}");
-				const enabledGroups = parseInt("{{.Summary.EnabledGroups}}");
-				const disabledGroups = parseInt("{{.Summary.DisabledGroups}}");
-
-				// 基于准备好的dom，初始化echarts实例
-				const myChart = echarts.init(document.getElementById('main'));
+				const enabledUsers = parseInt("{{.Summary.EnabledUsers}}"),
+					  disabledUsers = parseInt("{{.Summary.DisabledUsers}}"),
+					  enabledThings = parseInt("{{.Summary.EnabledThings}}"),
+					  disabledThings = parseInt("{{.Summary.DisabledThings}}"),
+					  enabledChannels = parseInt("{{.Summary.EnabledChannels}}"),
+					  disabledChannels = parseInt("{{.Summary.DisabledChannels}}"),
+					  enabledGroups = parseInt("{{.Summary.EnabledGroups}}"),
+					  disabledGroups = parseInt("{{.Summary.DisabledGroups}}"),
+					  myChart = echarts.init(document.getElementById('main'));
+					  
 				// 指定图表的配置项和数据
 				let option = {
 					tooltip: {
