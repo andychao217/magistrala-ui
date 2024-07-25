@@ -88,6 +88,7 @@ SPDX-License-Identifier: Apache-2.0 -->
 					  enabledGroups = parseInt("{{.Summary.EnabledGroups}}"),
 					  disabledGroups = parseInt("{{.Summary.DisabledGroups}}"),
 					  myChart = echarts.init(document.getElementById('main'));
+				let intervalRefreshData = null;
 					  
 				// 指定图表的配置项和数据
 				let option = {
@@ -185,7 +186,17 @@ SPDX-License-Identifier: Apache-2.0 -->
 					});
 				}
 
-				const intervalRefreshData = setInterval(refreshThingsPieChart, 2000);
+				intervalRefreshData = setInterval(refreshThingsPieChart, 2000);
+
+				// 在组件卸载时停止调用
+				window.addEventListener('beforeunload', stopFetchingData);
+
+				function stopFetchingData() {
+					if (intervalRefreshData) {
+						clearInterval(intervalRefreshData);
+						intervalRefreshData = null;
+					}
+				}
             </script>
         </body>
     </html>

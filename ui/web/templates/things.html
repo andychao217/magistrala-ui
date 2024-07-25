@@ -401,7 +401,8 @@ SPDX-License-Identifier: Apache-2.0 -->
 				let currentDevices = {}, 
                   	newDevices = {},
                   	scanNewThingsList = [],
-                  	selectedNewThingNames = [];
+                  	selectedNewThingNames = [],
+					intervalRefreshData = null;
 				const deviceNetCfgModal = new bootstrap.Modal(document.getElementById("deviceNetCfgModal"));
 				
 				$(document).ready(function() {
@@ -411,7 +412,7 @@ SPDX-License-Identifier: Apache-2.0 -->
 					sessionStorage.setItem("onlineStatus", onlineStatusValue);
 					getThingsList(onlineStatusValue, false);
 
-					let intervalRefreshData = setInterval(refreshThingsData, 2000);
+					intervalRefreshData = setInterval(refreshThingsData, 2000);
 
 					if (onlineStatusValue === '1') {
 						$('#btnAll').prop('checked', false);
@@ -438,7 +439,7 @@ SPDX-License-Identifier: Apache-2.0 -->
 							reqOnlineStatus = '0'; //offline
 						}
 						sessionStorage.setItem("onlineStatus", reqOnlineStatus);
-						clearInterval(intervalRefreshData);
+						stopFetchingData();
 						getThingsList(reqOnlineStatus, true);
 					});
 
@@ -554,6 +555,16 @@ SPDX-License-Identifier: Apache-2.0 -->
 					});
 				});
 				
+				// 在组件卸载时停止调用
+				window.addEventListener('beforeunload', stopFetchingData);
+
+				function stopFetchingData() {
+					if (intervalRefreshData) {
+						clearInterval(intervalRefreshData);
+						intervalRefreshData = null;
+					}
+				}
+
 				function openModal(modal) {
 					const thingModal = new bootstrap.Modal(document.getElementById("addThingModal"));
 					const thingsModal = new bootstrap.Modal(document.getElementById("addThingsModal"));
@@ -871,7 +882,7 @@ SPDX-License-Identifier: Apache-2.0 -->
 									updateThingsGrid(things);
 								}
 							}
-							intervalRefreshData = setInterval(refreshThingsData, 1500);
+							intervalRefreshData = setInterval(refreshThingsData, 2000);
 						})
 						.catch(error => {
 							//

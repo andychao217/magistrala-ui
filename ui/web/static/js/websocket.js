@@ -62,20 +62,23 @@ function connectWebSocket(host, port, defaultChannelId) {
         } else if (url.indexOf("things") !== -1) {
             console.log("allThingsListWebsocket: ", allThingsListWebsocket);
             // 当前为分区设备、或设备页面
-            const deviceName = data.data?.device_name;
-            const newDeviceInfo = data.data?.info;
+            const deviceName = data.data?.info?.device_name;
+            const newDeviceInfo = {...data.data?.info};
             //检查设备信息是否更新，如果更新了，则更新前端数据
             if (data.msgName === "DEVICE_INFO_UPDATE" || data.msgName === "DEVICE_INFO_GET_REPLY") {
-               const targetDevice = allThingsListWebsocket.find(device => device.credentials.identity === deviceName);
-               const originalDeviceInfo = targetDevice.metadata["info"] || {};
-               const originalDeviceAliase = targetDevice.metadata["aliase"] || "";
-               const originalDeviceName = targetDevice.name;
-               if (JSON.stringify(originalDeviceInfo) !== JSON.stringify(newDeviceInfo) || originalDeviceName !== newDeviceInfo.device_aliase) {
-                const queryData = {...targetDevice};
-                queryData.metadata["info"] = {...newDeviceInfo};
-                queryData.name = newDeviceInfo.device_aliase;
-                queryData.metadata["aliase"] = originalDeviceAliase.replace(originalDeviceName, newDeviceInfo.device_aliase);
-                httpUpdateThingWebsocket(queryData);
+                const targetDevice = allThingsListWebsocket.find(device => device.credentials.identity === deviceName);
+                if (targetDevice && targetDevice.id) {
+                    console.log("targetDevice: ", targetDevice);
+                    const originalDeviceInfo = targetDevice.metadata && targetDevice.metadata["info"] ? targetDevice.metadata["info"] : {};
+                    const originalDeviceAliase = targetDevice.metadata["aliase"] || "";
+                    const originalDeviceName = targetDevice.name;
+                    if (JSON.stringify(originalDeviceInfo) !== JSON.stringify(newDeviceInfo) || originalDeviceName !== newDeviceInfo.device_aliase) {
+                        const queryData = {...targetDevice};
+                        queryData.metadata["info"] = {...newDeviceInfo};
+                        queryData.name = newDeviceInfo.device_aliase;
+                        queryData.metadata["aliase"] = originalDeviceAliase.replace(originalDeviceName, newDeviceInfo.device_aliase);
+                        httpUpdateThingWebsocket(queryData);
+                    }
                }
             }
         }

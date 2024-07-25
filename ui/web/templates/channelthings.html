@@ -158,7 +158,8 @@ SPDX-License-Identifier: Apache-2.0 -->
 				let currentDevices = {}, 
 					newDevices = {}, 
 					connectThingsModalList = [],  //关联设备弹框列表
-					selectedThingsIds = []; //关联设备弹框选中id
+					selectedThingsIds = [], //关联设备弹框选中id
+					intervalRefreshData = null; 
 
 				$(document).ready(function() {
 					const currentUrl = window.location.href; // 获取当前页面的URL
@@ -194,7 +195,7 @@ SPDX-License-Identifier: Apache-2.0 -->
 						refreshThingsData();
 					});
 
-					const intervalRefreshData = setInterval(refreshThingsData, 2000);
+					intervalRefreshData = setInterval(refreshThingsData, 2000);
 
 					$('#connect-things-btn').click(function() {
 						const channelID = "{{.ChannelID}}";
@@ -238,6 +239,16 @@ SPDX-License-Identifier: Apache-2.0 -->
 						}
 					});
 				});
+
+				// 在组件卸载时停止调用
+				window.addEventListener('beforeunload', stopFetchingData);
+
+				function stopFetchingData() {
+					if (intervalRefreshData) {
+						clearInterval(intervalRefreshData);
+						intervalRefreshData = null;
+					}
+				}
 
 				//关联设备弹框设备列表-勾选设备
 				function onSelectNewThing(e) {
