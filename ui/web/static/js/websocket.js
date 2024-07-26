@@ -76,7 +76,7 @@ function connectWebSocket(host, port, defaultChannelId) {
                         const queryData = {...targetDevice};
                         queryData.metadata["info"] = {...newDeviceInfo};
                         queryData.name = newDeviceInfo.device_aliase;
-                        queryData.metadata["aliase"] = originalDeviceAliase.replace(originalDeviceName, newDeviceInfo.device_aliase);
+                        queryData.metadata["aliase"] = newDeviceInfo.device_aliase + '_' + splitStringByLastUnderscore(originalDeviceAliase)[1];
                         httpUpdateThingWebsocket(queryData, defaultChannelId);
                     }
                }

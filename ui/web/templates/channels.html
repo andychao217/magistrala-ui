@@ -254,7 +254,7 @@ SPDX-License-Identifier: Apache-2.0 -->
 				//删除
 				function deleteChannel(channelID) {
 					// 显示确认对话框
-					showConfirmModal("你确定要删除所选数据吗？", ()=>{
+					showConfirmModal("确定要删除所选数据吗？", ()=>{
 						fetch(`/ui/channels/${channelID}/thingsInJSON?page=1&limit=1000`, {
 							method: "GET",
 						})

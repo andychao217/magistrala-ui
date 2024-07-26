@@ -1538,7 +1538,7 @@ SPDX-License-Identifier: Apache-2.0 -->
 							callback();
 						}
 						if (data.task && data.task.uuid) {
-							controlDevice('add', data.task);
+							controlDevice('taskAdd', data.task);
 						}
 					}).catch(error => {
 						console.error('Error:', error);
@@ -1564,7 +1564,7 @@ SPDX-License-Identifier: Apache-2.0 -->
 						callback();
 					}
 					if (data.task && data.task.uuid && notifyDevice) {
-						controlDevice('edit', data.task);
+						controlDevice('taskEdit', data.task);
 					}
 				}).catch(error => {
 					console.error('Error:', error);
@@ -1588,14 +1588,14 @@ SPDX-License-Identifier: Apache-2.0 -->
 			function playTask(element) {
 				const taskUUID = $(element).data("uuid");
 				const task = originalTaskList.find(task => task.uuid === taskUUID);
-				controlDevice('play', task);
+				controlDevice('taskStart', task);
 			}
 
 			// 停止任务
 			function stopTask(element) {
 				const taskUUID = $(element).data("uuid");
 				const task = originalTaskList.find(task => task.uuid === taskUUID);
-				controlDevice('stop', task);
+				controlDevice('taskStop', task);
 			}
 
 			// 同步任务
@@ -1613,7 +1613,6 @@ SPDX-License-Identifier: Apache-2.0 -->
 					$syncTaskTable.bootstrapTable({
 						data: syncStatusTableList,
 					});
-
 					syncTaskModal.show();
 				}
 
@@ -1678,7 +1677,7 @@ SPDX-License-Identifier: Apache-2.0 -->
 						showAlert('success', '复制成功！');
 						loadTaskLists(true);
 						if (data.task && data.task.uuid) {
-							controlDevice('copy', task);
+							controlDevice('taskAdd', task);
 						}
 					}).catch(error => {
 						console.error('Error:', error);
@@ -1801,7 +1800,7 @@ SPDX-License-Identifier: Apache-2.0 -->
 			// 删除任务
 			function deleteTask(element) {
 				const taskUUID = $(element).data("uuid");
-				showConfirmModal("你确定要删除所选数据吗？", () => {
+				showConfirmModal("确定要删除所选数据吗？", () => {
 				fetch(`${protocol}//${hostname}:${port}/deleteTask`, {
 					method: 'DELETE',
 					headers: {
@@ -1818,7 +1817,7 @@ SPDX-License-Identifier: Apache-2.0 -->
 						showAlert('success', '删除成功！');
 						loadTaskLists(true);
 						if (data.task && data.task.uuid) {
-							controlDevice('delete', task);
+							controlDevice('taskDelete', task);
 						}
 					}).catch(error => {
 						console.error('Error:', error);

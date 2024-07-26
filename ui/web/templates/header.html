@@ -70,15 +70,17 @@ SPDX-License-Identifier: Apache-2.0 -->
         data-bs-keyboard="false"
     >
         <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h1 class="modal-title" id="confirmModalLabel">请确认</h5>
+            <div class="modal-content" style="width: 350px;">
+                <div class="modal-header" style="border: none;">
+                    <h1 class="modal-title" id="confirmModalLabel">
+                        <i class="fa-solid fa-triangle-exclamation" style="color: orange;"></i> 请确认
+                    </h1>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
-                <div class="modal-body" id="confirmModalContent">
-                    你确定要删除所选数据吗？
+                <div class="modal-body" id="confirmModalContent" style="text-align: center;">
+                    确定要删除所选数据吗？
                 </div>
-                <div class="modal-footer">
+                <div class="modal-footer" style="display: block; text-align: center; border: none;">
                     <button type="button" class="btn btn-secondary" id="confirmModalCancelBtn">取消</button>
                     <button type="button" class="btn body-button" id="confirmModalConfirmBtn">确定</button>
                 </div>

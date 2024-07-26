@@ -242,3 +242,9 @@ function showConfirmModal(content, callback) {
     });
     confirmModal.show();
 }
+
+// 匹配最后一个下划线
+function splitStringByLastUnderscore(str) {
+    const regex = /_(?!.*_)/; 
+    return str.split(regex);
+}

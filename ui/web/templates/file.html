@@ -416,7 +416,7 @@ SPDX-License-Identifier: Apache-2.0 -->
 			function deleteFile() {
 				const selectedRows = $fileTable.bootstrapTable('getSelections');
 				if (selectedRows.length) {
-					showConfirmModal("你确定要删除所选数据吗？", () => {
+					showConfirmModal("确定要删除所选数据吗？", () => {
 						const keyList = selectedRows.map(row => row.key);
 						fetch(`${protocol}//${hostname}:9102/delete`, {
 							method: 'DELETE',

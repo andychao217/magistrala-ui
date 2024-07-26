@@ -33,25 +33,85 @@ SPDX-License-Identifier: Apache-2.0 -->
 											<div class="modal-content">
 												<div class="modal-header">
 													<h1 class="modal-title" id="editThingModalLabel">修改设备</h1>
-													<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+													<button 
+														type="button" 
+														class="btn-close" 
+														data-bs-dismiss="modal" 
+														aria-label="Close" 
+														onclick="
+															$('#deviceNameEditThingModal').attr('data-id', '');
+															$('#deviceNameEditThingModal').attr('data-name', '');
+														"
+													></button>
 												</div>
 												<form id="editThingform">
 													<div class="modal-body">
-														<div id="editAlertMessage"></div>
-														<div class="mb-3">
-															<label for="name" class="form-label">名称</label>
-															<input type="text" class="form-control name-field" name="name" id="editName" placeholder="设备名称" maxlength="20" />
-															<div id="editNameError" class="text-danger"></div>
+														<div class="mb-3 row">
+															<label for="name" class="col-sm-3 col-form-label">名称</label>
+															<div class="col-sm-9">
+																<input 
+																	type="text" 
+																	class="form-control name-field" 
+																	name="name" 
+																	id="deviceNameEditThingModal" 
+																	placeholder="设备名称" 
+																	maxlength="20" 
+																/>
+																<div 
+																	id="deviceNameErrorEditThingModal" 
+																	class="text-danger" 
+																	style="margin-top: 10px; color: orangered;"
+																></div>
+															</div>
 														</div>
-													</div>
-													<div class="modal-footer">
-														<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">取消</button>
-														<button type="submit" class="btn body-button" id="edit-thing-button">确定</button>
+														<div id="out_channels_container_EditThingModal"></div>
+														<div class="mb-3 row">
+															<div class="col-sm-12" style="text-align: center;">
+																<div id="moreSettingEditThingModal" class="moreSettingBtn">
+																	<i class="fa-solid fa-chevron-down"></i>
+																</div>
+															</div>
+														</div>
 													</div>
 												</form>
 											</div>
 										</div>
                                     </div>
+
+									<div 
+										class="modal fade" 
+										id="moreEditThingModal" 
+										tabindex="-1" 
+										role="dialog" 
+										aria-labelledby="moreEditThingModalLabel" 
+										data-bs-backdrop="static" 
+										data-bs-keyboard="false" 
+										aria-hidden="true"
+									>
+										<div class="modal-dialog" role="document">
+											<div class="modal-content">
+												<div class="modal-header">
+													<h1 class="modal-title" id="moreEditThingModalLabel">
+														<span>设备配置</span>
+														(<span id="deviceNameTitleMoreEditThingModal"></span>)
+													</h1>
+													<button 
+														type="button" 
+														class="btn-close" 
+														data-bs-dismiss="modal" 
+														aria-label="Close"
+														onclick="editThingModal.show()"
+													></button>
+												</div>
+												<div class="modal-body">
+													
+												</div>
+												<div class="modal-footer">
+													
+												</div>
+											</div>
+										</div>
+									</div>
 
                                     <!-- 扫描添加设备弹框 -->
                                     <div 
@@ -249,7 +309,7 @@ SPDX-License-Identifier: Apache-2.0 -->
 																{{ end }}
 															{{ end }}
 														>
-															<a class="dropdown-item" onclick="editThing('{{ $t.ID }}', '{{ $t.Name }}')">
+															<a class="dropdown-item" onclick="editThing('{{ $t.ID }}')">
 																<i class="fa-solid fa-pencil-alt" style="width: 16px;"></i> 修改
 															</a>
 														</li>
@@ -307,8 +367,12 @@ SPDX-License-Identifier: Apache-2.0 -->
                   	newDevices = {},
                   	scanNewThingsList = [],
                   	selectedNewThingNames = [],
-					intervalRefreshData = null;
+					intervalRefreshData = null,
+					currentThingsList = [];
 				const deviceNetCfgModal = new bootstrap.Modal(document.getElementById("deviceNetCfgModal")),
+					  editThingModal = new bootstrap.Modal(document.getElementById("editThingModal")),
+					  moreEditThingModal= new bootstrap.Modal(document.getElementById("moreEditThingModal")),
+					  requiredMsg = '不能为空',
 					  url = window.location.href, // 获取当前页面的URL
 					  onlineStatusValue = (url.match(/onlineStatus=(\d+)/) || [])[1] || 
 					  	sessionStorage.getItem("onlineStatus") || '1'; // 从URL获取onlineStatus的值
@@ -456,6 +520,37 @@ SPDX-License-Identifier: Apache-2.0 -->
 					scanThingsModalDiv.addEventListener('hidden.bs.modal', function (event) {
 						$('.modal-backdrop.fade.show').remove();
 					});
+
+					// 点击更多设置按钮时，切换显示更多设置-设备设置弹框
+					$('#moreSettingEditThingModal').click(function() {
+						const thingID = $('#editThingModal').data('id');
+						const originalDevice = currentThingsList.find(thing => thing.id === thingID);
+						editThingModal.hide();
+						moreEditThingModal.show();
+						$("#deviceNameTitleMoreEditThingModal").html(originalDevice.name);
+					});
+
+					$('#deviceNameEditThingModal').on('change blur keyup', function(event) {
+						const newDeviceName = $(this).val();
+						if (newDeviceName) {
+							$(`#deviceNameErrorEditThingModal`).empty();
+							$('#deviceNameErrorEditThingModal').hide();
+							const thingID = $("#editThingModal").data('id');
+							const originalDevice = currentThingsList.find(thing => thing.id === thingID);
+							const originalDeviceAliase = originalDevice.metadata["aliase"] || "";
+                    		const originalDeviceName = originalDevice.name;
+							if (originalDeviceName !== newDeviceName && event.type === 'blur') {
+								let queryData = {...originalDevice};
+								queryData.name = newDeviceName;
+								queryData.metadata.info.device_aliase = newDeviceName;
+								queryData.metadata.aliase = newDeviceName + '_' + splitStringByLastUnderscore(originalDeviceAliase)[1];
+								console.log('queryData123: ', queryData);
+							}
+						} else {
+							$(`#deviceNameErrorEditThingModal`).html(requiredMsg);
+							$('#deviceNameErrorEditThingModal').show();
+						}
+					});
 				});
 				
 				// 在组件卸载时停止调用
@@ -476,21 +571,71 @@ SPDX-License-Identifier: Apache-2.0 -->
 					}
 				}
 
-				//修改设备
-				function editThing(id, name) {
-					const editThingModal = new bootstrap.Modal(document.getElementById("editThingModal"));
-					editThingModal.show();
-					$("#editName").val(name);
+				//生成输出通道配置项-修改设备弹框
+				function createOutChannelConfig (channel) {
+					const $channelConfig = $(`
+						<div class="mb-3 row">
+							<label for="out_channel_aliase_${channel.id}" class="col-sm-3 col-form-label">输出名称</label>
+							<div class="col-sm-9">
+								<div>
+									<input 
+										type="text" 
+										class="form-control name-field" 
+										name="out_channel_aliase_${channel.id}" 
+										id="out_channel_aliase_${channel.id}"
+										placeholder="输出名称" 
+										maxlength="20"
+										value="${channel.aliase}" 
+									/>
+								</div>
+								<div style="display: flex; margin-top: 7px;">
+									<input 
+										type="range" 
+										class="form-conrtol form-range" 
+										min="0" 
+										max="15" 
+										step="1" 
+										value="${channel.volume}" 
+										id="out_channel_volume_${channel.id}"
+									/>
+									<div id="out_channel_volumeLabel_${channel.id}" style="text-align: right; width: 30px; line-height: 25px;">
+										${channel.volume}
+									</div>
+								</div>
+							</div>
+						</div>
+					`);
+					$(`#out_channels_container_EditThingModal`).append($channelConfig);
 				}
 
-				//查看详情
+				//修改设备
+				function editThing(id) {
+					const originalDevice = currentThingsList.find(thing => thing.id === id);
+					$("#editThingModal").attr("data-id", id);
+					$("#deviceNameEditThingModal").val(originalDevice.name);
+					$('#out_channels_container_EditThingModal').empty();
+					if (
+						originalDevice.metadata && 
+						originalDevice.metadata["info"] && 
+						originalDevice.metadata["info"].out_channel &&
+						originalDevice.metadata["info"].out_channel.channel && 
+						originalDevice.metadata["info"].out_channel.channel.length
+					) {
+						originalDevice.metadata["info"].out_channel.channel.forEach((channel)=>{
+							createOutChannelConfig(channel);
+						});
+					}
+					editThingModal.show();
+				}
+
+				//查看设备详情
 				function viewThing(id, thingIdentity) {
 					window.location.href = '{{printf "%s/things/" pathPrefix}}' + id;
 				}
 
 				//删除确认，接触通道关联
 				function deleteThing(thingID) {
-					showConfirmModal("你确定要删除所选数据吗？", () => {
+					showConfirmModal("确定要删除所选数据吗？", () => {
 					fetch(`/ui/things/${thingID}/channelsInJSON?page=1&limit=1000`, {
 						method: "GET",
 					})
@@ -542,8 +687,8 @@ SPDX-License-Identifier: Apache-2.0 -->
 
 				//重启设备
 				function rebootThing(thingIdentity) {
-					showConfirmModal("你确定要重启所选设备吗？", () => {
-						conntrolThing(thingIdentity, "reboot");
+					showConfirmModal("确定要重启所选设备吗？", () => {
+						conntrolThing(thingIdentity, "deviceReboot");
 					});
 				}
 
@@ -629,14 +774,17 @@ SPDX-License-Identifier: Apache-2.0 -->
 									};
 								});
 								updateThingsGrid(things);
+								currentThingsList = [...things];
 							} else {
 								currentDevices = {};
 								$(`#thingsGrid`).empty();
+								currentThingsList = [];
 							};
 						})
 						.catch(error => {
 							currentDevices = {};
 							$(`#thingsGrid`).empty();
+							currentThingsList = [];
 						});
 				}
 				
@@ -707,7 +855,7 @@ SPDX-License-Identifier: Apache-2.0 -->
 									id="${device.id}-editBtn"
 									style="display: ${device.metadata && Number(device.metadata.is_online) === 1 ? 'block':'none'}"
 								>
-									<a class="dropdown-item" onclick="editThing('${device.id}', '${device.name}')">
+									<a class="dropdown-item" onclick="editThing('${device.id}')">
 										<i class="fa-solid fa-pencil-alt" style="width: 16px;"></i> 修改
 									</a>
 								</li>
@@ -820,7 +968,7 @@ SPDX-License-Identifier: Apache-2.0 -->
 						thingIdentity: thingIdentity,
 						host: address.hostname,
 						comID: channelID,
-						controlType: 'reboot',
+						controlType: controlType,
 						username: userInfo.credentials.identity,
 					}
 					fetch(`http://${address.hostname}:${port}/controlDevice`, {

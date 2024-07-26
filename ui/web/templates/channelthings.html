@@ -379,8 +379,8 @@ SPDX-License-Identifier: Apache-2.0 -->
 
 				//重启设备
 				function rebootThing(thingIdentity) {
-					showConfirmModal("你确定要重启所选设备吗？", () => {
-						conntrolThing(thingIdentity, "reboot");
+					showConfirmModal("确定要重启所选设备吗？", () => {
+						conntrolThing(thingIdentity, "deviceReboot");
 					});
 				}
 				
@@ -608,33 +608,30 @@ SPDX-License-Identifier: Apache-2.0 -->
 				}
 
 				function postMessage(channelID, controlType, thingIdentity) {
-					if (controlType === "reboot") {
-						const url = window.location.href; // 获取当前页面的URL
-						const address = new URL(url);
-						const port =  sessionStorage.getItem("socketBridgePort") || "63001";
-						const identity = thingIdentity.split("_")[0];
-						const data = {
-							channelID: channelID,
-							thingIdentity: identity,
-							host: address.hostname,
-							comID: channelID,
-							controlType: 'reboot',
-						}
-						fetch(`http://${address.hostname}:${port}/controlDevice`, {
-							method: "POST",
-							headers: {
-								"Content-Type": "application/json",
-							},
-							body: JSON.stringify(data),
-						})
-							.then(response => {
-								console.log("postMessage: ", response)
-							})
-							.catch((error) => {
-								console.error("error postMessage: ", error);
-							});
-					} else {
+					const url = window.location.href; // 获取当前页面的URL
+					const address = new URL(url);
+					const port =  sessionStorage.getItem("socketBridgePort") || "63001";
+					const identity = thingIdentity.split("_")[0];
+					const data = {
+						channelID: channelID,
+						thingIdentity: identity,
+						host: address.hostname,
+						comID: channelID,
+						controlType: controlType,
 					}
+					fetch(`http://${address.hostname}:${port}/controlDevice`, {
+						method: "POST",
+						headers: {
+							"Content-Type": "application/json",
+						},
+						body: JSON.stringify(data),
+					})
+						.then(response => {
+							console.log("postMessage: ", response)
+						})
+						.catch((error) => {
+							console.error("error postMessage: ", error);
+						});
 				}
             </script>
         </body>
