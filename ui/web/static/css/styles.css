@@ -828,6 +828,12 @@ button.edit-btn {
     box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
     cursor: pointer;
 } 
+
+.hoverCardIcon{
+    height: 38px; 
+    float: left;
+}
+
 .channelIcon{
     color: var(--main-color);
     border: thin solid var(--main-color);

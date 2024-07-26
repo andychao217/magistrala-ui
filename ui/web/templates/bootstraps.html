@@ -41,7 +41,7 @@ SPDX-License-Identifier: Apache-2.0 -->
                                                     <div class="modal-body">
                                                         <div class="mb-3">
                                                             <label for="name" class="form-label">Bootstrap名称</label>
-                                                            <input type="text" class="form-control" name="name" id="name" aria-describedby="tagHelp" placeholder="Name" />
+                                                            <input type="text" class="form-control" name="name" id="name" aria-describedby="tagHelp" placeholder="Name" maxlength="20" />
                                                         </div>
                                                         <div class="row mb-3">
                                                             <div class="col-md-6">
@@ -55,14 +55,14 @@ SPDX-License-Identifier: Apache-2.0 -->
                                                         </div>
                                                         <div class="mb-3">
                                                             <label for="things-select" class="form-label">设备</label>
-                                                            <input type="text" class="itemsFilter" name="thingFilter" id="thingFilter" placeholder="请输入名称" />
+                                                            <input type="text" class="itemsFilter" name="thingFilter" id="thingFilter" placeholder="请输入名称" maxlength="20" />
                                                             <select class="form-select" name="thingID" id="things-select" size="5" required>
                                                                 <option disabled>选择设备</option>
                                                             </select>
                                                         </div>
                                                         <div class="mb-3">
                                                             <label for="channels-select" class="form-label">分区</label>
-                                                            <input type="text" class="itemsFilter" name="channelFilter" id="channelFilter" placeholder="请输入名称" />
+                                                            <input type="text" class="itemsFilter" name="channelFilter" id="channelFilter" placeholder="请输入名称" maxlength="20" />
                                                             <select class="form-select" name="channelID" id="channels-select" size="5" multiple>
                                                                 <option disabled>选择分区</option>
                                                             </select>

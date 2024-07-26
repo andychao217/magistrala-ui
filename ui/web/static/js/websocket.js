@@ -72,12 +72,12 @@ function connectWebSocket(host, port, defaultChannelId) {
                     const originalDeviceInfo = targetDevice.metadata && targetDevice.metadata["info"] ? targetDevice.metadata["info"] : {};
                     const originalDeviceAliase = targetDevice.metadata["aliase"] || "";
                     const originalDeviceName = targetDevice.name;
-                    if (JSON.stringify(originalDeviceInfo) !== JSON.stringify(newDeviceInfo) || originalDeviceName !== newDeviceInfo.device_aliase) {
+                    if (!_.isEqual(originalDeviceInfo, newDeviceInfo) || originalDeviceName !== newDeviceInfo.device_aliase) {
                         const queryData = {...targetDevice};
                         queryData.metadata["info"] = {...newDeviceInfo};
                         queryData.name = newDeviceInfo.device_aliase;
                         queryData.metadata["aliase"] = originalDeviceAliase.replace(originalDeviceName, newDeviceInfo.device_aliase);
-                        httpUpdateThingWebsocket(queryData);
+                        httpUpdateThingWebsocket(queryData, defaultChannelId);
                     }
                }
             }
@@ -122,14 +122,14 @@ function httpGetDomainIdWebsocket() {
               const port =  sessionStorage.getItem("socketBridgePort") || "63001";
               if (domainID && defaultChannelId) {
                 connectWebSocket(hostNameWebsocket, port, defaultChannelId);
-                httpGetAllThingsListWebsocket(hostNameWebsocket, defaultChannelId);
+                httpGetAllThingsListWebsocket(hostNameWebsocket, defaultChannelId, true);
               }
             })
     }
 }
 
 // 获取所有设备列表
-function httpGetAllThingsListWebsocket(host, comID) {
+function httpGetAllThingsListWebsocket(host, comID, notifyDevice) {
     fetch(`/ui/things/thingsInJSON?page=1&limit=1000&onlineStatus=2`, {
         method: "GET",
     })
@@ -145,7 +145,7 @@ function httpGetAllThingsListWebsocket(host, comID) {
             allThingsListWebsocket = thingsData && typeof thingsData === 'object' && 
                 thingsData.things && typeof thingsData.things === 'object' ?  
                     [...thingsData.things]  : [];
-            if (allThingsListWebsocket.length) {
+            if (allThingsListWebsocket.length && notifyDevice) {
                 const url = window.location.href;
                 if (url.indexOf("things") !== -1) {
                     // 进入设备页面时，发送请求获取设备信息
@@ -204,13 +204,15 @@ function controlDeviceWebsocket(host, comID, controlType) {
 }
 
 // 更新设备信息
-function httpUpdateThingWebsocket(queryData) {
+function httpUpdateThingWebsocket(queryData, comID) {
     fetch(`/ui/things/${queryData.id}`, {
         method: "POST",
         headers: {
             "Content-Type": "application/json",
         },
         body: JSON.stringify(queryData),
+    }).then(response => {
+        httpGetAllThingsListWebsocket(hostNameWebsocket, comID, false);
     });
 }
 

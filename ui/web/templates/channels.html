@@ -39,7 +39,7 @@ SPDX-License-Identifier: Apache-2.0 -->
                                                         <div id="alertMessage"></div>
                                                         <div class="mb-3">
                                                             <label for="name" class="form-label">名称</label>
-                                                            <input type="text" class="form-control name-field" name="name" id="name" placeholder="分区名称" />
+                                                            <input type="text" class="form-control name-field" name="name" id="name" placeholder="分区名称" maxlength="20" />
                                                             <div id="nameError" class="text-danger"></div>
                                                         </div>
                                                         <div class="mb-3" style="display: none;">
@@ -49,7 +49,7 @@ SPDX-License-Identifier: Apache-2.0 -->
                                                         </div>
                                                         <div class="mb-3" style="display: none;">
                                                             <label for="description" class="form-label">描述</label>
-                                                            <input type="text" class="form-control" name="description" id="description" placeholder="分区描述" />
+                                                            <input type="text" class="form-control" name="description" id="description" placeholder="分区描述" maxlength="50" />
                                                         </div>
                                                         <div class="mb-3" style="display: none;">
                                                             <label for="metadata" class="form-label">附加属性</label>
@@ -133,7 +133,7 @@ SPDX-License-Identifier: Apache-2.0 -->
 														<div id="editAlertMessage"></div>
 														<div class="mb-3">
 															<label for="name" class="form-label">名称</label>
-															<input type="text" class="form-control name-field" name="name" id="editName" placeholder="分区名称" />
+															<input type="text" class="form-control name-field" name="name" id="editName" placeholder="分区名称" maxlength="20" />
 															<div id="editNameError" class="text-danger"></div>
 														</div>
 														<div class="mb-3" style="display: none;">
@@ -142,7 +142,7 @@ SPDX-License-Identifier: Apache-2.0 -->
 														</div>
 														<div class="mb-3" style="display: none;">
 															<label for="description" class="form-label">描述</label>
-															<input type="text" class="form-control" name="description" id="editDescription" placeholder="分区描述" />
+															<input type="text" class="form-control" name="description" id="editDescription" placeholder="分区描述" maxlength="50" />
 														</div>
 													</div>
 													<div class="modal-footer">
@@ -170,7 +170,7 @@ SPDX-License-Identifier: Apache-2.0 -->
 												<div class="card-body">
 													<div class="row">
 														<div class="col">
-															<img src="/images/icon_organization_area.svg" alt="" style="height: 38px; float: left;">
+															<img src="/images/icon_organization_area.svg" class="hoverCardIcon">
 														</div>
 														<div class="col">
 															<div class="dropdown" style="float: right;">

@@ -43,16 +43,16 @@ SPDX-License-Identifier: Apache-2.0 -->
 
                                                         <div class="mb-3">
                                                             <label for="name" class="form-label">名称</label>
-                                                            <input type="text" class="form-control name-field" name="name" id="name" placeholder="组名称" />
+                                                            <input type="text" class="form-control name-field" name="name" id="name" placeholder="组名称" maxlength="20" />
                                                             <div id="nameError" class="text-danger"></div>
                                                         </div>
                                                         <div class="mb-3">
                                                             <label for="description" class="form-label">描述</label>
-                                                            <input type="text" class="form-control" name="description" id="description" placeholder="组描述" />
+                                                            <input type="text" class="form-control" name="description" id="description" placeholder="组描述" maxlength="50" />
                                                         </div>
                                                         <div class="mb-3">
                                                             <label for="infiniteScroll" class="form-label">父级别</label>
-                                                            <input type="text" class="itemsFilter" name="parentFilter" id="parentFilter" placeholder="请输入名称" />
+                                                            <input type="text" class="itemsFilter" name="parentFilter" id="parentFilter" placeholder="请输入名称" maxlength="20" />
                                                             <select class="form-select" name="parentID" id="infiniteScroll" size="5">
                                                                 <option disabled>选择组</option>
                                                             </select>

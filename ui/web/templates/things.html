@@ -18,107 +18,6 @@ SPDX-License-Identifier: Apache-2.0 -->
                             {{ template "breadcrumb" . }}
                             <div class="row">
                                 <div class="buttons">
-                                    <!-- add thing modal -->
-                                    <div 
-										class="modal fade" 
-										id="addThingModal" 
-										tabindex="-1" 
-										role="dialog" 
-										aria-labelledby="addThingModalLabel"
-										data-bs-backdrop="static" 
-										data-bs-keyboard="false"  
-										aria-hidden="true"
-                                    >
-                                        <div class="modal-dialog" role="document">
-                                            <div class="modal-content">
-                                                <div class="modal-header">
-                                                    <h1 class="modal-title" id="addThingModalLabel">添加设备</h1>
-                                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                                </div>
-                                                <form id="thingform">
-                                                    <div class="modal-body">
-                                                        <div id="alertMessage"></div>
-                                                        
-                                                        <div class="mb-3">
-                                                            <label for="name" class="form-label">名称</label>
-                                                            <input type="text" class="form-control name-field" name="name" id="name" placeholder="设备名称" />
-                                                            <div id="nameError" class="text-danger"></div>
-                                                        </div>
-                                                        <div class="mb-3">
-                                                            <label for="identity" class="form-label">设备身份识别码</label>
-                                                            <input type="text" class="form-control" name="identity" id="identity" placeholder="设备身份识别码" />
-                                                        </div>
-                                                        <div class="mb-3">
-                                                            <label for="secret" class="form-label">密码</label>
-                                                            <input type="text" class="form-control" name="secret" id="secret" placeholder="设备密码" />
-                                                            <div id="secretError" class="error-message"></div>
-                                                        </div>
-                                                        <div class="mb-3" style="display: none;">
-                                                            <label for="thingsTags" class="form-label">标识</label>
-                                                            <div id="thingsTagsList" onclick="deleteItem(event)"></div>
-                                                            <input
-                                                                type="text"
-                                                                class="form-control tags-field"
-                                                                name="tags"
-                                                                id="thingTags"
-                                                                aria-describedby="tagHelp"
-                                                                onkeydown="addItem(event, 'thingTags', 'thingsTagsList')"
-                                                                placeholder="Add a tag"
-                                                            />
-                                                            <div id="tagHelp" class="form-text">以字符串数组形式输入标识.</div>
-                                                            <div id="tagsError" class="text-danger"></div>
-                                                        </div>
-                                                        <div class="mb-3" style="display: none;">
-                                                            <label for="metadata" class="form-label">附加属性</label>
-                                                            <div class="metadata-field">
-                                                                <textarea name="metadata" id="metadata"></textarea>
-                                                            </div>
-                                                            <div id="metadataHelp" class="form-text">以JSON形式输入附加属性.</div>
-                                                            <div id="metadataError" class="text-danger"></div>
-                                                        </div>
-                                                    </div>
-                                                    <div class="modal-footer">
-                                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">取消</button>
-                                                        <button type="submit" class="btn body-button" id="create-thing-button" onclick="submitItemList('thingTags', 'thingsTagsList')">确定</button>
-                                                    </div>
-                                                </form>
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    <!-- Button trigger modal -->
-                                    <button type="button" class="btn body-button" onclick="openModal('bulk')" style="display: none;">批量添加设备</button>
-
-                                    <!-- add things modal -->
-                                    <div class="modal fade" id="addThingsModal" tabindex="-1" role="dialog" aria-labelledby="addThingsModalLabel" aria-hidden="true">
-                                        <div class="modal-dialog" role="document">
-                                            <div class="modal-content">
-                                                <div class="modal-header">
-                                                    <h1 class="modal-title" id="addThingsModalLabel">批量添加设备</h1>
-                                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                                </div>
-                                                <form method="post" enctype="multipart/form-data" id="bulkThingsForm">
-                                                    <div class="modal-body">
-                                                        <div id="alertBulkMessage"></div>
-
-                                                        <div class="form-group mb-3">
-                                                            <label for="thingsFile">
-                                                                添加包含设备名称以及附加属性的CSV文件(附加属性可以为空). 在
-                                                                <a href="/samples/things.csv" download="things.csv">这里</a>
-                                                                可以下载模版文件
-                                                            </label>
-                                                            <input type="file" class="form-control-file" id="thingsFile" name="thingsFile" required />
-                                                        </div>
-                                                        <div class="modal-footer">
-                                                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">取消</button>
-                                                            <button type="submit" value="upload" class="btn body-button">确定</button>
-                                                        </div>
-                                                    </div>
-                                                </form>
-                                            </div>
-                                        </div>
-                                    </div>
-
                                     <!-- edit thing modal -->
                                     <div 
 										class="modal fade" 
@@ -141,12 +40,8 @@ SPDX-License-Identifier: Apache-2.0 -->
 														<div id="editAlertMessage"></div>
 														<div class="mb-3">
 															<label for="name" class="form-label">名称</label>
-															<input type="text" class="form-control name-field" name="name" id="editName" placeholder="设备名称" />
+															<input type="text" class="form-control name-field" name="name" id="editName" placeholder="设备名称" maxlength="20" />
 															<div id="editNameError" class="text-danger"></div>
-														</div>
-														<div class="mb-3" style="display: none;">
-															<label for="id" class="form-label">设备ID</label>
-															<input type="text" class="form-control" name="id" id="editID" placeholder="设备ID" readonly />
 														</div>
 													</div>
 													<div class="modal-footer">
@@ -208,7 +103,7 @@ SPDX-License-Identifier: Apache-2.0 -->
 												<div class="modal-body">
 												<div class="mb-3">
 													<label for="alias" class="form-label">设备名称</label>
-													<input type="text" class="form-control" name="alias" id="alias-deviceNetCfg" placeholder="设备名称" />
+													<input type="text" class="form-control" name="alias" id="alias-deviceNetCfg" placeholder="设备名称" maxlength="20" />
 													<div id="aliasError" class="text-danger"></div>
 												</div>
 												<div class="mb-3">
@@ -255,23 +150,21 @@ SPDX-License-Identifier: Apache-2.0 -->
                                     </div>
                                 </div>
                                 <div class="table-responsive table-container">
-									<!-- {{ template "tableheader" . }} -->
 									<div class="row buttons mb-3">
 										<div class="col-4" role="group">
-										<!-- <button type="button" class="btn body-button" onclick="openModal('single')">添加设备</button> -->
-										<button type="button" class="btn body-button" onclick="openModal('scan')">
-											<i class="fa-solid fa-plus"></i> 添加设备
-										</button>
+											<button type="button" class="btn body-button" onclick="openModal('scan')">
+												<i class="fa-solid fa-plus"></i> 添加设备
+											</button>
 										</div>
 										<div class="btn-group col-4" role="group">
-										<input type="radio" class="btn-check" name="btnOnlineStatus" id="btnAll" autocomplete="off" />
-										<label class="btn btn-outline-primary" for="btnAll">全部</label>
-										
-										<input type="radio" class="btn-check" name="btnOnlineStatus" id="btnOnline" autocomplete="off" />
-										<label class="btn btn-outline-primary" for="btnOnline">在线</label>
-										
-										<input type="radio" class="btn-check" name="btnOnlineStatus" id="btnOffline" autocomplete="off" />
-										<label class="btn btn-outline-primary" for="btnOffline">离线</label>
+											<input type="radio" class="btn-check" name="btnOnlineStatus" id="btnAll" autocomplete="off" />
+											<label class="btn btn-outline-primary" for="btnAll">全部</label>
+											
+											<input type="radio" class="btn-check" name="btnOnlineStatus" id="btnOnline" autocomplete="off" />
+											<label class="btn btn-outline-primary" for="btnOnline">在线</label>
+											
+											<input type="radio" class="btn-check" name="btnOnlineStatus" id="btnOffline" autocomplete="off" />
+											<label class="btn btn-outline-primary" for="btnOffline">离线</label>
 										</div>
 									</div>
 									<div class="row" id="thingsGrid">
@@ -293,31 +186,31 @@ SPDX-License-Identifier: Apache-2.0 -->
 												<div class="col">
 													{{ if $t.Metadata.product_name }}
 														{{ if stringContains $t.Metadata.product_name "2204" }}
-															<img id="{{ $t.ID }}-thingIcon" src="/images/icon_device1.svg" alt="" style="height: 38px; float: left;">
+															<img id="{{ $t.ID }}-thingIcon" src="/images/icon_device1.svg" class="hoverCardIcon">
 														{{ else if stringContains $t.Metadata.product_name "2200" }}
-															<img id="{{ $t.ID }}-thingIcon" src="/images/icon_device1.svg" alt="" style="height: 38px; float: left;">
+															<img id="{{ $t.ID }}-thingIcon" src="/images/icon_device1.svg" class="hoverCardIcon">
 														{{ else if stringContains $t.Metadata.product_name "2201" }}
-															<img id="{{ $t.ID }}-thingIcon" src="/images/icon_device1.svg" alt="" style="height: 38px; float: left;">
+															<img id="{{ $t.ID }}-thingIcon" src="/images/icon_device1.svg" class="hoverCardIcon">
 														{{ else if stringContains $t.Metadata.product_name "2102" }}
-															<img id="{{ $t.ID }}-thingIcon" src="/images/icon_device2.svg" alt="" style="height: 38px; float: left;">
+															<img id="{{ $t.ID }}-thingIcon" src="/images/icon_device2.svg" class="hoverCardIcon">
 														{{ else if stringContains $t.Metadata.product_name "2110" }}
-															<img id="{{ $t.ID }}-thingIcon" src="/images/icon_device2.svg" alt="" style="height: 38px; float: left;">
+															<img id="{{ $t.ID }}-thingIcon" src="/images/icon_device2.svg" class="hoverCardIcon">
 														{{ else if stringContains $t.Metadata.product_name "2112" }}
-															<img id="{{ $t.ID }}-thingIcon" src="/images/icon_device2.svg" alt="" style="height: 38px; float: left;">
+															<img id="{{ $t.ID }}-thingIcon" src="/images/icon_device2.svg" class="hoverCardIcon">
 														{{ else if stringContains $t.Metadata.product_name "3302" }}
-															<img id="{{ $t.ID }}-thingIcon" src="/images/icon_device3.svg" alt="" style="height: 38px; float: left;">
+															<img id="{{ $t.ID }}-thingIcon" src="/images/icon_device3.svg" class="hoverCardIcon">
 														{{ else if stringContains $t.Metadata.product_name "2001" }}
-															<img id="{{ $t.ID }}-thingIcon" src="/images/icon_device4.svg" alt="" style="height: 38px; float: left;">
+															<img id="{{ $t.ID }}-thingIcon" src="/images/icon_device4.svg" class="hoverCardIcon">
 														{{ else if stringContains $t.Metadata.product_name "2011" }}
-															<img id="{{ $t.ID }}-thingIcon" src="/images/icon_device4.svg" alt="" style="height: 38px; float: left;">
+															<img id="{{ $t.ID }}-thingIcon" src="/images/icon_device4.svg" class="hoverCardIcon">
 														{{ else if stringContains $t.Metadata.product_name "3401" }}
-															<img id="{{ $t.ID }}-thingIcon" src="/images/icon_device5.svg" alt="" style="height: 38px; float: left;">
+															<img id="{{ $t.ID }}-thingIcon" src="/images/icon_device5.svg" class="hoverCardIcon">
 														{{ else if stringContains $t.Metadata.product_name "2401" }}
-															<img id="{{ $t.ID }}-thingIcon" src="/images/icon_device5.svg" alt="" style="height: 38px; float: left;">
+															<img id="{{ $t.ID }}-thingIcon" src="/images/icon_device5.svg" class="hoverCardIcon">
 														{{ else if stringContains $t.Metadata.product_name "3602" }}
-															<img id="{{ $t.ID }}-thingIcon" src="/images/icon_device8.svg" alt="" style="height: 38px; float: left;">
+															<img id="{{ $t.ID }}-thingIcon" src="/images/icon_device8.svg" class="hoverCardIcon">
 														{{ else }}
-															<img id="{{ $t.ID }}-thingIcon" src="/images/icon_device0.svg" alt="" style="height: 38px; float: left;">
+															<img id="{{ $t.ID }}-thingIcon" src="/images/icon_device0.svg" class="hoverCardIcon">
 														{{ end }}
 													{{ end }}
 												</div>
@@ -327,8 +220,11 @@ SPDX-License-Identifier: Apache-2.0 -->
 														<i class="fa-solid fa-ellipsis"></i>
 													</button>
 													<ul class="dropdown-menu">
-														<li><a class="dropdown-item" onclick="viewThing('{{ $t.ID }}', '{{ $t.Credentials.Identity }}')">
-														<i class="fa-solid fa-info" style="width: 16px;"></i> 查看</a></li>
+														<li style="display: none;">
+															<a class="dropdown-item" onclick="viewThing('{{ $t.ID }}', '{{ $t.Credentials.Identity }}')">
+																<i class="fa-solid fa-info" style="width: 16px;"></i> 查看
+															</a>
+														</li>
 														<li
 															id="{{ $t.ID }}-rebootBtn"
 															{{ if $t.Metadata.is_online }}
@@ -339,11 +235,20 @@ SPDX-License-Identifier: Apache-2.0 -->
 																{{ end }}
 															{{ end }}
 														>
-															<a class="dropdown-item" onclick="conntrolThing('{{ $t.Credentials.Identity }}', 'reboot')">
+															<a class="dropdown-item" onclick="rebootThing('{{ $t.Credentials.Identity }}')">
 																<i class="fa-solid fa-arrows-rotate" style="width: 16px;"></i> 重启
 															</a>
 														</li>
-														<li id="{{ $t.ID }}-editBtn">
+														<li 
+															id="{{ $t.ID }}-editBtn"
+															{{ if $t.Metadata.is_online }}
+																{{ if eq $t.Metadata.is_online "1" }}
+																style="display: block;"
+																{{ else }}
+																style="display: none;"
+																{{ end }}
+															{{ end }}
+														>
 															<a class="dropdown-item" onclick="editThing('{{ $t.ID }}', '{{ $t.Name }}')">
 																<i class="fa-solid fa-pencil-alt" style="width: 16px;"></i> 修改
 															</a>
@@ -403,17 +308,18 @@ SPDX-License-Identifier: Apache-2.0 -->
                   	scanNewThingsList = [],
                   	selectedNewThingNames = [],
 					intervalRefreshData = null;
-				const deviceNetCfgModal = new bootstrap.Modal(document.getElementById("deviceNetCfgModal"));
+				const deviceNetCfgModal = new bootstrap.Modal(document.getElementById("deviceNetCfgModal")),
+					  url = window.location.href, // 获取当前页面的URL
+					  onlineStatusValue = (url.match(/onlineStatus=(\d+)/) || [])[1] || 
+					  	sessionStorage.getItem("onlineStatus") || '1'; // 从URL获取onlineStatus的值
 				
 				$(document).ready(function() {
-					const url = window.location.href; // 获取当前页面的URL
-					const address = new URL(url);
-					const onlineStatusValue = (url.match(/onlineStatus=(\d+)/) || [])[1] || sessionStorage.getItem("onlineStatus") || '1'; // 从URL获取onlineStatus的值
 					sessionStorage.setItem("onlineStatus", onlineStatusValue);
 					getThingsList(onlineStatusValue, false);
 
 					intervalRefreshData = setInterval(refreshThingsData, 2000);
 
+					// 根据路径参数配置设备状态选中标签
 					if (onlineStatusValue === '1') {
 						$('#btnAll').prop('checked', false);
 						$('#btnOnline').prop('checked', true);
@@ -428,6 +334,7 @@ SPDX-License-Identifier: Apache-2.0 -->
 						$('#btnOffline').prop('checked', false);
 					}
 
+					// 切换要查看的设备状态
 					$('input[name="btnOnlineStatus"]').change(function() {
 						currentDevices = {}, newDevices = {};
 						$(`#thingsGrid`).empty();
@@ -442,8 +349,6 @@ SPDX-License-Identifier: Apache-2.0 -->
 						stopFetchingData();
 						getThingsList(reqOnlineStatus, true);
 					});
-
-					
 
 					//搜索添加设备确认添加按钮事件
 					$('#scan-add-thing-button').on('click', addScanNewThings);
@@ -496,12 +401,10 @@ SPDX-License-Identifier: Apache-2.0 -->
 					});
 
 					//搜索添加设备-网络配置-手动-注册所有输入框的验证和保存逻辑
-					validateAndSave('alias');
-					validateAndSave('ip');
-					validateAndSave('gateway');
-					validateAndSave('netmask');
-					validateAndSave('dns1');
-					validateAndSave('dns2');
+					const netConfigArray = ['alias', 'ip', 'gateway', 'netmask', 'dns1', 'dns2'];
+					netConfigArray.forEach((config) => {
+						validateAndSave(config);
+					});
 
 					//搜索添加设备-网络配置-确认按钮
 					$('#deviceNetCfgModal-confirm-button').on('click', function() {
@@ -558,6 +461,7 @@ SPDX-License-Identifier: Apache-2.0 -->
 				// 在组件卸载时停止调用
 				window.addEventListener('beforeunload', stopFetchingData);
 
+				// 停止轮询刷新数据
 				function stopFetchingData() {
 					if (intervalRefreshData) {
 						clearInterval(intervalRefreshData);
@@ -565,14 +469,9 @@ SPDX-License-Identifier: Apache-2.0 -->
 					}
 				}
 
+				//打开弹框
 				function openModal(modal) {
-					const thingModal = new bootstrap.Modal(document.getElementById("addThingModal"));
-					const thingsModal = new bootstrap.Modal(document.getElementById("addThingsModal"));
-					if (modal === "single") {
-						thingModal.show();
-					} else if (modal === "bulk") {
-						thingsModal.show();
-					} else if (modal === "scan") {
+					if (modal === "scan") {
 						scanNewThings();
 					}
 				}
@@ -582,16 +481,14 @@ SPDX-License-Identifier: Apache-2.0 -->
 					const editThingModal = new bootstrap.Modal(document.getElementById("editThingModal"));
 					editThingModal.show();
 					$("#editName").val(name);
-					$("#editID").val(id);
 				}
 
 				//查看详情
 				function viewThing(id, thingIdentity) {
 					window.location.href = '{{printf "%s/things/" pathPrefix}}' + id;
-					conntrolThing(thingIdentity, "deviceInfo");
 				}
 
-				//删除
+				//删除确认，接触通道关联
 				function deleteThing(thingID) {
 					showConfirmModal("你确定要删除所选数据吗？", () => {
 					fetch(`/ui/things/${thingID}/channelsInJSON?page=1&limit=1000`, {
@@ -618,6 +515,7 @@ SPDX-License-Identifier: Apache-2.0 -->
 					});
 				}
 
+				//删除设备
 				function handleDelete(thingID) {
 					fetch(`/ui/things/${thingID}`, {
 						method: "DELETE",
@@ -640,6 +538,13 @@ SPDX-License-Identifier: Apache-2.0 -->
 							window.location.href = `/ui/things?limit=1000&onlineStatus=${reqOnlineStatus}`;
 							console.error("error submitting form: ", error);
 						});
+				}
+
+				//重启设备
+				function rebootThing(thingIdentity) {
+					showConfirmModal("你确定要重启所选设备吗？", () => {
+						conntrolThing(thingIdentity, "reboot");
+					});
 				}
 
 				//控制设备
@@ -778,22 +683,30 @@ SPDX-License-Identifier: Apache-2.0 -->
 
 				function updateThingsGridDom(device) {
 					const deviceIcon = getDeviceIcon(device);
-					const imgSpan = `<img id="${device.id}-thingIcon" src="/images/${deviceIcon}" alt="" style="height: 38px; float: left;">`;
+					const imgSpan = `<img id="${device.id}-thingIcon" src="/images/${deviceIcon}" class="hoverCardIcon">`;
 					const btnSpan = `
 						<div class="dropdown" style="float: right;">
 							<button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
 								<i class="fa-solid fa-ellipsis"></i>
 							</button>
 							<ul class="dropdown-menu">
-								<li><a class="dropdown-item" onclick="viewThing('${device.id}')">
-									<i class="fa-solid fa-info" style="width: 16px;"></i> 查看</a>
+								<li style="display: none;">
+									<a class="dropdown-item" onclick="viewThing('${device.id}')">
+										<i class="fa-solid fa-info" style="width: 16px;"></i> 查看
+									</a>
 								</li>
-								<li id="${device.id}-rebootBtn" style="display: ${device.metadata && Number(device.metadata.is_online) === 1 ? 'block':'none'}">
-									<a class="dropdown-item" onclick="conntrolThing('${device.credentials.identity}', 'reboot')">
+								<li 
+									id="${device.id}-rebootBtn" 
+									style="display: ${device.metadata && Number(device.metadata.is_online) === 1 ? 'block':'none'}"
+								>
+									<a class="dropdown-item" onclick="rebootThing('${device.credentials.identity}')">
 										<i class="fa-solid fa-arrows-rotate" style="width: 16px;"></i> 重启
 									</a>
 								</li>
-								<li id="${device.id}-editBtn">
+								<li 
+									id="${device.id}-editBtn"
+									style="display: ${device.metadata && Number(device.metadata.is_online) === 1 ? 'block':'none'}"
+								>
 									<a class="dropdown-item" onclick="editThing('${device.id}', '${device.name}')">
 										<i class="fa-solid fa-pencil-alt" style="width: 16px;"></i> 修改
 									</a>
@@ -812,7 +725,13 @@ SPDX-License-Identifier: Apache-2.0 -->
 						`
 							<div class="row" style="position: absolute; bottom: 40px; padding-left: 24px;">
 								${device.metadata.out_channel_array.map(($o, $i) => {
-									return `<i class="fa-solid fa-${$i+1} channelIcon" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-title="${$o.aliase}" title="${$o.aliase}"></i>`
+									return `<i 
+												class="fa-solid fa-${$i+1} channelIcon" 
+												data-bs-toggle="tooltip" 
+												data-bs-placement="bottom" 
+												data-bs-title="${$o.aliase}" 
+												title="${$o.aliase}">
+											</i>`
 								}).join('')}
 							</div>
 						` : ``;
@@ -1275,75 +1194,7 @@ SPDX-License-Identifier: Apache-2.0 -->
 								});
 						})
 				}	
-		   </script> 
-            <script type="module">
-				import {
-					attachValidationListener,
-					validateName,
-					validateJSON,
-					validateStringArray,
-				} from "/js/validation.js";
-				import { submitCreateForm } from "/js/forms.js";
-
-				const thingModal = new bootstrap.Modal(document.getElementById("addThingModal")),
-					  thingsModal = new bootstrap.Modal(document.getElementById("addThingsModal")),
-					  editThingModal = new bootstrap.Modal(document.getElementById("editThingModal"));
-
-				attachValidationListener({
-					buttonId: "create-thing-button",
-					errorDivs: {
-						name: "nameError",
-						// metadata: "metadataError",
-						thingsTags: "tagsError",
-					},
-					validations: {
-						name: validateName,
-						// metadata: validateJSON,
-						thingsTags: validateStringArray,
-					},
-					fields: {
-						name: "name-field",
-						// metadata: "metadata-field",
-						thingsTags: "tags-field",
-					},
-				});
-
-				submitCreateForm({
-					url: '{{printf "%s/things" pathPrefix}}',
-					formId: "thingform",
-					alertDiv: "alertMessage",
-					modal: thingModal,
-					type:"addThing"
-				});
-
-				submitCreateForm({
-					url: '{{printf "%s/things/bulk" pathPrefix}}',
-					formId: "bulkThingsForm",
-					alertDiv: "alertBulkMessage",
-					modal: thingsModal,
-				});
-
-				attachValidationListener({
-					buttonId: "edit-thing-button",
-					errorDivs: {
-						name: "editNameError",
-					},
-					validations: {
-						editName: validateName,
-					},
-					fields: {
-						editName: "name-field",
-					},
-				});
-
-				submitCreateForm({
-					url: '{{ printf "%s/things" pathPrefix }}',
-					formId: "editThingform",
-					alertDiv: "editAlertMessage",
-					modal: editThingModal,
-					type: "edit"
-				});
-            </script>
+		   	</script>
         </body>
     </html>
 {{ end }}

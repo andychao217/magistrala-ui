@@ -81,7 +81,7 @@ SPDX-License-Identifier: Apache-2.0 -->
 												<div class="card-body">
 													<div class="row">
 														<div class="col">
-															<img id="{{ $t.ID }}-thingIcon" src="/images/icon_channel.png" alt="" style="height: 38px; float: left;">
+															<img id="{{ $t.ID }}-thingIcon" src="/images/icon_channel.png" class="hoverCardIcon">
 														</div>
 														<div class="col">
 															<div class="dropdown" style="float: right;">
@@ -90,14 +90,18 @@ SPDX-License-Identifier: Apache-2.0 -->
 																</button>
 																<ul class="dropdown-menu">
 																	<form action="{{ printf "%s/channels/%s/things/disconnect?item=channels" pathPrefix $channelID }}" method="post">
-																		<li><a class="dropdown-item" onclick="viewThing('{{ $t.ID }}')"><i class="fa-solid fa-info" style="width: 16px;"></i> 查看</a></li>
+																		<li style="display: none;">
+																			<a class="dropdown-item" onclick="viewThing('{{ $t.ID }}')">
+																				<i class="fa-solid fa-info" style="width: 16px;"></i> 查看
+																			</a>
+																		</li>
 																		<li>
 																			<input type="hidden" name="thingID" value="{{ $t.ID }}" />
 																			<button type="submit" class="dropdown-item" {{ if not $shareButton }}disabled{{ end }}>
 																				<i class="fa-solid fa-link-slash" style="width: 16px;"></i> 移除设备
 																			</button>
 																		</li>
-																		<li
+																		<!-- <li
 																			id="{{ $t.ID }}-rebootBtn"
 																			{{ if $t.Metadata.is_online }}
 																				{{ if eq $t.Metadata.is_online "1" }}
@@ -107,10 +111,10 @@ SPDX-License-Identifier: Apache-2.0 -->
 																				{{ end }}
 																			{{ end }}
 																		>
-																			<a class="dropdown-item" onclick="conntrolThing('{{ $t.Credentials.Identity }}', 'reboot')">
+																			<a class="dropdown-item" onclick="rebootThing('{{ $t.Credentials.Identity }}')">
 																				<i class="fa-solid fa-arrows-rotate" style="width: 16px;"></i> 重启
 																			</a>
-																		</li>
+																		</li> -->
 																	</form>
 																</ul>
 															</div>
@@ -373,6 +377,13 @@ SPDX-License-Identifier: Apache-2.0 -->
 					window.location.href = '{{printf "%s/things/" pathPrefix}}' + id;
 				}
 
+				//重启设备
+				function rebootThing(thingIdentity) {
+					showConfirmModal("你确定要重启所选设备吗？", () => {
+						conntrolThing(thingIdentity, "reboot");
+					});
+				}
+				
 				//控制设备
 				function conntrolThing(thingIdentity, controlType) {
 					const domainID = sessionStorage.getItem("domainID");
@@ -492,30 +503,34 @@ SPDX-License-Identifier: Apache-2.0 -->
 								(typeof currentDevices[newId] === 'object' && Object.entries(currentDevices[newId]).length === 0)
 							) {
 								const device = newDevices[newId];
-								const imgSpan = `<img id="${device.id}-thingIcon" src="/images/icon_channel.png" alt="" style="height: 38px; float: left;">`;
+								const imgSpan = `<img id="${device.id}-thingIcon" src="/images/icon_channel.png" class="hoverCardIcon">`;
 								const btnSpan = `
 									<div class="dropdown" style="float: right;">
 										<button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
 											<i class="fa-solid fa-ellipsis"></i>
 										</button>
 										<ul class="dropdown-menu">
-										<form action="/ui/channels/${channelID}/things/disconnect?item=channels" method="post">
-											<li><a class="dropdown-item" onclick="viewThing('${device.id}')"><i class="fa-solid fa-info" style="width: 16px;"></i> 查看</a></li>
-											<li>
-												<input type="hidden" name="thingID" value="${device.id}" />
-												<button type="submit" class="dropdown-item">
-													<i class="fa-solid fa-link-slash" style="width: 16px;"></i> 移除设备
-												</button>
-											</li>
-											<li id="${device.id}-rebootBtn" style="display: ${device.metadata && Number(device.metadata.is_online) === 1 ? 'block':'none'}">
-												<a class="dropdown-item" onclick="conntrolThing('${device.credentials.identity}', 'reboot')">
-													<i class="fa-solid fa-arrows-rotate" style="width: 16px;"></i> 重启
-												</a>
-											</li>
-										</form>
+											<form action="/ui/channels/${channelID}/things/disconnect?item=channels" method="post">
+												<li style="display: none;">
+													<a class="dropdown-item" onclick="viewThing('${device.id}')">
+														<i class="fa-solid fa-info" style="width: 16px;"></i> 查看
+													</a>
+												</li>
+												<li>
+													<input type="hidden" name="thingID" value="${device.id}" />
+													<button type="submit" class="dropdown-item">
+														<i class="fa-solid fa-link-slash" style="width: 16px;"></i> 移除设备
+													</button>
+												</li>
+											</form>
 										</ul>
 									</div>
 								`;
+								// <li id="${device.id}-rebootBtn" style="display: ${device.metadata && Number(device.metadata.is_online) === 1 ? 'block':'none'}">
+								// 	<a class="dropdown-item" onclick="rebootThing('${device.credentials.identity}')">
+								// 		<i class="fa-solid fa-arrows-rotate" style="width: 16px;"></i> 重启
+								// 	</a>
+								// </li>
 								const thingName = device.metadata.out_channel_array && device.metadata.out_channel_array.length > 1 ? 
 								device.metadata.aliase : device.name;
 								const $thingCard = $(`
