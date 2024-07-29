@@ -7,8 +7,8 @@ import (
 	"context"
 	"time"
 
-	"github.com/absmach/magistrala-ui/ui"
 	sdk "github.com/absmach/magistrala/pkg/sdk/go"
+	"github.com/andychao217/magistrala-ui/ui"
 	"github.com/go-kit/kit/metrics"
 )
 

@@ -28,7 +28,15 @@ SPDX-License-Identifier: Apache-2.0 -->
                                     <span class="fs-6 fw-lighter font-monospace">{{ .Dashboard.ID }}</span>
                                 </div>
                                 <div class="row-mb-3 display-none" id="CanvasButtons">
-                                    <button type="button" class="btn body-button" data-bs-toggle="offcanvas" data-bs-target="#widgetsCanvas" aria-controls="widgetsCanvas">新增组件</button>
+                                    <button 
+                                        type="button" 
+                                        class="btn body-button" 
+                                        data-bs-toggle="offcanvas" 
+                                        data-bs-target="#widgetsCanvas" 
+                                        aria-controls="widgetsCanvas"
+                                    >
+                                        新增组件
+                                    </button>
                                     <button type="button" class="btn body-button" onclick="saveLayout()">保存布局</button>
                                     <button type="button" class="btn body-button" onclick="cancelEdit()">取消</button>
                                     <button type="button" class="btn body-button" onclick="clearCanvas()">清除画布</button>

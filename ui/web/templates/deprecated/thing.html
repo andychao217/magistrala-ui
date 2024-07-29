@@ -158,8 +158,7 @@ SPDX-License-Identifier: Apache-2.0 -->
                 attachEditRowListener, 
                     updateName, 
                     updateSecret, 
-                    updateTags, 
-                    // updateMetadata 
+                    updateTags
                 } from "/js/update.js";
 
                 attachEditRowListener({
@@ -178,16 +177,6 @@ SPDX-License-Identifier: Apache-2.0 -->
                     },
                     pathPrefix: "{{ pathPrefix }}",
                 });
-                // updateMetadata({
-                //     textArea: "metadataTextArea",
-                //     field: "metadata",
-                //     alertDiv: "metadataError",
-                //     fieldName: "metadata-field",
-                //     id: "{{ .Entity.ID }}",
-                //     entity: "things",
-                //     button: "save-metadata",
-                //     pathPrefix: "{{ pathPrefix }}",
-                // });
             </script>
         </body>
     </html>

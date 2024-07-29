@@ -103,21 +103,40 @@ SPDX-License-Identifier: Apache-2.0 -->
                                     <div id="error-message" class="text-danger"></div>
                                     <div class="row-mb-3 d-flex flex-row gap-2 mt-3">
                                         {{ if eq .Entity.Status "enabled" }}
-                                            <button type="button" class="btn body-button" data-bs-toggle="modal" data-bs-target="#disableEntityModal" style="display: none;">禁用用户</button>
+                                            <button 
+                                                type="button" 
+                                                class="btn body-button" 
+                                                data-bs-toggle="modal" 
+                                                data-bs-target="#disableEntityModal" 
+                                                style="display: none;"
+                                            >
+                                                禁用用户
+                                            </button>
                                         {{ else }}
-                                            <button type="button" class="btn body-button" data-bs-toggle="modal" data-bs-target="#enableEntityModal" style="display: none;">启用用户</button>
+                                            <button 
+                                                type="button" 
+                                                class="btn body-button" 
+                                                data-bs-toggle="modal" 
+                                                data-bs-target="#enableEntityModal" 
+                                                style="display: none;"
+                                            >
+                                                启用用户
+                                            </button>
                                         {{ end }}
-                                        <button type="button" class="btn body-button" data-bs-toggle="modal" data-bs-target="#updateRoleModal">更新用户角色</button>
+                                        <button 
+                                            type="button" 
+                                            class="btn body-button" 
+                                            data-bs-toggle="modal" 
+                                            data-bs-target="#updateRoleModal"
+                                        >
+                                            更新用户角色
+                                        </button>
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
-
-                <!-- status update modals -->
-                {{ template "statusupdate" . }}
-
 
                 <!-- Update Role Modal -->
                 <div 
@@ -176,7 +195,6 @@ SPDX-License-Identifier: Apache-2.0 -->
                     updateName,
                     updateIdentity,
                     updateTags,
-                    // updateMetadata
                 } from "/js/update.js";
 
                 attachEditRowListener({
@@ -195,17 +213,6 @@ SPDX-License-Identifier: Apache-2.0 -->
                     },
                     pathPrefix: "{{ pathPrefix }}",
                 });
-
-                // updateMetadata({
-                //     textArea: "metadataTextArea",
-                //     field: "metadata",
-                //     alertDiv: "metadataError",
-                //     fieldName: "metadata-field",
-                //     id: "{{ .Entity.ID }}",
-                //     entity: "users",
-                //     button: "save-metadata",
-                //     pathPrefix: "{{ pathPrefix }}",
-                // });
             </script>
         </body>
     </html>

@@ -36,7 +36,7 @@ linters-settings:
     generated-is-used: false
   wrapcheck:
     ignoreSigRegexps:
-      - "github.com/absmach/magistrala-ui/ui.Service"
+      - "github.com/andychao217/magistrala-ui/ui.Service"
     ignorePackageGlobs:
       - "net/http"
       - "database/sql"

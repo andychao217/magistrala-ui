@@ -1,4 +1,4 @@
-module github.com/absmach/magistrala-ui
+module github.com/andychao217/magistrala-ui
 
 go 1.21.5
 

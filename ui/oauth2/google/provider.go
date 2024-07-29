@@ -7,7 +7,7 @@ import (
 	"net/url"
 	"strings"
 
-	mgoauth2 "github.com/absmach/magistrala-ui/ui/oauth2"
+	mgoauth2 "github.com/andychao217/magistrala-ui/ui/oauth2"
 	"golang.org/x/oauth2"
 	googleoauth2 "golang.org/x/oauth2/google"
 )

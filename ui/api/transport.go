@@ -15,10 +15,10 @@ import (
 	"time"
 
 	"github.com/absmach/magistrala"
-	"github.com/absmach/magistrala-ui/ui"
-	"github.com/absmach/magistrala-ui/ui/oauth2"
 	"github.com/absmach/magistrala/pkg/errors"
 	sdk "github.com/absmach/magistrala/pkg/sdk/go"
+	"github.com/andychao217/magistrala-ui/ui"
+	"github.com/andychao217/magistrala-ui/ui/oauth2"
 	"github.com/go-chi/chi/v5"
 	kithttp "github.com/go-kit/kit/transport/http"
 	"github.com/go-zoo/bone"

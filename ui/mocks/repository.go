@@ -7,7 +7,7 @@ package mocks
 import (
 	context "context"
 
-	ui "github.com/absmach/magistrala-ui/ui"
+	ui "github.com/andychao217/magistrala-ui/ui"
 	mock "github.com/stretchr/testify/mock"
 )
 

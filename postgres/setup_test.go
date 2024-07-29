@@ -11,9 +11,9 @@ import (
 	"testing"
 	"time"
 
-	"github.com/absmach/magistrala-ui/internal/postgres"
-	dpostgres "github.com/absmach/magistrala-ui/postgres"
-	"github.com/absmach/magistrala-ui/ui"
+	"github.com/andychao217/magistrala-ui/internal/postgres"
+	dpostgres "github.com/andychao217/magistrala-ui/postgres"
+	"github.com/andychao217/magistrala-ui/ui"
 	"github.com/jmoiron/sqlx"
 	"github.com/ory/dockertest/v3"
 	"github.com/ory/dockertest/v3/docker"

@@ -1,6 +1,6 @@
 # Magistrala-ui
 
-[![Create and publish a Docker image](https://github.com/absmach/magistrala-ui/actions/workflows/build.yml/badge.svg)](https://github.com/absmach/magistrala-ui/actions/workflows/build.yml) [![Continuous Integration](https://github.com/absmach/magistrala-ui/actions/workflows/ci.yaml/badge.svg)](https://github.com/absmach/magistrala-ui/actions/workflows/ci.yaml) [![code style: prettier](https://img.shields.io/badge/code_style-prettier-ff69b4.svg?style=flat-square)](https://github.com/prettier/prettier)
+[![Create and publish a Docker image](https://github.com/andychao217/magistrala-ui/actions/workflows/build.yml/badge.svg)](https://github.com/andychao217/magistrala-ui/actions/workflows/build.yml) [![Continuous Integration](https://github.com/andychao217/magistrala-ui/actions/workflows/ci.yaml/badge.svg)](https://github.com/andychao217/magistrala-ui/actions/workflows/ci.yaml) [![code style: prettier](https://img.shields.io/badge/code_style-prettier-ff69b4.svg?style=flat-square)](https://github.com/prettier/prettier)
 
 The Magistrala-ui functions as a Graphical User Interface (GUI) designed to interact with Magistrala services, encompassing both the creation and management aspects of users, things, channels, and groups. It streamlines tasks such as user and thing creation, channel establishment, policy configuration, and HTTP message transmission across various channels.
 

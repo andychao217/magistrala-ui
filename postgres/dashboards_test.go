@@ -12,10 +12,10 @@ import (
 	"time"
 
 	"github.com/0x6flab/namegenerator"
-	"github.com/absmach/magistrala-ui/postgres"
-	"github.com/absmach/magistrala-ui/ui"
 	"github.com/absmach/magistrala/pkg/errors"
 	"github.com/absmach/magistrala/pkg/uuid"
+	"github.com/andychao217/magistrala-ui/postgres"
+	"github.com/andychao217/magistrala-ui/ui"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 )

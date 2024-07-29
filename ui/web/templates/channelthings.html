@@ -88,11 +88,6 @@ SPDX-License-Identifier: Apache-2.0 -->
 																</button>
 																<ul class="dropdown-menu">
 																	<form action="{{ printf "%s/channels/%s/things/disconnect?item=channels" pathPrefix $channelID }}" method="post">
-																		<li style="display: none;">
-																			<a class="dropdown-item" onclick="viewThing('{{ $t.ID }}')">
-																				<i class="fa-solid fa-info" style="width: 16px;"></i> 查看
-																			</a>
-																		</li>
 																		<li>
 																			<input type="hidden" name="thingID" value="{{ $t.ID }}" />
 																			<button type="submit" class="dropdown-item" {{ if not $shareButton }}disabled{{ end }}>
@@ -369,11 +364,6 @@ SPDX-License-Identifier: Apache-2.0 -->
 						.catch((error) => console.error("Error:", error));
 				}
 
-				//查看详情
-				function viewThing(id) {
-					window.location.href = '{{printf "%s/things/" pathPrefix}}' + id;
-				}
-
 				//重启设备
 				function rebootThing(thingIdentity) {
 					showConfirmModal("确定要重启所选设备吗？", () => {
@@ -508,11 +498,6 @@ SPDX-License-Identifier: Apache-2.0 -->
 										</button>
 										<ul class="dropdown-menu">
 											<form action="/ui/channels/${channelID}/things/disconnect?item=channels" method="post">
-												<li style="display: none;">
-													<a class="dropdown-item" onclick="viewThing('${device.id}')">
-														<i class="fa-solid fa-info" style="width: 16px;"></i> 查看
-													</a>
-												</li>
 												<li>
 													<input type="hidden" name="thingID" value="${device.id}" />
 													<button type="submit" class="dropdown-item">
@@ -523,11 +508,6 @@ SPDX-License-Identifier: Apache-2.0 -->
 										</ul>
 									</div>
 								`;
-								// <li id="${device.id}-rebootBtn" style="display: ${device.metadata && Number(device.metadata.is_online) === 1 ? 'block':'none'}">
-								// 	<a class="dropdown-item" onclick="rebootThing('${device.credentials.identity}')">
-								// 		<i class="fa-solid fa-arrows-rotate" style="width: 16px;"></i> 重启
-								// 	</a>
-								// </li>
 								const thingName = device.metadata.out_channel_array && device.metadata.out_channel_array.length > 1 ? 
 								device.metadata.aliase : device.name;
 								const $thingCard = $(`

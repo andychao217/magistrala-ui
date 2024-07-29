@@ -7,7 +7,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/absmach/magistrala-ui/ui"
+	"github.com/andychao217/magistrala-ui/ui"
 )
 
 func TestCreateCharts(t *testing.T) {

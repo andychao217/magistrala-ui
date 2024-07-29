@@ -10,8 +10,8 @@ import (
 	"strings"
 	"time"
 
-	"github.com/absmach/magistrala-ui/ui"
 	"github.com/absmach/magistrala/pkg/errors"
+	"github.com/andychao217/magistrala-ui/ui"
 	"github.com/jmoiron/sqlx"
 )
 

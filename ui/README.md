@@ -40,13 +40,13 @@ The service is configured using the environment variables presented in the follo
 
 ## Deployment
 
-The service itself is distributed as a Docker container. Check the [`UI`](https://github.com/absmach/magistrala-ui/blob/main/docker/docker-compose.yml) service section in docker-compose to see how the service is deployed.
+The service itself is distributed as a Docker container. Check the [`UI`](https://github.com/andychao217/magistrala-ui/blob/main/docker/docker-compose.yml) service section in docker-compose to see how the service is deployed.
 
 To start the service outside of the container, execute the following shell script (this would require a Postgres instance running):
 
 ```bash
 # download the latest version of the service
-git clone https://github.com/absmach/magistrala-ui
+git clone https://github.com/andychao217/magistrala-ui
 
 cd magistrala-ui
 
