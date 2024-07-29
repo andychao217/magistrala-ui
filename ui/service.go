@@ -22,12 +22,12 @@ import (
 	"time"
 
 	"github.com/absmach/agent/pkg/bootstrap"
-	"github.com/absmach/magistrala"
-	"github.com/absmach/magistrala/pkg/errors"
-	sdk "github.com/absmach/magistrala/pkg/sdk/go"
-	"github.com/absmach/magistrala/pkg/transformers/senml"
 	mgsenml "github.com/absmach/senml"
+	"github.com/andychao217/magistrala"
 	"github.com/andychao217/magistrala-ui/ui/oauth2"
+	"github.com/andychao217/magistrala/pkg/errors"
+	sdk "github.com/andychao217/magistrala/pkg/sdk/go"
+	"github.com/andychao217/magistrala/pkg/transformers/senml"
 	mqtt "github.com/eclipse/paho.mqtt.golang"
 	"golang.org/x/exp/slices"
 )

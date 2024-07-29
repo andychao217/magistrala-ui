@@ -4,7 +4,7 @@
 package postgres
 
 import (
-	"github.com/absmach/magistrala/pkg/errors"
+	"github.com/andychao217/magistrala/pkg/errors"
 	"github.com/jackc/pgx/v5/pgconn"
 )
 

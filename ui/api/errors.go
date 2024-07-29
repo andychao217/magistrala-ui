@@ -3,7 +3,7 @@
 
 package api
 
-import "github.com/absmach/magistrala/pkg/errors"
+import "github.com/andychao217/magistrala/pkg/errors"
 
 var (
 	errInvalidCredentials     = errors.New("missing or invalid credentials provided")

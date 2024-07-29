@@ -8,8 +8,8 @@ import (
 	"log/slog"
 	"time"
 
-	sdk "github.com/absmach/magistrala/pkg/sdk/go"
 	"github.com/andychao217/magistrala-ui/ui"
+	sdk "github.com/andychao217/magistrala/pkg/sdk/go"
 )
 
 var _ ui.Service = (*loggingMiddleware)(nil)

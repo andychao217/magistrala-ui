@@ -17,9 +17,9 @@ MOCKERY_VERSION=v2.42.0
 define compile_service
 	CGO_ENABLED=$(CGO_ENABLED) GOOS=$(GOOS) GOARCH=$(GOARCH) GOARM=$(GOARM) \
 	go build -ldflags "-s -w \
-	-X 'github.com/absmach/magistrala.BuildTime=$(TIME)' \
-	-X 'github.com/absmach/magistrala.Version=$(VERSION)' \
-	-X 'github.com/absmach/magistrala.Commit=$(COMMIT)'" \
+	-X 'github.com/andychao217/magistrala.BuildTime=$(TIME)' \
+	-X 'github.com/andychao217/magistrala.Version=$(VERSION)' \
+	-X 'github.com/andychao217/magistrala.Commit=$(COMMIT)'" \
 	-o ${BUILD_DIR}/$(SVC) cmd/$(SVC)/main.go
 endef
 

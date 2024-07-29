@@ -10,7 +10,7 @@ Magistrala-ui can be obtained as an independent subset of Magistrala; however, i
 
 To run Magistrala-ui, you need the following components:
 
-- [Magistrala](https://github.com/absmach/magistrala) (latest version)
+- [Magistrala](https://github.com/andychao217/magistrala) (latest version)
 - [Go](https://golang.org/doc/install) (version 1.19.2)
 - [Docker-compose](https://docs.docker.com/compose/install/) (latest version)
 - [make](https://www.gnu.org/software/make/manual/make.html)
@@ -27,7 +27,7 @@ make
 make run
 ```
 
-These commands will launch Magistrala-ui. To use the Magistrala-ui, ensure that the Magistrala core services are operational. You can achieve this by installing [Magistrala](https://github.com/absmach/magistrala) and its prerequisites.
+These commands will launch Magistrala-ui. To use the Magistrala-ui, ensure that the Magistrala core services are operational. You can achieve this by installing [Magistrala](https://github.com/andychao217/magistrala) and its prerequisites.
 
 To build the docker images for the ui service, run the following commands which will build the docker images in different configurations.
 
