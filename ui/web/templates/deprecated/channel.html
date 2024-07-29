@@ -1,0 +1,169 @@
+<!-- Copyright (c) Abstract Machines
+SPDX-License-Identifier: Apache-2.0 -->
+
+{{ define "channel" }}
+    <!doctype html>
+    <html lang="en">
+        <head>
+            <title>分区</title>
+            {{ template "header" }}
+        </head>
+        <body>
+            {{ template "navbar" . }}
+            <div class="main-content pt-3">
+                <div class="container-fluid">
+                    <div class="row-mb-3 p-3">
+                        <div class="col-lg-12 mx-auto">
+                            {{ template "breadcrumb" . }}
+                            <div class="row">
+                                <div class="buttons mb-3">
+                                    <a href="{{ printf "%s/channels/%s/things" pathPrefix .Entity.ID }}" type="button" class="btn body-button">关联</a>
+                                    <a href="{{ printf "%s/channels/%s/users" pathPrefix .Entity.ID }}" type="button" class="btn body-button" style="display:none">关联用户</a>
+                                    <a href="{{ printf "%s/channels/%s/groups" pathPrefix .Entity.ID }}" type="button" class="btn body-button" style="display:none">关联组</a>
+                                </div>
+                                <div class="table-responsive table-container">
+                                    <table id="itemsTable" class="table">
+                                        <thead>
+                                            <tr>
+                                                <th scope="row">分区</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            {{ $editButton := false }}
+                                            {{ if (hasPermission .Permissions "edit") }}
+                                                {{ $editButton = true }}
+                                            {{ end }}
+                                            <tr>
+                                                <th>名称</th>
+                                                <td class="editable name-field" contenteditable="false" data-field="name">
+                                                    {{ .Entity.Name }}
+                                                </td>
+                                                <td>
+                                                    <button
+                                                        class="edit-btn"
+                                                        id="edit-name"
+                                                        {{ if not $editButton }}disabled{{ end }}
+                                                    >
+                                                        <i class="fas fa-pencil-alt"></i>
+                                                    </button>
+                                                    <div class="save-cancel-buttons" style="display: none">
+                                                        <button class="save-btn" id="save-name">保存</button>
+                                                        <button class="cancel-btn" id="cancel-name">取消</button>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <th>ID</th>
+                                                <td>{{ .Entity.ID }}</td>
+                                                <td></td>
+                                            </tr>
+                                            <tr>
+                                                <th>描述</th>
+                                                <td class="editable" contenteditable="false" data-field="description">
+                                                    {{ .Entity.Description }}
+                                                </td>
+                                                <td>
+                                                    <button
+                                                        class="edit-btn"
+                                                        id="edit-description"
+                                                        {{ if not $editButton }}disabled{{ end }}
+                                                    >
+                                                        <i class="fas fa-pencil-alt"></i>
+                                                    </button>
+                                                    <div class="save-cancel-buttons" style="display: none">
+                                                        <button class="save-btn" id="save-description">保存</button>
+                                                        <button class="cancel-btn" id="cancel-description">取消</button>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                            <!-- <tr>
+                                                <th>附加属性</th>
+                                                <td class="entityMeta-col">
+                                                    <div>
+                                                        <pre id="meta-data" style="display: none;"></pre>
+                                                    </div>
+                                                </td>
+                                                <td>
+                                                    <button
+                                                        style="display: none;"
+                                                        type="button"
+                                                        class="edit-btn"
+                                                        data-bs-toggle="modal"
+                                                        data-bs-target="#editMetadataModal"
+                                                        {{ if not $editButton }}disabled{{ end }}
+                                                    >
+                                                        <i class="fas fa-pencil-alt"></i>
+                                                    </button>
+                                                </td>
+                                            </tr> -->
+                                        </tbody>
+                                    </table>
+                                    <div id="error-message" class="text-danger"></div>
+                                    <div class="row-mb-3 mt-3" style="display: none;">
+                                        {{ if eq .Entity.Status "enabled" }}
+                                            <button
+                                                type="button"
+                                                class="btn body-button"
+                                                data-bs-toggle="modal"
+                                                data-bs-target="#disableEntityModal"
+                                                {{ if not (hasPermission .Permissions "delete") }}disabled{{ end }}
+                                            >
+                                                禁用分区
+                                            </button>
+                                        {{ else }}
+                                            <button
+                                                type="button"
+                                                class="btn body-button"
+                                                data-bs-toggle="modal"
+                                                data-bs-target="#enableEntityModal"
+                                                {{ if not (hasPermission .Permissions "delete") }}disabled{{ end }}
+                                            >
+                                                启用分区
+                                            </button>
+                                        {{ end }}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- status update modals -->
+                    {{ template "statusupdate" . }}
+
+                </div>
+            </div>    
+            <script type="module">
+                import { 
+                    attachEditRowListener, 
+                    updateName, 
+                    updateDescription, 
+                    // updateMetadata
+                } from "/js/update.js";
+                
+                attachEditRowListener({
+                    entity: "channels",
+                    id: "{{ .Entity.ID }}",
+                    rows: {
+                        name:updateName,
+                        description: updateDescription,
+                    },
+                    errorDiv: "error-message",
+                    fields:{
+                        name: "name-field",
+                    },
+                    pathPrefix: "{{ pathPrefix }}",
+                });
+                //   updateMetadata({
+                //     textArea: "metadataTextArea",
+                //     field:"metadata",
+                //     alertDiv: "metadataError",
+                //     fieldName: "metadata-field",
+                //     id: "{{ .Entity.ID }}",
+                //     entity: "channels",
+                //     button: "save-metadata",
+                //     pathPrefix: "{{ pathPrefix }}",
+                //   });
+            </script>
+        </body>
+    </html>
+{{ end }}

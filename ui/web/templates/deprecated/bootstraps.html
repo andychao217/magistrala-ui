@@ -1,0 +1,186 @@
+<!-- Copyright (c) Abstract Machines
+SPDX-License-Identifier: Apache-2.0 -->
+
+{{ define "bootstraps" }}
+    <!doctype html>
+    <html lang="en">
+        <head>
+            <title>Bootstraps</title>
+            {{ template "header" }}
+        </head>
+
+        <body>
+            {{ template "navbar" . }}
+            <div class="main-content pt-3">
+                <div class="container-fluid">
+                    <div class="row-mb-3 p-3">
+                        <div class="col-lg-12 mx-auto">
+                            {{ template "breadcrumb" . }}
+                            <div class="row">
+                                <div class="buttons mb-3">
+                                    <button type="button" class="btn body-button" onclick="openModal()">新增</button>
+
+                                    <!-- Add Bootstrap Modal -->
+                                    <div 
+                                        class="modal fade" 
+                                        id="addBootstrapModal"
+                                        tabindex="-1" 
+                                        role="dialog" 
+                                        aria-labelledby="addBootstrapModalLabel" 
+                                        aria-hidden="true"
+                                        data-bs-backdrop="static" 
+                                        data-bs-keyboard="false"  
+                                    >
+                                        <div class="modal-dialog" role="document">
+                                            <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <h1 class="modal-title" id="addBootstrapModalLabel">新增Bootstrap配置</h1>
+                                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                </div>
+                                                <form method="post">
+                                                    <div class="modal-body">
+                                                        <div class="mb-3">
+                                                            <label for="name" class="form-label">Bootstrap名称</label>
+                                                            <input type="text" class="form-control" name="name" id="name" aria-describedby="tagHelp" placeholder="Name" maxlength="20" />
+                                                        </div>
+                                                        <div class="row mb-3">
+                                                            <div class="col-md-6">
+                                                                <label for="externalID" class="form-label">外部ID</label>
+                                                                <input type="text" class="form-control" name="externalID" id="externalID" placeholder="外部ID" required />
+                                                            </div>
+                                                            <div class="col-md-6">
+                                                                <label for="externalKey" class="form-label">外部Key</label>
+                                                                <input type="text" class="form-control" name="externalKey" id="externalKey" placeholder="外部Key" required />
+                                                            </div>
+                                                        </div>
+                                                        <div class="mb-3">
+                                                            <label for="things-select" class="form-label">设备</label>
+                                                            <input type="text" class="itemsFilter" name="thingFilter" id="thingFilter" placeholder="请输入名称" maxlength="20" />
+                                                            <select class="form-select" name="thingID" id="things-select" size="5" required>
+                                                                <option disabled>选择设备</option>
+                                                            </select>
+                                                        </div>
+                                                        <div class="mb-3">
+                                                            <label for="channels-select" class="form-label">分区</label>
+                                                            <input type="text" class="itemsFilter" name="channelFilter" id="channelFilter" placeholder="请输入名称" maxlength="20" />
+                                                            <select class="form-select" name="channelID" id="channels-select" size="5" multiple>
+                                                                <option disabled>选择分区</option>
+                                                            </select>
+                                                        </div>
+                                                        <div class="row mb-3">
+                                                            <div class="col-md-6">
+                                                                <label for="clientCert" class="form-label">设备证书</label>
+                                                                <input type="text" class="form-control" name="clientCert" id="clientCert" aria-describedby="tagHelp" placeholder="设备证书" />
+                                                            </div>
+                                                            <div class="col-md-6">
+                                                                <label for="clientKey" class="form-label">设备Key</label>
+                                                                <input type="text" class="form-control" name="clientKey" id="clientKey" aria-describedby="tagHelp" placeholder="设备Key" />
+                                                            </div>
+                                                        </div>
+                                                        <div class="mb-3">
+                                                            <label for="CACert" class="form-label">CA证书</label>
+                                                            <input type="text" class="form-control" name="CACert" id="CACert" aria-describedby="tagHelp" placeholder="CA证书" />
+                                                        </div>
+                                                        <div class="mb-3">
+                                                            <label for="content" class="form-label">内容</label>
+                                                            <div class="content-field">
+                                                                <textarea name="content" id="content"></textarea>
+                                                            </div>
+                                                            <div id="contentHelp" class="form-text">以JSON形式输入内容.</div>
+                                                            <div id="contentError" class="text-danger"></div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="modal-footer">
+                                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">取消</button>
+                                                        <button type="submit" id="create-bootstrap-button" class="btn body-button" onclick="submitItemList('channels', 'channelsList')">确定</button>
+                                                    </div>
+                                                </form>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="table-responsive table-container">
+                                    {{ template "tableheader" . }}
+                                    <div class="itemsTable">
+                                        <table id="itemsTable" class="table table-hover">
+                                            <thead>
+                                                <tr>
+                                                    <th scope="col">名称</th>
+                                                    <th scope="col">设备ID</th>
+                                                    <th scope="col">外部ID</th>
+                                                    <!-- <th scope="col">状态</th> -->
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                {{ range $i, $t := .Bootstraps }}
+                                                    <tr onclick="viewBootstrap('{{ $t.ThingID }}')" class="clickable-row">
+                                                        <td>{{ $t.Name }}</td>
+                                                        <td>
+                                                            <a href="{{ printf " %s/things/%s" pathPrefix $t.ThingID }}">
+                                                                {{ $t.ThingID }}
+                                                            </a>
+                                                        </td>
+                                                        <td>{{ $t.ExternalID }}</td>
+                                                        <!-- <td>
+														{{ if eq $t.State 0 }}
+                                                            <span class="badge rounded-pill disabled-pill">禁用</span>
+                                                        {{ else }}
+                                                            <span class="badge rounded-pill enabled-pill">启用</span>
+                                                        {{ end }}
+														</td> -->
+                                                    </tr>
+                                                {{ end }}
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                    {{ template "tablefooter" . }}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <script>
+                const bootstrapsModal = new bootstrap.Modal(document.getElementById("addBootstrapModal"));
+                
+                function openModal() {
+                    bootstrapsModal.show();
+                }
+            </script>
+			<script type="module">
+				import {
+					attachValidationListener,
+					validateStringArray,
+					validateJSON,
+				} from "/js/validation.js";
+				import { fetchIndividualEntity } from "/js/infinitescroll.js";
+
+				attachValidationListener({
+					buttonId: "create-bootstrap-button",
+					errorDivs: {
+						channels: "channelsError",
+						content: "contentError",
+					},
+					validations: {
+						channels: validateStringArray,
+						content: validateJSON,
+					},
+				});
+
+				fetchIndividualEntity({
+					input: "thingFilter",
+					itemSelect: "things-select",
+					item: "things",
+					pathPrefix: "{{ pathPrefix }}",
+				});
+
+				fetchIndividualEntity({
+					input: "channelFilter",
+					itemSelect: "channels-select",
+					item: "channels",
+					pathPrefix: "{{ pathPrefix }}",
+				});
+			</script>
+        </body>
+    </html>
+{{ end }}

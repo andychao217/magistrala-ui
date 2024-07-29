@@ -1,0 +1,128 @@
+<!-- Copyright (c) Abstract Machines
+SPDX-License-Identifier: Apache-2.0 -->
+
+{{ define "entitiestablemodal" }}
+<!-- Modal -->
+<div
+	class="modal fade"
+	id="entitiesTableModal"
+	tabindex="-1"
+	role="dialog"
+	aria-labelledby="entitiesTableModalLabel"
+	aria-hidden="true"
+>
+	<div class="modal-dialog modal-dialog-centered">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title" id="entitiesTableModalLabel">实体查看表格</h5>
+				<button
+					type="button"
+					class="btn-close"
+					data-bs-dismiss="modal"
+					aria-label="Close"
+				></button>
+			</div>
+			<form id="create-entitiesTable-form">
+				<div class="modal-body">
+					<div class="mb-3">
+						<label for="channel-id" class="form-label">分区ID</label>
+						<input
+							type="text"
+							pattern="{{ .UUIDPattern }}"
+							class="form-control mb-3"
+							name="channel"
+							id="channel-id"
+							placeholder="输入分区ID"
+							required
+						/>
+						<div class="invalid-feedback">请输入正确的ID</div>
+					</div>
+					<div class="mb-3">
+						<label for="thing-id" class="form-label">设备IDs</label>
+						<input
+							type="text"
+							pattern="{{ .UUIDPattern }}"
+							class="form-control mb-3"
+							name="thing"
+							id="thing-id"
+							placeholder="输入设备IDs"
+							required
+						/>
+						<div class="invalid-feedback">请输入正确的ID</div>
+					</div>
+					<div class="mb-3">
+						<label for="value-name" class="form-label">值名称</label>
+						<input
+							type="text"
+							class="form-control mb-3"
+							name="valueName"
+							id="value-name"
+							placeholder="输入值名称, 比如: 温度"
+							required
+						/>
+					</div>
+					<div class="mb-3">
+						<label for="update-interval" class="form-label">更新间隔</label>
+						<input
+							type="text"
+							pattern="{{ .IntervalPattern }}"
+							class="form-control mb-3"
+							name="updateInterval"
+							id="update-interval"
+							placeholder="输入更新间隔, 例如:  5s, 10m, 1h, 1d"
+							required
+						/>
+						<div class="invalid-feedback">请输入正确的间隔</div>
+					</div>
+				</div>
+				<div class="modal-footer">
+					<button
+						type="button"
+						class="btn btn-secondary"
+						id="close-entitiesTable-button"
+						data-bs-dismiss="modal"
+					>
+						关闭
+					</button>
+					<button type="button" class="btn body-button" id="create-entitiesTable-button">
+						创建图表
+					</button>
+				</div>
+			</form>
+		</div>
+	</div>
+</div>
+<script>
+	// line chart form
+	document.getElementById("create-entitiesTable-button").addEventListener("click", function () {
+		const form = document.getElementById("create-entitiesTable-form");
+		if (!form.checkValidity()) {
+			form.classList.add("was-validated");
+			return;
+		}
+
+		// Create an object to store the form data
+		let chartData = {};
+		let formData = new FormData(form);
+		for (const pair of formData.entries()) {
+			chartData[pair[0]] = pair[1];
+		}
+
+		const widgetID = "entitiesTable-" + Date.now();
+
+		chartData["Type"] = "entitiesTable";
+		addWidget(chartData, widgetID);
+		metadataBuffer[widgetID] = chartData;
+
+		form.reset();
+		form.classList.remove("was-validated");
+		bootstrap.Modal.getInstance(document.getElementById("entitiesTableModal")).hide();
+	});
+
+	document.getElementById("close-entitiesTable-button").addEventListener("click", function () {
+		const form = document.getElementById("create-entitiesTable-form");
+		form.reset();
+		form.classList.remove("was-validated");
+	});
+</script>
+{{ end }}

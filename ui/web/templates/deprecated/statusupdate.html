@@ -1,0 +1,74 @@
+<!-- Copyright (c) Abstract Machines
+SPDX-License-Identifier: Apache-2.0 -->
+
+{{ define "statusupdate" }}
+    <!-- disable entity modal -->
+    <div 
+        class="modal fade" 
+        id="disableEntityModal" 
+        tabindex="-1" 
+        role="dialog" 
+        aria-labelledby="disableEntityModalLabel" 
+        aria-hidden="true"
+        data-bs-backdrop="static" 
+        data-bs-keyboard="false"  
+    >
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <div class="modal-title" id="disableEntityModalLabel">禁用 {{ .CollapseActive }}</div>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <form action="{{ printf "%s/%s/disable" pathPrefix .Path }}" method="post">
+                    <div class="modal-body">
+                        <span>
+                            确定
+                            <span class="fw-bold text-danger">禁用</span>
+                            这个 {{ .CollapseActive }}?
+                        </span>
+                        <input type="hidden" name="entityID" id="entityID" value="{{ .Entity.ID }}" />
+                    </div>
+                    <div class="modal-footer">
+                        <button class="btn btn-secondary" type="button" data-bs-dismiss="modal">取消</button>
+                        <button class="btn btn-danger" type="submit">禁用</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- enable entity modal -->
+    <div 
+        class="modal fade" 
+        id="enableEntityModal" 
+        tabindex="-1"
+        role="dialog" 
+        aria-labelledby="enableEntityModalLabel" 
+        aria-hidden="true"
+        data-bs-backdrop="static" 
+        data-bs-keyboard="false"  
+    >
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <div class="modal-title" id="enableEntityModalLabel">启用 {{ .CollapseActive }}</div>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <form action="{{ printf "%s/%s/enable" pathPrefix .Path }}" method="post">
+                    <div class="modal-body">
+                        <span>
+                            确定
+                            <span class="fw-bold text-success">启用</span>
+                            这个 {{ .CollapseActive }}?
+                        </span>
+                        <input type="hidden" name="entityID" id="entityID" value="{{ .Entity.ID }}" />
+                    </div>
+                    <div class="modal-footer">
+                        <button class="btn btn-secondary" type="button" data-bs-dismiss="modal">取消</button>
+                        <button class="btn btn-success" type="submit">启用</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+{{ end }}

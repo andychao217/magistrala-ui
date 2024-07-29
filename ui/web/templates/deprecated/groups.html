@@ -1,0 +1,233 @@
+<!-- Copyright (c) Abstract Machines
+SPDX-License-Identifier: Apache-2.0 -->
+
+{{ define "groups" }}
+    <!doctype html>
+    <html lang="en">
+        <head>
+            <title>组</title>
+            {{ template "header" }}
+        </head>
+        <body>
+            {{ template "navbar" . }}
+            <div class="main-content pt-3">
+                <div class="container-fluid">
+                    <div class="row-mb-3 p-3">
+                        <div class="col-lg-12 mx-auto">
+                            {{ template "breadcrumb" . }}
+                            <div class="row">
+                                <div class="buttons mb-3">
+                                    <!-- Button trigger modal -->
+                                    <button type="button" class="btn body-button" onclick="openModal('single')">添加组</button>
+
+                                    <!-- add group modal -->
+                                    <div 
+                                        class="modal fade" 
+                                        id="addGroupModal" 
+                                        tabindex="-1" 
+                                        role="dialog" 
+                                        aria-labelledby="addGroupModalLabel" 
+                                        aria-hidden="true"
+                                        data-bs-backdrop="static" 
+                                        data-bs-keyboard="false"  
+                                    >
+                                        <div class="modal-dialog" role="document">
+                                            <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <h1 class="modal-title" id="addGroupModalLabel">添加组</h1>
+                                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                </div>
+                                                <form method="post" id="groupform">
+                                                    <div class="modal-body">
+                                                        <div id="alertMessage"></div>
+
+                                                        <div class="mb-3">
+                                                            <label for="name" class="form-label">名称</label>
+                                                            <input type="text" class="form-control name-field" name="name" id="name" placeholder="组名称" maxlength="20" />
+                                                            <div id="nameError" class="text-danger"></div>
+                                                        </div>
+                                                        <div class="mb-3">
+                                                            <label for="description" class="form-label">描述</label>
+                                                            <input type="text" class="form-control" name="description" id="description" placeholder="组描述" maxlength="50" />
+                                                        </div>
+                                                        <div class="mb-3">
+                                                            <label for="infiniteScroll" class="form-label">父级别</label>
+                                                            <input type="text" class="itemsFilter" name="parentFilter" id="parentFilter" placeholder="请输入名称" maxlength="20" />
+                                                            <select class="form-select" name="parentID" id="infiniteScroll" size="5">
+                                                                <option disabled>选择组</option>
+                                                            </select>
+                                                        </div>
+                                                        <div class="mb-3" style="display: none;">
+                                                            <label for="metadata" class="form-label">附加属性</label>
+                                                            <div class="metadata-field">
+                                                                <textarea name="metadata" id="metadata"></textarea>
+                                                            </div>
+                                                            <div id="metadataHelp" class="form-text">以JSON形式输入附加属性.</div>
+                                                            <div id="metadataError" class="text-danger"></div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="modal-footer">
+                                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">取消</button>
+                                                        <button type="submit" class="btn body-button" id="create-group-button">确定</button>
+                                                    </div>
+                                                </form>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <button type="button" class="btn body-button" onclick="openModal('bulk')">批量添加组</button>
+
+                                    <!-- add groups modal -->
+                                    <div 
+                                        class="modal fade" 
+                                        id="addGroupsModal" 
+                                        tabindex="-1" 
+                                        role="dialog" 
+                                        aria-labelledby="addGroupsModalLabel" 
+                                        aria-hidden="true"
+                                        data-bs-backdrop="static" 
+                                        data-bs-keyboard="false"  
+                                    >
+                                        <div class="modal-dialog" role="document">
+                                            <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <h1 class="modal-title" id="addGroupsModalLabel">批量添加组</h1>
+                                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                </div>
+                                                <form enctype="multipart/form-data" id="bulkgroupsform">
+                                                    <div class="modal-body">
+                                                        <div id="alertBulkMessage"></div>
+
+                                                        <div class="form-group mb-3">
+                                                            <label for="groupsFile">
+                                                                添加包含组名称的CSV文件. 在
+                                                                <a href="/samples/groups.csv" download="groups.csv">这里</a>
+                                                                可以下载模版文件
+                                                            </label>
+                                                            <input type="file" class="form-control-file" id="groupsFile" name="groupsFile" required />
+                                                        </div>
+                                                    </div>
+                                                    <div class="modal-footer">
+                                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">取消</button>
+                                                        <button type="submit" value="upload" class="btn body-button">确定</button>
+                                                    </div>
+                                                </form>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="table-responsive table-container">
+                                    {{ template "tableheader" . }}
+                                    <div class="itemsTable">
+                                        <table id="itemsTable" class="table table-hover">
+                                            <thead>
+                                                <tr>
+                                                    <th scope="col">名称</th>
+                                                    <th class="desc-col" scope="col">描述</th>
+                                                    <th class="meta-col" scope="col">附加属性</th>
+                                                    <th class="created-col" scope="col">创建时间</th>
+                                                    <!-- <th class="status-col" scope="col">状态</th> -->
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                {{ range $i, $g := .Groups }}
+                                                    <tr onclick="viewGroup('{{ $g.ID }}')">
+                                                        <td>{{ $g.Name }}</td>
+
+                                                        <td class="desc-col">{{ $g.Description }}</td>
+                                                        <td class="meta-col">
+                                                            <div class="meta-div">
+                                                                <pre id="meta-{{ $i }}"></pre>
+                                                            </div>
+                                                        </td>
+                                                        <td class="created-col">{{ $g.CreatedAt }}</td>
+                                                        <!-- <td>
+                                                        {{ if eq $g.Status "enabled" }}
+                                                            <span class="badge rounded-pill enabled-pill">启用</span>
+                                                        {{ else if eq $g.Status "disabled" }}
+                                                            <span class="badge rounded-pill disabled-pill">禁用</span>
+                                                        {{ end }}
+                                                        </td> -->
+                                                    </tr>
+                                                    <!-- <script>
+                                                      attachFormatJsonWithPrettifyListener({
+                                                        data: '{{ toJSON $g.Metadata }}',
+                                                        id: "meta-{{ $i }}",
+                                                      })
+                                                    </script> -->
+                                                {{ end }}
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                    {{ template "tablefooter" . }}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <script>
+                const groupModal = new bootstrap.Modal(document.getElementById("addGroupModal")),
+                      groupsModal = new bootstrap.Modal(document.getElementById("addGroupsModal"));
+
+                function openModal(modal) {
+                    if (modal === "single") {
+                        groupModal.show();
+                    } else if (modal === "bulk") {
+                        groupsModal.show();
+                    }
+                }
+
+                function viewGroup(id) {
+                    window.location.href = '{{ printf "%s/groups/" pathPrefix }}' + id;
+                }
+            </script>      
+            <script type="module">
+                import { 
+                    attachValidationListener, 
+                    validateName, 
+                    validateJSON 
+                } from "/js/validation.js";
+                import { submitCreateForm } from "/js/forms.js";
+                import { fetchIndividualEntity } from "/js/infinitescroll.js";
+
+                attachValidationListener({
+                    buttonId: "create-group-button",
+                    errorDivs: {
+                        name: "nameError",
+                    //   metadata: "metadataError",
+                    },
+                    validations: {
+                        name: validateName,
+                    //   metadata: validateJSON,
+                    },
+                    fields: {
+                        name: "name-field",
+                    //   metadata: "metadata-field",
+                    },
+                });
+
+                submitCreateForm({
+                    url: '{{ printf "%s/groups" pathPrefix }}',
+                    formId: "groupform",
+                    alertDiv: "alertMessage",
+                    modal: groupModal,
+                    type: "addGroup",
+                });
+
+                submitCreateForm({
+                    url: '{{ printf "%s/groups/bulk" pathPrefix }}',
+                    formId: "bulkgroupsform",
+                    alertDiv: "alertBulkMessage",
+                    modal: groupsModal,
+                });
+
+                fetchIndividualEntity({
+                    input: "parentFilter",
+                    itemSelect: "infiniteScroll",
+                    item: "groups",
+                    pathPrefix: "{{ pathPrefix }}",
+                });
+            </script>
+        </body>
+    </html>
+{{ end }}
