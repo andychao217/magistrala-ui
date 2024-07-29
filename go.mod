@@ -6,8 +6,8 @@ toolchain go1.22.5
 
 require (
 	github.com/0x6flab/namegenerator v1.3.1
-	github.com/absmach/agent v0.0.0-20240202075640-cc619e6685c8
 	github.com/absmach/senml v1.0.5
+	github.com/andychao217/agent v1.0.0
 	github.com/andychao217/magistrala v1.0.0
 	github.com/caarlos0/env/v10 v10.0.0
 	github.com/eclipse/paho.mqtt.golang v1.4.3
@@ -35,7 +35,6 @@ require (
 	github.com/Azure/go-ansiterm v0.0.0-20230124172434-306776ec8161 // indirect
 	github.com/Microsoft/go-winio v0.6.1 // indirect
 	github.com/Nvveen/Gotty v0.0.0-20120604004816-cd527374f1e5 // indirect
-	github.com/absmach/magistrala v0.14.1-0.20240305111255-42d433a92f39 // indirect
 	github.com/beorn7/perks v1.0.1 // indirect
 	github.com/cenkalti/backoff/v4 v4.3.0 // indirect
 	github.com/cespare/xxhash/v2 v2.3.0 // indirect

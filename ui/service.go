@@ -21,8 +21,8 @@ import (
 	"sync"
 	"time"
 
-	"github.com/absmach/agent/pkg/bootstrap"
 	mgsenml "github.com/absmach/senml"
+	"github.com/andychao217/agent/pkg/bootstrap"
 	"github.com/andychao217/magistrala"
 	"github.com/andychao217/magistrala-ui/ui/oauth2"
 	"github.com/andychao217/magistrala/pkg/errors"

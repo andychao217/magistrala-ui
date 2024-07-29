@@ -47,10 +47,6 @@ github.com/Shopify/sarama v1.19.0/go.mod h1:FVkBWblsNy7DGZRfXLU0O9RCGt5g3g3yEuWX
 github.com/Shopify/toxiproxy v2.1.4+incompatible/go.mod h1:OXgGpZ6Cli1/URJOF1DMxUHB2q5Ap20/P/eIdh4G0pI=
 github.com/VividCortex/gohistogram v1.0.0 h1:6+hBz+qvs0JOrrNhhmR7lFxo5sINxBCGXrdtl/UvroE=
 github.com/VividCortex/gohistogram v1.0.0/go.mod h1:Pf5mBqqDxYaXu3hDrrU+w6nw50o/4+TcAqDqk/vUH7g=
-github.com/absmach/agent v0.0.0-20240202075640-cc619e6685c8 h1:UpXJGOwJ1JAt93/C+G8eZbiOlLa09TSv0cxNpBdbhcQ=
-github.com/absmach/agent v0.0.0-20240202075640-cc619e6685c8/go.mod h1:yv3n0/JnLgZFShQlV+d4D14wA7IhGgQwBL5DG+hmTR0=
-github.com/absmach/magistrala v0.14.1-0.20240305111255-42d433a92f39 h1:qzE/GO9n1nfaFZ3XoubIDmddr68LQK5QTmjZGPlCKnI=
-github.com/absmach/magistrala v0.14.1-0.20240305111255-42d433a92f39/go.mod h1:IiDX6bEARa1CM6rVRwck38DjCAeS2FkBzY37nlKOs6Y=
 github.com/absmach/mproxy v0.4.2 h1:u0ORPxSrUknqbVrC+E1MdsCv/7Q5eWNG7clIwOMV5hk=
 github.com/absmach/mproxy v0.4.2/go.mod h1:TeXhbHdjihXLVoohSzxvIEFzWu16WDOa91LNduks/N8=
 github.com/absmach/senml v1.0.5 h1:zNPRYpGr2Wsb8brAusz8DIfFqemy1a2dNbmMnegY3GE=
@@ -63,6 +59,8 @@ github.com/alecthomas/units v0.0.0-20151022065526-2efee857e7cf/go.mod h1:ybxpYRF
 github.com/alecthomas/units v0.0.0-20190717042225-c3de453c63f4/go.mod h1:ybxpYRFXyAe+OPACYpWeL0wqObRcbAqCMya13uyzqw0=
 github.com/alexbrainman/sspi v0.0.0-20180613141037-e580b900e9f5/go.mod h1:976q2ETgjT2snVCf2ZaBnyBbVoPERGjUz+0sofzEfro=
 github.com/andreyvit/diff v0.0.0-20170406064948-c7f18ee00883/go.mod h1:rCTlJbsFo29Kk6CurOXKm700vrz8f0KW0JNfpkRJY/8=
+github.com/andychao217/agent v1.0.0 h1:mC+vEUurFpDj9hGNyGXhYc5Eo9n/wSKtAyF06jxBrT0=
+github.com/andychao217/agent v1.0.0/go.mod h1:9wV1p1D3VTuf+MZRKrawMX/VoHgk0ngpPPFLmPyEqu8=
 github.com/andychao217/magistrala v1.0.0 h1:QchD1wfgsvB+W7mUpnCvputJaI3Ohj0O7CJGtYaaKto=
 github.com/andychao217/magistrala v1.0.0/go.mod h1:m4G00J3AdVFA+GgPUHOM+DMzibJxsKxaL1NjeOifDNc=
 github.com/apache/arrow/go/arrow v0.0.0-20191024131854-af6fa24be0db/go.mod h1:VTxUBvSJ3s3eHAg65PNgrsn5BtqCRPdmyXh6rAfdxN0=
