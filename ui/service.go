@@ -3136,13 +3136,14 @@ func parseTemplates(mfsdk sdk.SDK, prefix string) (tpl *template.Template, err e
 		templates = append(templates, templatesDir+"/"+entry.Name())
 	}
 
-	entries, err = templatesFS.ReadDir(chartTemplatesDir)
-	if err != nil {
-		return nil, errors.Wrap(ErrReadDir, err)
-	}
-	for _, entry := range entries {
-		templates = append(templates, chartTemplatesDir+"/"+entry.Name())
-	}
+	// 不使用/charts
+	// entries, err = templatesFS.ReadDir(chartTemplatesDir)
+	// if err != nil {
+	// 	return nil, errors.Wrap(ErrReadDir, err)
+	// }
+	// for _, entry := range entries {
+	// 	templates = append(templates, chartTemplatesDir+"/"+entry.Name())
+	// }
 
 	template, err := tpl.ParseFS(templatesFS, templates...)
 	if err != nil {

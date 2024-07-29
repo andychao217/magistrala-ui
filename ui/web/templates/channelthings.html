@@ -14,7 +14,6 @@ SPDX-License-Identifier: Apache-2.0 -->
                 <div class="container-fluid">
                     <div class="row-mb-3">
                         <div class="col-lg-12 mx-auto">
-                            {{ template "breadcrumb" . }}
                             <div class="row" style="padding-left: 20px;">
                                 <div class="table-responsive table-container">
                                     {{ $shareButton := false }}
@@ -45,7 +44,6 @@ SPDX-License-Identifier: Apache-2.0 -->
                                             </div>
                                         </div>
                                     </div>
-                                    <!-- {{ template "tableheader" . }} -->
                                     <div class="row buttons mb-3">
 										<div class="col-4" role="group">
 											<button type="button" class="btn body-button" onclick="openConnectThingModal()" {{ if not $shareButton }}disabled{{ end }}>
@@ -151,7 +149,6 @@ SPDX-License-Identifier: Apache-2.0 -->
 										</div>
                                         {{ end }}
                                     </div>
-                                    <!-- {{ template "tablefooter" . }} -->
                                 </div>
                             </div>
                         </div>

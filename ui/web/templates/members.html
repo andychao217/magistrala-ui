@@ -14,7 +14,6 @@ SPDX-License-Identifier: Apache-2.0 -->
                 <div class="container-fluid">
                     <div class="row-mb-3 p-3">
                         <div class="col-lg-12 mx-auto">
-                            {{ template "breadcrumb" . }}
                             <div class="row-mb-3 d-flex flex-row justify-content-between mb-3">
                                 <!-- add member modal -->
                                 <div class="modal fade" id="addMemberModal" tabindex="-1" aria-labelledby="addMemberModalLabel" aria-hidden="true">
@@ -65,7 +64,6 @@ SPDX-License-Identifier: Apache-2.0 -->
                                 </div>
                             </div>
                             <div class="table-responsive table-container">
-                                <!-- {{ template "tableheader" . }} -->
                                 <div class="row buttons mb-3">
                                     <div class="col-4" role="group">
                                         <button type="button" class="btn body-button" role="button" id="add-member-button" onclick="openMemberModal()">
@@ -81,7 +79,7 @@ SPDX-License-Identifier: Apache-2.0 -->
                                                     <div class="card-body">
                                                         <div class="row">
                                                             <div class="col">
-                                                                <i class="fa-solid fa-user" class="hoverCardIcon"></i>
+                                                                <i class="fa-solid fa-user" style="width: 38px; height: 38px;"></i>
                                                             </div>
                                                             <div class="col">
                                                                 <div class="dropdown" style="float: right;">
@@ -89,9 +87,14 @@ SPDX-License-Identifier: Apache-2.0 -->
                                                                         <i class="fa-solid fa-ellipsis"></i>
                                                                     </button>
                                                                     <ul class="dropdown-menu">
-                                                                        <li>
+                                                                        <!-- <li>
                                                                             <a class="dropdown-item" onclick="viewMember('{{ $m.Credentials.Identity }}')">
                                                                                 <i class="fa-solid fa-info" style="width: 16px;"></i> 查看
+                                                                            </a>
+                                                                        </li> -->
+                                                                        <li>
+                                                                            <a class="dropdown-item" onclick="unassignMember('{{ $m.ID }}')">
+                                                                                <i class="fa-solid fa-link-slash" style="width: 16px;"></i> 移除
                                                                             </a>
                                                                         </li>
                                                                     </ul>
@@ -114,7 +117,6 @@ SPDX-License-Identifier: Apache-2.0 -->
                                         </div>
                                     {{ end }}
                                 </div>
-                                <!-- {{ template "tablefooter" . }} -->
                             </div>
                         </div>
                     </div>
@@ -122,7 +124,8 @@ SPDX-License-Identifier: Apache-2.0 -->
             </div>
             <script>
                 const userRole = '{{.Session.User.Role}}',
-                      memberModal = new bootstrap.Modal(document.getElementById("addMemberModal"));
+                      memberModal = new bootstrap.Modal(document.getElementById("addMemberModal")),
+                      domainID = sessionStorage.getItem("domainID");
                       
                 if (userRole == "admin") {
                     document.getElementById("add-member-button").style.display = "block";
@@ -136,6 +139,45 @@ SPDX-License-Identifier: Apache-2.0 -->
 
                 function viewMember(identity) {
                     window.location.href = '{{ printf "%s/domains/members?identity=" pathPrefix }}' + identity;
+                }
+
+                function unassignMember(id) {
+                    const relations = ['administrator', 'editor', 'viewer', 'member'];
+                    
+                    async function processRequests() {
+						try {
+							const promises = relations.map(async (relation) => {
+								const requestData = new URLSearchParams();
+                                requestData.append("userID", [id]);
+                                requestData.append("relation", relation);
+								const response = await fetch(`/ui/domains/${domainID}/unassign`, {
+									method: "POST",
+									headers: {
+                                        "Content-Type": "application/x-www-form-urlencoded",
+                                    },
+                                    body: requestData.toString(),
+								});
+								return await response.json();
+							});
+							// 等待所有 Promise 完成（无论成功与否）
+							const results = await Promise.allSettled(promises);
+							// 处理所有的结果
+							results.forEach((result) => {
+								if (result.status === 'fulfilled') {
+									console.log('成功:', result.value);
+								} else if (result.status === 'rejected') {
+									console.error('失败:', result.reason);
+								}
+							});
+                            window.location.reload();
+						} catch (error) {
+							// 捕获意外错误（理论上不会走到这里，因为所有的 Promise 都已经处理）
+							console.error("意外错误:", error);
+						}
+					}
+
+					// 调用异步函数
+					processRequests();
                 }
             </script>      
             <script type="module">

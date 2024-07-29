@@ -154,7 +154,7 @@ SPDX-License-Identifier: Apache-2.0 -->
 												</div>
 											</div>
 											<div class="mb-3" id="moreSettingContainerTaskModal" style="display: none;">
-												<div class="mb-3 row">
+												<div class="mb-3 row" id="endTimeContainer">
 													<label for="endTime" class="col-sm-2 col-form-label">结束时间</label>
 													<div class="col-sm-10">
 														<input 
@@ -643,8 +643,8 @@ SPDX-License-Identifier: Apache-2.0 -->
 					if(selectedPlayAreas) {
 						const selectedPlayAreasId = selectedPlayAreas.map(playArea => playArea.id);
 						selectedPlayAreasId.forEach(playAreaId => {
-						const node = $playAreaTree.getNodeById(playAreaId);
-						$playAreaTree.check(node);
+							const node = $playAreaTree.getNodeById(playAreaId);
+							$playAreaTree.check(node);
 						});
 					}
 				});
@@ -740,11 +740,12 @@ SPDX-License-Identifier: Apache-2.0 -->
 						$('#startTimeError').show();
 					},
 					donefun: function(obj){
-						const startTime = obj.val;
+						const startTime = obj.val ? moment(obj.val) : null;
 						const endTime = $(`#endTime`).val();
 						if (startTime) {
 							if (!endTime) {
-								$(`#endTime`).val(startTime);
+								const newEndTime = startTime.add(1, 'seconds');
+								$(`#endTime`).val(newEndTime.format('YYYY-MM-DD HH:mm:ss'));
 								$('#endTimeError').hide();
 							}
 							$('#startTimeError').hide();
@@ -879,17 +880,21 @@ SPDX-License-Identifier: Apache-2.0 -->
 						}
 						return;
 					} else {
-						if (startTime && endTime) {
-							// 将时间字符串转换为 Date 对象
-							const startTimeDate = new Date(startTime.replace(' ', 'T'));
-							const endTimeDate = new Date(endTime.replace(' ', 'T'));
-							// 比较两个 Date 对象
-							if (endTimeDate < startTimeDate) {
-								$(`#endTimeError`).html(endTimeBeforeStartTimeMsg);
-								$('#endTimeError').show();
-								return;
+						const repeatNumSwitchChecked = $(`#repeatNumSwitch`).is(':checked');
+						if (repeatNumSwitchChecked) {
+							if (startTime && endTime) {
+								// 将时间字符串转换为 Date 对象
+								const startTimeDate = new Date(startTime.replace(' ', 'T'));
+								const endTimeDate = new Date(endTime.replace(' ', 'T'));
+								// 比较两个 Date 对象
+								if (endTimeDate < startTimeDate) {
+									$(`#endTimeError`).html(endTimeBeforeStartTimeMsg);
+									$('#endTimeError').show();
+									return;
+								}
 							}
 						}
+						
 						if (playbackCycleValue === 'week') {
 							let checkedWeeks = [];
 							$('.taskWeekCheckbox:checked').each(function() {
@@ -977,6 +982,7 @@ SPDX-License-Identifier: Apache-2.0 -->
 							const endTime = moment(queryData.end_date);
 							const durationInSeconds = endTime.diff(startTime, 'seconds');
 							queryData.duration = durationInSeconds;
+							delete queryData.end_date;
 						}
 						// 随机播放
 						queryData.song_play_type = 0;
@@ -1008,9 +1014,11 @@ SPDX-License-Identifier: Apache-2.0 -->
 				// 重复次数开关-任务弹框
 				$('#repeatNumSwitch').on('change', function() {
 					if ($(this).is(':checked')) {
+						$('#endTimeContainer').hide();
 						$('#endTime').prop('disabled', true);
 						$('#endTimeError').hide();
 					} else {
+						$('#endTimeContainer').show();
 						$('#endTime').prop('disabled', false);
 					}
 				});
@@ -1716,7 +1724,7 @@ SPDX-License-Identifier: Apache-2.0 -->
 					for (let i = 1; i <= 7; i++) {
 						$(`#weekCheckbox${i}`).prop('checked', false);
 						if (weekArray.includes(String(i))) {
-						$(`#weekCheckbox${i}`).prop('checked', true);
+							$(`#weekCheckbox${i}`).prop('checked', true);
 						}
 					}
 				} else if (task.repeat === 3) {
@@ -1748,11 +1756,17 @@ SPDX-License-Identifier: Apache-2.0 -->
 				) {
 					$('#sourceName').val('文件 + 采播');
 				} else {
-					if (selectedSourceObject.files && selectedSourceObject.files.length) {
+					if (
+						selectedSourceObject.files && 
+						selectedSourceObject.files.length
+					) {
 						$('#sourceName').val('文件');
 						$('#backgroundSource').append($(`<option value="file">文件</option>`));
 						$('#backgroundSource').val('file');
-					} else if (selectedSourceObject.devices && selectedSourceObject.devices.length) {
+					} else if (
+						selectedSourceObject.devices && 
+						selectedSourceObject.devices.length
+					) {
 						$('#sourceName').val('采播');
 					}
 				}
@@ -1772,8 +1786,10 @@ SPDX-License-Identifier: Apache-2.0 -->
 				$('#endTime').prop('disabled', true);
 				$('#repeatNum').val(task.cyclic_times)
 				$('#repeatNumSwitch').prop('checked', true);
+				$('#endTimeContainer').hide();
 				if (task.duration) {
 					$('#repeatNumSwitch').prop('checked', false);
+					$('#endTimeContainer').show();
 				}
 
 				// 随机播放
@@ -1863,6 +1879,13 @@ SPDX-License-Identifier: Apache-2.0 -->
 					taskModal.show();
 				}
 				createPlayAreasList();
+				if (selectedPlayAreas && selectedPlayAreas.length) {
+					$('#playAreaError').hide();
+					$('#playAreaError').empty();
+				} else {
+					$('#playAreaError').html(requiredMsg);
+					$('#playAreaError').show();
+				}
 			}
 
 			// 获取组装播放区域设备树-播放区域弹框
@@ -2067,6 +2090,7 @@ SPDX-License-Identifier: Apache-2.0 -->
 				$('#startTime').val('');
 				$('#startTimeError').hide();
 
+				$('#endTimeContainer').hide();
 				$('#endTime').val('');
 				$('#endTimeError').hide();
 				$('#endTime').attr("disabled", false);
@@ -2078,6 +2102,7 @@ SPDX-License-Identifier: Apache-2.0 -->
 				$('.taskWeekCheckbox').prop('checked', false);
 
 				selectedPlayAreas = [];
+				$('#playAreaError').empty();
 				$('#playAreaError').hide();
 
 				showMoreSettingTaskModal = false;
@@ -2112,7 +2137,7 @@ SPDX-License-Identifier: Apache-2.0 -->
 				$('#sourceModalDeviceListContainer').empty();
 
 				$('#repeatNum').val(1)
-				$('#repeatNumSwitch').prop('checked', false);
+				$('#repeatNumSwitch').prop('checked', true);
 
 				$('#taskModalConfirmBtn').attr('data-uuid', "");
 			}
