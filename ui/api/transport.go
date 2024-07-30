@@ -869,6 +869,15 @@ func MakeHandler(svc ui.Service, r *chi.Mux, instanceID, prefix string, secureCo
 					).ServeHTTP)
 				})
 
+				r.Route("/blank", func(r chi.Router) {
+					r.Get("/", kithttp.NewServer(
+						listBlankEndpoint(svc),
+						decodeBlankRequest,
+						encodeResponse,
+						opts...,
+					).ServeHTTP)
+				})
+
 				r.Route("/task", func(r chi.Router) {
 					r.Get("/", kithttp.NewServer(
 						listTaskEndpoint(svc),
@@ -2579,6 +2588,17 @@ func decodeListInvitationsRequest(_ context.Context, r *http.Request) (interface
 		domainID: domainID,
 		page:     page,
 		limit:    limit,
+	}, nil
+}
+
+func decodeBlankRequest(_ context.Context, r *http.Request) (interface{}, error) {
+	session, err := sessionFromHeader(r)
+	if err != nil {
+		return nil, err
+	}
+
+	return blankReq{
+		Session: session,
 	}, nil
 }
 

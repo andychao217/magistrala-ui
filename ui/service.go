@@ -57,6 +57,7 @@ const (
 	membersActive           = "members"
 	invitationsActive       = "invitations"
 	fileActive              = "file"
+	blankActive             = "blank"
 	taskActive              = "task"
 	domainInvitationsActive = "domaininvitations"
 )
@@ -381,6 +382,8 @@ type Service interface {
 	DeleteInvitation(token, userID, domainID string) error
 	// view file page
 	File(s Session) ([]byte, error)
+	// view blank page
+	Blank(s Session) ([]byte, error)
 	// view task page
 	Task(s Session) ([]byte, error)
 
@@ -2816,6 +2819,31 @@ func (us *uiService) DeleteInvitation(token, userID, domainID string) error {
 	}
 
 	return nil
+}
+
+func (us *uiService) Blank(s Session) ([]byte, error) {
+	crumbs := []breadcrumb{
+		{Name: blankActive},
+	}
+
+	data := struct {
+		NavbarActive   string
+		CollapseActive string
+		Breadcrumbs    []breadcrumb
+		Session        Session
+	}{
+		blankActive,
+		blankActive,
+		crumbs,
+		s,
+	}
+
+	var btpl bytes.Buffer
+	if err := us.tpls.ExecuteTemplate(&btpl, "blank", data); err != nil {
+		return []byte{}, errors.Wrap(ErrExecTemplate, err)
+	}
+
+	return btpl.Bytes(), nil
 }
 
 func (us *uiService) File(s Session) ([]byte, error) {

@@ -206,8 +206,20 @@ function attachEditRowListener(config) {
     for (const key in config.rows) {
         if (config.rows.hasOwnProperty(key)) {
             const cell = document.querySelector(`td[data-field="${key}"]`);
+            // 添加检查，确保 cell 不为 null
+            if (!cell) {
+                console.info(`Could not find cell with data-field="${key}"`);
+                continue; // 跳过此迭代
+            }
             const editBtn = cell.parentNode.querySelector(".edit-btn");
             const saveCancelBtn = cell.parentNode.querySelector(".save-cancel-buttons");
+
+            // 添加检查，确保 editBtn 和 saveCancelBtn 不为 null
+            if (!editBtn || !saveCancelBtn) {
+                console.info(`Could not find buttons for field="${key}"`);
+                continue; // 跳过此迭代
+            }
+
             editRow({
                 button: `edit-${key}`,
                 cell: cell,

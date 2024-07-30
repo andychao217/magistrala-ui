@@ -15,9 +15,9 @@ SPDX-License-Identifier: Apache-2.0 -->
         <div id="index-nav-items">
             <li class="nav-item mb-2 mx-2">
                 {{ $navbarActive := "homepage" }}
-                <a 
-                    href="{{ printf "%s/" pathPrefix }}" 
-                    id="index" 
+                <a
+                    onclick="changePage(`/ui/`, 'index')"
+                    id="indexPage"
                     class="nav-link sidebar-link {{ if eq .NavbarActive $navbarActive }}active{{ end }}"
                 >
                     <img src="/images/icon_organization_home_white.svg" class="channel-icon" style="height: 18px;">
@@ -88,9 +88,9 @@ SPDX-License-Identifier: Apache-2.0 -->
                     <li class="nav-item mb-2 mx-2">
                         {{ $navbarActive = "domain" }}
                         <a 
-                            class="nav-link {{ if eq .NavbarActive $navbarActive }}active{{ end }}" 
-                            id="domain" 
-                            href="{{ printf "%s/domains/%s" pathPrefix .Session.Domain.ID }}"
+                            class="nav-link sidebar-sub-link {{ if eq .NavbarActive $navbarActive }}active{{ end }}" 
+                            onclick="changePage(`/ui/domains/{{.Session.Domain.ID}}`, 'domain')"
+                            id="domainPage" 
                         >
                             <img src="/images/icon_mechanism_active.svg" class="channel-icon" style="height: 18px;">
                             <span>机构</span>
@@ -98,11 +98,11 @@ SPDX-License-Identifier: Apache-2.0 -->
                     </li>
                     <li class="nav-item mb-2 mx-2">
                         {{ $navbarActive = "members" }}
-                        <a 
-                            href="{{ printf "%s/domains/%s/members?limit=1000" pathPrefix .Session.Domain.ID }}" 
-                            id="members" 
-                            class="nav-link 
+                        <a
+                            class="nav-link sidebar-sub-link
                             {{ if eq .NavbarActive $navbarActive }}active{{ end }}"
+                            onclick="changePage(`/ui/domains/{{.Session.Domain.ID}}/members?limit=1000`, 'members')"
+                            id="membersPage" 
                         >
                             <i class="menu-icon fa-solid fa-users" style="margin-right: 5px;"></i>
                             <span>机构成员</span>
@@ -115,10 +115,11 @@ SPDX-License-Identifier: Apache-2.0 -->
         <li id="users-nav-items" class="nav-item mb-2 mx-2">
             {{ $navbarActive = "users" }}
             <a
-                href="{{ printf "%s/users?limit=1000" pathPrefix }}"
                 class=" nav-link sidebar-link {{ if (serviceUnavailable "users") }}
                     disabled-item
                 {{ end }} {{ if eq .NavbarActive $navbarActive }}active{{ end }}"
+                onclick="changePage('/ui/users?limit=1000', 'users')"
+                id="usersPage" 
             >
                 <i class="menu-icon fas fa-users" style="margin-right: 5px;"></i>
                 <span>用户管理</span>
@@ -134,11 +135,11 @@ SPDX-License-Identifier: Apache-2.0 -->
             <li class="nav-item mb-2 mx-2">
                 {{ $navbarActive = "things" }}
                 <a
-                    href="{{ printf "%s/things?limit=1000&onlineStatus=1" pathPrefix }}"
-                    id="things"
                     class="nav-link sidebar-link {{ if (serviceUnavailable "things") }}
                         disabled-item
                     {{ end }} {{ if eq .NavbarActive $navbarActive }}active{{ end }}"
+                     onclick="changePage('/ui/things?limit=1000&onlineStatus=1', 'things')"
+                    id="thingsPage"
                 >
                     <img src="/images/icon_equipment.svg" class="channel-icon" style="height: 18px;">
                     <span>设备</span>
@@ -147,11 +148,11 @@ SPDX-License-Identifier: Apache-2.0 -->
             <li class="nav-item mb-2 mx-2">
                 {{ $navbarActive = "channels" }}
                 <a
-                    href="{{ printf "%s/channels?limit=1000" pathPrefix }}"
-                    id="channels"
                     class="nav-link sidebar-link {{ if (serviceUnavailable "things") }}
                         disabled-item
                     {{ end }} {{ if eq .NavbarActive $navbarActive }}active{{ end }}"
+                    onclick="changePage('/ui/channels?limit=1000', 'channels')"
+                    id="channelsPage"
                 >
                     <img src="/images/icon_organization_area_white.svg" class="channel-icon" style="height: 18px;">
                     <span>分区</span>
@@ -160,9 +161,9 @@ SPDX-License-Identifier: Apache-2.0 -->
             <li class="nav-item mb-2 mx-2">
                 {{ $navbarActive = "file" }}
                 <a
-                    href="{{ printf "%s/file" pathPrefix }}"
-                    id="file"
                     class="nav-link sidebar-link {{ if eq .NavbarActive $navbarActive }}active{{ end }}"
+                    onclick="changePage('/ui/file', 'file')"
+                    id="filePage"
                 >
                     <img src="/images/icon_file.svg" class="channel-icon" style="height: 18px;">
                     <span>资源</span>
@@ -171,9 +172,9 @@ SPDX-License-Identifier: Apache-2.0 -->
             <li class="nav-item mb-2 mx-2">
                 {{ $navbarActive = "task" }}
                 <a
-                    href="{{ printf "%s/task" pathPrefix }}"
-                    id="task"
                     class="nav-link sidebar-link {{ if eq .NavbarActive $navbarActive }}active{{ end }}"
+                    onclick="changePage('/ui/task', 'task')"
+                    id="taskPage"
                 >
                     <img src="/images/icon_calendar.svg" class="channel-icon" style="height: 18px;">
                     <span>日程</span>
@@ -258,7 +259,11 @@ SPDX-License-Identifier: Apache-2.0 -->
                             </li>
                             <li><hr class="dropdown-divider" /></li>
                             <li>
-                                <a class="dropdown-item user-item-button p-2 mb-2" href="{{ printf "%s/domains?limit=1000" pathPrefix }}">
+                                <a 
+                                    class="dropdown-item user-item-button p-2 mb-2"
+                                    onclick="changePage('/ui/domains?limit=1000', 'domains')"
+                                    id="domainsPage"
+                                >
                                     <i class="menu-icon fa-solid fa-repeat"></i>
                                     切换机构
                                 </a>
@@ -284,7 +289,11 @@ SPDX-License-Identifier: Apache-2.0 -->
                             </li>
                             <li class="mb-2"><hr class="dropdown-divider" /></li>
                             <li class="mb-2">
-                                <a href="{{ printf "%s/password" pathPrefix }}" class="dropdown-item user-item-button p-2 mb-2">
+                                <a
+                                    class="dropdown-item user-item-button p-2 mb-2"
+                                    onclick="changePage('/ui/password', 'password')"
+                                    id="passwordPage"
+                                >
                                     <i class="menu-icon fas fa-solid fa-lock me-2"></i>
                                     <span>修改密码</span>
                                 </a>
@@ -446,6 +455,50 @@ SPDX-License-Identifier: Apache-2.0 -->
                 .catch((error) => {
                     console.error("error logging out: ", error);
                 });
+        }
+
+        function changePage(curPageUrl, pageKey) {
+            const loginStatus = '{{.Session.LoginStatus}}';
+            if (loginStatus !== "domain") {
+                if (pageKey === 'users') {
+                    const url = '/ui/users?limit=1000';
+                    window.location.href = url;
+                }
+            } else {
+                const element = $(`#${pageKey}Page`);
+                // 检查是否具有class "disabled-item"
+                if (element.hasClass("disabled-item")) {
+                    // console.log("The element has the 'disabled-item' class.");
+                } else {
+                    $(".nav-link.sidebar-link").removeClass("active");
+                    $(".nav-link.sidebar-sub-link").removeClass("active");
+                    element.addClass("active");
+                    sessionStorage.setItem("curPageUrl", curPageUrl);
+                    const $indexPageContainer = $('#indexPageContainer'),
+                        $iframePageContainer = $('#iframePageContainer'),
+                        iframe = document.getElementById('iframePage');
+                    if ($indexPageContainer && $iframePageContainer && iframe) {
+                        if (curPageUrl.includes(pageKey) && pageKey !== 'index') {
+                            $indexPageContainer.fadeOut();
+                            $iframePageContainer.fadeIn();
+                            iframe.src = curPageUrl;
+                            if (stopFetchingDataIndex && typeof stopFetchingDataIndex === 'function') {
+                                stopFetchingDataIndex();
+                            }
+                        } else {
+                            $iframePageContainer.fadeOut();
+                            iframe.src = '/ui/blank';
+                            $indexPageContainer.fadeIn();
+                            intervalRefreshDataIndex = setInterval(refreshThingsPieChart, 2000);
+                        }
+                    } else {
+                        if (pageKey === 'index') {
+                            const url = '/ui/';
+                            window.location.href = url;
+                        }
+                    }
+                }
+            }
         }
     </script>
 {{ end }}

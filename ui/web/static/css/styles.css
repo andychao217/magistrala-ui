@@ -79,6 +79,7 @@ html {
     opacity: 0.8;
     padding-left: 1rem;
     font-size: 1.1rem;
+    cursor: pointer;
 }
 
 .sidebar a.sidebar-link.active {
@@ -1320,4 +1321,18 @@ ul.gj-list img[src="/images/icon_channel.png"] {
 .gj-checkbox-material-icons input[type=checkbox]:checked+span:after {
     background: #007aff;
     color: white;
+}
+
+.nav-pills .nav-link{
+    border-radius: 0px;
+    color: #606266;
+    cursor: pointer;
+}
+.nav-pills .nav-link:hover,
+.nav-pills .nav-link.active, .nav-pills .show>.nav-link {
+    color: #0064de;
+    background-color: #d1e8fe;
+}
+.nav-pills .nav-link:last-child {
+    border-bottom-left-radius: 5px;
 }

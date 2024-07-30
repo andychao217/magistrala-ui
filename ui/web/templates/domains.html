@@ -145,7 +145,14 @@ SPDX-License-Identifier: Apache-2.0 -->
                                 sessionStorage.setItem("domainID", domainID);
                                 //选择domain之后要更新一下userInfo中保存的domain信息
                                 updateUserSelectedDomain(domainID);
-                                window.location.href = `/ui`;
+                                const url = `/ui`;
+                                if (window.self !== window.top) {
+                                    // 当前窗口在 iframe 中
+                                    window.parent.location.href = url;
+                                } else {
+                                    // 当前窗口不在 iframe 中
+                                    window.location.href = url;
+                                }
                             }
                         })
                         .catch((error) => {

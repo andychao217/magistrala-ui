@@ -1,10 +1,11 @@
 let ws = null, 
-    allThingsListWebsocket = []
+    allThingsListWebsocket = [];
+
 const hostNameWebsocket = getHostnameWebsocket(window.location),
       protocolWebsocket = window.location.protocol,
-      portSocketBridge =  sessionStorage.getItem("socketBridgePort") || "63001",
+      portSocketBridge = sessionStorage.getItem("socketBridgePort") || "63001",
       userInfoStrWebsocket = sessionStorage.getItem("userInfo"),
-      userInfoWebsocket  = JSON.parse(userInfoStrWebsocket);
+      userInfoWebsocket = JSON.parse(userInfoStrWebsocket);
 
 // 获取当前网页的域名
 function getHostnameWebsocket(url) {
@@ -14,7 +15,10 @@ function getHostnameWebsocket(url) {
 
 // 建立websocket连接
 function connectWebSocket(host, port, defaultChannelId) {
-    // 假设WebSocket服务器在ws://your-websocket-server-url
+    if (ws && ws.readyState === WebSocket.OPEN) {
+        console.log("WebSocket is already open.");
+        return;
+    }
     ws = new WebSocket(`ws://${host}:${port}/websocket`);
 
     // 监听WebSocket的open事件，连接成功时给后台发一些参数，后台去建立mqtt连接
@@ -38,71 +42,87 @@ function connectWebSocket(host, port, defaultChannelId) {
     ws.onmessage = function (event) {// 处理从服务器接收到的数据
         const url = window.location.href, 
               data = JSON.parse(event.data);
-        if (url.indexOf("task") !== -1) {
+        
+        // 使用postMessage将消息传递给iframe（如果存在）
+        if (window.parent && window.parent !== window) {
+            window.parent.postMessage({ type: 'websocket-message', data: data }, '*');
+        }
+
+        if (
+            url.indexOf("task") !== -1 || 
+            sessionStorage.getItem("curPageUrl").includes("task")
+        ) {
             // 当前为日程页面
-            if (data.msgName === "TASK_START") {
-                // 任务开始
-                const task = originalTaskList.find(task => task.uuid === data?.data?.task?.uuid);
-                const queryData = {...task};
-                if (task && task.uuid) {
-                    queryData.running = true;
-                    httpUpdateTask(queryData, false, loadTaskLists(false));
-                }
-            } else if (data.msgName === "TASK_STOP") {
-                // 任务结束
-                const task = originalTaskList.find(task => task.uuid === data?.data?.uuid);
-                const queryData = {...task};
-                if (task && task.uuid) {
-                    queryData.running = false;
-                    httpUpdateTask(queryData, false, loadTaskLists(false));
-                }
-            } else if (data.msgName === "TASK_SYNC_STATUS_GET_REPLY") {
-               
-            }
-        } else if (url.indexOf("things") !== -1) {
+            handleTaskMessage(data);
+        } else if (
+            url.indexOf("things") !== -1 || 
+            sessionStorage.getItem("curPageUrl").includes("things")
+        ) {
             console.log("allThingsListWebsocket: ", allThingsListWebsocket);
-            // 当前为分区设备、或设备页面
-            const deviceName = data.data?.info?.device_name;
-            const newDeviceInfo = {...data.data?.info};
-            //检查设备信息是否更新，如果更新了，则更新前端数据
-            if (data.msgName === "DEVICE_INFO_UPDATE" || data.msgName === "DEVICE_INFO_GET_REPLY") {
-                const targetDevice = allThingsListWebsocket.find(device => device.credentials.identity === deviceName);
-                if (targetDevice && targetDevice.id) {
-                    console.log("targetDevice: ", targetDevice);
-                    const originalDeviceInfo = targetDevice.metadata && targetDevice.metadata["info"] ? targetDevice.metadata["info"] : {};
-                    const originalDeviceAliase = targetDevice.metadata["aliase"] || "";
-                    const originalDeviceName = targetDevice.name;
-                    if (!_.isEqual(originalDeviceInfo, newDeviceInfo) || originalDeviceName !== newDeviceInfo.device_aliase) {
-                        const queryData = {...targetDevice};
-                        queryData.metadata["info"] = {...newDeviceInfo};
-                        queryData.name = newDeviceInfo.device_aliase;
-                        queryData.metadata["aliase"] = newDeviceInfo.device_aliase + '_' + splitStringByLastUnderscore(originalDeviceAliase)[1];
-                        httpUpdateThingWebsocket(queryData, defaultChannelId);
-                    }
-               }
-            }
+            handleThingMessage(data, defaultChannelId);
         }
     };
 
-    // 监听WebSocket的close事件，连接断开时触发
     ws.onclose = function (event) {
         if (event.wasClean) {
             console.log("WebSocket closed cleanly, code=" + event.code + " reason=" + event.reason);
         } else {
-            // 例如，服务器进程被终止，代码可能不是1000
             console.error("WebSocket disconnected unexpectedly (code=" + event.code + " reason=" + event.reason + ")");
         }
         // 可以在这里尝试重新连接
     };
 
-    // 监听WebSocket的error事件，连接出错时触发重连
     ws.onerror = function (error) {
         console.error("WebSocket Error: ", error);
         connectWebSocket(host, port, defaultChannelId);
     };
 }
 
- // 获取当前domain的ID号
+function handleTaskMessage(data) {
+    if (data.msgName === "TASK_START") {
+         // 任务开始
+        const task = originalTaskList.find(task => task.uuid === data?.data?.task?.uuid);
+        const queryData = {...task};
+        if (task && task.uuid) {
+            queryData.running = true;
+            httpUpdateTask(queryData, false, loadTaskLists(false));
+        }
+    } else if (data.msgName === "TASK_STOP") {
+        // 任务结束
+        const task = originalTaskList.find(task => task.uuid === data?.data?.uuid);
+        const queryData = {...task};
+        if (task && task.uuid) {
+            queryData.running = false;
+            httpUpdateTask(queryData, false, loadTaskLists(false));
+        }
+    } else if (data.msgName === "TASK_SYNC_STATUS_GET_REPLY") {
+        // 处理任务同步状态响应
+    }
+}
+
+function handleThingMessage(data, defaultChannelId) {
+    // 当前为分区设备、或设备页面
+    const deviceName = data.data?.info?.device_name;
+    const newDeviceInfo = {...data.data?.info};
+    //检查设备信息是否更新，如果更新了，则更新前端数据
+    if (data.msgName === "DEVICE_INFO_UPDATE" || data.msgName === "DEVICE_INFO_GET_REPLY") {
+        const targetDevice = allThingsListWebsocket.find(device => device.credentials.identity === deviceName);
+        if (targetDevice && targetDevice.id) {
+            console.log("targetDevice: ", targetDevice);
+            const originalDeviceInfo = targetDevice.metadata && targetDevice.metadata["info"] ? targetDevice.metadata["info"] : {};
+            const originalDeviceAliase = targetDevice.metadata["aliase"] || "";
+            const originalDeviceName = targetDevice.name;
+            if (!_.isEqual(originalDeviceInfo, newDeviceInfo) || originalDeviceName !== newDeviceInfo.device_aliase) {
+                const queryData = {...targetDevice};
+                queryData.metadata["info"] = {...newDeviceInfo};
+                queryData.name = newDeviceInfo.device_aliase;
+                queryData.metadata["aliase"] = newDeviceInfo.device_aliase + '_' + splitStringByLastUnderscore(originalDeviceAliase)[1];
+                httpUpdateThingWebsocket(queryData, defaultChannelId);
+            }
+       }
+    }
+}
+
 function httpGetDomainIdWebsocket() {
     const domainID = sessionStorage.getItem("domainID");
     if (domainID) {
@@ -123,9 +143,31 @@ function httpGetDomainIdWebsocket() {
               if (domainID && defaultChannelId) {
                 connectWebSocket(hostNameWebsocket, port, defaultChannelId);
                 httpGetAllThingsListWebsocket(hostNameWebsocket, defaultChannelId, true);
+                setupMessageListener(defaultChannelId);
               }
             })
     }
+}
+
+function setupMessageListener(defaultChannelId) {
+    window.addEventListener("message", function(event) {
+        if (event.data.type === 'websocket-message') {
+            const data = event.data.data;
+            const url = window.location.href;
+
+            if (
+                url.indexOf("task") !== -1 || 
+                sessionStorage.getItem("curPageUrl").includes("task")
+            ) {
+                handleTaskMessage(data);
+            } else if (
+                url.indexOf("things") !== -1 || 
+                sessionStorage.getItem("curPageUrl").includes("things")
+            ) {
+                handleThingMessage(data, defaultChannelId);
+            }
+        }
+    });
 }
 
 // 获取所有设备列表

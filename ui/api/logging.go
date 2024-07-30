@@ -1872,6 +1872,18 @@ func (lm *loggingMiddleware) DeleteInvitation(token, userID, domainID string) (e
 	return lm.svc.DeleteInvitation(token, userID, domainID)
 }
 
+func (lm *loggingMiddleware) Blank(s ui.Session) (b []byte, err error) {
+	defer func(begin time.Time) {
+		if err != nil {
+			lm.logger.Warn("View Blank failed to complete successfully")
+			return
+		}
+		lm.logger.Info("View Blank completed successfully")
+	}(time.Now())
+
+	return lm.svc.File(s)
+}
+
 func (lm *loggingMiddleware) File(s ui.Session) (b []byte, err error) {
 	defer func(begin time.Time) {
 		if err != nil {

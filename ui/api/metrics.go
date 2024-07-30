@@ -1052,6 +1052,15 @@ func (mm *metricsMiddleware) DeleteInvitation(token, userID, domainID string) er
 	return mm.svc.DeleteInvitation(token, userID, domainID)
 }
 
+func (mm *metricsMiddleware) Blank(s ui.Session) ([]byte, error) {
+	defer func(begin time.Time) {
+		mm.counter.With("method", "view_blank").Add(1)
+		mm.latency.With("method", "view_blank").Observe(time.Since(begin).Seconds())
+	}(time.Now())
+
+	return mm.svc.Blank(s)
+}
+
 func (mm *metricsMiddleware) File(s ui.Session) ([]byte, error) {
 	defer func(begin time.Time) {
 		mm.counter.With("method", "view_file").Add(1)
