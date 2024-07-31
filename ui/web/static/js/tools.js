@@ -233,8 +233,9 @@ function showConfirmModal(content, callback) {
     }
     // 绑定删除按钮的点击事件
     $('#confirmModalConfirmBtn').off('click').on('click', function() {
-        // 执行回调函数
-        callback();
+        if (callback && typeof callback === 'function') {
+            callback();
+        }
         confirmModal.hide();
     });
     $('#confirmModalCancelBtn').on('click', function() {

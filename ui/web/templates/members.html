@@ -17,7 +17,7 @@ SPDX-License-Identifier: Apache-2.0 -->
                             <div class="row-mb-3 d-flex flex-row justify-content-between mb-3">
                                 <!-- add member modal -->
                                 <div class="modal fade" id="addMemberModal" tabindex="-1" aria-labelledby="addMemberModalLabel" aria-hidden="true">
-                                    <div class="modal-dialog modal-dialog-centered">
+                                    <div class="modal-dialog">
                                         <div class="modal-content">
                                             <div class="modal-header">
                                                 <h1 class="modal-title" id="addMemberModalLabel">添加成员</h1>
@@ -73,7 +73,7 @@ SPDX-License-Identifier: Apache-2.0 -->
                                 </div>
                                 <div class="row">
                                     {{ range $i, $m := .Members }}
-                                        <div class="col-sm-3 mb-3 mb-sm-0">
+                                        <div class="mb-3" style="width: 20%;">
                                             <div class="hoverCard card">
                                                 <div class="card-body">
                                                     <div class="card-body">

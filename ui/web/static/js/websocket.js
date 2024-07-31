@@ -58,7 +58,7 @@ function connectWebSocket(host, port, defaultChannelId) {
             url.indexOf("things") !== -1 || 
             sessionStorage.getItem("curPageUrl").includes("things")
         ) {
-            console.log("allThingsListWebsocket: ", allThingsListWebsocket);
+            // console.log("allThingsListWebsocket: ", allThingsListWebsocket);
             handleThingMessage(data, defaultChannelId);
         }
     };
@@ -67,13 +67,11 @@ function connectWebSocket(host, port, defaultChannelId) {
         if (event.wasClean) {
             console.log("WebSocket closed cleanly, code=" + event.code + " reason=" + event.reason);
         } else {
-            console.error("WebSocket disconnected unexpectedly (code=" + event.code + " reason=" + event.reason + ")");
+            connectWebSocket(host, port, defaultChannelId);
         }
-        // 可以在这里尝试重新连接
     };
 
     ws.onerror = function (error) {
-        console.error("WebSocket Error: ", error);
         connectWebSocket(host, port, defaultChannelId);
     };
 }
@@ -108,7 +106,7 @@ function handleThingMessage(data, defaultChannelId) {
     if (data.msgName === "DEVICE_INFO_UPDATE" || data.msgName === "DEVICE_INFO_GET_REPLY") {
         const targetDevice = allThingsListWebsocket.find(device => device.credentials.identity === deviceName);
         if (targetDevice && targetDevice.id) {
-            console.log("targetDevice: ", targetDevice);
+            // console.log("targetDevice: ", targetDevice);
             const originalDeviceInfo = targetDevice.metadata && targetDevice.metadata["info"] ? targetDevice.metadata["info"] : {};
             const originalDeviceAliase = targetDevice.metadata["aliase"] || "";
             const originalDeviceName = targetDevice.name;

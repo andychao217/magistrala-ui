@@ -27,7 +27,7 @@ SPDX-License-Identifier: Apache-2.0 -->
 										data-bs-backdrop="static" 
 										data-bs-keyboard="false"  
                                     >
-                                        <div class="modal-dialog" role="document">
+                                        <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-dialog-scrollable" role="document">
                                             <div class="modal-content">
                                                 <div class="modal-header">
                                                     <h1 class="modal-title" id="addChannelModalLabel">添加分区</h1>
@@ -163,7 +163,7 @@ SPDX-License-Identifier: Apache-2.0 -->
                                     </div>
                                     <div class="row">
 										{{ range $i, $c := .Channels }}
-										<div class="col-sm-3 mb-3 mb-sm-0" onclick="viewChannel('{{ $c.ID }}', event)">
+										<div class="mb-3" onclick="viewChannel('{{ $c.ID }}', event)" style="width: 20%;">
 											<div class="hoverCard card">
 												<div class="card-body">
 													<div class="row">

@@ -190,7 +190,8 @@ SPDX-License-Identifier: Apache-2.0 -->
 					$('#downloadBtn').prop('disabled', true);
 				}
 			});
-
+			$fileTable.removeClass('table-bordered');
+			
 			document.getElementById("filePreviewModal").addEventListener('hidden.bs.modal', () => {
 				const audio = document.getElementById("audioPreview");
 				audio.pause(); // 暂停音频播放
@@ -198,6 +199,8 @@ SPDX-License-Identifier: Apache-2.0 -->
 				$("#filePreviewModalTitle").empty();
 				$("#filePreviewModalContent").empty();
 			});
+
+
 
 			// 更新批量操作按钮状态
 			function updateButtonsState() {

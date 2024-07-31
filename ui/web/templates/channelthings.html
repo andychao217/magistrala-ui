@@ -23,7 +23,7 @@ SPDX-License-Identifier: Apache-2.0 -->
                                     <div class="d-flex flex-row justify-content-between">
                                         <!-- add thing modal -->
                                         <div class="modal fade" id="connectThingModal" tabindex="-1" aria-labelledby="connectThingModalLabel" aria-hidden="true">
-                                            <div class="modal-dialog modal-dialog-centered">
+                                            <div class="modal-dialog">
                                                 <div class="modal-content">
                                                     <div class="modal-header">
                                                       	<h1 class="modal-title" id="connectThingModalLabel">分区关联设备</h1>
@@ -64,7 +64,7 @@ SPDX-License-Identifier: Apache-2.0 -->
                                     {{ $channelID := .ChannelID }}
                                     <div class="row" id="thingsGrid">
                                         {{ range $i, $t := .Things }}
-										<div class="col-sm-3 mb-3 mb-sm-0" id="{{ $t.ID }}-thingCard">
+										<div class="mb-3" id="{{ $t.ID }}-thingCard"  style="width: 20%;">
 											<div 
 												class="hoverCard card"  
 												id="{{ $t.ID }}-thingCardContent"
@@ -162,7 +162,7 @@ SPDX-License-Identifier: Apache-2.0 -->
 					const urlObj = new URL(currentUrl);
 					const onlineStatusValue = (currentUrl.match(/onlineStatus=(\d+)/) || [])[1] || sessionStorage.getItem("onlineStatus") || '1'; // 从URL获取onlineStatus的值
 					sessionStorage.setItem("onlineStatus", onlineStatusValue);
-					getThingsList(onlineStatusValue);
+					getThingsList(onlineStatusValue, false);
 
 					if (onlineStatusValue === '1') {
 						$('#btnAll').prop('checked', false);
@@ -186,12 +186,14 @@ SPDX-License-Identifier: Apache-2.0 -->
 							reqOnlineStatus = '0'; //offline
 						}
 						sessionStorage.setItem("onlineStatus", reqOnlineStatus);
-						$(`#thingsGrid`).empty();
-						currentDevices = {}, newDevices = {};
-						refreshThingsData();
+						// 获取当前页面的完整URL
+						const currentUrl = window.location.href;
+						// 创建URL对象
+						const urlObj = new URL(currentUrl);
+						window.location.href = `${urlObj.pathname}?page=1&limit=1000&onlineStatus=${reqOnlineStatus}`;
+						stopFetchingDataThings();
+						getThingsList(reqOnlineStatus);
 					});
-
-					intervalRefreshDataThings = setInterval(refreshThingsData, 2000);
 
 					$('#connect-things-btn').click(function() {
 						const channelID = "{{.ChannelID}}";
@@ -308,7 +310,7 @@ SPDX-License-Identifier: Apache-2.0 -->
 							$(`#connectThingsList`).empty();
 							//全选按钮
 							const $selectAll = $(`
-								<li class="list-group-item newThingItemList">
+								<li class="list-group-item newThingItemList" style="background: whitesmoke;">
 									<input 
 										class="form-check-input" 
 										type="checkbox" 
@@ -341,7 +343,7 @@ SPDX-License-Identifier: Apache-2.0 -->
 										<label for="checkbox_${thing.id}" class="form-check-label">
 											<img 
 												src="/images/icon_channel.png" 
-												style="height: 16px; margin-top: -3px;"
+												style="height: 18px; margin-top: -3px; margin-left: 5px;"
 											/>
 											<span 
 												data-bs-toggle="tooltip" 
@@ -511,7 +513,7 @@ SPDX-License-Identifier: Apache-2.0 -->
 								const thingName = device.metadata.out_channel_array && device.metadata.out_channel_array.length > 1 ? 
 								device.metadata.aliase : device.name;
 								const $thingCard = $(`
-									<div class="col-sm-3 mb-3 mb-sm-0" id="${device.id}-thingCard">
+									<div class="mb-3" id="${device.id}-thingCard" style="width: 20%;">
 										<div class="hoverCard card" id="${device.id}-thingCardContent">
 											<div class="card-body">
 												<div class="row">
@@ -544,13 +546,13 @@ SPDX-License-Identifier: Apache-2.0 -->
 					}
 
 					currentDevices = {};
-					currentDevices = newDevices;
+					currentDevices = {...newDevices};
 				}
 
 				//根据在线类型获取设备列表
-				function getThingsList(onlineStatus) {
+				function getThingsList(onlineStatus, isRender) {
+					currentDevices = {}, newDevices = {};
 					const urlObj = new URL(window.location.href);
-					currentDevices = {};
 					fetch(`${urlObj.pathname}InJSON?limit=1000&onlineStatus=${onlineStatus}`, {
 						method: "GET",
 					})
@@ -564,7 +566,6 @@ SPDX-License-Identifier: Apache-2.0 -->
 							const data = json.data;
 							const thingsData = JSON.parse(data).thingsData;
 							const things = thingsData.things || [];
-							currentDevices = {};
 							if (things.length) {
 								things.forEach(device => {
 									currentDevices[device.id] = {
@@ -577,10 +578,14 @@ SPDX-License-Identifier: Apache-2.0 -->
 										updated_at: device.updated_at,
 									};
 								});
+								if (isRender) {
+									updateThingsGrid(things);
+								}
 							}
+							intervalRefreshDataThings = setInterval(refreshThingsData, 2000);
 						})
 						.catch(error => {
-						//
+							//
 						});
 				}
 

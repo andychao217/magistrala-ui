@@ -16,7 +16,7 @@ SPDX-License-Identifier: Apache-2.0 -->
             <li class="nav-item mb-2 mx-2">
                 {{ $navbarActive := "homepage" }}
                 <a
-                    onclick="changePage(`/ui/`, 'index')"
+                    onclick="changePage(`/ui`, 'index')"
                     id="indexPage"
                     class="nav-link sidebar-link {{ if eq .NavbarActive $navbarActive }}active{{ end }}"
                 >
@@ -317,7 +317,7 @@ SPDX-License-Identifier: Apache-2.0 -->
         aria-labelledby="createDomainModalLabel" 
         aria-hidden="true"
     >
-        <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
                     <h1 class="modal-title" id="createDomainModalLabel">新建机构</h1>
@@ -461,8 +461,7 @@ SPDX-License-Identifier: Apache-2.0 -->
             const loginStatus = '{{.Session.LoginStatus}}';
             if (loginStatus !== "domain") {
                 if (pageKey === 'users') {
-                    const url = '/ui/users?limit=1000';
-                    window.location.href = url;
+                    window.location.href = curPageUrl;
                 }
             } else {
                 const element = $(`#${pageKey}Page`);
@@ -492,10 +491,7 @@ SPDX-License-Identifier: Apache-2.0 -->
                             intervalRefreshDataIndex = setInterval(refreshThingsPieChart, 2000);
                         }
                     } else {
-                        if (pageKey === 'index') {
-                            const url = '/ui/';
-                            window.location.href = url;
-                        }
+                        window.location.href = curPageUrl;
                     }
                 }
             }

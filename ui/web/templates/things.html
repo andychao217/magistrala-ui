@@ -29,7 +29,7 @@ SPDX-License-Identifier: Apache-2.0 -->
 										aria-hidden="true"
                                     >
 										<div class="modal-dialog" role="document">
-											<div class="modal-content">
+											<div class="modal-content" style="width: 580px;">
 												<div class="modal-header">
 													<h1 class="modal-title" id="editThingModalLabel">修改设备</h1>
 													<button 
@@ -89,7 +89,7 @@ SPDX-License-Identifier: Apache-2.0 -->
 										aria-hidden="true"
 									>
 										<div class="modal-dialog" role="document">
-											<div class="modal-content">
+											<div class="modal-content" style="width: 580px;">
 												<div class="modal-header">
 													<h1 class="modal-title" id="moreEditThingModalLabel">
 														<span>设备配置</span>
@@ -320,7 +320,7 @@ SPDX-License-Identifier: Apache-2.0 -->
 									</div>
 									<div class="row" id="thingsGrid">
 										{{ range $i, $t := .Things }}
-										<div class="col-sm-3 mb-3 mb-sm-0" id="{{ $t.ID }}-thingCard">
+										<div class="mb-3" id="{{ $t.ID }}-thingCard" style="width: 20%;">
 											<div 
 												class="hoverCard card"  
 												id="{{ $t.ID }}-thingCardContent"
@@ -420,7 +420,7 @@ SPDX-License-Identifier: Apache-2.0 -->
 													<div class="row" style="position: absolute; bottom: 40px; padding-left: 24px;">
 														{{ range $i, $o := $t.Metadata.out_channel_array }}
 														<i 
-															class="fa-solid fa-{{ add $i 1 }} channelIcon" 
+															class="fa-solid fa-{{ add $i 1 }} deviceChannelIcon" 
 															data-bs-toggle="tooltip" 
 															data-bs-placement="bottom" 
 															data-bs-title="{{ $o.aliase }}" 
@@ -471,8 +471,6 @@ SPDX-License-Identifier: Apache-2.0 -->
 					sessionStorage.setItem("onlineStatus", onlineStatusValue);
 					getThingsList(onlineStatusValue, false);
 
-					intervalRefreshDataThings = setInterval(refreshThingsData, 2000);
-
 					// 根据路径参数配置设备状态选中标签
 					if (onlineStatusValue === '1') {
 						$('#btnAll').prop('checked', false);
@@ -490,9 +488,6 @@ SPDX-License-Identifier: Apache-2.0 -->
 
 					// 切换要查看的设备状态
 					$('input[name="btnOnlineStatus"]').change(function() {
-						currentDevices = {}, newDevices = {};
-						$(`#thingsGrid`).empty();
-
 						let reqOnlineStatus = '2'; //all
 						if (this.id === 'btnOnline') {
 							reqOnlineStatus = '1'; //online
@@ -500,8 +495,9 @@ SPDX-License-Identifier: Apache-2.0 -->
 							reqOnlineStatus = '0'; //offline
 						}
 						sessionStorage.setItem("onlineStatus", reqOnlineStatus);
+						window.location.href = `/ui/things?limit=1000&onlineStatus=${reqOnlineStatus}`;
 						stopFetchingDataThings();
-						getThingsList(reqOnlineStatus, true);
+						getThingsList(reqOnlineStatus);
 					});
 
 					//搜索添加设备确认添加按钮事件
@@ -916,7 +912,7 @@ SPDX-License-Identifier: Apache-2.0 -->
 					}
 
 					currentDevices = {};
-					currentDevices = newDevices;
+					currentDevices = {...newDevices};
 				}
 
 				function updateThingsGridDom(device) {
@@ -957,14 +953,14 @@ SPDX-License-Identifier: Apache-2.0 -->
 							</ul>
 						</div>
 					`;
-					const channelIconDiv = device.metadata && 
+					const deviceChannelIconDiv = device.metadata && 
 						device.metadata.out_channel_array && 
 						device.metadata.out_channel_array.length > 1 ? 
 						`
 							<div class="row" style="position: absolute; bottom: 40px; padding-left: 24px;">
 								${device.metadata.out_channel_array.map(($o, $i) => {
 									return `<i 
-												class="fa-solid fa-${$i+1} channelIcon" 
+												class="fa-solid fa-${$i+1} deviceChannelIcon" 
 												data-bs-toggle="tooltip" 
 												data-bs-placement="bottom" 
 												data-bs-title="${$o.aliase}" 
@@ -974,7 +970,7 @@ SPDX-License-Identifier: Apache-2.0 -->
 							</div>
 						` : ``;
 					const $thingCard = $(`
-						<div class="col-sm-3 mb-3 mb-sm-0" id="${device.id}-thingCard">
+						<div class="mb-3" id="${device.id}-thingCard" style="width: 20%;">
 							<div class="hoverCard card" id="${device.id}-thingCardContent" >
 								<div class="card-body">
 									<div class="row">
@@ -986,7 +982,7 @@ SPDX-License-Identifier: Apache-2.0 -->
 										</div>
 									</div>
 									<div class="row" style="margin-top:50px">
-										${channelIconDiv}
+										${deviceChannelIconDiv}
 										<h5 
 											class="card-title truncate-text" 
 											data-bs-toggle="tooltip" 
@@ -1006,6 +1002,7 @@ SPDX-License-Identifier: Apache-2.0 -->
 
 				//根据在线类型获取设备列表
 				function getThingsList(onlineStatus, isRender) {
+					currentDevices = {}, newDevices = {}, currentThingsList = [];;
 					fetch(`/ui/things/thingsInJSON?limit=1000&onlineStatus=${onlineStatus}`, {
 						method: "GET",
 					})
@@ -1035,15 +1032,14 @@ SPDX-License-Identifier: Apache-2.0 -->
 										updated_at: device.updated_at,
 									};
 								});
+								currentThingsList = [...things];
 								if (isRender) {
 									updateThingsGrid(things);
 								}
 							}
 							intervalRefreshDataThings = setInterval(refreshThingsData, 2000);
 						})
-						.catch(error => {
-							//
-						});
+						.catch(error => {});
 				}
 
 				//给设备发信息
@@ -1235,17 +1231,17 @@ SPDX-License-Identifier: Apache-2.0 -->
 
 					//全选按钮
 					const $selectAll = $(`
-						<li class="list-group-item newThingItemList">
-						<input 
-							class="form-check-input" 
-							type="checkbox" 
-							value="selectAll" 
-							id="checkbox_selectAll"
-							onchange="onSelectNewThing(event)"
-						/>
-						<label class="form-check-label" for="checkbox_selectAll" style="margin-left:5px">
-							全选
-						</label>
+						<li class="list-group-item newThingItemList" style="background: whitesmoke;">
+							<input 
+								class="form-check-input" 
+								type="checkbox" 
+								value="selectAll" 
+								id="checkbox_selectAll"
+								onchange="onSelectNewThing(event)"
+							/>
+							<label class="form-check-label" for="checkbox_selectAll" style="margin-left:5px">
+								全选
+							</label>
 						</li>
 					`);
 					$(`#scanThingsGrid`).append($selectAll);
@@ -1271,7 +1267,7 @@ SPDX-License-Identifier: Apache-2.0 -->
 								<label class="form-check-label" data-device_name="${thing.device_name}" >
 									<img 
 										src="/images/${deviceIcon}" 
-										style="height: 24px; margin-top: -3px;"
+										style="height: 18px; margin-top: -3px; margin-left: 5px;"
 										data-device_name="${thing.device_name}" 
 									>
 									<span data-device_name="${thing.device_name}" >${thing.device_aliase}</span>

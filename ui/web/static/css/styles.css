@@ -308,6 +308,10 @@ body .body-button:hover {
     justify-content: space-between;
 }
 
+.table.table-hover > thead > tr > th {
+    background: whitesmoke;
+}
+
 #itemsTable thead tr {
     border-bottom: 1px solid var(--text-grey);
     border-top: 0;
@@ -820,22 +824,18 @@ button.edit-btn {
     /* box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); */
     transition: box-shadow 0.3s ease;
 }
-
 .hoverCard {
     height: 150px;
 }
-
 .hoverCard:hover {
     box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
     cursor: pointer;
 } 
-
 .hoverCardIcon{
     height: 38px; 
     float: left;
 }
-
-.channelIcon{
+.deviceChannelIcon{
     color: var(--main-color);
     border: thin solid var(--main-color);
     border-radius: 12px;
@@ -970,6 +970,7 @@ table > thead > tr > th {
     margin-left: 5px;
     margin-right: 5px;
     border: thin solid lightgray;
+    border-radius: 5px;
 }
 #fileTableContainer > .bootstrap-table {
     padding-left: 0px;
@@ -1018,7 +1019,6 @@ table > thead > tr > th {
     backdrop-filter: blur(5px);
     background: rgba(255, 255, 255, 0.1);
 }
-
 .dropdown-item {
     color: gray;
 }
@@ -1284,7 +1284,14 @@ table > thead > tr > th {
 .modalTableContainer {
     max-height: 400px; 
     overflow-y: auto;
-    border: thin solid whitesmoke;
+    margin-left: 5px;
+    margin-right: 5px;
+    border: thin solid lightgray;
+    border-radius: 5px;
+}
+.modalTableContainer > .bootstrap-table {
+    padding-left: 0px;
+    padding-right: 0px;
 }
 .channel-icon {
     height: 16px; 
@@ -1335,4 +1342,15 @@ ul.gj-list img[src="/images/icon_channel.png"] {
 }
 .nav-pills .nav-link:last-child {
     border-bottom-left-radius: 5px;
+}
+
+.modal-dialog {
+    margin-top: 80px;
+}
+
+.table-responsive.table-container {
+    background-image: url(/images/wave.svg);
+    background-repeat: no-repeat;
+    background-position-x: left;
+    background-position-y: bottom;
 }
