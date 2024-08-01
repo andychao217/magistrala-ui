@@ -224,8 +224,12 @@ SPDX-License-Identifier: Apache-2.0 -->
 											</div>
 											</div>
 											<div class="modal-footer">
-												<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">取消</button>
-												<button type="submit" class="btn body-button" id="taskModalConfirmBtn">确定</button>
+												<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+													<i class="fa-solid fa-xmark"></i> 取消
+												</button>
+												<button type="submit" class="btn body-button" id="taskModalConfirmBtn">
+													<i class="fa-solid fa-floppy-disk"></i> 确定
+												</button>
 											</div>
 										</div>
 									</form>
@@ -255,8 +259,12 @@ SPDX-License-Identifier: Apache-2.0 -->
 										<div id="playAreaTree"></div>
 									</div>
 									<div class="modal-footer">
-										<button type="button" class="btn btn-secondary" data-bs-dismiss="modal" onclick="closePlayAreasAddModal();">取消</button>
-										<button type="button" class="btn body-button" id="confirmPlayAreasAddModalBtn">确定</button>
+										<button type="button" class="btn btn-secondary" data-bs-dismiss="modal" onclick="closePlayAreasAddModal();">
+											<i class="fa-solid fa-xmark"></i> 取消
+										</button>
+										<button type="button" class="btn body-button" id="confirmPlayAreasAddModalBtn">
+											<i class="fa-solid fa-floppy-disk"></i> 确定
+										</button>
 									</div>
 								</div>
 							</div>
@@ -285,8 +293,12 @@ SPDX-License-Identifier: Apache-2.0 -->
 										<div class="row row-cols-4 g-3" id="playAreasDetailListContainer"></div>
 									</div>
 									<div class="modal-footer">
-										<button type="button" class="btn btn-secondary" data-bs-dismiss="modal" onclick="taskModal.show();">取消</button>
-										<button type="button" class="btn body-button" id="confirmPlayAreasDetailModalBtn">确定</button>
+										<button type="button" class="btn btn-secondary" data-bs-dismiss="modal" onclick="taskModal.show();">
+											<i class="fa-solid fa-xmark"></i> 取消
+										</button>
+										<button type="button" class="btn body-button" id="confirmPlayAreasDetailModalBtn">
+											<i class="fa-solid fa-floppy-disk"></i> 确定
+										</button>
 									</div>
 								</div>
 							</div>
@@ -379,8 +391,12 @@ SPDX-License-Identifier: Apache-2.0 -->
 										</div>
 									</div>
 									<div class="modal-footer">
-										<button type="button" class="btn btn-secondary" data-bs-dismiss="modal" onclick="taskModal.show();">取消</button>
-										<button type="button" class="btn body-button" id="sourceModalConfirmBtn">确定</button>
+										<button type="button" class="btn btn-secondary" data-bs-dismiss="modal" onclick="taskModal.show();">
+											<i class="fa-solid fa-xmark"></i> 取消
+										</button>
+										<button type="button" class="btn body-button" id="sourceModalConfirmBtn">
+											<i class="fa-solid fa-floppy-disk"></i> 确定
+										</button>
 									</div>
 								</div>
 							</div>
@@ -426,8 +442,12 @@ SPDX-License-Identifier: Apache-2.0 -->
 											</table>
 										</div>
 										<div class="modal-footer">
-											<button type="button" class="btn btn-secondary" data-bs-dismiss="modal" onclick="sourceModal.show();">取消</button>
-											<button type="button" class="btn body-button" id="confirmFileBtn">确定</button>
+											<button type="button" class="btn btn-secondary" data-bs-dismiss="modal" onclick="sourceModal.show();">
+												<i class="fa-solid fa-xmark"></i> 取消
+											</button>
+											<button type="button" class="btn body-button" id="confirmFileBtn">
+												<i class="fa-solid fa-floppy-disk"></i> 确定
+											</button>
 										</div>
 									</div>
 								</div>
@@ -468,8 +488,12 @@ SPDX-License-Identifier: Apache-2.0 -->
 											</table>
 										</div>
 										<div class="modal-footer">
-											<button type="button" class="btn btn-secondary" data-bs-dismiss="modal" onclick="sourceModal.show();">取消</button>
-											<button type="button" class="btn body-button" id="confirmInputChannelsBtn">确定</button>
+											<button type="button" class="btn btn-secondary" data-bs-dismiss="modal" onclick="sourceModal.show();">
+												<i class="fa-solid fa-xmark"></i> 取消
+											</button>
+											<button type="button" class="btn body-button" id="confirmInputChannelsBtn">
+												<i class="fa-solid fa-floppy-disk"></i> 确定
+											</button>
 										</div>
 									</div>
 								</div>
@@ -510,8 +534,12 @@ SPDX-License-Identifier: Apache-2.0 -->
 											</table>
 										</div>
 										<div class="modal-footer" style="display: block; text-align: center; border-top: none;">
-											<button type="button" class="btn body-button" id="oneClickSyncTaskBtn">一键同步</button>
-											<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">取消</button>
+											<button type="button" class="btn body-button" id="oneClickSyncTaskBtn">
+												<i class="fa-solid fa-rotate"></i> 一键同步
+											</button>
+											<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+												<i class="fa-solid fa-xmark"></i> 取消
+											</button>
 										</div>
 									</div>
 								</div>
@@ -1135,11 +1163,51 @@ SPDX-License-Identifier: Apache-2.0 -->
 				getPlayAreaTree();
 			});
 
+			// 更新任务运行状态
+			function handleUpdateTaskRunningStatus(uuid, runningStatus) {
+				allTaskList = allTaskList.map((task) => {
+					if (uuid && task.uuid === uuid) {
+						if (runningStatus) {
+							task.running = true;
+						} else {
+							task.running = false;
+						}
+					}
+				});
+				renderTaskCalenderAndTaskList(allTaskList, selectedDate);
+			}
+
+			// 渲染生成日历和任务列表
+			function renderTaskCalenderAndTaskList (taskList, date) {
+				let schedules = [];
+				const runningTasksDates = taskList.filter(task => task.running).map(task => task.datesArray);
+				const runningTasksDatesFlatArray = runningTasksDates.flat(Infinity); // 将嵌套数组扁平化
+				const runningTasksDatesUniqueArray = [...new Set(runningTasksDatesFlatArray)]; // 去除重复元素
+				const runningTasksScheules = runningTasksDatesUniqueArray.map(date => {
+					return {
+						name: 'ad',
+						date: date, 
+					}
+				});
+
+				const stoppedTasksDates = taskList.filter(task => !task.running).map(task => task.datesArray);
+				const stoppedTasksDatesFlatArray = stoppedTasksDates.flat(Infinity); // 将嵌套数组扁平化
+				const stoppedTasksDatesUniqueArray = [...new Set(stoppedTasksDatesFlatArray)]; // 去除重复元素
+				const stoppedTasksScheules = stoppedTasksDatesUniqueArray.filter((date)=> !runningTasksDatesUniqueArray.includes(date)).map(date => {
+					return {
+						name: 'offer',
+						date: date, 
+					}
+				});
+				schedules = [...runningTasksScheules, ...stoppedTasksScheules];
+				initTaskCalender(schedules);
+				createTaskList(date);
+			}
+
 			// 获取任务列表
 			function loadTaskLists(notifyDevice) {
 				allTaskList = [];
 				originalTaskList = [];
-				let schedules = [];
 				fetch(`${protocol}//${hostname}:${port}/taskList`, {
 					method: 'POST',
 					headers: {
@@ -1164,30 +1232,7 @@ SPDX-License-Identifier: Apache-2.0 -->
 								taskObj.datesArray = handleTaskDatesArray(taskObj);
 								return taskObj;
 							});
-							
-							const runningTasksDates = allTaskList.filter(task => task.running).map(task => task.datesArray);
-							const runningTasksDatesFlatArray = runningTasksDates.flat(Infinity); // 将嵌套数组扁平化
-							const runningTasksDatesUniqueArray = [...new Set(runningTasksDatesFlatArray)]; // 去除重复元素
-							const runningTasksScheules = runningTasksDatesUniqueArray.map(date => {
-								return {
-									name: 'ad',
-									date: date, 
-								}
-							});
-
-							const stoppedTasksDates = allTaskList.filter(task => !task.running).map(task => task.datesArray);
-							const stoppedTasksDatesFlatArray = stoppedTasksDates.flat(Infinity); // 将嵌套数组扁平化
-							const stoppedTasksDatesUniqueArray = [...new Set(stoppedTasksDatesFlatArray)]; // 去除重复元素
-							const stoppedTasksScheules = stoppedTasksDatesUniqueArray.filter((date)=> !runningTasksDatesUniqueArray.includes(date)).map(date => {
-								return {
-									name: 'offer',
-									date: date, 
-								}
-							});
-
-							schedules = [...runningTasksScheules, ...stoppedTasksScheules];
-							initTaskCalender(schedules);
-							createTaskList(selectedDate);
+							renderTaskCalenderAndTaskList(allTaskList, selectedDate);
 							if (notifyDevice) {
 								controlDevice("taskStatGet");
 							}
@@ -1486,6 +1531,7 @@ SPDX-License-Identifier: Apache-2.0 -->
 						username: userInfo.credentials.identity,
 						task: {...task},
 					};
+					delete queryData.task.running;
 					if (controlType === 'play') {
 						//手动启动任务时，开始时间+3秒
 						const originalStarTime = moment();

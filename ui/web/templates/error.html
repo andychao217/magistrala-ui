@@ -22,14 +22,16 @@ SPDX-License-Identifier: Apache-2.0 -->
                                    <p>{{ .Error }}</p>
                                    <p>页面将在 5 秒后自动跳转到登录页面。</p>
                                 </div>
-                                <a type="button" onclick="redirectToLogin()" class="btn body-button">返回登录</a>
+                                <a type="button" onclick="redirectToLogin()" class="btn body-button">
+                                    <i class="fa-solid fa-right-from-bracket"></i> 返回登录
+                                </a>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
             <script>
-                function redirectToLogin(url) {
+                function redirectToLogin() {
                     const url = '/ui/login';
                     if (window.self !== window.top) {
                         // 当前窗口在 iframe 中

@@ -27,7 +27,7 @@ SPDX-License-Identifier: Apache-2.0 -->
 										data-bs-backdrop="static" 
 										data-bs-keyboard="false"  
                                     >
-                                        <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-dialog-scrollable" role="document">
+                                        <div class="modal-dialog" role="document">
                                             <div class="modal-content">
                                                 <div class="modal-header">
                                                     <h1 class="modal-title" id="addChannelModalLabel">添加分区</h1>
@@ -60,8 +60,12 @@ SPDX-License-Identifier: Apache-2.0 -->
                                                         </div>
                                                     </div>
                                                     <div class="modal-footer">
-                                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">取消</button>
-                                                        <button type="submit" class="btn body-button" id="create-channel-button">确定</button>
+                                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+															<i class="fa-solid fa-xmark"></i> 取消
+														</button>
+                                                        <button type="submit" class="btn body-button" id="create-channel-button">
+															<i class="fa-solid fa-floppy-disk"></i> 确定
+														</button>
                                                     </div>
                                                 </form>
                                             </div>
@@ -70,7 +74,9 @@ SPDX-License-Identifier: Apache-2.0 -->
 
                                     <!-- 隐藏按钮 -->
                                     <!-- Button trigger modal -->
-                                    <button type="button" class="btn body-button" onclick="openModal('bulk')" style="display: none;">批量添加分区</button>
+                                    <button type="button" class="btn body-button" onclick="openModal('bulk')" style="display: none;">
+										<i class="fa-solid fa-plus"></i> 批量添加分区
+									</button>
 
                                     <!-- add channels modal -->
                                     <div 
@@ -102,8 +108,12 @@ SPDX-License-Identifier: Apache-2.0 -->
                                                         </div>
                                                     </div>
                                                     <div class="modal-footer">
-                                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">取消</button>
-                                                        <button type="submit" value="upload" class="btn body-button">确定</button>
+                                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+															<i class="fa-solid fa-xmark"></i> 取消
+														</button>
+                                                        <button type="submit" value="upload" class="btn body-button">
+															<i class="fa-solid fa-floppy-disk"></i> 确定
+														</button>
                                                     </div>
                                                 </form>
                                             </div>
@@ -145,8 +155,12 @@ SPDX-License-Identifier: Apache-2.0 -->
 														</div>
 													</div>
 													<div class="modal-footer">
-														<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">取消</button>
-														<button type="submit" class="btn body-button" id="edit-channel-button">确定</button>
+														<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+															<i class="fa-solid fa-xmark"></i> 取消
+														</button>
+														<button type="submit" class="btn body-button" id="edit-channel-button">
+															<i class="fa-solid fa-floppy-disk"></i> 确定
+														</button>
 													</div>
 												</form>
                                           	</div>

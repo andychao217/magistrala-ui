@@ -2,7 +2,7 @@
 SPDX-License-Identifier: Apache-2.0 */
 
 html {
-    min-width: 1280px;
+    min-width: 1330px;
     overflow-x: auto;
     overflow-y: hidden;
 }
@@ -34,6 +34,10 @@ html {
     font-family: "PingFang SC", "Helvetica Neue", "Microsoft YaHei", "微软雅黑", "STHeitiSC-Light", "华文细黑", "STXihei", "Arial", "sans-serif";
 }
 
+.fixed-top {
+    z-index: 10;
+}
+
 .sidebar {
     width: 200px;
     overflow-x: hidden;
@@ -41,7 +45,7 @@ html {
     bottom: 0;
     height: auto;
     overflow-y: auto;
-    z-index: 1200;
+    z-index: 11;
     position: absolute;
     outline: 0;
     left: 0;
@@ -293,8 +297,6 @@ body .body-button:hover {
     padding: 10px;
     background: #fff;
     border-radius: var(--border-radius);
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    transition: box-shadow 0.3s ease;
 }
 
 .table-container tbody tr td a {
@@ -310,6 +312,9 @@ body .body-button:hover {
 
 .table.table-hover > thead > tr > th {
     background: whitesmoke;
+}
+.table.table-hover > tbody > tr > td {
+    background: transparent;
 }
 
 #itemsTable thead tr {
@@ -1118,6 +1123,9 @@ table > thead > tr > th {
     margin-bottom: 15px;
 }
 .taskContentList .taskItem {
+    border-top: thin solid white;
+    border-bottom: thin solid white;
+    border-right: thin solid white;
     border-left: var(--border-radius) solid #00c6ff;
     background-color: #e8f3fc;
     border-radius: var(--border-radius);
@@ -1137,7 +1145,7 @@ table > thead > tr > th {
     transition: all 0.3s ease;
 }
 .taskContentList .taskItem.activeTask {
-    border-color:#ff8a00;
+    border-left-color:#ff8a00;
     background-color: lightgoldenrodyellow;
 }
 
@@ -1348,7 +1356,10 @@ ul.gj-list img[src="/images/icon_channel.png"] {
     margin-top: 80px;
 }
 
+.dashboardCard,
 .table-responsive.table-container {
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+    transition: box-shadow 0.3s ease;
     background-image: url(/images/wave.svg);
     background-repeat: no-repeat;
     background-position-x: left;

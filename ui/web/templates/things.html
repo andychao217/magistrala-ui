@@ -228,8 +228,12 @@ SPDX-License-Identifier: Apache-2.0 -->
 													</div>
 												</div>
 												<div class="modal-footer">
-													<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">取消</button>
-													<button type="button" class="btn body-button" id="scan-add-thing-button" disabled>添加设备</button>
+													<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+														<i class="fa-solid fa-xmark"></i> 取消
+													</button>
+													<button type="button" class="btn body-button" id="scan-add-thing-button" disabled>
+														<i class="fa-solid fa-plus"></i> 添加设备
+													</button>
 												</div>
 											</div>
 										</div>
@@ -291,9 +295,11 @@ SPDX-License-Identifier: Apache-2.0 -->
 												</div>
 												</div>
 												<div class="modal-footer">
-													<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">取消</button>
+													<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+														<i class="fa-solid fa-xmark"></i> 取消
+													</button>
 													<button type="button" class="btn body-button" id="deviceNetCfgModal-confirm-button">
-														确定
+														<i class="fa-solid fa-floppy-disk"></i> 确定
 													</button>
 												</div>
 											</div>
@@ -1356,27 +1362,27 @@ SPDX-License-Identifier: Apache-2.0 -->
 						}
 					});
 
-					let query = [];
-					for(let i = 0; i < oriQuery.length; i++) {
-						if (Number(oriQuery[i].metadata.out_channel) > 1) {
-							//当out_channel存在且大于1时，说明有是多通道设备，则要保存为多个设备
-							// 1、先保存一个原样的
-							query.push(oriQuery[i])
-							// 2、根据out_channel的大小从下标2开始，生成多个通道设备
-							for (let j = 2; j <= oriQuery[i].metadata.out_channel_array.length; j++) {
-								let newThing = JSON.parse(JSON.stringify(oriQuery[i])); //深拷贝
-								newThing.name = `${oriQuery[i].name}_${oriQuery[i].metadata.out_channel_array[j-1].aliase}`;
-								newThing.credentials.identity = `${oriQuery[i].credentials.identity}_${j}`;
-								newThing.credentials.secret = `${oriQuery[i].credentials.secret}_${j}`;
-								newThing.metadata.aliase = `${oriQuery[i].name}_${oriQuery[i].metadata.out_channel_array[j-1].aliase}`;
-								newThing.metadata.is_channel = "1";
-								query.push(newThing);
-							}
-						} else {
-							//当out_channel不存在 或者 等于1时，说明不是多通道设备，保留原样
-							query.push(oriQuery[i]);
-						}
-					}
+					// let query = [];
+					// for(let i = 0; i < oriQuery.length; i++) {
+					// 	if (Number(oriQuery[i].metadata.out_channel) > 1) {
+					// 		//当out_channel存在且大于1时，说明有是多通道设备，则要保存为多个设备
+					// 		// 1、先保存一个原样的
+					// 		query.push(oriQuery[i])
+					// 		// 2、根据out_channel的大小从下标2开始，生成多个通道设备
+					// 		for (let j = 2; j <= oriQuery[i].metadata.out_channel_array.length; j++) {
+					// 			let newThing = JSON.parse(JSON.stringify(oriQuery[i])); //深拷贝
+					// 			newThing.name = `${oriQuery[i].name}_${oriQuery[i].metadata.out_channel_array[j-1].aliase}`;
+					// 			newThing.credentials.identity = `${oriQuery[i].credentials.identity}_${j}`;
+					// 			newThing.credentials.secret = `${oriQuery[i].credentials.secret}_${j}`;
+					// 			newThing.metadata.aliase = `${oriQuery[i].name}_${oriQuery[i].metadata.out_channel_array[j-1].aliase}`;
+					// 			newThing.metadata.is_channel = "1";
+					// 			query.push(newThing);
+					// 		}
+					// 	} else {
+					// 		//当out_channel不存在 或者 等于1时，说明不是多通道设备，保留原样
+					// 		query.push(oriQuery[i]);
+					// 	}
+					// }
 					
 					//获取当前domain的ID号
 					const domainID = sessionStorage.getItem("domainID");
@@ -1398,7 +1404,7 @@ SPDX-License-Identifier: Apache-2.0 -->
 								headers: {
 									"Content-Type": "application/json",
 								},
-								body: JSON.stringify(query),
+								body: JSON.stringify(oriQuery),
 							})
 								.then(response => {
 									const url = window.location.href; // 获取当前页面的URL
@@ -1424,7 +1430,7 @@ SPDX-License-Identifier: Apache-2.0 -->
 											currentUrl.searchParams.set('onlineStatus', reqOnlineStatus);
 											// 跳转到新的 URL
 											window.location.href = currentUrl.toString();
-										})
+										});
 								});
 						})
 				}	

@@ -78,20 +78,16 @@ function connectWebSocket(host, port, defaultChannelId) {
 
 function handleTaskMessage(data) {
     if (data.msgName === "TASK_START") {
-         // 任务开始
-        const task = originalTaskList.find(task => task.uuid === data?.data?.task?.uuid);
-        const queryData = {...task};
-        if (task && task.uuid) {
-            queryData.running = true;
-            httpUpdateTask(queryData, false, loadTaskLists(false));
+        // 任务开始
+        const targetUuid = data?.data?.task?.uuid || "";
+        if (targetUuid) {
+            handleUpdateTaskRunningStatus(targetUuid, true);
         }
     } else if (data.msgName === "TASK_STOP") {
         // 任务结束
-        const task = originalTaskList.find(task => task.uuid === data?.data?.uuid);
-        const queryData = {...task};
-        if (task && task.uuid) {
-            queryData.running = false;
-            httpUpdateTask(queryData, false, loadTaskLists(false));
+        const targetUuid = data?.data?.uuid || "";
+        if (targetUuid) {
+            handleUpdateTaskRunningStatus(targetUuid, false);
         }
     } else if (data.msgName === "TASK_SYNC_STATUS_GET_REPLY") {
         // 处理任务同步状态响应
