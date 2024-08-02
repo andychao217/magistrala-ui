@@ -239,13 +239,13 @@ SPDX-License-Identifier: Apache-2.0 -->
 					currentFolderKey = "";
 					generateBreadCrumb(breadCrumbFolderList);
 				}
-
+				const queryData = { path: folder, comID: comID };
 				fetch(`${protocol}//${hostname}:9102/resourceList`, {
 					method: 'POST',
 					headers: {
 						'Content-Type': 'application/json'
 					},
-					body: JSON.stringify({ path: folder, comID: comID })
+					body: JSON.stringify(queryData)
 				})
 					.then(response => {
 						if (!response.ok) {
@@ -400,12 +400,13 @@ SPDX-License-Identifier: Apache-2.0 -->
 						$(`#createFolderNameError`).html('请不要输入重复的文件夹名称');
 						return;
 					}
+					const queryData = { currentPath: "/"+currentPath, folderName: folderName };
 					fetch(`${protocol}//${hostname}:9102/createFolder`, {
 						method: 'POST',
 						headers: {
 							'Content-Type': 'application/json'
 						},
-						body: JSON.stringify({ currentPath: "/"+currentPath, folderName: folderName })
+						body: JSON.stringify(queryData)
 					})
 						.then(response => response.json())
 						.then(data => {
@@ -429,12 +430,13 @@ SPDX-License-Identifier: Apache-2.0 -->
 				if (selectedRows.length) {
 					showConfirmModal("确定要删除所选数据吗？", () => {
 						const keyList = selectedRows.map(row => row.key);
+						const queryData = { keyList: keyList };
 						fetch(`${protocol}//${hostname}:9102/delete`, {
 							method: 'DELETE',
 							headers: {
 								'Content-Type': 'application/json'
 							},
-							body: JSON.stringify({ keyList: keyList })
+							body: JSON.stringify(queryData)
 						})
 							.then(response => response.json())
 							.then(data => {
@@ -455,12 +457,13 @@ SPDX-License-Identifier: Apache-2.0 -->
 				const selectedRows = $fileTable.bootstrapTable('getSelections');
 				if (selectedRows.length) {
 					selectedRows.forEach((row, index) => {
+						const queryData = { key: row.key };
 						fetch(`${protocol}//${hostname}:9102/download`, {
 							method: 'POST',
 							headers: {
 								'Content-Type': 'application/json'
 							},
-							body: JSON.stringify({ key: row.key })
+							body: JSON.stringify(queryData)
 						})
 						.then(response => response.blob())
 						.then(blob => {

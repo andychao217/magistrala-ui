@@ -62,7 +62,7 @@ function saveLayout() {
     // Update the metadata
     upMetadata = updateMetadata(jsonString, metadata);
 
-    const dashboard = {
+    const queryData = {
         id: dashboardID,
         layout: jsonString,
         metadata: JSON.stringify(upMetadata),
@@ -70,7 +70,7 @@ function saveLayout() {
 
     fetch(`${pathPrefix}/dashboards`, {
         method: "PATCH",
-        body: JSON.stringify(dashboard),
+        body: JSON.stringify(queryData),
         headers: {
             "Content-Type": "application/json",
         },

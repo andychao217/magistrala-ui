@@ -4,10 +4,14 @@
 package api
 
 import (
+	"bytes"
+	"compress/flate"
+	"compress/gzip"
 	"context"
 	"encoding/csv"
 	"encoding/json"
 	"fmt"
+	"io"
 	"net/http"
 	"net/url"
 	"strconv"
@@ -30,7 +34,7 @@ import (
 )
 
 const (
-	htmContentType          = "text/html"
+	htmContentType          = "text/html; charset=utf-8"
 	jsonContentType         = "application/json"
 	protocol                = "http"
 	pageKey                 = "page"
@@ -2854,6 +2858,58 @@ func DecryptCookieMiddleware(s *securecookie.SecureCookie, prefix string) func(h
 	}
 }
 
+func CompressionMiddleware(next http.Handler) http.Handler {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		// 检查请求头中支持的编码
+		acceptEncoding := r.Header.Get("Accept-Encoding")
+		if strings.Contains(acceptEncoding, "gzip") {
+			// 使用 Gzip 压缩
+			w.Header().Set("Content-Encoding", "gzip")
+			gz := gzip.NewWriter(w)
+			defer gz.Close()
+			gw := &gzipResponseWriter{Writer: gz, ResponseWriter: w}
+			next.ServeHTTP(gw, r)
+		} else if strings.Contains(acceptEncoding, "deflate") {
+			// 使用 Deflate 压缩
+			var buf bytes.Buffer
+			writer, err := flate.NewWriter(&buf, flate.BestCompression)
+			if err != nil {
+				http.Error(w, "Failed to create flate writer", http.StatusInternalServerError)
+				return
+			}
+			defer writer.Close()
+
+			w.Header().Set("Content-Encoding", "deflate")
+			dw := &deflateResponseWriter{Writer: writer, ResponseWriter: w}
+			next.ServeHTTP(dw, r)
+
+			writer.Close()
+			w.Write(buf.Bytes())
+		} else {
+			// 不支持压缩，直接处理请求
+			next.ServeHTTP(w, r)
+		}
+	})
+}
+
+type gzipResponseWriter struct {
+	io.Writer
+	http.ResponseWriter
+}
+
+func (g *gzipResponseWriter) Write(b []byte) (int, error) {
+	return g.Writer.Write(b)
+}
+
+type deflateResponseWriter struct {
+	io.Writer
+	http.ResponseWriter
+}
+
+func (d *deflateResponseWriter) Write(b []byte) (int, error) {
+	return d.Writer.Write(b)
+}
+
 func handleStaticFiles(m *chi.Mux) error {
 	entries, err := ui.StaticFS.ReadDir(ui.StaticDir)
 	if err != nil {
@@ -2862,7 +2918,7 @@ func handleStaticFiles(m *chi.Mux) error {
 	for _, entry := range entries {
 		if entry.IsDir() {
 			fs := http.FileServer(http.FS(ui.StaticFS))
-			m.Handle(fmt.Sprintf("/%s/*", entry.Name()), addPrefix(ui.StaticDir, fs))
+			m.Handle(fmt.Sprintf("/%s/*", entry.Name()), CompressionMiddleware(addPrefix(ui.StaticDir, fs)))
 		}
 	}
 

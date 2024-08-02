@@ -31,15 +31,15 @@ export function submitCreateForm(config) {
 
         if (config.type.includes('edit')) {
             url += `/${formData.get("id")}`;
-            let data = {};
+            let queryData = {};
             // 遍历 FormData 对象
             for (let pair of formData.entries()) {
                 // pair 是一个包含键和值的数组 [key, value]
-                data[pair[0]] = pair[1];
+                queryData[pair[0]] = pair[1];
             }
             fetchConfig = {
                 method: "POST",
-                body: JSON.stringify(data),
+                body: JSON.stringify(queryData),
                 headers: {
                     "Content-Type": "application/json",
                 }
@@ -70,9 +70,10 @@ export function submitCreateForm(config) {
 
 
 export function submitUpdateForm(config) {
+    const queryData = config.data;
     fetch(config.url, {
         method: "POST",
-        body: JSON.stringify(config.data),
+        body: JSON.stringify(queryData),
         headers: {
             "Content-Type": "application/json",
         },

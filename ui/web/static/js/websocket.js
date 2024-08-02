@@ -77,17 +77,27 @@ function connectWebSocket(host, port, defaultChannelId) {
 }
 
 function handleTaskMessage(data) {
+    // 获取 iframe 元素
+    const iframe = document.getElementById('iframePage');
     if (data.msgName === "TASK_START") {
         // 任务开始
         const targetUuid = data?.data?.task?.uuid || "";
         if (targetUuid) {
-            handleUpdateTaskRunningStatus(targetUuid, true);
+            if (iframe) {
+                iframe.contentWindow.handleUpdateTaskRunningStatus(targetUuid, true);
+            } else {
+                handleUpdateTaskRunningStatus(targetUuid, true);
+            }
         }
     } else if (data.msgName === "TASK_STOP") {
         // 任务结束
         const targetUuid = data?.data?.uuid || "";
         if (targetUuid) {
-            handleUpdateTaskRunningStatus(targetUuid, false);
+            if (iframe) {
+                iframe.contentWindow.handleUpdateTaskRunningStatus(targetUuid, false);
+            } else {
+                handleUpdateTaskRunningStatus(targetUuid, false);
+            }
         }
     } else if (data.msgName === "TASK_SYNC_STATUS_GET_REPLY") {
         // 处理任务同步状态响应
@@ -196,7 +206,7 @@ function httpGetAllThingsListWebsocket(host, comID, notifyDevice) {
 
 function controlDeviceWebsocket(host, comID, controlType) {
     const out_channel_unique_array = [...new Set(allThingsListWebsocket.map((item) => item.credentials.identity.split('_')[0]))];
-    let queryData = {
+    let data = {
         channelID: comID,
         host: host,
         comID: comID,
@@ -209,13 +219,13 @@ function controlDeviceWebsocket(host, comID, controlType) {
         try {
             const promises = out_channel_unique_array.map(async (thingIdentity) => {
                 const url = `${protocolWebsocket}//${hostNameWebsocket}:${portSocketBridge}/controlDevice`;
-                const data = {...queryData, thingIdentity: thingIdentity};
+                const queryData = {...data, thingIdentity: thingIdentity};
                 const response = await fetch(url, {
                     method: "POST",
                     headers: {
                         "Content-Type": "application/json",
                     },
-                    body: JSON.stringify(data),
+                    body: JSON.stringify(queryData),
                 });
                 return await response.json();
             });

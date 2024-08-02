@@ -515,7 +515,7 @@ SPDX-License-Identifier: Apache-2.0 -->
 									</div>
 								`;
 								const thingName = device.metadata.out_channel_array && device.metadata.out_channel_array.length > 1 ? 
-								device.metadata.aliase : device.name;
+									device.metadata.aliase : device.name;
 								const $thingCard = $(`
 									<div class="mb-3" id="${device.id}-thingCard" style="width: 20%;">
 										<div class="hoverCard card" id="${device.id}-thingCardContent">
@@ -598,7 +598,7 @@ SPDX-License-Identifier: Apache-2.0 -->
 					const address = new URL(url);
 					const port =  sessionStorage.getItem("socketBridgePort") || "63001";
 					const identity = thingIdentity.split("_")[0];
-					const data = {
+					const queryData = {
 						channelID: channelID,
 						thingIdentity: identity,
 						host: address.hostname,
@@ -610,7 +610,7 @@ SPDX-License-Identifier: Apache-2.0 -->
 						headers: {
 							"Content-Type": "application/json",
 						},
-						body: JSON.stringify(data),
+						body: JSON.stringify(queryData),
 					})
 						.then(response => {
 							console.log("postMessage: ", response)

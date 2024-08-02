@@ -601,26 +601,8 @@ SPDX-License-Identifier: Apache-2.0 -->
 				  domainID = sessionStorage.getItem("domainID"), // 当前机构ID
 				  userInfoStr = sessionStorage.getItem("userInfo"),
 				  userInfo = JSON.parse(userInfoStr);
-			let comID = "";
-			if (domainID) {
-				fetch(`/ui/domains/${domainID}/domainInJSON`, {
-					method: "GET",
-				})
-					.then(response => {
-						if (!response.ok) {
-						throw new Error('Network response was not ok');
-						}
-						return response.json(); // 直接将流转换为JSON对象
-					})
-					.then(json => {
-						const data = json.data;
-						const domainData = JSON.parse(data).domainData;
-						comID = domainData.metadata["comID"];
-						loadTaskLists(true);
-					});
-			}
-
-			let isListAllTask = false, // 是否显示全部任务
+			let comID = "",
+				isListAllTask = false, // 是否显示全部任务
 				selectedDate = moment().format('YYYY-MM-DD'), // 当前选中日期
 				showMoreSettingTaskModal = false,  // 是否显示更多设置弹框-任务弹框
 				showMoreSettingSourceModal = false, // 是否显示更多设置弹框-音源弹框
@@ -645,6 +627,8 @@ SPDX-License-Identifier: Apache-2.0 -->
 				allTaskList = []; //全部任务列表
 
 			$(function() {
+				initPage();
+
 				// 初始化设定页面标题为当天
 				$('#taskDateTitle').html(selectedDate);
 
@@ -1163,6 +1147,29 @@ SPDX-License-Identifier: Apache-2.0 -->
 				getPlayAreaTree();
 			});
 
+			// 页面初始化时，获取任务列表
+			function initPage () {
+				if (domainID) {
+					fetch(`/ui/domains/${domainID}/domainInJSON`, {
+						method: "GET",
+					})
+						.then(response => {
+							if (!response.ok) {
+							throw new Error('Network response was not ok');
+							}
+							return response.json(); // 直接将流转换为JSON对象
+						})
+						.then(json => {
+							const data = json.data;
+							const domainData = JSON.parse(data).domainData;
+							comID = domainData.metadata["comID"];
+							loadTaskLists(true);
+						});
+				} else {
+					initTaskCalender([]);
+				}
+			}
+
 			// 更新任务运行状态
 			function handleUpdateTaskRunningStatus(uuid, runningStatus) {
 				allTaskList = allTaskList.map((task) => {
@@ -1173,6 +1180,7 @@ SPDX-License-Identifier: Apache-2.0 -->
 							task.running = false;
 						}
 					}
+					return task;
 				});
 				renderTaskCalenderAndTaskList(allTaskList, selectedDate);
 			}
@@ -1208,12 +1216,13 @@ SPDX-License-Identifier: Apache-2.0 -->
 			function loadTaskLists(notifyDevice) {
 				allTaskList = [];
 				originalTaskList = [];
+				const queryData = { path: '', comID: comID };
 				fetch(`${protocol}//${hostname}:${port}/taskList`, {
 					method: 'POST',
 					headers: {
 						'Content-Type': 'application/json'
 					},
-					body: JSON.stringify({ path: '', comID: comID })
+					body: JSON.stringify(queryData)
 				})
 					.then(response => {
 						if (!response.ok) {
@@ -1522,7 +1531,7 @@ SPDX-License-Identifier: Apache-2.0 -->
 				} else {
 					const out_channel_array = task.out_channel.split(",");
 					const out_channel_unique_array = [...new Set(out_channel_array.map((item) => item.split('_')[0]))];
-					let queryData = {
+					let data = {
 						channelID: comID,
 						host: hostname,
 						comID: comID,
@@ -1531,24 +1540,24 @@ SPDX-License-Identifier: Apache-2.0 -->
 						username: userInfo.credentials.identity,
 						task: {...task},
 					};
-					delete queryData.task.running;
+					delete data.task.running;
 					if (controlType === 'play') {
 						//手动启动任务时，开始时间+3秒
 						const originalStarTime = moment();
 						const newStartTime = originalStarTime.add(3, 'seconds');
-						queryData.task.start_date = newStartTime.format("YYYY-MM-DD HH:mm:ss");
+						data.task.start_date = newStartTime.format("YYYY-MM-DD HH:mm:ss");
 					}
 					async function processRequests() {
 						try {
 							const promises = out_channel_unique_array.map(async (thingIdentity) => {
 								const url = `${protocol}//${hostname}:${port}/controlDevice`;
-								const data = {...queryData, thingIdentity: thingIdentity};
+								const queryData = {...data, thingIdentity: thingIdentity};
 								const response = await fetch(url, {
 									method: "POST",
 									headers: {
 										"Content-Type": "application/json",
 									},
-									body: JSON.stringify(data),
+									body: JSON.stringify(queryData),
 								});
 								return await response.json();
 							});
@@ -1579,12 +1588,13 @@ SPDX-License-Identifier: Apache-2.0 -->
 
 			// 发送HTTP请求，添加日程任务
 			function httpAddTask(query, callback) {
+				const queryData = { path: '', comID: comID, task: query };
 				fetch(`${protocol}//${hostname}:${port}/addTask`, {
 					method: 'POST',
 					headers: {
 						'Content-Type': 'application/json'
 					},
-					body: JSON.stringify({ path: '', comID: comID, task: query })
+					body: JSON.stringify(queryData)
 				})
 					.then(response => {
 						if (!response.ok) {
@@ -1605,12 +1615,13 @@ SPDX-License-Identifier: Apache-2.0 -->
 
 			// 发送HTTP请求，更新日程任务
 			function httpUpdateTask(query, notifyDevice, callback) {
+				const queryData = { path: '', comID: comID, task: query };
 				fetch(`${protocol}//${hostname}:${port}/updateTask`, {
 					method: 'PUT',
 					headers: {
 						'Content-Type': 'application/json'
 					},
-					body: JSON.stringify({ path: '', comID: comID, task: query })
+					body: JSON.stringify(queryData)
 				})
 				.then(response => {
 					if (!response.ok) {
@@ -1719,12 +1730,13 @@ SPDX-License-Identifier: Apache-2.0 -->
 			function copyTask(element) {
 				const taskUUID = $(element).data("uuid");
 				const task = originalTaskList.find(task => task.uuid === taskUUID);
+				const queryData = { path: '', comID: comID, task: task };
 				fetch(`${protocol}//${hostname}:${port}/copyTask`, {
 					method: 'POST',
 					headers: {
 						'Content-Type': 'application/json'
 					},
-					body: JSON.stringify({ path: '', comID: comID, task: task })
+					body: JSON.stringify(queryData)
 				})
 					.then(response => {
 						if (!response.ok) {
@@ -1867,27 +1879,28 @@ SPDX-License-Identifier: Apache-2.0 -->
 			function deleteTask(element) {
 				const taskUUID = $(element).data("uuid");
 				showConfirmModal("确定要删除所选数据吗？", () => {
-				fetch(`${protocol}//${hostname}:${port}/deleteTask`, {
-					method: 'DELETE',
-					headers: {
-						'Content-Type': 'application/json'
-					},
-					body: JSON.stringify({ path: '', comID: comID, uuid: taskUUID })
-				})
-					.then(response => {
-						if (!response.ok) {
-							throw new Error("Network response was not ok");
-						}
-						return response.json(); // 直接将流转换为JSON对象
-					}).then(data => {
-						showAlert('success', '删除成功！');
-						loadTaskLists(true);
-						if (data.task && data.task.uuid) {
-							controlDevice('taskDelete', task);
-						}
-					}).catch(error => {
-						console.error('Error:', error);
-					});
+					const queryData = { path: '', comID: comID, uuid: taskUUID };
+					fetch(`${protocol}//${hostname}:${port}/deleteTask`, {
+						method: 'DELETE',
+						headers: {
+							'Content-Type': 'application/json'
+						},
+						body: JSON.stringify(queryData)
+					})
+						.then(response => {
+							if (!response.ok) {
+								throw new Error("Network response was not ok");
+							}
+							return response.json(); // 直接将流转换为JSON对象
+						}).then(data => {
+							showAlert('success', '删除成功！');
+							loadTaskLists(true);
+							if (data.task && data.task.uuid) {
+								controlDevice('taskDelete', task);
+							}
+						}).catch(error => {
+							console.error('Error:', error);
+						});
 				});
 			}
 
@@ -2307,13 +2320,13 @@ SPDX-License-Identifier: Apache-2.0 -->
 					currentFolderKey = "";
 					generateBreadCrumb(breadCrumbFolderList);
 				}
-
+				const queryData = { path: folder, comID: comID };
 				fetch(`${protocol}//${hostname}:9102/resourceList`, {
 					method: 'POST',
 					headers: {
 						'Content-Type': 'application/json'
 					},
-					body: JSON.stringify({ path: folder, comID: comID })
+					body: JSON.stringify(queryData)
 				})
 					.then(response => {
 						if (!response.ok) {

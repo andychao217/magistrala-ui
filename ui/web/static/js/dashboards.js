@@ -9,7 +9,7 @@ const newDashboard = () => {
 const createDashboardForm = document.getElementById("create-dashboard-form");
 createDashboardForm.addEventListener("submit", function (event) {
     event.preventDefault();
-    const data = {
+    const queryData = {
         name: createDashboardForm.name.value,
         description: createDashboardForm.description.value,
     };
@@ -18,7 +18,7 @@ createDashboardForm.addEventListener("submit", function (event) {
         headers: {
             "Content-Type": "application/json",
         },
-        body: JSON.stringify(data),
+        body: JSON.stringify(queryData),
     })
         .then((response) => response.json())
         .then((data) => {
@@ -140,12 +140,13 @@ function createCard(data) {
 
 // Delete dashboard deletes the dashboard from the database.
 function deleteDashboard(id) {
+    const queryData = {id: id};
     fetch(`${pathPrefix}/dashboards`, {
         method: "DELETE",
         headers: {
             "Content-Type": "application/json",
         },
-        body: JSON.stringify({ id: id }),
+        body: JSON.stringify(queryData),
     })
         .then((response) => {
             if (response.status === 204) {
@@ -186,7 +187,7 @@ function editDashboard(id, name, description) {
 const updateButton = document.getElementById("update-dashboard-button");
 updateButton.addEventListener("click", function () {
     const form = document.getElementById("update-dashboard-form");
-    const data = {
+    const queryData = {
         id: form.id.value,
         name: form.name.value,
         description: form.description.value,
@@ -196,7 +197,7 @@ updateButton.addEventListener("click", function () {
         headers: {
             "Content-Type": "application/json",
         },
-        body: JSON.stringify(data),
+        body: JSON.stringify(queryData),
     })
         .then((response) => {
             if (response.status === 200) {

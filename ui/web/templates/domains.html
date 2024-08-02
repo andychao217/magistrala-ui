@@ -164,18 +164,19 @@ SPDX-License-Identifier: Apache-2.0 -->
                 function updateUserSelectedDomain(domainID){
                     let userInfo = JSON.parse(sessionStorage.getItem("userInfo"));
                     userInfo.metadata.domainID = domainID;
-                    userInfo.metadata.comID = userInfo.metadata[domainID]
+                    userInfo.metadata.comID = userInfo.metadata[domainID];
+                    const queryData = {...userInfo};
                     fetch( `/ui/users/${userInfo.id}` ,  {
                         method: "POST",
                         headers: {
                             "Content-Type": "application/json",
                         },
-                        body: JSON.stringify(userInfo),
+                        body: JSON.stringify(queryData),
                     }).then((response) => {
                         if (!response.ok) {
                             throw new Error("Network response was not ok");
                         } else {
-                            sessionStorage.setItem("userInfo", JSON.stringify(userInfo));
+                            sessionStorage.setItem("userInfo", JSON.stringify(queryData));
                             console.log("updated userInfo succeed 123")
                         }
                     })
