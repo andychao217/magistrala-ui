@@ -1698,7 +1698,8 @@ SPDX-License-Identifier: Apache-2.0 -->
 			function deviceNameTableFormatter(value, row, index) {
 				const deviceIcon = getDeviceIcon(row);
 				return `<div class="truncate-text" style="max-width: 250px;" title="${row.name}">
-							<img 
+							<img
+								loading="lazy"
 								src="/images/${deviceIcon}" 
 								style="
 									width: 28px; 
@@ -1922,7 +1923,7 @@ SPDX-License-Identifier: Apache-2.0 -->
 						const $playArea = $(`
 							<div class="d-grid col-6" title="${selectedPlayAreas[i].metadata.aliase}">
 								<button disabled type="button" class="btn btn-light truncate-text" style="color: #20afbf;">
-									<img src="/images/icon_channel.png" class="channel-icon" />
+									<img loading="lazy" src="/images/icon_channel.png" class="channel-icon" />
 									<span>${selectedPlayAreas[i].metadata.aliase}</span>
 								</button>
 							</div>
@@ -2115,7 +2116,7 @@ SPDX-License-Identifier: Apache-2.0 -->
 							<div class="d-grid col-4" title="${selectedPlayAreas[i].metadata.aliase}">
 								<div class="hoverCard card" style="height:95px;">
 									<div class="card-body" style="text-align: center;">
-										<img src="/images/icon_channel.png" style="margin-bottom: 5px; width: 32px;" />
+										<img loading="lazy" src="/images/icon_channel.png" style="margin-bottom: 5px; width: 32px;" />
 										<div class="truncate-text" style="font-size: 14px; width: 100%;">
 											${selectedPlayAreas[i].metadata.aliase}
 										</div>
@@ -2263,7 +2264,7 @@ SPDX-License-Identifier: Apache-2.0 -->
 						const $deviceItem = $(`
 							<li class="list-group-item sourceModalListItem">
 								<div>
-									<img src="/images/icon_channel.png" class="channel-icon" />
+									<img loading="lazy" src="/images/icon_channel.png" class="channel-icon" />
 									<span>${device.name}</span>
 								</div>
 								<div>
@@ -2306,7 +2307,7 @@ SPDX-License-Identifier: Apache-2.0 -->
 			// 音源设备表格设备名称-设备弹框
 			function inputChannelNameTableFormatter(value, row, index) {
 				return `<div>
-							<img src="/images/icon_channel.png" style="width: 16px; margin-bottom: 3px;" />
+							<img loading="lazy" src="/images/icon_channel.png" style="width: 16px; margin-bottom: 3px;" />
 							<span data-key="${row.key}" data-devicename="${row.deviceName}">${value}</span>
 						</div>`;
 			}
@@ -2358,12 +2359,12 @@ SPDX-License-Identifier: Apache-2.0 -->
 			function fileNameTableFormatter(value, row, index) {
 				if (row.isDir) {
 					return `<div style="cursor: pointer" data-key="${row.key}" data-filename="${row.fileName}" onclick="onClickFolder(event)">
-								<img src="/images/icon_folder.png" style="width: 16px; margin-bottom: 3px;" />
+								<img loading="lazy" src="/images/icon_folder.png" style="width: 16px; margin-bottom: 3px;" />
 								<span>${value}</span>
 							</div>`;
 				} else {
 					return `<div>
-								<img src="/images/icon_mp3.png" style="width: 16px; margin-bottom: 3px;" />
+								<img loading="lazy" src="/images/icon_mp3.png" style="width: 16px; margin-bottom: 3px;" />
 								<span>${value}</span>
 							</div>`;
 				}

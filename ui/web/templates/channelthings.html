@@ -83,7 +83,7 @@ SPDX-License-Identifier: Apache-2.0 -->
 												<div class="card-body">
 													<div class="row">
 														<div class="col">
-															<img id="{{ $t.ID }}-thingIcon" src="/images/icon_channel.png" class="hoverCardIcon" />
+															<img loading="lazy" id="{{ $t.ID }}-thingIcon" src="/images/icon_channel.png" class="hoverCardIcon" />
 														</div>
 														<div class="col">
 															<div class="dropdown" style="float: right;">
@@ -346,6 +346,7 @@ SPDX-License-Identifier: Apache-2.0 -->
 										/>
 										<label for="checkbox_${thing.id}" class="form-check-label">
 											<img 
+												loading="lazy"
 												src="/images/icon_channel.png" 
 												style="height: 18px; margin-top: -3px; margin-left: 5px;"
 											/>
@@ -498,7 +499,7 @@ SPDX-License-Identifier: Apache-2.0 -->
 								(typeof currentDevices[newId] === 'object' && Object.entries(currentDevices[newId]).length === 0)
 							) {
 								const device = newDevices[newId];
-								const imgSpan = `<img id="${device.id}-thingIcon" src="/images/icon_channel.png" class="hoverCardIcon" />`;
+								const imgSpan = `<img loading="lazy" id="${device.id}-thingIcon" src="/images/icon_channel.png" class="hoverCardIcon" />`;
 								const btnSpan = `
 									<div class="dropdown" style="float: right;">
 										<button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">

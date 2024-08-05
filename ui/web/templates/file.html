@@ -265,12 +265,12 @@ SPDX-License-Identifier: Apache-2.0 -->
 			function fileNameTableFormatter(value, row, index) {
 				if (row.isDir) {
 					return `<div style="cursor: pointer" data-key="${row.key}" data-filename="${row.fileName}" onclick="onClickFolder(event)">
-								<img src="/images/icon_folder.png" style="width: 16px; margin-bottom: 3px;" />
+								<img loading="lazy" src="/images/icon_folder.png" style="width: 16px; margin-bottom: 3px;" />
 								<span>${value}</span>
 							</div>`;
 				} else {
 					return `<div>
-								<img src="/images/icon_mp3.png" style="width: 16px; margin-bottom: 3px;" />
+								<img loading="lazy" src="/images/icon_mp3.png" style="width: 16px; margin-bottom: 3px;" />
 								<span>${value}</span>
 							</div>`;
 				}
