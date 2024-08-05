@@ -249,3 +249,15 @@ function splitStringByLastUnderscore(str) {
     const regex = /_(?!.*_)/; 
     return str.split(regex);
 }
+
+// 跳转至登录页
+function redirectToLogin() {
+    const url = '/ui/login';
+    if (window.self !== window.top) {
+        // 当前窗口在 iframe 中
+        window.parent.location.href = url;
+    } else {
+        // 当前窗口不在 iframe 中
+        window.location.href = url;
+    }
+}

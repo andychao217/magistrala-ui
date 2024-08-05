@@ -114,6 +114,7 @@ func MakeHandler(svc ui.Service, r *chi.Mux, instanceID, prefix string, secureCo
 	}
 
 	r.Route(pathPrefix, func(r chi.Router) {
+		r.Use(CompressionMiddleware)
 		r.Get("/register", kithttp.NewServer(
 			viewRegistrationEndpoint(svc),
 			decodeViewRegistrationRequest,

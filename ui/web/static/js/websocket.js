@@ -150,6 +150,11 @@ function httpGetDomainIdWebsocket() {
                 setupMessageListener(defaultChannelId);
               }
             })
+    } else {
+        const url = window.location.href;
+        if (url.indexOf("domain") === -1) {
+            redirectToLogin();
+        }
     }
 }
 

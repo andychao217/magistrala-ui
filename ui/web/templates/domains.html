@@ -147,7 +147,7 @@ SPDX-License-Identifier: Apache-2.0 -->
                                 updateUserSelectedDomain(domainID);
                                 const url = `/ui`;
                                 if (window.self !== window.top) {
-                                    // 当前窗口在 iframe 中
+                                    // 当前窗口在 iframe 中 
                                     window.parent.location.href = url;
                                 } else {
                                     // 当前窗口不在 iframe 中

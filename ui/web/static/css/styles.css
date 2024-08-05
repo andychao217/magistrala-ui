@@ -970,6 +970,8 @@ table > thead > tr > th {
 
 /* file page */
 #fileTableContainer {
+    backdrop-filter: blur(7px);
+    background: rgba(255, 255, 255, 0.2);
     height: calc(100vh - 270px);
     overflow-y: auto;
     margin-left: 5px;

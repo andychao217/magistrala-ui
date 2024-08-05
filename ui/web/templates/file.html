@@ -92,7 +92,7 @@ SPDX-License-Identifier: Apache-2.0 -->
 					</div>
 					<div class="modal-body">
 						<div class="dropzone" id="dropzone">
-							<i class="fa-solid fa-upload" style="margin-right: 5px;"></i> 拖拽文件到此处或点击上传
+							拖拽文件到此处或点击选择文件
 						</div>
 						<input type="file" id="fileInput" multiple style="display: none;" accept=".mp3, .wav">
 						<ul id="fileList"></ul>
@@ -182,6 +182,8 @@ SPDX-License-Identifier: Apache-2.0 -->
 					comID = domainData.metadata["comID"];
 					loadFilesTable("");
 				})
+			} else {
+				redirectToLogin();
 			}
 
 			let breadCrumbFolderList = [], //当前选中文件夹列表
