@@ -2,7 +2,7 @@
 SPDX-License-Identifier: Apache-2.0 */
 
 html {
-    min-width: 1330px;
+    min-width: 1280px;
     overflow-x: auto;
     overflow-y: hidden;
 }
@@ -88,6 +88,8 @@ html {
 .sidebar a.sidebar-link.active {
     color: #fff;
     opacity: 1;
+    background: var(--bs-teal);
+    border-radius: 5px;
 }
 
 .sidebar .sidebar-heading {
@@ -126,6 +128,9 @@ html {
 .sidebar .nav-item:hover {
     border-radius: 5px;
     background: var(--bs-teal);
+}
+.sidebar .nav-item.sub-link:hover a {
+    color: #fff;
 }
 
 .topbar {

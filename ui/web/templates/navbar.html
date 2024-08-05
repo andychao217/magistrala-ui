@@ -87,18 +87,18 @@ SPDX-License-Identifier: Apache-2.0 -->
                 id="domain-collapse"
             >
                 <ul class="collapse-list">
-                    <li class="nav-item mb-2 mx-2">
+                    <li class="nav-item mb-2 mx-2 sub-link">
                         {{ $navbarActive = "domain" }}
                         <a 
                             class="nav-link sidebar-sub-link {{ if eq .NavbarActive $navbarActive }}active{{ end }}" 
                             onclick="changePage(`/ui/domains/{{.Session.Domain.ID}}`, 'domain')"
                             id="domainPage" 
                         >
-                            <img loading="lazy" src="/images/icon_mechanism_active.svg" class="channel-icon" style="height: 18px;" />
+                            <i class="menu-icon fa-solid fa-building-columns" style="margin-right: 5px;"></i>
                             <span>机构</span>
                         </a>
                     </li>
-                    <li class="nav-item mb-2 mx-2">
+                    <li class="nav-item mb-2 mx-2 sub-link">
                         {{ $navbarActive = "members" }}
                         <a
                             class="nav-link sidebar-sub-link
