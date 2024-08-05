@@ -342,27 +342,21 @@ SPDX-License-Identifier: Apache-2.0 -->
 												<div class="row">
 												<div class="col">
 													{{ if $t.Metadata.product_name }}
-														{{ if stringContains $t.Metadata.product_name "2204" }}
+														{{ if or (stringContains $t.Metadata.product_name "2204") 
+															(stringContains $t.Metadata.product_name "2200") 
+															(stringContains $t.Metadata.product_name "2201") }}
 															<img loading="lazy" id="{{ $t.ID }}-thingIcon" src="/images/icon_device1.svg" class="hoverCardIcon" />
-														{{ else if stringContains $t.Metadata.product_name "2200" }}
-															<img loading="lazy" id="{{ $t.ID }}-thingIcon" src="/images/icon_device1.svg" class="hoverCardIcon" />
-														{{ else if stringContains $t.Metadata.product_name "2201" }}
-															<img loading="lazy" id="{{ $t.ID }}-thingIcon" src="/images/icon_device1.svg" class="hoverCardIcon" />
-														{{ else if stringContains $t.Metadata.product_name "2102" }}
-															<img loading="lazy" id="{{ $t.ID }}-thingIcon" src="/images/icon_device2.svg" class="hoverCardIcon" />
-														{{ else if stringContains $t.Metadata.product_name "2110" }}
-															<img loading="lazy" id="{{ $t.ID }}-thingIcon" src="/images/icon_device2.svg" class="hoverCardIcon" />
-														{{ else if stringContains $t.Metadata.product_name "2112" }}
+														{{ else if or (stringContains $t.Metadata.product_name "2102") 
+															(stringContains $t.Metadata.product_name "2110")
+															(stringContains $t.Metadata.product_name "2112") }}
 															<img loading="lazy" id="{{ $t.ID }}-thingIcon" src="/images/icon_device2.svg" class="hoverCardIcon" />
 														{{ else if stringContains $t.Metadata.product_name "3302" }}
 															<img loading="lazy" id="{{ $t.ID }}-thingIcon" src="/images/icon_device3.svg" class="hoverCardIcon" />
-														{{ else if stringContains $t.Metadata.product_name "2001" }}
+														{{ else if or (stringContains $t.Metadata.product_name "2001")
+													 		(stringContains $t.Metadata.product_name "2011") }}
 															<img loading="lazy" id="{{ $t.ID }}-thingIcon" src="/images/icon_device4.svg" class="hoverCardIcon" />
-														{{ else if stringContains $t.Metadata.product_name "2011" }}
-															<img loading="lazy" id="{{ $t.ID }}-thingIcon" src="/images/icon_device4.svg" class="hoverCardIcon" />
-														{{ else if stringContains $t.Metadata.product_name "3401" }}
-															<img loading="lazy" id="{{ $t.ID }}-thingIcon" src="/images/icon_device5.svg" class="hoverCardIcon" />
-														{{ else if stringContains $t.Metadata.product_name "2401" }}
+														{{ else if or (stringContains $t.Metadata.product_name "3401")
+															(stringContains $t.Metadata.product_name "2401") }}
 															<img loading="lazy" id="{{ $t.ID }}-thingIcon" src="/images/icon_device5.svg" class="hoverCardIcon" />
 														{{ else if stringContains $t.Metadata.product_name "3602" }}
 															<img loading="lazy" id="{{ $t.ID }}-thingIcon" src="/images/icon_device8.svg" class="hoverCardIcon" />
