@@ -2679,7 +2679,7 @@ func decodeError(_ context.Context, r *http.Request) (interface{}, error) {
 func decodePageNotFound(_ context.Context, r *http.Request) (interface{}, error) {
 	return errorReq{
 		pageURL: r.URL.String(),
-		err:     "Whoops! Page not found",
+		err:     "哎呀！您访问的页面似乎迷路了。",
 	}, nil
 }
 

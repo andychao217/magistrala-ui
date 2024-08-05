@@ -5,8 +5,10 @@ SPDX-License-Identifier: Apache-2.0 -->
     <!-- Sidebbar -->
     <ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark" id="accordionSidebar">
         <!-- Sidebar Brand -->
-        <a class="sidebar-brand d-flex justify-content-center">
-            <h2 class="mx-3 sidebar-logo">世邦思拓</h2>
+        <a class="sidebar-brand d-flex">
+            <h2 class="mx-3 sidebar-logo">
+                <img src="/images/icon_logo.png" style="height: 24px; margin-top: -6px;" /> 世邦思拓
+            </h2>
         </a>
 
         <!-- Divider -->
@@ -20,7 +22,7 @@ SPDX-License-Identifier: Apache-2.0 -->
                     id="indexPage"
                     class="nav-link sidebar-link {{ if eq .NavbarActive $navbarActive }}active{{ end }}"
                 >
-                    <img src="/images/icon_organization_home_white.svg" class="channel-icon" style="height: 18px;">
+                    <img src="/images/icon_organization_home_white.svg" class="channel-icon" style="height: 18px;" />
                     <span>首页</span>
                 </a>
             </li>
@@ -54,7 +56,7 @@ SPDX-License-Identifier: Apache-2.0 -->
                 id="domain-collapse-toggle"
                 style="margin-right: 20px;"
             >
-                <img src="/images/icon_mechanism.svg" class="channel-icon" style="height: 18px;">
+                <img src="/images/icon_mechanism.svg" class="channel-icon" style="height: 18px;" />
                 <span 
                     id="domainName" 
                     class="truncate-text-sidebar"
@@ -92,7 +94,7 @@ SPDX-License-Identifier: Apache-2.0 -->
                             onclick="changePage(`/ui/domains/{{.Session.Domain.ID}}`, 'domain')"
                             id="domainPage" 
                         >
-                            <img src="/images/icon_mechanism_active.svg" class="channel-icon" style="height: 18px;">
+                            <img src="/images/icon_mechanism_active.svg" class="channel-icon" style="height: 18px;" />
                             <span>机构</span>
                         </a>
                     </li>
@@ -141,7 +143,7 @@ SPDX-License-Identifier: Apache-2.0 -->
                      onclick="changePage('/ui/things?limit=1000&onlineStatus=1', 'things')"
                     id="thingsPage"
                 >
-                    <img src="/images/icon_equipment.svg" class="channel-icon" style="height: 18px;">
+                    <img src="/images/icon_equipment.svg" class="channel-icon" style="height: 18px;" />
                     <span>设备</span>
                 </a>
             </li>
@@ -154,7 +156,7 @@ SPDX-License-Identifier: Apache-2.0 -->
                     onclick="changePage('/ui/channels?limit=1000', 'channels')"
                     id="channelsPage"
                 >
-                    <img src="/images/icon_organization_area_white.svg" class="channel-icon" style="height: 18px;">
+                    <img src="/images/icon_organization_area_white.svg" class="channel-icon" style="height: 18px;" />
                     <span>分区</span>
                 </a>
             </li>
@@ -165,7 +167,7 @@ SPDX-License-Identifier: Apache-2.0 -->
                     onclick="changePage('/ui/file', 'file')"
                     id="filePage"
                 >
-                    <img src="/images/icon_file.svg" class="channel-icon" style="height: 18px;">
+                    <img src="/images/icon_file.svg" class="channel-icon" style="height: 18px;" />
                     <span>资源</span>
                 </a>
             </li>
@@ -176,7 +178,7 @@ SPDX-License-Identifier: Apache-2.0 -->
                     onclick="changePage('/ui/task', 'task')"
                     id="taskPage"
                 >
-                    <img src="/images/icon_calendar.svg" class="channel-icon" style="height: 18px;">
+                    <img src="/images/icon_calendar.svg" class="channel-icon" style="height: 18px;" />
                     <span>日程</span>
                 </a>
             </li>
@@ -261,7 +263,7 @@ SPDX-License-Identifier: Apache-2.0 -->
                             <li>
                                 <a 
                                     class="dropdown-item user-item-button p-2 mb-2"
-                                    onclick="changePage('/ui/domains?limit=1000', 'domains')"
+                                    onclick="changeDomain()"
                                     id="domainsPage"
                                 >
                                     <i class="menu-icon fa-solid fa-repeat"></i>
@@ -439,26 +441,39 @@ SPDX-License-Identifier: Apache-2.0 -->
             }
         });
 
+        // 创建机构
         function openCreateDomainModal() {
             const createDomainModal = new bootstrap.Modal(document.getElementById("createDomainModal"));
             createDomainModal.show();
         }
 
+        // 登出
         function logout() {
-            fetch('{{ printf "%s/logout" pathPrefix }}', {
-                method: "GET",
-            })
-                .then((response) => {
-                    if (response.status === 200) {
-                        clearAllCookies();
-                        window.location.href = '{{ printf "%s/login" pathPrefix }}';
-                    }
+            showConfirmModal("确定要退出系统吗？", () => {
+                fetch('{{ printf "%s/logout" pathPrefix }}', {
+                    method: "GET",
                 })
-                .catch((error) => {
-                    console.error("error logging out: ", error);
-                });
+                    .then((response) => {
+                        if (response.status === 200) {
+                            clearAllCookies();
+                            sessionStorage.clear();
+                            window.location.href = '{{ printf "%s/login" pathPrefix }}';
+                        }
+                    })
+                    .catch((error) => {
+                        console.error("error logging out: ", error);
+                    });
+            });
         }
 
+        // 切换机构
+        function changeDomain() {
+            showConfirmModal("确定要切换机构吗？", () => {
+                changePage('/ui/domains?limit=1000', 'domains');
+            });
+        }
+
+        // 切换页面
         function changePage(curPageUrl, pageKey) {
             const loginStatus = '{{.Session.LoginStatus}}';
             if (loginStatus !== "domain") {

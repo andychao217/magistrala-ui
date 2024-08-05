@@ -16,11 +16,11 @@ SPDX-License-Identifier: Apache-2.0 -->
                         <div class="col-lg-8 mx-auto py-5">
                             <div class="row">
                                 <div class="error-header py-5">
-                                    <h1 class="error-header">抱歉, 你的请求发生了一个错误</h1>
+                                    <h1 class="error-header">抱歉, 您的请求发生了一个错误</h1>
                                 </div>
                                 <div class="alert alert-danger alert-dismissible">
                                    <p>{{ .Error }}</p>
-                                   <p>页面将在 5 秒后自动跳转到登录页面。</p>
+                                   <p>让我们帮您回到正轨，页面将在<span id="errorCountdown" style="font-weight: bold;"></span>秒后自动跳转到登录页面。</p>
                                 </div>
                                 <a type="button" onclick="redirectToLogin()" class="btn body-button">
                                     <i class="fa-solid fa-right-from-bracket"></i> 返回登录
@@ -31,8 +31,23 @@ SPDX-License-Identifier: Apache-2.0 -->
                 </div>
             </div>
             <script>
+                let intervalErrorCountdown;
+                
                 $(document).ready(function () {
+                    let errorCountdown = 5;
+                    $("#errorCountdown").text(errorCountdown);
+                    intervalErrorCountdown = setInterval(function () {
+                        errorCountdown -= 1;
+                        $("#errorCountdown").text(errorCountdown);
+                    } , 1000);
                     setTimeout(redirectToLogin, 5000);
+                });
+
+                window.addEventListener('beforeunload', function () {
+                    if (intervalErrorCountdown) {
+						clearInterval(intervalErrorCountdown);
+						intervalErrorCountdown = null;
+					}
                 });
             </script>
         </body>

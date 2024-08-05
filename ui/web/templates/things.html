@@ -14,8 +14,8 @@ SPDX-License-Identifier: Apache-2.0 -->
             <div class="main-content pt-3">
                 <div class="container-fluid">
                     <div class="row-mb-3 p-3">
-                        <div class="col-lg-12 mx-auto">
-                            <div class="row">
+                        <div class="col-12 mx-auto">
+                            <div>
                                 <div class="buttons">
                                     <!-- edit thing modal -->
                                     <div 
@@ -343,31 +343,31 @@ SPDX-License-Identifier: Apache-2.0 -->
 												<div class="col">
 													{{ if $t.Metadata.product_name }}
 														{{ if stringContains $t.Metadata.product_name "2204" }}
-															<img id="{{ $t.ID }}-thingIcon" src="/images/icon_device1.svg" class="hoverCardIcon">
+															<img id="{{ $t.ID }}-thingIcon" src="/images/icon_device1.svg" class="hoverCardIcon" />
 														{{ else if stringContains $t.Metadata.product_name "2200" }}
-															<img id="{{ $t.ID }}-thingIcon" src="/images/icon_device1.svg" class="hoverCardIcon">
+															<img id="{{ $t.ID }}-thingIcon" src="/images/icon_device1.svg" class="hoverCardIcon" />
 														{{ else if stringContains $t.Metadata.product_name "2201" }}
-															<img id="{{ $t.ID }}-thingIcon" src="/images/icon_device1.svg" class="hoverCardIcon">
+															<img id="{{ $t.ID }}-thingIcon" src="/images/icon_device1.svg" class="hoverCardIcon" />
 														{{ else if stringContains $t.Metadata.product_name "2102" }}
-															<img id="{{ $t.ID }}-thingIcon" src="/images/icon_device2.svg" class="hoverCardIcon">
+															<img id="{{ $t.ID }}-thingIcon" src="/images/icon_device2.svg" class="hoverCardIcon" />
 														{{ else if stringContains $t.Metadata.product_name "2110" }}
-															<img id="{{ $t.ID }}-thingIcon" src="/images/icon_device2.svg" class="hoverCardIcon">
+															<img id="{{ $t.ID }}-thingIcon" src="/images/icon_device2.svg" class="hoverCardIcon" />
 														{{ else if stringContains $t.Metadata.product_name "2112" }}
-															<img id="{{ $t.ID }}-thingIcon" src="/images/icon_device2.svg" class="hoverCardIcon">
+															<img id="{{ $t.ID }}-thingIcon" src="/images/icon_device2.svg" class="hoverCardIcon" />
 														{{ else if stringContains $t.Metadata.product_name "3302" }}
-															<img id="{{ $t.ID }}-thingIcon" src="/images/icon_device3.svg" class="hoverCardIcon">
+															<img id="{{ $t.ID }}-thingIcon" src="/images/icon_device3.svg" class="hoverCardIcon" />
 														{{ else if stringContains $t.Metadata.product_name "2001" }}
-															<img id="{{ $t.ID }}-thingIcon" src="/images/icon_device4.svg" class="hoverCardIcon">
+															<img id="{{ $t.ID }}-thingIcon" src="/images/icon_device4.svg" class="hoverCardIcon" />
 														{{ else if stringContains $t.Metadata.product_name "2011" }}
-															<img id="{{ $t.ID }}-thingIcon" src="/images/icon_device4.svg" class="hoverCardIcon">
+															<img id="{{ $t.ID }}-thingIcon" src="/images/icon_device4.svg" class="hoverCardIcon" />
 														{{ else if stringContains $t.Metadata.product_name "3401" }}
-															<img id="{{ $t.ID }}-thingIcon" src="/images/icon_device5.svg" class="hoverCardIcon">
+															<img id="{{ $t.ID }}-thingIcon" src="/images/icon_device5.svg" class="hoverCardIcon" />
 														{{ else if stringContains $t.Metadata.product_name "2401" }}
-															<img id="{{ $t.ID }}-thingIcon" src="/images/icon_device5.svg" class="hoverCardIcon">
+															<img id="{{ $t.ID }}-thingIcon" src="/images/icon_device5.svg" class="hoverCardIcon" />
 														{{ else if stringContains $t.Metadata.product_name "3602" }}
-															<img id="{{ $t.ID }}-thingIcon" src="/images/icon_device8.svg" class="hoverCardIcon">
+															<img id="{{ $t.ID }}-thingIcon" src="/images/icon_device8.svg" class="hoverCardIcon" />
 														{{ else }}
-															<img id="{{ $t.ID }}-thingIcon" src="/images/icon_device0.svg" class="hoverCardIcon">
+															<img id="{{ $t.ID }}-thingIcon" src="/images/icon_device0.svg" class="hoverCardIcon" />
 														{{ end }}
 													{{ end }}
 												</div>
@@ -925,7 +925,7 @@ SPDX-License-Identifier: Apache-2.0 -->
 
 				function updateThingsGridDom(device) {
 					const deviceIcon = getDeviceIcon(device);
-					const imgSpan = `<img id="${device.id}-thingIcon" src="/images/${deviceIcon}" class="hoverCardIcon">`;
+					const imgSpan = `<img id="${device.id}-thingIcon" src="/images/${deviceIcon}" class="hoverCardIcon" />`;
 					const btnSpan = `
 						<div class="dropdown" style="float: right;">
 							<button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
@@ -1278,7 +1278,7 @@ SPDX-License-Identifier: Apache-2.0 -->
 										src="/images/${deviceIcon}" 
 										style="height: 18px; margin-top: -3px; margin-left: 5px;"
 										data-device_name="${thing.device_name}" 
-									>
+									/>
 									<span data-device_name="${thing.device_name}" >${thing.device_aliase}</span>
 								</label>
 							</li>

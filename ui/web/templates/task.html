@@ -17,7 +17,7 @@ SPDX-License-Identifier: Apache-2.0 -->
 		<div class="main-content pt-3">
 			<div class="container-fluid">
 				<div class="row-mb-3 p-3">
-					<div class="col-lg-12 mx-auto">
+					<div class="col-12 mx-auto">
 						<!-- 新增、修改任务弹框 -->
 						<div 
 							class="modal fade" 
@@ -2306,7 +2306,7 @@ SPDX-License-Identifier: Apache-2.0 -->
 			// 音源设备表格设备名称-设备弹框
 			function inputChannelNameTableFormatter(value, row, index) {
 				return `<div>
-							<img src="/images/icon_channel.png" style="width: 16px; margin-bottom: 3px;"/>
+							<img src="/images/icon_channel.png" style="width: 16px; margin-bottom: 3px;" />
 							<span data-key="${row.key}" data-devicename="${row.deviceName}">${value}</span>
 						</div>`;
 			}
@@ -2358,12 +2358,12 @@ SPDX-License-Identifier: Apache-2.0 -->
 			function fileNameTableFormatter(value, row, index) {
 				if (row.isDir) {
 					return `<div style="cursor: pointer" data-key="${row.key}" data-filename="${row.fileName}" onclick="onClickFolder(event)">
-								<img src="/images/icon_folder.png" style="width: 16px; margin-bottom: 3px;"/>
+								<img src="/images/icon_folder.png" style="width: 16px; margin-bottom: 3px;" />
 								<span>${value}</span>
 							</div>`;
 				} else {
 					return `<div>
-								<img src="/images/icon_mp3.png" style="width: 16px; margin-bottom: 3px;"/>
+								<img src="/images/icon_mp3.png" style="width: 16px; margin-bottom: 3px;" />
 								<span>${value}</span>
 							</div>`;
 				}
