@@ -35,7 +35,7 @@ import (
 
 const (
 	htmContentType          = "text/html; charset=utf-8"
-	jsonContentType         = "application/json"
+	jsonContentType         = "application/json; charset=utf-8"
 	protocol                = "http"
 	pageKey                 = "page"
 	limitKey                = "limit"
@@ -2899,6 +2899,11 @@ type gzipResponseWriter struct {
 }
 
 func (g *gzipResponseWriter) Write(b []byte) (int, error) {
+	if g.Header().Get("Content-Type") == "" {
+		if isJSONData(b) {
+			g.Header().Set("Content-Type", jsonContentType)
+		}
+	}
 	return g.Writer.Write(b)
 }
 
@@ -2908,7 +2913,20 @@ type deflateResponseWriter struct {
 }
 
 func (d *deflateResponseWriter) Write(b []byte) (int, error) {
+	if d.Header().Get("Content-Type") == "" {
+		if isJSONData(b) {
+			d.Header().Set("Content-Type", jsonContentType)
+		}
+	}
 	return d.Writer.Write(b)
+}
+
+// 示例判断 JSON 数据的方法
+func isJSONData(data []byte) bool {
+	// 尝试解析 JSON 数据，如果成功则认为是 JSON 数据
+	var jsonObj interface{}
+	err := json.Unmarshal(data, &jsonObj)
+	return err == nil
 }
 
 func handleStaticFiles(m *chi.Mux) error {

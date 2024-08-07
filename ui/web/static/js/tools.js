@@ -226,19 +226,22 @@ function showAlert(type, message) {
     toast.show();
 }
 
-function showConfirmModal(content, callback) {
+function showConfirmModal(content, confirmCallback, cancelCallback) {
     const confirmModal = new bootstrap.Modal(document.getElementById("confirmModal"));
     if (content) {
         $('#confirmModalContent').html(content);
     }
     // 绑定删除按钮的点击事件
     $('#confirmModalConfirmBtn').off('click').on('click', function() {
-        if (callback && typeof callback === 'function') {
-            callback();
+        if (confirmCallback && typeof confirmCallback === 'function') {
+            confirmCallback();
         }
         confirmModal.hide();
     });
     $('#confirmModalCancelBtn').on('click', function() {
+        if (cancelCallback && typeof cancelCallback === 'function') {
+            cancelCallback();
+        }
         confirmModal.hide();
     });
     confirmModal.show();

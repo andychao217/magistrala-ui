@@ -93,7 +93,7 @@ SPDX-License-Identifier: Apache-2.0 -->
 												<div class="modal-header">
 													<h1 class="modal-title" id="moreEditThingModalLabel">
 														<span>设备配置</span>
-														(<span id="deviceNameTitleMoreEditThingModal"></span>)
+														<span id="deviceNameTitleMoreEditThingModal"></span>
 													</h1>
 													<button 
 														type="button" 
@@ -113,30 +113,6 @@ SPDX-License-Identifier: Apache-2.0 -->
 														>
 															<button 
 																class="nav-link active" 
-																id="v-pills-home-tab" 
-																data-bs-toggle="pill" 
-																data-bs-target="#v-pills-home" 
-																type="button" 
-																role="tab" 
-																aria-controls="v-pills-home" 
-																aria-selected="true"
-															>
-																Home
-															</button>
-															<button 
-																class="nav-link" 
-																id="v-pills-profile-tab" 
-																data-bs-toggle="pill" 
-																data-bs-target="#v-pills-profile" 
-																type="button" 
-																role="tab" 
-																aria-controls="v-pills-profile" 
-																aria-selected="false"
-															>
-																Profile
-															</button>
-															<button 
-																class="nav-link" 
 																id="v-pills-messages-tab" 
 																data-bs-toggle="pill" 
 																data-bs-target="#v-pills-messages" 
@@ -149,38 +125,48 @@ SPDX-License-Identifier: Apache-2.0 -->
 															</button>
 															<button 
 																class="nav-link" 
-																id="v-pills-settings-tab" 
+																id="moreEditThingModal-deviceLog-tab" 
 																data-bs-toggle="pill" 
-																data-bs-target="#v-pills-settings" 
+																data-bs-target="#moreEditThingModal-deviceLog" 
 																type="button" 
 																role="tab" 
-																aria-controls="v-pills-settings" 
+																aria-controls="moreEditThingModal-deviceLog" 
 																aria-selected="false"
 															>
-																Settings
+																设备日志
+															</button>
+															<button 
+																class="nav-link" 
+																id="moreEditThingModal-sysInfo-tab" 
+																data-bs-toggle="pill" 
+																data-bs-target="#moreEditThingModal-sysInfo" 
+																type="button" 
+																role="tab" 
+																aria-controls="moreEditThingModal-sysInfo" 
+																aria-selected="true"
+															>
+																系统信息
+															</button>
+															<button 
+																class="nav-link" 
+																id="moreEditThingModal-deviceOperation-tab" 
+																data-bs-toggle="pill" 
+																data-bs-target="#moreEditThingModal-deviceOperation" 
+																type="button" 
+																role="tab" 
+																aria-controls="moreEditThingModal-deviceOperation" 
+																aria-selected="true"
+															>
+																设备操作
 															</button>
 														</div>
-														<div class="tab-content" id="v-pills-tabContent" style="border-left: thin solid lightgray; padding: 0px 20px;">
+														<div 
+															class="tab-content" 
+															id="v-pills-tabContent" 
+															style="border-left: thin solid lightgray; padding: 10px 20px;"
+														>
 															<div 
 																class="tab-pane fade show active" 
-																id="v-pills-home" 
-																role="tabpanel" 
-																aria-labelledby="v-pills-home-tab" 
-																tabindex="0"
-															>
-																...
-															</div>
-															<div 
-																class="tab-pane fade" 
-																id="v-pills-profile" 
-																role="tabpanel" 
-																aria-labelledby="v-pills-profile-tab" 
-																tabindex="0"
-															>
-																...
-															</div>
-															<div 
-																class="tab-pane fade" 
 																id="v-pills-messages" 
 																role="tabpanel" 
 																aria-labelledby="v-pills-messages-tab" 
@@ -190,12 +176,152 @@ SPDX-License-Identifier: Apache-2.0 -->
 															</div>
 															<div 
 																class="tab-pane fade" 
-																id="v-pills-settings" 
+																id="moreEditThingModal-deviceLog" 
 																role="tabpanel" 
-																aria-labelledby="v-pills-settings-tab" 
+																aria-labelledby="moreEditThingModal-deviceLog-tab" 
 																tabindex="0"
 															>
-																...
+																设备日志
+															</div>
+															<div 
+																class="tab-pane fade" 
+																id="moreEditThingModal-sysInfo" 
+																role="tabpanel" 
+																aria-labelledby="moreEditThingModal-sysInfo-tab" 
+																tabindex="0"
+																style="width: 430px; font-size: 14px;"
+															>
+																<div class="row mb-2">
+																	<div class="col align-self-start moreEditThingModal-sysInfo-label">
+																		固件版本
+																	</div>
+																	<div 
+																		class="col align-self-end moreEditThingModal-sysInfo-content"
+																		id="moreEditThingModal-sysInfo-firmware"
+																	></div>
+															  	</div>
+																<div class="row mb-2">
+																	<div class="col align-self-start moreEditThingModal-sysInfo-label">
+																		制造商
+																	</div>
+																	<div 
+																		class="col align-self-end moreEditThingModal-sysInfo-content"
+																		id="moreEditThingModal-sysInfo-manufacturer"
+																	></div>
+															  	</div>
+																<div class="row mb-2">
+																	<div class="col align-self-start moreEditThingModal-sysInfo-label">
+																		产品名称
+																	</div>
+																	<div 
+																		class="col align-self-end moreEditThingModal-sysInfo-content"
+																		id="moreEditThingModal-sysInfo-productName"
+																	></div>
+															  	</div>
+																<div class="row mb-2">
+																	<div class="col align-self-start moreEditThingModal-sysInfo-label">
+																		产品SN
+																	</div>
+																	<div 
+																		class="col align-self-end moreEditThingModal-sysInfo-content"
+																		id="moreEditThingModal-sysInfo-productSN"
+																	></div>
+															  	</div>
+																<div class="row mb-2" style="display: none;">
+																	<div class="col align-self-start moreEditThingModal-sysInfo-label">
+																		功放类型
+																	</div>
+																	<div 
+																		class="col align-self-end moreEditThingModal-sysInfo-content"
+																		id="moreEditThingModal-sysInfo-amplifierType"
+																	></div>
+															  	</div>
+																<div class="row mb-2">
+																	<div class="col align-self-start moreEditThingModal-sysInfo-label">
+																		总容量
+																	</div>
+																	<div 
+																		class="col align-self-end moreEditThingModal-sysInfo-content"
+																		id="moreEditThingModal-sysInfo-totalVolumn"
+																	></div>
+															  	</div>
+																<div class="row mb-2">
+																	<div class="col align-self-start moreEditThingModal-sysInfo-label">
+																		可用容量
+																	</div>
+																	<div 
+																		class="col align-self-end moreEditThingModal-sysInfo-content"
+																		id="moreEditThingModal-sysInfo-availableVolumn"
+																	></div>
+															  	</div>
+																<div class="row mb-2">
+																	<div class="col align-self-start moreEditThingModal-sysInfo-label">
+																		Wifi MAC地址
+																	</div>
+																	<div 
+																		class="col align-self-end moreEditThingModal-sysInfo-content"
+																		id="moreEditThingModal-sysInfo-wifiMAC"
+																	></div>
+															  	</div>
+																<div class="row mb-2">
+																	<div class="col align-self-start moreEditThingModal-sysInfo-label">
+																		以太网 MAC地址
+																	</div>
+																	<div 
+																		class="col align-self-end moreEditThingModal-sysInfo-content"
+																		id="moreEditThingModal-sysInfo-lanMAC"
+																	></div>
+															  	</div>
+															</div>
+															<div 
+																class="tab-pane fade" 
+																id="moreEditThingModal-deviceOperation" 
+																role="tabpanel" 
+																aria-labelledby="moreEditThingModal-deviceOperation-tab" 
+																tabindex="0"
+																style="height: 300px;"
+															>
+																<div class="row">
+																	<div
+																		class="hoverCard card deviceOperation-btn dangerBtn"
+																		id="moreEditThingModal-deviceOperation-rebootBtn"
+																	>
+																		<div class="card-body deviceOperation-btn-container">
+																			<div class="deviceOperation-btn-icon">
+																				<i class="fa-solid fa-power-off"></i>
+																			</div>
+																			<div class="row">
+																				重启设备
+																			</div>
+																		</div>
+																	</div>
+																	<div
+																		class="hoverCard card deviceOperation-btn dangerBtn"
+																		id="moreEditThingModal-deviceOperation-deleteBtn"
+																	>
+																		<div class="card-body deviceOperation-btn-container">
+																			<div class="deviceOperation-btn-icon">
+																				<i class="fa-solid fa-trash-can"></i>
+																			</div>
+																			<div class="row">
+																				删除设备
+																			</div>
+																		</div>
+																	</div>
+																	<div
+																		class="hoverCard card deviceOperation-btn dangerBtn"
+																		id="moreEditThingModal-deviceOperation-resetBtn"
+																	>
+																		<div class="card-body deviceOperation-btn-container">
+																			<div class="deviceOperation-btn-icon">
+																				<i class="fa-solid fa-arrows-rotate"></i>
+																			</div>
+																			<div class="row">
+																				恢复出厂
+																			</div>
+																		</div>
+																	</div>
+																</div>
 															</div>
 														</div>
 													  </div>
@@ -338,110 +464,110 @@ SPDX-License-Identifier: Apache-2.0 -->
 													{{ end }}
 												{{ end }}
 											>
-											<div class="card-body">
-												<div class="row">
-												<div class="col">
-													{{ if $t.Metadata.product_name }}
-														{{ if or (stringContains $t.Metadata.product_name "2204") 
-															(stringContains $t.Metadata.product_name "2200") 
-															(stringContains $t.Metadata.product_name "2201") }}
-															<img loading="lazy" id="{{ $t.ID }}-thingIcon" src="/images/icon_device1.svg" class="hoverCardIcon" />
-														{{ else if or (stringContains $t.Metadata.product_name "2102") 
-															(stringContains $t.Metadata.product_name "2110")
-															(stringContains $t.Metadata.product_name "2112") }}
-															<img loading="lazy" id="{{ $t.ID }}-thingIcon" src="/images/icon_device2.svg" class="hoverCardIcon" />
-														{{ else if stringContains $t.Metadata.product_name "3302" }}
-															<img loading="lazy" id="{{ $t.ID }}-thingIcon" src="/images/icon_device3.svg" class="hoverCardIcon" />
-														{{ else if or (stringContains $t.Metadata.product_name "2001")
-													 		(stringContains $t.Metadata.product_name "2011") }}
-															<img loading="lazy" id="{{ $t.ID }}-thingIcon" src="/images/icon_device4.svg" class="hoverCardIcon" />
-														{{ else if or (stringContains $t.Metadata.product_name "3401")
-															(stringContains $t.Metadata.product_name "2401") }}
-															<img loading="lazy" id="{{ $t.ID }}-thingIcon" src="/images/icon_device5.svg" class="hoverCardIcon" />
-														{{ else if stringContains $t.Metadata.product_name "3602" }}
-															<img loading="lazy" id="{{ $t.ID }}-thingIcon" src="/images/icon_device8.svg" class="hoverCardIcon" />
-														{{ else }}
-															<img loading="lazy" id="{{ $t.ID }}-thingIcon" src="/images/icon_device0.svg" class="hoverCardIcon" />
-														{{ end }}
-													{{ end }}
-												</div>
-												<div class="col">
-													<div class="dropdown" style="float: right;">
-													<button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-														<i class="fa-solid fa-ellipsis"></i>
-													</button>
-													<ul class="dropdown-menu">
-														<li style="display: none;">
-															<a class="dropdown-item" onclick="viewThing('{{ $t.ID }}', '{{ $t.Credentials.Identity }}')">
-																<i class="fa-solid fa-info" style="width: 16px;"></i> 查看
-															</a>
-														</li>
-														<li
-															id="{{ $t.ID }}-rebootBtn"
-															{{ if $t.Metadata.is_online }}
-																{{ if eq $t.Metadata.is_online "1" }}
-																style="display: block;"
+												<div class="card-body">
+													<div class="row">
+														<div class="col">
+															{{ if $t.Metadata.product_name }}
+																{{ if or (stringContains $t.Metadata.product_name "2204") 
+																	(stringContains $t.Metadata.product_name "2200") 
+																	(stringContains $t.Metadata.product_name "2201") }}
+																	<img loading="lazy" id="{{ $t.ID }}-thingIcon" src="/images/icon_device1.svg" class="hoverCardIcon" />
+																{{ else if or (stringContains $t.Metadata.product_name "2102") 
+																	(stringContains $t.Metadata.product_name "2110")
+																	(stringContains $t.Metadata.product_name "2112") }}
+																	<img loading="lazy" id="{{ $t.ID }}-thingIcon" src="/images/icon_device2.svg" class="hoverCardIcon" />
+																{{ else if stringContains $t.Metadata.product_name "3302" }}
+																	<img loading="lazy" id="{{ $t.ID }}-thingIcon" src="/images/icon_device3.svg" class="hoverCardIcon" />
+																{{ else if or (stringContains $t.Metadata.product_name "2001")
+																	(stringContains $t.Metadata.product_name "2011") }}
+																	<img loading="lazy" id="{{ $t.ID }}-thingIcon" src="/images/icon_device4.svg" class="hoverCardIcon" />
+																{{ else if or (stringContains $t.Metadata.product_name "3401")
+																	(stringContains $t.Metadata.product_name "2401") }}
+																	<img loading="lazy" id="{{ $t.ID }}-thingIcon" src="/images/icon_device5.svg" class="hoverCardIcon" />
+																{{ else if stringContains $t.Metadata.product_name "3602" }}
+																	<img loading="lazy" id="{{ $t.ID }}-thingIcon" src="/images/icon_device8.svg" class="hoverCardIcon" />
 																{{ else }}
-																style="display: none;"
+																	<img loading="lazy" id="{{ $t.ID }}-thingIcon" src="/images/icon_device0.svg" class="hoverCardIcon" />
 																{{ end }}
 															{{ end }}
-														>
-															<a class="dropdown-item" onclick="rebootThing('{{ $t.Credentials.Identity }}')">
-																<i class="fa-solid fa-arrows-rotate" style="width: 16px;"></i> 重启
-															</a>
-														</li>
-														<li 
-															id="{{ $t.ID }}-editBtn"
-															{{ if $t.Metadata.is_online }}
-																{{ if eq $t.Metadata.is_online "1" }}
-																style="display: block;"
-																{{ else }}
-																style="display: none;"
-																{{ end }}
-															{{ end }}
-														>
-															<a class="dropdown-item" onclick="editThing('{{ $t.ID }}')">
-																<i class="fa-solid fa-pencil-alt" style="width: 16px;"></i> 修改
-															</a>
-														</li>
-														<li id="{{ $t.ID }}-deleteBtn">
-															<a class="dropdown-item" onclick="deleteThing('{{ $t.ID }}')" >
-																<i class="fa-solid fa-trash-can" style="width: 16px;"></i> 删除
-															</a>
-														</li>
-													</ul>
+														</div>
+														<div class="col">
+															<div class="dropdown" style="float: right;">
+															<button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+																<i class="fa-solid fa-ellipsis"></i>
+															</button>
+															<ul class="dropdown-menu">
+																<li style="display: none;">
+																	<a class="dropdown-item" onclick="viewThing('{{ $t.ID }}', '{{ $t.Credentials.Identity }}')">
+																		<i class="fa-solid fa-info" style="width: 16px;"></i> 查看
+																	</a>
+																</li>
+																<li
+																	id="{{ $t.ID }}-rebootBtn"
+																	{{ if $t.Metadata.is_online }}
+																		{{ if eq $t.Metadata.is_online "1" }}
+																		style="display: block;"
+																		{{ else }}
+																		style="display: none;"
+																		{{ end }}
+																	{{ end }}
+																>
+																	<a class="dropdown-item" onclick="rebootThing('{{ $t.Credentials.Identity }}')">
+																		<i class="fa-solid fa-power-off" style="width: 16px;"></i> 重启
+																	</a>
+																</li>
+																<li 
+																	id="{{ $t.ID }}-editBtn"
+																	{{ if $t.Metadata.is_online }}
+																		{{ if eq $t.Metadata.is_online "1" }}
+																		style="display: block;"
+																		{{ else }}
+																		style="display: none;"
+																		{{ end }}
+																	{{ end }}
+																>
+																	<a class="dropdown-item" onclick="editThing('{{ $t.ID }}')">
+																		<i class="fa-solid fa-pencil-alt" style="width: 16px;"></i> 修改
+																	</a>
+																</li>
+																<li id="{{ $t.ID }}-deleteBtn">
+																	<a class="dropdown-item" onclick="deleteThing('{{ $t.ID }}')" >
+																		<i class="fa-solid fa-trash-can" style="width: 16px;"></i> 删除
+																	</a>
+																</li>
+															</ul>
+															</div>
+														</div>
 													</div>
-												</div>
-												</div>
-												<div class="row">
-												{{ if $t.Metadata.out_channel_array }}
-													{{ $length := len $t.Metadata.out_channel_array }}
-													{{if bigger $length 1}}
-													<div class="row" style="position: absolute; bottom: 40px; padding-left: 24px;">
-														{{ range $i, $o := $t.Metadata.out_channel_array }}
-														<i 
-															class="fa-solid fa-{{ add $i 1 }} deviceChannelIcon" 
+													<div class="row">
+														{{ if $t.Metadata.out_channel_array }}
+															{{ $length := len $t.Metadata.out_channel_array }}
+															{{if bigger $length 1}}
+															<div class="row" style="position: absolute; bottom: 40px; padding-left: 24px;">
+																{{ range $i, $o := $t.Metadata.out_channel_array }}
+																<i 
+																	class="fa-solid fa-{{ add $i 1 }} deviceChannelIcon" 
+																	data-bs-toggle="tooltip" 
+																	data-bs-placement="bottom" 
+																	data-bs-title="{{ $o.aliase }}" 
+																	title="{{ $o.aliase }}"
+																></i>
+																{{ end }}
+															</div>
+															{{ end }}
+														{{ end }}
+														<h5 
+															id="{{ $t.ID }}-deviceName"
+															class="card-title truncate-text" 
 															data-bs-toggle="tooltip" 
 															data-bs-placement="bottom" 
-															data-bs-title="{{ $o.aliase }}" 
-															title="{{ $o.aliase }}"
-														></i>
-														{{ end }}
+															data-bs-title="{{ $t.Name }}" 
+															title="{{ $t.Name }}"
+														>
+															{{ $t.Name }}
+														</h5>
 													</div>
-													{{ end }}
-												{{ end }}
-												<h5 
-													id="{{ $t.ID }}-deviceName"
-													class="card-title truncate-text" 
-													data-bs-toggle="tooltip" 
-													data-bs-placement="bottom" 
-													data-bs-title="{{ $t.Name }}" 
-													title="{{ $t.Name }}"
-												>
-													{{ $t.Name }}
-												</h5>
 												</div>
-											</div>
 											</div>
 										</div>
 										{{ end }}
@@ -505,7 +631,7 @@ SPDX-License-Identifier: Apache-2.0 -->
 
 					//搜索添加设备-网络配置-手动、自动下拉选项
 					$('#dhcp_enable-deviceNetCfg').change(function() {
-						const deviceName = $(this).data('device_name');
+						const deviceName = $(this).attr('data-device_name');
 						const deviceInfo = scanNewThingsList.find((item)=>item.device_name === deviceName); 
 						const dhcp_enable = $(this).val();
 						let ip = deviceInfo.netcfg.static_ip, 
@@ -558,7 +684,7 @@ SPDX-License-Identifier: Apache-2.0 -->
 
 					//搜索添加设备-网络配置-确认按钮
 					$('#deviceNetCfgModal-confirm-button').on('click', function() {
-						const deviceName = $(this).data('device_name');
+						const deviceName = $(this).attr('data-device_name');
 						const deviceInfo = scanNewThingsList.find(item => item.device_name === deviceName);
 						const dhcp_enable = deviceInfo.netcfg.dhcp_enable;
 						let canCloseModal = true;
@@ -609,19 +735,22 @@ SPDX-License-Identifier: Apache-2.0 -->
 
 					// 点击更多设置按钮时，切换显示更多设置-设备设置弹框
 					$('#moreSettingEditThingModal').click(function() {
-						const thingID = $('#editThingModal').data('id');
+						const thingID = $('#moreEditThingModal').attr('data-id');
+						console.log("thingID: ", thingID);
 						const originalDevice = currentThingsList.find(thing => thing.id === thingID);
+						console.log("originalDevice: ", originalDevice);
+						initMoreEditThingModal(originalDevice);
 						editThingModal.hide();
 						moreEditThingModal.show();
-						$("#deviceNameTitleMoreEditThingModal").html(originalDevice.name);
 					});
 
+					// 输入设备名称时，验证以及调整相关数据
 					$('#deviceNameEditThingModal').on('change blur keyup', function(event) {
 						const newDeviceName = $(this).val();
 						if (newDeviceName) {
 							$(`#deviceNameErrorEditThingModal`).empty();
 							$('#deviceNameErrorEditThingModal').hide();
-							const thingID = $("#editThingModal").data('id');
+							const thingID = $("#editThingModal").attr('data-id');
 							const originalDevice = currentThingsList.find(thing => thing.id === thingID);
 							const originalDeviceAliase = originalDevice.metadata["aliase"] || "";
                     		const originalDeviceName = originalDevice.name;
@@ -637,6 +766,14 @@ SPDX-License-Identifier: Apache-2.0 -->
 							$('#deviceNameErrorEditThingModal').show();
 						}
 					});
+
+					// const tabEls = document.querySelectorAll('button[data-bs-toggle="pill"]')
+					// tabEls.forEach(tab => {
+					// 	tab.addEventListener('shown.bs.tab', event => {
+					// 		console.log("event.target: ", event.target);
+					// 		console.log("event.relatedTarget: ", event.relatedTarget)
+					// 	})
+					// })
 				});
 				
 				// 在组件卸载时停止调用
@@ -698,6 +835,7 @@ SPDX-License-Identifier: Apache-2.0 -->
 				function editThing(id) {
 					const originalDevice = currentThingsList.find(thing => thing.id === id);
 					$("#editThingModal").attr("data-id", id);
+					$('#moreEditThingModal').attr("data-id", id);
 					$("#deviceNameEditThingModal").val(originalDevice.name);
 					$('#out_channels_container_EditThingModal').empty();
 					if (
@@ -714,40 +852,105 @@ SPDX-License-Identifier: Apache-2.0 -->
 					editThingModal.show();
 				}
 
+				//初始化更多设置
+				function initMoreEditThingModal(device) {
+					$("#deviceNameTitleMoreEditThingModal").html(device.name || "");
+					//显示第一个tab标签
+					const triggerEl = document.querySelector('#v-pills-tab button[data-bs-toggle="pill"]')
+					bootstrap.Tab.getInstance(triggerEl).show();
+
+					$(".moreEditThingModal-sysInfo-content").empty();
+					const deviceInfo = _.cloneDeep(device.metadata?.info);
+					if (deviceInfo && !_.isEmpty(deviceInfo)) {
+						//显示设备信息
+						$("#moreEditThingModal-sysInfo-firmware").html(deviceInfo.sw_version || "");
+						$("#moreEditThingModal-sysInfo-manufacturer").html(deviceInfo.manufacturer || "");
+						$("#moreEditThingModal-sysInfo-productName").html(deviceInfo.product_name || "");
+						$("#moreEditThingModal-sysInfo-productSN").html(deviceInfo.product_serial || "");
+						$("#moreEditThingModal-sysInfo-amplifierType").html(deviceInfo.pa_type || "");
+						const total_capacity = deviceInfo.total_capacity || 0;
+						const total_capacityStr = (total_capacity / 1024).toFixed(2) + "GB";
+						const available_capacity = deviceInfo.available_capacity || 0;
+						const available_capacityStr = (available_capacity / 1024).toFixed(2) + "GB";
+						$("#moreEditThingModal-sysInfo-totalVolumn").html(total_capacityStr);
+						$("#moreEditThingModal-sysInfo-availableVolumn").html(available_capacityStr);
+						$("#moreEditThingModal-sysInfo-wifiMAC").html(deviceInfo.wifi_mac_addr || "");
+						$("#moreEditThingModal-sysInfo-lanMAC").html(deviceInfo.eth_mac_addr || "");
+					}
+					
+					//获取日志
+					conntrolThing(device.credentials.identity, "getLog");
+
+					//设备操作按钮
+					//重启设备
+					$('#moreEditThingModal-deviceOperation-rebootBtn').on('click', function () {
+						const callback = function () {
+							moreEditThingModal.hide();
+							editThingModal.hide();
+						}
+						const cancelCallback = function () {
+							moreEditThingModal.show();
+						}
+						moreEditThingModal.hide();
+						rebootThing(device.credentials.identity, callback, cancelCallback);
+					});
+					//删除设备
+					$('#moreEditThingModal-deviceOperation-deleteBtn').on('click', function () {
+						const callback = function () {
+							moreEditThingModal.hide();
+							editThingModal.hide();
+						}
+						const cancelCallback = function () {
+							moreEditThingModal.show();
+						}
+						moreEditThingModal.hide();
+						deleteThing(device.id, callback, cancelCallback);
+					});
+					//恢复出厂
+					$('#moreEditThingModal-deviceOperation-resetBtn').on('click', function () {
+						const callback = function () {
+							moreEditThingModal.hide();
+							editThingModal.hide();
+						}
+						moreEditThingModal.hide();
+						callback();
+					});
+				}
+
 				//查看设备详情
 				function viewThing(id, thingIdentity) {
 					window.location.href = '{{printf "%s/things/" pathPrefix}}' + id;
 				}
 
 				//删除确认，接触通道关联
-				function deleteThing(thingID) {
+				function deleteThing(thingID, callback, cancelCallback) {
 					showConfirmModal("确定要删除所选数据吗？", () => {
-					fetch(`/ui/things/${thingID}/channelsInJSON?page=1&limit=1000`, {
-						method: "GET",
-					})
-						.then(response => {
-							if (!response.ok) {
-								throw new Error('Network response was not ok');
-							}
-							return response.json(); // 直接将流转换为JSON对象
+						fetch(`/ui/things/${thingID}/channelsInJSON?page=1&limit=1000`, {
+							method: "GET",
 						})
-						.then(json => {
-							const data = json.data;
-							const channelsData = JSON.parse(data).channelsData;
-							const channels = channelsData.groups;
-							const fetchPromises = channels.map((channel) => disconnectThingsAndChannels(thingID, channel.id));
-							Promise.all(fetchPromises).then(responses => {})
-								.then(jsonData => { handleDelete(thingID) })
-								.catch(error => {
-									// 如果有任何错误发生，这里会捕获到
-									console.error('An error occurred:', error);
-								});
-						});
-					});
+							.then(response => {
+								if (!response.ok) {
+									throw new Error('Network response was not ok');
+								}
+								return response.json(); // 直接将流转换为JSON对象
+							})
+							.then(json => {
+								const data = json.data;
+								const channelsData = JSON.parse(data).channelsData;
+								const channels = channelsData.groups;
+								const fetchPromises = channels.map((channel) => disconnectThingsAndChannels(thingID, channel.id));
+								Promise.all(fetchPromises).then(responses => {})
+									.then(jsonData => { handleDelete(thingID, callback) })
+									.catch(error => {
+										// 如果有任何错误发生，这里会捕获到
+										console.error('An error occurred:', error);
+									});
+							});
+					}, cancelCallback);
 				}
 
 				//删除设备
-				function handleDelete(thingID) {
+				function handleDelete(thingID, callback) {
 					fetch(`/ui/things/${thingID}`, {
 						method: "DELETE",
 					})
@@ -760,26 +963,31 @@ SPDX-License-Identifier: Apache-2.0 -->
 									console.log(`Error: ${response.status}`);
 								}
 							} else {
+								if (callback && typeof callback === "function") {
+									callback();
+								}
 								const reqOnlineStatus = sessionStorage.getItem("onlineStatus");
 								window.location.href = `/ui/things?limit=1000&onlineStatus=${reqOnlineStatus}`;
 							}
 						})
 						.catch((error) => {
+							if (callback && typeof callback === "function") {
+								callback();
+							}
 							const reqOnlineStatus = sessionStorage.getItem("onlineStatus");
 							window.location.href = `/ui/things?limit=1000&onlineStatus=${reqOnlineStatus}`;
-							console.error("error submitting form: ", error);
 						});
 				}
 
 				//重启设备
-				function rebootThing(thingIdentity) {
+				function rebootThing(thingIdentity, callback, cancelCallback) {
 					showConfirmModal("确定要重启所选设备吗？", () => {
-						conntrolThing(thingIdentity, "deviceReboot");
-					});
+						conntrolThing(thingIdentity, "deviceReboot", callback);
+					}, cancelCallback);
 				}
 
 				//控制设备
-				function conntrolThing(thingIdentity, controlType) {
+				function conntrolThing(thingIdentity, controlType, callback) {
 					const domainID = sessionStorage.getItem("domainID");
 					if (domainID) {
 						fetch(`/ui/domains/${domainID}/domainInJSON`, {
@@ -796,7 +1004,7 @@ SPDX-License-Identifier: Apache-2.0 -->
 								const domainData = JSON.parse(data).domainData;
 								const comID = domainData.metadata["comID"];
 								if (comID) {
-									postMessage(comID, controlType, thingIdentity);
+									postMessage(comID, controlType, thingIdentity, callback);
 								}
 							});
 					} else {
@@ -936,7 +1144,7 @@ SPDX-License-Identifier: Apache-2.0 -->
 									style="display: ${device.metadata && Number(device.metadata.is_online) === 1 ? 'block':'none'}"
 								>
 									<a class="dropdown-item" onclick="rebootThing('${device.credentials.identity}')">
-										<i class="fa-solid fa-arrows-rotate" style="width: 16px;"></i> 重启
+										<i class="fa-solid fa-power-off" style="width: 16px;"></i> 重启
 									</a>
 								</li>
 								<li 
@@ -1046,7 +1254,7 @@ SPDX-License-Identifier: Apache-2.0 -->
 				}
 
 				//给设备发信息
-				function postMessage(channelID, controlType, thingIdentity) {
+				function postMessage(channelID, controlType, thingIdentity, callback) {
 					const url = window.location.href; // 获取当前页面的URL
 					const address = new URL(url);
 					const port =  sessionStorage.getItem("socketBridgePort") || "63001";
@@ -1068,6 +1276,9 @@ SPDX-License-Identifier: Apache-2.0 -->
 						body: JSON.stringify(queryData),
 					})
 						.then(response => {
+							if (callback && typeof callback === 'function') {
+								callback();
+							}
 							console.log("postMessage: ", response)
 						})
 						.catch((error) => {
@@ -1079,7 +1290,7 @@ SPDX-License-Identifier: Apache-2.0 -->
 				function validateAndSave(property) {
 					const $inputElement = $(`#${property}-deviceNetCfg`);
 					$inputElement.on('change blur keyup', function(event) {
-						const deviceName = $(this).data('device_name');
+						const deviceName = $(this).attr('data-device_name');
 						const deviceInfo = scanNewThingsList.find(item => item.device_name === deviceName);
 						const dhcp_enable = deviceInfo.netcfg.dhcp_enable;
 						const value = $(this).val();

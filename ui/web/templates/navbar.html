@@ -192,7 +192,7 @@ SPDX-License-Identifier: Apache-2.0 -->
         <div class="container-fluid">
             <div class="sidebar-toggle">
                 <!-- Sidebar Toggle (Topbar) -->
-                <button id="sidebarToggleTop" class="btn btn-link d-md-none rounded-circle mr-3 user-item">
+                <button id="sidebarToggleTop" class="btn btn-link d-md-none rounded-circle mr-3 user-item" style="display: none;">
                     <i class="fa fa-bars"></i>
                 </button>
             </div>
@@ -422,24 +422,24 @@ SPDX-License-Identifier: Apache-2.0 -->
        
         // Toggle the side navigation
         // document.querySelectorAll("#sidebarToggle, #sidebarToggleTop")
-        document.querySelectorAll("#sidebarToggleTop").forEach(function (element) {
-            element.addEventListener("click", function (e) {
-                document.body.classList.toggle("sidebar-toggled");
-                document.querySelector(".sidebar").classList.toggle("toggled");
-            });
-        });
+        // document.querySelectorAll("#sidebarToggleTop").forEach(function (element) {
+        //     element.addEventListener("click", function (e) {
+        //         document.body.classList.toggle("sidebar-toggled");
+        //         document.querySelector(".sidebar").classList.toggle("toggled");
+        //     });
+        // });
 
-        // Close any open menu accordions when window is resized below 768px
-        window.addEventListener("resize", function () {
-            // Toggle the side navigation when window is resized below 480px
-            if (
-                window.innerWidth < 480 &&
-                !document.querySelector(".sidebar").classList.contains("toggled")
-            ) {
-                document.body.classList.add("sidebar-toggled");
-                document.querySelector(".sidebar").classList.add("toggled");
-            }
-        });
+        // // Close any open menu accordions when window is resized below 768px
+        // window.addEventListener("resize", function () {
+        //     // Toggle the side navigation when window is resized below 480px
+        //     if (
+        //         window.innerWidth < 480 &&
+        //         !document.querySelector(".sidebar").classList.contains("toggled")
+        //     ) {
+        //         document.body.classList.add("sidebar-toggled");
+        //         document.querySelector(".sidebar").classList.add("toggled");
+        //     }
+        // });
 
         // 创建机构
         function openCreateDomainModal() {
@@ -468,9 +468,7 @@ SPDX-License-Identifier: Apache-2.0 -->
 
         // 切换机构
         function changeDomain() {
-            showConfirmModal("确定要切换机构吗？", () => {
-                changePage('/ui/domains?limit=1000', 'domains');
-            });
+            changePage('/ui/domains?limit=1000', 'domains');
         }
 
         // 切换页面

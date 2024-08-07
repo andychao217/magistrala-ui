@@ -2,7 +2,6 @@
 SPDX-License-Identifier: Apache-2.0 */
 
 html {
-    min-width: 1280px;
     overflow-x: auto;
     overflow-y: hidden;
 }
@@ -154,22 +153,23 @@ html {
     color: #fff !important;
 }
 
-.navbar #sidebarToggleTop {
-    height: 2.5rem;
-    width: 2.5rem;
-}
-
-body.sidebar-toggled {
-    width: 100%;
-}
-
 .main-content {
+    min-width: 1200px;
     margin-left: 12rem;
     margin-top: 4.5rem;
     padding: 1rem;
 }
 
-.sidebar.toggled {
+/* .navbar #sidebarToggleTop {
+    height: 2.5rem;
+    width: 2.5rem;
+} */
+
+/* body.sidebar-toggled {
+    width: 100%;
+} */
+
+/* .sidebar.toggled {
     width: var(--sidebar-min);
     overflow-y: auto;
 }
@@ -257,7 +257,7 @@ body.sidebar-toggled .main-content {
     content: "\f105";
     font-family: "Font Awesome 5 Free";
     margin-left: 0.25rem;
-}
+} */
 
 body .body-button {
     background: var(--main-color);
@@ -1278,6 +1278,9 @@ table > thead > tr > th {
     cursor: pointer;
     border-radius: 5px;
 }
+.moreSettingBtn:hover {
+    box-shadow: 0 3px 6px rgba(0, 0, 0, 0.25);
+}
 .sourceModalList {
     border: thin solid whitesmoke;
     border-top: none;
@@ -1368,4 +1371,67 @@ ul.gj-list img[src="/images/icon_channel.png"] {
     background-repeat: no-repeat;
     background-position-x: left;
     background-position-y: bottom;
+}
+
+/*当前机构标签*/
+.domainTip {
+    font-size: 12px;
+    display: none;
+    position: absolute;
+    right: 0;
+    padding: 0px 5px;
+    background: orange;
+    border-bottom-left-radius: 5px;
+    color: whitesmoke;
+}
+.domainTip.active {
+    display: block;
+}
+
+#deviceNameTitleMoreEditThingModal::before {
+    content: "[";
+    margin-right: 2px;
+}
+
+#deviceNameTitleMoreEditThingModal::after {
+    content: "]";
+    margin-left: 2px;
+}
+
+.moreEditThingModal-sysInfo-label {
+    color: var(--main-color);
+}
+.moreEditThingModal-sysInfo-content {
+    font-family: "Courier New";
+    text-align: right;
+}
+
+#moreEditThingModal-deviceLog {
+    height: 400px; 
+    overflow: auto; 
+    font-size: 14px;
+    width: 430px;
+}
+
+.hoverCard.card.deviceOperation-btn {
+    border-radius: 10px;
+    border: none;
+    width: 100px;
+    height: 120px;
+    margin-right: 10px;
+    padding: 0;
+    color: white;
+}
+.hoverCard.card.deviceOperation-btn.dangerBtn {
+    background: #ff5555;
+}
+.card-body.deviceOperation-btn-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+.deviceOperation-btn-icon {
+    margin-bottom: 15px;
+    font-size: 25px
 }

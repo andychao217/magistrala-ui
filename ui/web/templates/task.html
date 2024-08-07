@@ -746,7 +746,7 @@ SPDX-License-Identifier: Apache-2.0 -->
 				});
 
 				// 开始时间初始化-任务弹框
-				const startTimeFormatter = $(`#startTime`).data("formatter");
+				const startTimeFormatter = $(`#startTime`).attr('data-formatter');
 				jeDate(`#startTime`, {
 					onClose:false,
 					format: startTimeFormatter,
@@ -772,7 +772,7 @@ SPDX-License-Identifier: Apache-2.0 -->
 				});
 				
 				// 结束时间初始化-任务弹框
-				const endTimeFormatter = $(`#endTime`).data("formatter");
+				const endTimeFormatter = $(`#endTime`).attr('data-formatter');
 				jeDate(`#endTime`, {
 					onClose:false,
 					format: endTimeFormatter,
@@ -927,7 +927,7 @@ SPDX-License-Identifier: Apache-2.0 -->
 							queryData = {};
 							successMsg= '日程创建成功';
 						} else {
-							const taskUUID = $('#taskModalConfirmBtn').data("uuid");
+							const taskUUID = $('#taskModalConfirmBtn').attr('data-uuid');
 							const task = originalTaskList.find(task => task.uuid === taskUUID);
 							queryData = {...task};
 							queryData.uuid = taskUUID;
@@ -1391,7 +1391,7 @@ SPDX-License-Identifier: Apache-2.0 -->
 
 				// 遍历所有具有特定类名的元素
 				$('.pignose-calendar-unit-date').each(function() {
-					const dataDate = $(this).data('date');
+					const dataDate = $(this).attr('data-date');
 					const classes = $(this).attr('class').split(' ');
 
 					// 检查类中是否包含 pignose-calendar-unit-active 或 pignose-calendar-unit-first-active
@@ -1642,7 +1642,7 @@ SPDX-License-Identifier: Apache-2.0 -->
 
 			// 启用、禁用任务
 			function enableOrDisableTask(element) {
-				const taskUUID = $(element).data("uuid");
+				const taskUUID = $(element).attr('data-uuid');
 				const task = originalTaskList.find(task => task.uuid === taskUUID);
 				let queryData = {...task}
 				if ($(element).is(':checked')) {
@@ -1655,14 +1655,14 @@ SPDX-License-Identifier: Apache-2.0 -->
 
 			// 播放任务
 			function playTask(element) {
-				const taskUUID = $(element).data("uuid");
+				const taskUUID = $(element).attr('data-uuid');
 				const task = originalTaskList.find(task => task.uuid === taskUUID);
 				controlDevice('taskStart', task);
 			}
 
 			// 停止任务
 			function stopTask(element) {
-				const taskUUID = $(element).data("uuid");
+				const taskUUID = $(element).attr('data-uuid');
 				const task = originalTaskList.find(task => task.uuid === taskUUID);
 				controlDevice('taskStop', task);
 			}
@@ -1670,7 +1670,7 @@ SPDX-License-Identifier: Apache-2.0 -->
 			// 同步任务
 			function syncTask(element) {
 				syncStatusTableList = [];
-				const taskUUID = $(element).data("uuid");
+				const taskUUID = $(element).attr('data-uuid');
 				const task = originalTaskList.find(task => task.uuid === taskUUID);
 				
 				const callback = () => {
@@ -1729,7 +1729,7 @@ SPDX-License-Identifier: Apache-2.0 -->
 
 			// 复制任务
 			function copyTask(element) {
-				const taskUUID = $(element).data("uuid");
+				const taskUUID = $(element).attr('data-uuid');
 				const task = originalTaskList.find(task => task.uuid === taskUUID);
 				const queryData = { path: '', comID: comID, task: task };
 				fetch(`${protocol}//${hostname}:${port}/copyTask`, {
@@ -1759,7 +1759,7 @@ SPDX-License-Identifier: Apache-2.0 -->
 			function editTask(element) {
 				initAddTaskModal();
 
-				const taskUUID = $(element).data("uuid");
+				const taskUUID = $(element).attr('data-uuid');
 				const task = originalTaskList.find(task => task.uuid === taskUUID);
 				$('#taskModalConfirmBtn').attr('data-uuid', taskUUID);
 				$('#taskModalLabel').html('编辑日程');
@@ -1878,7 +1878,7 @@ SPDX-License-Identifier: Apache-2.0 -->
 
 			// 删除任务
 			function deleteTask(element) {
-				const taskUUID = $(element).data("uuid");
+				const taskUUID = $(element).attr('data-uuid');
 				showConfirmModal("确定要删除所选数据吗？", () => {
 					const queryData = { path: '', comID: comID, uuid: taskUUID };
 					fetch(`${protocol}//${hostname}:${port}/deleteTask`, {
