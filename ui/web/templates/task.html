@@ -1520,6 +1520,7 @@ SPDX-License-Identifier: Apache-2.0 -->
 						uuid: "",
 						username: userInfo.credentials.identity,
 						task: {},
+						deviceInfo: {},
 					};
 					fetch(`${protocol}//${hostname}:${port}/controlDevice`, {
 						method: 'POST',
@@ -1539,6 +1540,7 @@ SPDX-License-Identifier: Apache-2.0 -->
 						uuid: task.uuid,
 						username: userInfo.credentials.identity,
 						task: {...task},
+						deviceInfo: {},
 					};
 					delete data.task.running;
 					if (controlType === 'play') {

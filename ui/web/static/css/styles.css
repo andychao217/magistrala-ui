@@ -1277,9 +1277,10 @@ table > thead > tr > th {
     background: whitesmoke;
     cursor: pointer;
     border-radius: 5px;
+    transition: box-shadow 0.3s ease;
 }
 .moreSettingBtn:hover {
-    box-shadow: 0 3px 6px rgba(0, 0, 0, 0.25);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 .sourceModalList {
     border: thin solid whitesmoke;

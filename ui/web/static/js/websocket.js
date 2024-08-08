@@ -117,7 +117,6 @@ function handleThingMessage(data, defaultChannelId) {
         const targetDevice = allThingsListWebsocket.find(device => device.credentials.identity === deviceName);
         if (targetDevice && targetDevice.id) {
             const originalDeviceInfo = targetDevice.metadata?.info || {};
-            const originalDeviceAliase = targetDevice.metadata?.aliase || "";
             const originalDeviceName = targetDevice.name;
 
             if (!_.isEqual(originalDeviceInfo, newDeviceInfo) || originalDeviceName !== newDeviceInfo.device_aliase) {
@@ -125,10 +124,12 @@ function handleThingMessage(data, defaultChannelId) {
                     ...targetDevice,
                     metadata: {
                         ...targetDevice.metadata,
-                        info: { ...newDeviceInfo },
-                        aliase: `${newDeviceInfo.device_aliase}_${splitStringByLastUnderscore(originalDeviceAliase)[1]}`
+                        info: _.cloneDeep(newDeviceInfo),
+                        aliase: `${newDeviceInfo.device_aliase}_${newDeviceInfo.out_channel.channel[0].aliase}`,
+                        out_channel_array: _.cloneDeep(newDeviceInfo.out_channel.channel),
+                        out_channel: `${newDeviceInfo.out_channel.channel.length}` || "0",                      in_channel: newDeviceInfo.in_channel,
                     },
-                    name: newDeviceInfo.device_aliase
+                    name: newDeviceInfo.device_aliase,
                 };
                 httpUpdateThingWebsocket(queryData, defaultChannelId);
             }
@@ -155,6 +156,8 @@ function handleThingMessage(data, defaultChannelId) {
         if (deviceName && deviceInfo) {
             handleDeviceInfoUpdate(deviceName, deviceInfo);
         }
+    } else if (["DEVICE_ALIASE_SET_REPLY", "OUT_CHANNEL_EDIT_REPLY"].includes(data.msgName)) {
+        controlDeviceWebsocket(hostNameWebsocket, defaultChannelId, "deviceInfoGet");
     } else if (data.msgName === "GET_LOG_REPLY") {
         const logs = data.data?.log;
         const logContainer = iframe ? 
@@ -241,7 +244,7 @@ function httpGetAllThingsListWebsocket(host, comID, notifyDevice) {
             const thingsData = JSON.parse(data).thingsData;
             allThingsListWebsocket = thingsData && typeof thingsData === 'object' && 
                 thingsData.things && typeof thingsData.things === 'object' ?  
-                    [...thingsData.things]  : [];
+                    _.cloneDeep(thingsData.things) : [];
             if (allThingsListWebsocket.length && notifyDevice) {
                 const url = window.location.href;
                 if (url.indexOf("things") !== -1) {
@@ -266,6 +269,7 @@ function controlDeviceWebsocket(host, comID, controlType) {
         uuid: "",
         username: userInfoWebsocket.credentials.identity,
         task: {},
+        deviceInfo: {},
     };
     async function processRequests() {
         try {

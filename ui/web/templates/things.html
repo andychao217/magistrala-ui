@@ -31,7 +31,7 @@ SPDX-License-Identifier: Apache-2.0 -->
 										<div class="modal-dialog" role="document">
 											<div class="modal-content" style="width: 580px;">
 												<div class="modal-header">
-													<h1 class="modal-title" id="editThingModalLabel">修改设备</h1>
+													<h1 class="modal-title" id="editThingModalLabel">设备设置</h1>
 													<button 
 														type="button" 
 														class="btn-close" 
@@ -291,7 +291,7 @@ SPDX-License-Identifier: Apache-2.0 -->
 																				<i class="fa-solid fa-power-off"></i>
 																			</div>
 																			<div class="row">
-																				重启设备
+																				设备重启
 																			</div>
 																		</div>
 																	</div>
@@ -304,7 +304,7 @@ SPDX-License-Identifier: Apache-2.0 -->
 																				<i class="fa-solid fa-trash-can"></i>
 																			</div>
 																			<div class="row">
-																				删除设备
+																				设备删除
 																			</div>
 																		</div>
 																	</div>
@@ -513,7 +513,7 @@ SPDX-License-Identifier: Apache-2.0 -->
 																	{{ end }}
 																>
 																	<a class="dropdown-item" onclick="rebootThing('{{ $t.Credentials.Identity }}')">
-																		<i class="fa-solid fa-power-off" style="width: 16px;"></i> 重启
+																		<i class="fa-solid fa-power-off" style="width: 16px;"></i> 设备重启
 																	</a>
 																</li>
 																<li 
@@ -527,12 +527,12 @@ SPDX-License-Identifier: Apache-2.0 -->
 																	{{ end }}
 																>
 																	<a class="dropdown-item" onclick="editThing('{{ $t.ID }}')">
-																		<i class="fa-solid fa-pencil-alt" style="width: 16px;"></i> 修改
+																		<i class="fa-solid fa-gear" style="width: 16px;"></i> 设备设置
 																	</a>
 																</li>
 																<li id="{{ $t.ID }}-deleteBtn">
-																	<a class="dropdown-item" onclick="deleteThing('{{ $t.ID }}')" >
-																		<i class="fa-solid fa-trash-can" style="width: 16px;"></i> 删除
+																	<a class="dropdown-item" onclick="deleteThing('{{ $t.ID }}', true)" >
+																		<i class="fa-solid fa-trash-can" style="width: 16px;"></i> 设备删除
 																	</a>
 																</li>
 															</ul>
@@ -584,7 +584,7 @@ SPDX-License-Identifier: Apache-2.0 -->
                   	scanNewThingsList = [],
                   	selectedNewThingNames = [],
 					intervalRefreshDataThings = null,
-					currentThingsList = [];
+					allThingsList = [];
 				const deviceNetCfgModal = new bootstrap.Modal(document.getElementById("deviceNetCfgModal")),
 					  editThingModal = new bootstrap.Modal(document.getElementById("editThingModal")),
 					  moreEditThingModal= new bootstrap.Modal(document.getElementById("moreEditThingModal")),
@@ -596,6 +596,7 @@ SPDX-License-Identifier: Apache-2.0 -->
 				$(document).ready(function() {
 					sessionStorage.setItem("onlineStatus", onlineStatusValue);
 					getThingsList(onlineStatusValue, false);
+					getAllThingsList();
 
 					// 根据路径参数配置设备状态选中标签
 					if (onlineStatusValue === '1') {
@@ -735,13 +736,14 @@ SPDX-License-Identifier: Apache-2.0 -->
 
 					// 点击更多设置按钮时，切换显示更多设置-设备设置弹框
 					$('#moreSettingEditThingModal').click(function() {
-						const thingID = $('#moreEditThingModal').attr('data-id');
-						console.log("thingID: ", thingID);
-						const originalDevice = currentThingsList.find(thing => thing.id === thingID);
-						console.log("originalDevice: ", originalDevice);
-						initMoreEditThingModal(originalDevice);
-						editThingModal.hide();
-						moreEditThingModal.show();
+						const callback = function() {
+							const thingID = $('#moreEditThingModal').attr('data-id');
+							const originalDevice = allThingsList.find(thing => thing.id === thingID);
+							initMoreEditThingModal(originalDevice);
+							editThingModal.hide();
+							moreEditThingModal.show();
+						}
+						getAllThingsList(callback);
 					});
 
 					// 输入设备名称时，验证以及调整相关数据
@@ -751,29 +753,19 @@ SPDX-License-Identifier: Apache-2.0 -->
 							$(`#deviceNameErrorEditThingModal`).empty();
 							$('#deviceNameErrorEditThingModal').hide();
 							const thingID = $("#editThingModal").attr('data-id');
-							const originalDevice = currentThingsList.find(thing => thing.id === thingID);
+							const originalDevice = allThingsList.find(thing => thing.id === thingID);
 							const originalDeviceAliase = originalDevice.metadata["aliase"] || "";
                     		const originalDeviceName = originalDevice.name;
 							if (originalDeviceName !== newDeviceName && event.type === 'blur') {
-								let queryData = {...originalDevice};
-								queryData.name = newDeviceName;
-								queryData.metadata.info.device_aliase = newDeviceName;
-								queryData.metadata.aliase = newDeviceName + '_' + splitStringByLastUnderscore(originalDeviceAliase)[1];
-								console.log('queryData123: ', queryData);
+								let queryData = {...originalDevice.metadata.info};
+								queryData.device_aliase = newDeviceName;
+								conntrolThing(originalDevice.credentials.identity, "deviceAliaseSet", queryData);
 							}
 						} else {
 							$(`#deviceNameErrorEditThingModal`).html(requiredMsg);
 							$('#deviceNameErrorEditThingModal').show();
 						}
 					});
-
-					// const tabEls = document.querySelectorAll('button[data-bs-toggle="pill"]')
-					// tabEls.forEach(tab => {
-					// 	tab.addEventListener('shown.bs.tab', event => {
-					// 		console.log("event.target: ", event.target);
-					// 		console.log("event.relatedTarget: ", event.relatedTarget)
-					// 	})
-					// })
 				});
 				
 				// 在组件卸载时停止调用
@@ -795,7 +787,7 @@ SPDX-License-Identifier: Apache-2.0 -->
 				}
 
 				//生成输出通道配置项-修改设备弹框
-				function createOutChannelConfig (channel) {
+				function createOutChannelConfig (channel, thingIdentity) {
 					const $channelConfig = $(`
 						<div class="mb-3 row">
 							<label for="out_channel_aliase_${channel.id}" class="col-sm-3 col-form-label">输出名称</label>
@@ -810,6 +802,11 @@ SPDX-License-Identifier: Apache-2.0 -->
 										maxlength="20"
 										value="${channel.aliase}" 
 									/>
+									<div 
+										id="out_channel_aliase_error_${channel.id}" 
+										class="text-danger" 
+										style="margin-top: 10px; color: orangered;"
+									></div>
 								</div>
 								<div style="display: flex; margin-top: 7px;">
 									<input 
@@ -829,27 +826,59 @@ SPDX-License-Identifier: Apache-2.0 -->
 						</div>
 					`);
 					$(`#out_channels_container_EditThingModal`).append($channelConfig);
+
+					$(`#out_channel_aliase_${channel.id}`).on('change blur keyup', function(event) {
+						const out_channel_aliase = $(this).val();
+						console.log("out_channel_aliase 123: ", out_channel_aliase);
+						console.log("channel 123: ", channel);
+						if (out_channel_aliase) {
+							$(`#out_channel_aliase_error_${channel.id}`).empty();
+							$(`#out_channel_aliase_error_${channel.id}`).hide();
+							const queryData = _.cloneDeep(channel);
+							queryData.aliase = out_channel_aliase;
+							if (event.type === 'blur') {
+								conntrolThing(thingIdentity, "deviceOutChannelEdit", {}, queryData);
+							}
+							
+						} else {
+							$(`#out_channel_aliase_error_${channel.id}`).html(requiredMsg);
+							$(`#out_channel_aliase_error_${channel.id}`).show();
+						}
+					});
+
+					$(`#out_channel_volume_${channel.id}`).on('input blur', function(event) {
+						const out_channel_volume = $(this).val();
+						$(`#out_channel_volumeLabel_${channel.id}`).html(out_channel_volume);
+						const queryData = _.cloneDeep(channel);
+						queryData.volume = Number(out_channel_volume);
+						if (event.type === 'blur') {
+							conntrolThing(thingIdentity, "deviceOutChannelEdit", {}, queryData);
+						}
+					});
 				}
 
 				//修改设备
 				function editThing(id) {
-					const originalDevice = currentThingsList.find(thing => thing.id === id);
-					$("#editThingModal").attr("data-id", id);
-					$('#moreEditThingModal').attr("data-id", id);
-					$("#deviceNameEditThingModal").val(originalDevice.name);
-					$('#out_channels_container_EditThingModal').empty();
-					if (
-						originalDevice.metadata && 
-						originalDevice.metadata["info"] && 
-						originalDevice.metadata["info"].out_channel &&
-						originalDevice.metadata["info"].out_channel.channel && 
-						originalDevice.metadata["info"].out_channel.channel.length
-					) {
-						originalDevice.metadata["info"].out_channel.channel.forEach((channel)=>{
-							createOutChannelConfig(channel);
-						});
+					const callback = function () {
+						const originalDevice = allThingsList.find(thing => thing.id === id);
+						$("#editThingModal").attr("data-id", id);
+						$('#moreEditThingModal').attr("data-id", id);
+						$("#deviceNameEditThingModal").val(originalDevice.name);
+						$('#out_channels_container_EditThingModal').empty();
+						if (
+							originalDevice.metadata && 
+							originalDevice.metadata["info"] && 
+							originalDevice.metadata["info"].out_channel &&
+							originalDevice.metadata["info"].out_channel.channel && 
+							originalDevice.metadata["info"].out_channel.channel.length
+						) {
+							originalDevice.metadata["info"].out_channel.channel.forEach((channel)=>{
+								createOutChannelConfig(channel, originalDevice.credentials.identity);
+							});
+						}
+						editThingModal.show();
 					}
-					editThingModal.show();
+					getAllThingsList(callback);
 				}
 
 				//初始化更多设置
@@ -879,7 +908,7 @@ SPDX-License-Identifier: Apache-2.0 -->
 					}
 					
 					//获取日志
-					conntrolThing(device.credentials.identity, "getLog");
+					conntrolThing(device.credentials.identity, "deviceLogGet");
 
 					//设备操作按钮
 					//重启设备
@@ -904,16 +933,20 @@ SPDX-License-Identifier: Apache-2.0 -->
 							moreEditThingModal.show();
 						}
 						moreEditThingModal.hide();
-						deleteThing(device.id, callback, cancelCallback);
+						deleteThing(device.id, true, callback, cancelCallback);
 					});
 					//恢复出厂
 					$('#moreEditThingModal-deviceOperation-resetBtn').on('click', function () {
 						const callback = function () {
 							moreEditThingModal.hide();
 							editThingModal.hide();
+							deleteThing(device.id, false);
+						}
+						const cancelCallback = function () {
+							moreEditThingModal.show();
 						}
 						moreEditThingModal.hide();
-						callback();
+						restoreThing(device.credentials.identity, callback, cancelCallback);
 					});
 				}
 
@@ -923,8 +956,8 @@ SPDX-License-Identifier: Apache-2.0 -->
 				}
 
 				//删除确认，接触通道关联
-				function deleteThing(thingID, callback, cancelCallback) {
-					showConfirmModal("确定要删除所选数据吗？", () => {
+				function deleteThing(thingID, showConfirm, callback, cancelCallback) {
+					const disconnectThenDeleteThing = () => {
 						fetch(`/ui/things/${thingID}/channelsInJSON?page=1&limit=1000`, {
 							method: "GET",
 						})
@@ -946,7 +979,14 @@ SPDX-License-Identifier: Apache-2.0 -->
 										console.error('An error occurred:', error);
 									});
 							});
-					}, cancelCallback);
+					}
+					if (showConfirm) {
+						showConfirmModal("确定要删除所选设备吗？", () => {
+							disconnectThenDeleteThing();
+						}, cancelCallback);
+					} else {
+						disconnectThenDeleteThing();
+					}
 				}
 
 				//删除设备
@@ -979,15 +1019,22 @@ SPDX-License-Identifier: Apache-2.0 -->
 						});
 				}
 
+				//恢复出厂
+				function restoreThing(thingIdentity, callback, cancelCallback) {
+					showConfirmModal("恢复出厂设置后需要重新添加该设备，确认继续？", () => {
+						conntrolThing(thingIdentity, "deviceRestore", {}, {}, callback);
+					}, cancelCallback);
+				}
+
 				//重启设备
 				function rebootThing(thingIdentity, callback, cancelCallback) {
 					showConfirmModal("确定要重启所选设备吗？", () => {
-						conntrolThing(thingIdentity, "deviceReboot", callback);
+						conntrolThing(thingIdentity, "deviceReboot", {}, {}, callback);
 					}, cancelCallback);
 				}
 
 				//控制设备
-				function conntrolThing(thingIdentity, controlType, callback) {
+				function conntrolThing(thingIdentity, controlType, deviceInfo, channelAttr, callback) {
 					const domainID = sessionStorage.getItem("domainID");
 					if (domainID) {
 						fetch(`/ui/domains/${domainID}/domainInJSON`, {
@@ -1004,7 +1051,7 @@ SPDX-License-Identifier: Apache-2.0 -->
 								const domainData = JSON.parse(data).domainData;
 								const comID = domainData.metadata["comID"];
 								if (comID) {
-									postMessage(comID, controlType, thingIdentity, callback);
+									postMessage(comID, controlType, thingIdentity, deviceInfo, channelAttr, callback);
 								}
 							});
 					} else {
@@ -1070,17 +1117,14 @@ SPDX-License-Identifier: Apache-2.0 -->
 									};
 								});
 								updateThingsGrid(things);
-								currentThingsList = [...things];
 							} else {
 								currentDevices = {};
 								$(`#thingsGrid`).empty();
-								currentThingsList = [];
 							};
 						})
 						.catch(error => {
 							currentDevices = {};
 							$(`#thingsGrid`).empty();
-							currentThingsList = [];
 						});
 				}
 				
@@ -1144,7 +1188,7 @@ SPDX-License-Identifier: Apache-2.0 -->
 									style="display: ${device.metadata && Number(device.metadata.is_online) === 1 ? 'block':'none'}"
 								>
 									<a class="dropdown-item" onclick="rebootThing('${device.credentials.identity}')">
-										<i class="fa-solid fa-power-off" style="width: 16px;"></i> 重启
+										<i class="fa-solid fa-power-off" style="width: 16px;"></i> 设备重启
 									</a>
 								</li>
 								<li 
@@ -1152,12 +1196,12 @@ SPDX-License-Identifier: Apache-2.0 -->
 									style="display: ${device.metadata && Number(device.metadata.is_online) === 1 ? 'block':'none'}"
 								>
 									<a class="dropdown-item" onclick="editThing('${device.id}')">
-										<i class="fa-solid fa-pencil-alt" style="width: 16px;"></i> 修改
+										<i class="fa-solid fa-gear" style="width: 16px;"></i> 设备设置
 									</a>
 								</li>
 								<li id="${device.id}-deleteBtn">
-									<a class="dropdown-item" onclick="deleteThing('${device.id}')">
-										<i class="fa-solid fa-trash-can" style="width: 16px;"></i> 删除
+									<a class="dropdown-item" onclick="deleteThing('${device.id}', true)">
+										<i class="fa-solid fa-trash-can" style="width: 16px;"></i> 设备删除
 									</a>
 								</li>
 							</ul>
@@ -1166,20 +1210,20 @@ SPDX-License-Identifier: Apache-2.0 -->
 					const deviceChannelIconDiv = device.metadata && 
 						device.metadata.out_channel_array && 
 						device.metadata.out_channel_array.length > 1 ? 
-						`
-							<div class="row" style="position: absolute; bottom: 40px; padding-left: 24px;">
-								${device.metadata.out_channel_array.map(($o, $i) => {
-									return `<i 
-												class="fa-solid fa-${$i+1} deviceChannelIcon" 
-												data-bs-toggle="tooltip" 
-												data-bs-placement="bottom" 
-												data-bs-title="${$o.aliase}" 
-												title="${$o.aliase}"
-											>
-											</i>`
-								}).join('')}
-							</div>
-						` : ``;
+							`
+								<div class="row" style="position: absolute; bottom: 40px; padding-left: 24px;">
+									${device.metadata.out_channel_array.map(($o, $i) => {
+										return `<i 
+													class="fa-solid fa-${$i+1} deviceChannelIcon" 
+													data-bs-toggle="tooltip" 
+													data-bs-placement="bottom" 
+													data-bs-title="${$o.aliase}" 
+													title="${$o.aliase}"
+												>
+												</i>`
+									}).join('')}
+								</div>
+							` : ``;
 					const $thingCard = $(`
 						<div class="mb-3" id="${device.id}-thingCard" style="width: 20%;">
 							<div class="hoverCard card" id="${device.id}-thingCardContent" >
@@ -1213,7 +1257,7 @@ SPDX-License-Identifier: Apache-2.0 -->
 
 				//根据在线类型获取设备列表
 				function getThingsList(onlineStatus, isRender) {
-					currentDevices = {}, newDevices = {}, currentThingsList = [];;
+					currentDevices = {}, newDevices = {};
 					fetch(`/ui/things/thingsInJSON?limit=1000&onlineStatus=${onlineStatus}`, {
 						method: "GET",
 					})
@@ -1243,7 +1287,6 @@ SPDX-License-Identifier: Apache-2.0 -->
 										updated_at: device.updated_at,
 									};
 								});
-								currentThingsList = [...things];
 								if (isRender) {
 									updateThingsGrid(things);
 								}
@@ -1253,8 +1296,42 @@ SPDX-License-Identifier: Apache-2.0 -->
 						.catch(error => {});
 				}
 
+				// 获取所有设备列表
+				function getAllThingsList(callback) {
+					allThingsList = [];
+					fetch(`/ui/things/thingsInJSON?limit=1000&onlineStatus=2`, {
+						method: "GET",
+					})
+						.then(response => {
+							if (!response.ok) {
+								throw new Error('Network response was not ok');
+							}
+							return response.json(); // 直接将流转换为JSON对象
+						})
+						.then(json => {
+							const data = json.data;
+							const thingsData = JSON.parse(data).thingsData;
+							const things = thingsData.things.filter((thing)=>{
+								//identity 中有下划线则表示为多通道，默认在设备页面隐藏
+								return thing.credentials && !thing.credentials.identity.includes("_");
+							}) || [];
+
+							if (things.length) {
+								allThingsList = _.cloneDeep(things);
+							}
+							if (callback && typeof callback === 'function') {
+								callback();
+							}
+						})
+						.catch(error => {
+							if (callback && typeof callback === 'function') {
+								callback();
+							}
+						});
+				}
+
 				//给设备发信息
-				function postMessage(channelID, controlType, thingIdentity, callback) {
+				function postMessage(channelID, controlType, thingIdentity, deviceInfo, channelAttr, callback) {
 					const url = window.location.href; // 获取当前页面的URL
 					const address = new URL(url);
 					const port =  sessionStorage.getItem("socketBridgePort") || "63001";
@@ -1267,6 +1344,9 @@ SPDX-License-Identifier: Apache-2.0 -->
 						comID: channelID,
 						controlType: controlType,
 						username: userInfo.credentials.identity,
+						task: {},
+						deviceInfo: _.cloneDeep(deviceInfo),
+						channelAttr:  _.cloneDeep(channelAttr)
 					}
 					fetch(`http://${address.hostname}:${port}/controlDevice`, {
 						method: "POST",
