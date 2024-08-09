@@ -1426,6 +1426,12 @@ ul.gj-list img[src="/images/icon_channel.png"] {
 .hoverCard.card.deviceOperation-btn.dangerBtn {
     background: #ff5555;
 }
+.hoverCard.card.deviceOperation-btn.primaryBtn {
+    background: var(--main-color);
+}
+.hoverCard.card.deviceOperation-btn.disabledBtn {
+    background: #73879c;
+}
 .card-body.deviceOperation-btn-container {
     display: flex;
     flex-direction: column;
@@ -1435,4 +1441,7 @@ ul.gj-list img[src="/images/icon_channel.png"] {
 .deviceOperation-btn-icon {
     margin-bottom: 15px;
     font-size: 25px
+}
+.device_more_setting_tab {
+    width: 440px;
 }

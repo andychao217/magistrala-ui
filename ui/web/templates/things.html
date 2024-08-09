@@ -113,15 +113,27 @@ SPDX-License-Identifier: Apache-2.0 -->
 														>
 															<button 
 																class="nav-link active" 
-																id="v-pills-messages-tab" 
+																id="moreEditThingModal-netConfig-tab" 
 																data-bs-toggle="pill" 
-																data-bs-target="#v-pills-messages" 
+																data-bs-target="#moreEditThingModal-netConfig" 
 																type="button" 
 																role="tab" 
-																aria-controls="v-pills-messages" 
+																aria-controls="moreEditThingModal-netConfig" 
 																aria-selected="false"
 															>
-																Messages
+																网络配置
+															</button>
+															<button 
+																class="nav-link" 
+																id="moreEditThingModal-inChannels-tab" 
+																data-bs-toggle="pill" 
+																data-bs-target="#moreEditThingModal-inChannels" 
+																type="button" 
+																role="tab" 
+																aria-controls="moreEditThingModal-inChannels" 
+																aria-selected="false"
+															>
+																输入通道
 															</button>
 															<button 
 																class="nav-link" 
@@ -149,6 +161,18 @@ SPDX-License-Identifier: Apache-2.0 -->
 															</button>
 															<button 
 																class="nav-link" 
+																id="moreEditThingModal-otherOperation-tab" 
+																data-bs-toggle="pill" 
+																data-bs-target="#moreEditThingModal-otherOperation" 
+																type="button" 
+																role="tab" 
+																aria-controls="moreEditThingModal-otherOperation" 
+																aria-selected="true"
+															>
+																其他设置
+															</button>
+															<button 
+																class="nav-link" 
 																id="moreEditThingModal-deviceOperation-tab" 
 																data-bs-toggle="pill" 
 																data-bs-target="#moreEditThingModal-deviceOperation" 
@@ -166,31 +190,43 @@ SPDX-License-Identifier: Apache-2.0 -->
 															style="border-left: thin solid lightgray; padding: 10px 20px;"
 														>
 															<div 
-																class="tab-pane fade show active" 
-																id="v-pills-messages" 
+																class="tab-pane fade show active device_more_setting_tab" 
+																id="moreEditThingModal-netConfig" 
 																role="tabpanel" 
-																aria-labelledby="v-pills-messages-tab" 
+																aria-labelledby="moreEditThingModal-netConfig-tab" 
 																tabindex="0"
 															>
-																...
+																<!-- 网络配置 -->
+																
 															</div>
 															<div 
-																class="tab-pane fade" 
+																class="tab-pane fade device_more_setting_tab" 
+																id="moreEditThingModal-inChannels" 
+																role="tabpanel" 
+																aria-labelledby="moreEditThingModal-inChannels-tab" 
+																tabindex="0"
+															>
+																<!-- 输入通道 -->
+																<div id="in_channels_container_EditThingModal" style="min-height:250px;"></div>
+															</div>
+															<div 
+																class="tab-pane fade device_more_setting_tab" 
 																id="moreEditThingModal-deviceLog" 
 																role="tabpanel" 
 																aria-labelledby="moreEditThingModal-deviceLog-tab" 
 																tabindex="0"
 															>
-																设备日志
+																<!-- 设备日志 -->
 															</div>
 															<div 
-																class="tab-pane fade" 
+																class="tab-pane fade device_more_setting_tab" 
 																id="moreEditThingModal-sysInfo" 
 																role="tabpanel" 
 																aria-labelledby="moreEditThingModal-sysInfo-tab" 
 																tabindex="0"
-																style="width: 430px; font-size: 14px;"
+																style="font-size: 14px;"
 															>
+																<!-- 系统信息 -->
 																<div class="row mb-2">
 																	<div class="col align-self-start moreEditThingModal-sysInfo-label">
 																		固件版本
@@ -274,13 +310,52 @@ SPDX-License-Identifier: Apache-2.0 -->
 															  	</div>
 															</div>
 															<div 
-																class="tab-pane fade" 
+																class="tab-pane fade device_more_setting_tab" 
+																id="moreEditThingModal-otherOperation" 
+																role="tabpanel" 
+																aria-labelledby="moreEditThingModal-otherOperation-tab" 
+																tabindex="0"
+																style="height: 300px;"
+															>
+																<!-- 其他设置 -->
+																<div class="row">
+																	<div
+																		class="hoverCard card deviceOperation-btn primaryBtn"
+																		id="moreEditThingModal-otherOperation-ledBtn"
+																	>
+																		<div class="card-body deviceOperation-btn-container">
+																			<div class="deviceOperation-btn-icon">
+																				<i class="fa-solid fa-lightbulb"></i>
+																			</div>
+																			<div class="row">
+																				状态灯
+																			</div>
+																		</div>
+																	</div>
+																	<div
+																		class="hoverCard card deviceOperation-btn primaryBtn"
+																		id="moreEditThingModal-otherOperation-stereoBtn"
+																	>
+																		<div class="card-body deviceOperation-btn-container">
+																			<div class="deviceOperation-btn-icon">
+																				<i class="fa-solid fa-volume-high"></i>
+																			</div>
+																			<div class="row">
+																				立体声
+																			</div>
+																		</div>
+																	</div>
+																</div>
+															</div>
+															<div 
+																class="tab-pane fade device_more_setting_tab" 
 																id="moreEditThingModal-deviceOperation" 
 																role="tabpanel" 
 																aria-labelledby="moreEditThingModal-deviceOperation-tab" 
 																tabindex="0"
 																style="height: 300px;"
 															>
+																<!-- 设备操作 -->
 																<div class="row">
 																	<div
 																		class="hoverCard card deviceOperation-btn dangerBtn"
@@ -759,17 +834,47 @@ SPDX-License-Identifier: Apache-2.0 -->
 							if (originalDeviceName !== newDeviceName && event.type === 'blur') {
 								let queryData = {...originalDevice.metadata.info};
 								queryData.device_aliase = newDeviceName;
-								conntrolThing(originalDevice.credentials.identity, "deviceAliaseSet", queryData);
+								controlThing(originalDevice.credentials.identity, "deviceAliaseSet", queryData);
 							}
 						} else {
 							$(`#deviceNameErrorEditThingModal`).html(requiredMsg);
 							$('#deviceNameErrorEditThingModal').show();
 						}
 					});
+
+					const tabEls = document.querySelectorAll('button[data-bs-toggle="pill"]');
+					const tabMappings = [
+						{ keyword: 'netConfig', selector: '#moreEditThingModal-netConfig' },
+						{ keyword: 'inChannels', selector: '#moreEditThingModal-inChannels' },
+						{ keyword: 'deviceLog', selector: '#moreEditThingModal-deviceLog' },
+						{ keyword: 'sysInfo', selector: '#moreEditThingModal-sysInfo' },
+						{ keyword: 'otherOperation', selector: '#moreEditThingModal-otherOperation' },
+						{ keyword: 'deviceOperation', selector: '#moreEditThingModal-deviceOperation' }
+					];
+					tabEls.forEach(tab => {
+						tab.addEventListener('shown.bs.tab', event => {
+							const targetID = event.target.id;
+							tabMappings.forEach(mapping => {
+								toggleTabVisibility(mapping.keyword, mapping.selector, targetID);
+							});
+						});
+					});
 				});
 				
 				// 在组件卸载时停止调用
 				window.addEventListener('beforeunload', stopFetchingDataThings);
+
+				//设备更多设置弹框切换tab的显示与隐藏
+				function toggleTabVisibility (keyword, selector, targetID) {
+					const element =	$(selector);
+					if (element) {
+						if (targetID.includes(keyword)) {
+							element.show();
+						} else {
+							element.hide();
+						}
+					}
+				};
 
 				// 停止轮询刷新数据
 				function stopFetchingDataThings() {
@@ -786,24 +891,28 @@ SPDX-License-Identifier: Apache-2.0 -->
 					}
 				}
 
-				//生成输出通道配置项-修改设备弹框
-				function createOutChannelConfig (channel, thingIdentity) {
+				//生成输入、输出通道配置项-修改设备弹框
+				function createChannelConfig (channel, channelType, thingIdentity) {
+					const channelLabel = channelType === "in" ? "输入名称" : "输出名称";
+					const controlType = channelType === "in" ? "deviceInChannelEdit" : "deviceOutChannelEdit";
 					const $channelConfig = $(`
 						<div class="mb-3 row">
-							<label for="out_channel_aliase_${channel.id}" class="col-sm-3 col-form-label">输出名称</label>
+							<label for="${channelType}_channel_aliase_${channel.id}" class="col-sm-3 col-form-label">
+								${channelLabel}
+							</label>
 							<div class="col-sm-9">
 								<div>
 									<input 
 										type="text" 
 										class="form-control name-field" 
-										name="out_channel_aliase_${channel.id}" 
-										id="out_channel_aliase_${channel.id}"
-										placeholder="输出名称" 
+										name="${channelType}_channel_aliase_${channel.id}" 
+										id="${channelType}_channel_aliase_${channel.id}"
+										placeholder="${channelLabel}" 
 										maxlength="20"
 										value="${channel.aliase}" 
 									/>
 									<div 
-										id="out_channel_aliase_error_${channel.id}" 
+										id="${channelType}_channel_aliase_error_${channel.id}" 
 										class="text-danger" 
 										style="margin-top: 10px; color: orangered;"
 									></div>
@@ -816,43 +925,44 @@ SPDX-License-Identifier: Apache-2.0 -->
 										max="15" 
 										step="1" 
 										value="${channel.volume}" 
-										id="out_channel_volume_${channel.id}"
+										id="${channelType}_channel_volume_${channel.id}"
 									/>
-									<div id="out_channel_volumeLabel_${channel.id}" style="text-align: right; width: 30px; line-height: 25px;">
+									<div 
+										id="${channelType}_channel_volumeLabel_${channel.id}" 
+										style="text-align: right; width: 30px; line-height: 25px;"
+									>
 										${channel.volume}
 									</div>
 								</div>
 							</div>
 						</div>
 					`);
-					$(`#out_channels_container_EditThingModal`).append($channelConfig);
+					$(`#${channelType}_channels_container_EditThingModal`).append($channelConfig);
 
-					$(`#out_channel_aliase_${channel.id}`).on('change blur keyup', function(event) {
-						const out_channel_aliase = $(this).val();
-						console.log("out_channel_aliase 123: ", out_channel_aliase);
-						console.log("channel 123: ", channel);
-						if (out_channel_aliase) {
-							$(`#out_channel_aliase_error_${channel.id}`).empty();
-							$(`#out_channel_aliase_error_${channel.id}`).hide();
+					$(`#${channelType}_channel_aliase_${channel.id}`).on('change blur keyup', function(event) {
+						const channel_aliase = $(this).val();
+						if (channel_aliase) {
+							$(`#${channelType}_channel_aliase_error_${channel.id}`).empty();
+							$(`#${channelType}_channel_aliase_error_${channel.id}`).hide();
 							const queryData = _.cloneDeep(channel);
-							queryData.aliase = out_channel_aliase;
+							queryData.aliase = channel_aliase;
 							if (event.type === 'blur') {
-								conntrolThing(thingIdentity, "deviceOutChannelEdit", {}, queryData);
+								controlThing(thingIdentity, controlType, {}, queryData);
 							}
 							
 						} else {
-							$(`#out_channel_aliase_error_${channel.id}`).html(requiredMsg);
-							$(`#out_channel_aliase_error_${channel.id}`).show();
+							$(`#${channelType}_channel_aliase_error_${channel.id}`).html(requiredMsg);
+							$(`#${channelType}_channel_aliase_error_${channel.id}`).show();
 						}
 					});
 
-					$(`#out_channel_volume_${channel.id}`).on('input blur', function(event) {
-						const out_channel_volume = $(this).val();
-						$(`#out_channel_volumeLabel_${channel.id}`).html(out_channel_volume);
+					$(`#${channelType}_channel_volume_${channel.id}`).on('input blur', function(event) {
+						const channel_volume = $(this).val();
+						$(`#${channelType}_channel_volumeLabel_${channel.id}`).html(channel_volume);
 						const queryData = _.cloneDeep(channel);
-						queryData.volume = Number(out_channel_volume);
+						queryData.volume = Number(channel_volume);
 						if (event.type === 'blur') {
-							conntrolThing(thingIdentity, "deviceOutChannelEdit", {}, queryData);
+							controlThing(thingIdentity, controlType, {}, queryData);
 						}
 					});
 				}
@@ -873,7 +983,7 @@ SPDX-License-Identifier: Apache-2.0 -->
 							originalDevice.metadata["info"].out_channel.channel.length
 						) {
 							originalDevice.metadata["info"].out_channel.channel.forEach((channel)=>{
-								createOutChannelConfig(channel, originalDevice.credentials.identity);
+								createChannelConfig(channel, 'out', originalDevice.credentials.identity);
 							});
 						}
 						editThingModal.show();
@@ -891,6 +1001,23 @@ SPDX-License-Identifier: Apache-2.0 -->
 					$(".moreEditThingModal-sysInfo-content").empty();
 					const deviceInfo = _.cloneDeep(device.metadata?.info);
 					if (deviceInfo && !_.isEmpty(deviceInfo)) {
+						$('#in_channels_container_EditThingModal').empty();
+						//输入通道
+						if (
+							deviceInfo.in_channel && 
+							deviceInfo.in_channel.channel && 
+							deviceInfo.in_channel.channel.length
+						) {
+							$('#moreEditThingModal-inChannels-tab').show();
+							$('#moreEditThingModal-inChannels').show();
+							deviceInfo.in_channel.channel.forEach((channel)=>{
+								createChannelConfig(channel, 'in', device.credentials.identity);
+							});
+						} else {
+							$('#moreEditThingModal-inChannels-tab').hide();
+							$('#moreEditThingModal-inChannels').hide();
+						}
+
 						//显示设备信息
 						$("#moreEditThingModal-sysInfo-firmware").html(deviceInfo.sw_version || "");
 						$("#moreEditThingModal-sysInfo-manufacturer").html(deviceInfo.manufacturer || "");
@@ -905,10 +1032,81 @@ SPDX-License-Identifier: Apache-2.0 -->
 						$("#moreEditThingModal-sysInfo-availableVolumn").html(available_capacityStr);
 						$("#moreEditThingModal-sysInfo-wifiMAC").html(deviceInfo.wifi_mac_addr || "");
 						$("#moreEditThingModal-sysInfo-lanMAC").html(deviceInfo.eth_mac_addr || "");
+
+						//其他设置
+						const feature_list = _.cloneDeep(deviceInfo.feature_list);
+						if (feature_list && !_.isEmpty(feature_list)) {
+							$('#moreEditThingModal-otherOperation-tab').show();
+							$('#moreEditThingModal-otherOperation').show();
+
+							// 状态灯、立体声按钮状态显示
+							function toggleButtonState(button, status) {
+								button.data('value', status);
+								if (status) {
+									button.removeClass('disabledBtn').addClass('primaryBtn');
+								} else {
+									button.removeClass('primaryBtn').addClass('disabledBtn');
+								}
+							}
+
+							// 状态灯、立体声按钮初始化
+							function setupButton(button, feature_status, enable_status, controlFunction) {
+								button.show();
+								button.data('value', enable_status);
+								toggleButtonState(button, enable_status);
+
+								button.on('click', function () {
+									const callback = function (status) {
+										moreEditThingModal.show();
+										toggleButtonState(button, status);
+									};
+
+									const cancelCallback = function () {
+										moreEditThingModal.show();
+									};
+
+									moreEditThingModal.hide();
+									showConfirmModal("确定要进行此操作吗，是否继续？", () => {
+										const current_status = Boolean(button.data('value'));
+										controlFunction(!current_status, callback);
+									}, cancelCallback);
+								});
+							}
+							// 状态灯
+							if (feature_list.has_status_led) {
+								setupButton(
+									$('#moreEditThingModal-otherOperation-ledBtn'),
+									feature_list.has_status_led,
+									feature_list.status_led_enable,
+									function(new_status, callback) {
+										controlThing(device.credentials.identity, "deviceLEDSet", {}, {}, new_status, callback(new_status));
+									}
+								);
+							} else {
+								$('#moreEditThingModal-otherOperation-ledBtn').hide();
+							}
+
+							// 立体声
+							if (feature_list.has_stereo) {
+								setupButton(
+									$('#moreEditThingModal-otherOperation-stereoBtn'),
+									feature_list.has_stereo,
+									feature_list.stereo_enable,
+									function(new_status, callback) {
+										controlThing(device.credentials.identity, "deviceStereoSet", {}, {}, new_status, callback(new_status));
+									}
+								);
+							} else {
+								$('#moreEditThingModal-otherOperation-stereoBtn').hide();
+							}
+						} else {
+							$('#moreEditThingModal-otherOperation-tab').hide();
+							$('#moreEditThingModal-otherOperation').hide();
+						}
 					}
 					
 					//获取日志
-					conntrolThing(device.credentials.identity, "deviceLogGet");
+					controlThing(device.credentials.identity, "deviceLogGet");
 
 					//设备操作按钮
 					//重启设备
@@ -1022,19 +1220,19 @@ SPDX-License-Identifier: Apache-2.0 -->
 				//恢复出厂
 				function restoreThing(thingIdentity, callback, cancelCallback) {
 					showConfirmModal("恢复出厂设置后需要重新添加该设备，确认继续？", () => {
-						conntrolThing(thingIdentity, "deviceRestore", {}, {}, callback);
+						controlThing(thingIdentity, "deviceRestore", {}, {}, false, callback);
 					}, cancelCallback);
 				}
 
 				//重启设备
 				function rebootThing(thingIdentity, callback, cancelCallback) {
 					showConfirmModal("确定要重启所选设备吗？", () => {
-						conntrolThing(thingIdentity, "deviceReboot", {}, {}, callback);
+						controlThing(thingIdentity, "deviceReboot", {}, {}, false, callback);
 					}, cancelCallback);
 				}
 
 				//控制设备
-				function conntrolThing(thingIdentity, controlType, deviceInfo, channelAttr, callback) {
+				function controlThing(thingIdentity, controlType, deviceInfo, channelAttr, enabled, callback) {
 					const domainID = sessionStorage.getItem("domainID");
 					if (domainID) {
 						fetch(`/ui/domains/${domainID}/domainInJSON`, {
@@ -1051,7 +1249,7 @@ SPDX-License-Identifier: Apache-2.0 -->
 								const domainData = JSON.parse(data).domainData;
 								const comID = domainData.metadata["comID"];
 								if (comID) {
-									postMessage(comID, controlType, thingIdentity, deviceInfo, channelAttr, callback);
+									postMessage(comID, controlType, thingIdentity, deviceInfo, channelAttr, enabled, callback);
 								}
 							});
 					} else {
@@ -1331,7 +1529,7 @@ SPDX-License-Identifier: Apache-2.0 -->
 				}
 
 				//给设备发信息
-				function postMessage(channelID, controlType, thingIdentity, deviceInfo, channelAttr, callback) {
+				function postMessage(channelID, controlType, thingIdentity, deviceInfo, channelAttr, enabled, callback) {
 					const url = window.location.href; // 获取当前页面的URL
 					const address = new URL(url);
 					const port =  sessionStorage.getItem("socketBridgePort") || "63001";
@@ -1346,7 +1544,8 @@ SPDX-License-Identifier: Apache-2.0 -->
 						username: userInfo.credentials.identity,
 						task: {},
 						deviceInfo: _.cloneDeep(deviceInfo),
-						channelAttr:  _.cloneDeep(channelAttr)
+						channelAttr:  _.cloneDeep(channelAttr),
+						enabled: enabled,
 					}
 					fetch(`http://${address.hostname}:${port}/controlDevice`, {
 						method: "POST",

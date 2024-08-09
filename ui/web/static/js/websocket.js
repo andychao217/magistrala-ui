@@ -156,7 +156,15 @@ function handleThingMessage(data, defaultChannelId) {
         if (deviceName && deviceInfo) {
             handleDeviceInfoUpdate(deviceName, deviceInfo);
         }
-    } else if (["DEVICE_ALIASE_SET_REPLY", "OUT_CHANNEL_EDIT_REPLY"].includes(data.msgName)) {
+    } else if (
+        [
+            "DEVICE_ALIASE_SET_REPLY", 
+            "OUT_CHANNEL_EDIT_REPLY", 
+            "IN_CHANNEL_EDIT_REPLY",
+            "LED_CFG_SET_REPLY",
+            "STEREO_CFG_SET_REPLY"
+        ].includes(data.msgName)
+    ) {
         controlDeviceWebsocket(hostNameWebsocket, defaultChannelId, "deviceInfoGet");
     } else if (data.msgName === "GET_LOG_REPLY") {
         const logs = data.data?.log;
@@ -268,8 +276,6 @@ function controlDeviceWebsocket(host, comID, controlType) {
         controlType: controlType,
         uuid: "",
         username: userInfoWebsocket.credentials.identity,
-        task: {},
-        deviceInfo: {},
     };
     async function processRequests() {
         try {
