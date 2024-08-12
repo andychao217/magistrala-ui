@@ -38,7 +38,7 @@ SPDX-License-Identifier: Apache-2.0 -->
 														data-bs-dismiss="modal" 
 														aria-label="Close" 
 														onclick="
-															$('#deviceNameEditThingModal').attr('data-id', '');
+															$('#deviceNameEditThingModal').attr('data-device_id', '');
 															$('#deviceNameEditThingModal').attr('data-name', '');
 														"
 													></button>
@@ -56,11 +56,7 @@ SPDX-License-Identifier: Apache-2.0 -->
 																	placeholder="设备名称" 
 																	maxlength="20" 
 																/>
-																<div 
-																	id="deviceNameErrorEditThingModal" 
-																	class="text-danger" 
-																	style="margin-top: 10px; color: orangered;"
-																></div>
+																<div id="deviceNameErrorEditThingModal" class="text-danger inputError"></div>
 															</div>
 														</div>
 														<div id="out_channels_container_EditThingModal"></div>
@@ -137,6 +133,30 @@ SPDX-License-Identifier: Apache-2.0 -->
 															</button>
 															<button 
 																class="nav-link" 
+																id="moreEditThingModal-localSpeech-tab" 
+																data-bs-toggle="pill" 
+																data-bs-target="#moreEditThingModal-localSpeech" 
+																type="button" 
+																role="tab" 
+																aria-controls="moreEditThingModal-localSpeech" 
+																aria-selected="false"
+															>
+																本地扩声
+															</button>
+															<button 
+																class="nav-link" 
+																id="moreEditThingModal-bluetooth-tab" 
+																data-bs-toggle="pill" 
+																data-bs-target="#moreEditThingModal-bluetooth" 
+																type="button" 
+																role="tab" 
+																aria-controls="moreEditThingModal-bluetooth" 
+																aria-selected="false"
+															>
+																蓝牙配置
+															</button>
+															<button 
+																class="nav-link" 
 																id="moreEditThingModal-deviceLog-tab" 
 																data-bs-toggle="pill" 
 																data-bs-target="#moreEditThingModal-deviceLog" 
@@ -195,9 +215,108 @@ SPDX-License-Identifier: Apache-2.0 -->
 																role="tabpanel" 
 																aria-labelledby="moreEditThingModal-netConfig-tab" 
 																tabindex="0"
+																style="min-height: 400px;"
 															>
 																<!-- 网络配置 -->
-																
+																<div class="mb-3 row">
+																	<label for="dhcp_enable-moreEditThingModal" class="col-sm-3 col-form-label">设置IP</label>
+																	<div class="col-sm-9">
+																		<div class="btn-group form-conrtol" role="group">
+																			<input 
+																				type="radio" 
+																				class="btn-check" 
+																				name="dhcp_enable-moreEditThingModal" 
+																				id="dhcp_enable-deviceNetCfg-moreEditThingModal-manual" 
+																				autocomplete="off" 
+																				value="0" 
+																				onchange="handleChangeDHCPEnable(this)"
+																			/>
+																			<label class="btn btn-outline-primary" for="dhcp_enable-deviceNetCfg-moreEditThingModal-manual">手动</label>
+																			<input 
+																				type="radio" 
+																				class="btn-check" 
+																				name="dhcp_enable-moreEditThingModal" 
+																				id="dhcp_enable-deviceNetCfg-moreEditThingModal-auto" 
+																				autocomplete="off" 
+																				value="1"
+																				onchange="handleChangeDHCPEnable(this)"
+																			/>
+																			<label class="btn btn-outline-primary" for="dhcp_enable-deviceNetCfg-moreEditThingModal-auto">自动</label>
+																		</div>
+																	</div>
+																</div>
+																<div class="mb-3 row">
+																	<label for="ip-moreEditThingModal" class="col-sm-3 col-form-label">IP地址</label>
+																	<div class="col-sm-9">
+																		<input 
+																			type="text" 
+																			class="form-control" 
+																			name="ip-moreEditThingModal" 
+																			id="ip-deviceNetCfg-moreEditThingModal" 
+																			placeholder="IP地址"
+																		/>
+																		<div id="ipError-moreEditThingModal" class="text-danger inputError"></div>
+																	</div>
+																</div>
+																<div class="mb-3 row">
+																	<label for="gateway-moreEditThingModal" class="col-sm-3 col-form-label">网关</label>
+																	<div class="col-sm-9">
+																		<input 
+																			type="text" 
+																			class="form-control" 
+																			name="gateway-moreEditThingModal" 
+																			id="gateway-deviceNetCfg-moreEditThingModal" 
+																			placeholder="网关"
+																		/>
+																		<div id="gatewayError-moreEditThingModal" class="text-danger inputError"></div>
+																	</div>
+																</div>
+																<div class="mb-3 row">
+																	<label for="netmask-moreEditThingModal" class="col-sm-3 col-form-label">子网掩码</label>
+																	<div class="col-sm-9">
+																		<input 
+																			type="text" 
+																			class="form-control" 
+																			name="netmask-moreEditThingModal" 
+																			id="netmask-deviceNetCfg-moreEditThingModal" 
+																			placeholder="子网掩码" 
+																		/>
+																		<div id="netmaskError-moreEditThingModal" class="text-danger inputError"></div>
+																	</div>
+																</div>
+																<div class="mb-3 row">
+																	<label for="dns1-moreEditThingModal" class="col-sm-3 col-form-label">主DNS</label>
+																	<div class="col-sm-9">
+																		<input 
+																			type="text" 
+																			class="form-control" 
+																			name="dns1-moreEditThingModal" 
+																			id="dns1-deviceNetCfg-moreEditThingModal" 
+																			placeholder="主DNS"
+																		/>
+																		<div id="dns1Error-moreEditThingModal" class="text-danger inputError"></div>
+																	</div>
+																</div>
+																<div class="mb-3 row">
+																	<label for="dns2-moreEditThingModal" class="col-sm-3 col-form-label">从DNS</label>
+																	<div class="col-sm-9">
+																		<input 
+																			type="text" 
+																			class="form-control" 
+																			name="dns2-moreEditThingModal" 
+																			id="dns2-deviceNetCfg-moreEditThingModal" 
+																			placeholder="从DNS" 
+																		/>
+																		<div id="dns2Error-moreEditThingModal" class="text-danger inputError"></div>
+																	</div>
+																</div>
+																<div class="mb-3 row">
+																	<div class="col-sm-9 offset-sm-3">
+																		<button type="button" class="btn body-button" id="deviceNetCfgModal-confirm-button-moreEditThingModal">
+																			<i class="fa-solid fa-floppy-disk"></i> 保存
+																		</button>
+																	</div>
+																</div>
 															</div>
 															<div 
 																class="tab-pane fade device_more_setting_tab" 
@@ -207,7 +326,69 @@ SPDX-License-Identifier: Apache-2.0 -->
 																tabindex="0"
 															>
 																<!-- 输入通道 -->
-																<div id="in_channels_container_EditThingModal" style="min-height:250px;"></div>
+																<div id="in_channels_container_EditThingModal" style="min-height:400px;"></div>
+															</div>
+															<div 
+																class="tab-pane fade device_more_setting_tab" 
+																id="moreEditThingModal-localSpeech" 
+																role="tabpanel" 
+																aria-labelledby="moreEditThingModal-localSpeech-tab" 
+																tabindex="0"
+																style="min-height:400px;"
+															>
+																<!-- 本地扩声 -->
+																<div class="mb-3 row">
+																	<label for="localSpeech-moreEditThingModal" class="col-sm-3 col-form-label">扩声开关</label>
+																	<div class="col-sm-9">
+																		<div class="form-control form-check form-switch" style="border: none;">
+																			<input 
+																				class="form-check-input" 
+																				type="checkbox" 
+																				role="switch" 
+																				name="localSpeech-moreEditThingModal" 
+																				id="localSpeech-moreEditThingModal" 
+																			/>
+																		</div>
+																	</div>
+																</div>
+															</div>
+															<div 
+																class="tab-pane fade device_more_setting_tab" 
+																id="moreEditThingModal-bluetooth" 
+																role="tabpanel" 
+																aria-labelledby="moreEditThingModal-bluetooth-tab" 
+																tabindex="0"
+																style="min-height:400px;"
+															>
+																<!-- 蓝牙配置 -->
+																<div class="mb-3 row">
+																	<label for="bluetooth-player-moreEditThingModal" class="col-sm-3 col-form-label">蓝牙播放器</label>
+																	<div class="col-sm-9">
+																		<div class="form-control form-check form-switch" style="border: none;">
+																			<input 
+																				class="form-check-input" 
+																				type="checkbox" 
+																				role="switch" 
+																				name="bluetooth-player-moreEditThingModal" 
+																				id="bluetooth-player-moreEditThingModal" 
+																			/>
+																		</div>
+																	</div>
+																</div>
+																<div class="mb-3 row">
+																	<label for="bluetooth-whitelist-moreEditThingModal" class="col-sm-3 col-form-label">白名单</label>
+																	<div class="col-sm-9">
+																		<div class="form-control form-check form-switch" style="border: none;">
+																			<input 
+																				class="form-check-input" 
+																				type="checkbox" 
+																				role="switch" 
+																				name="bluetooth-whitelist-moreEditThingModal" 
+																				id="bluetooth-whitelist-moreEditThingModal" 
+																			/>
+																		</div>
+																	</div>
+																</div>
 															</div>
 															<div 
 																class="tab-pane fade device_more_setting_tab" 
@@ -224,7 +405,7 @@ SPDX-License-Identifier: Apache-2.0 -->
 																role="tabpanel" 
 																aria-labelledby="moreEditThingModal-sysInfo-tab" 
 																tabindex="0"
-																style="font-size: 14px;"
+																style="font-size: 14px; height: 400px;"
 															>
 																<!-- 系统信息 -->
 																<div class="row mb-2">
@@ -315,7 +496,7 @@ SPDX-License-Identifier: Apache-2.0 -->
 																role="tabpanel" 
 																aria-labelledby="moreEditThingModal-otherOperation-tab" 
 																tabindex="0"
-																style="height: 300px;"
+																style="height: 400px;"
 															>
 																<!-- 其他设置 -->
 																<div class="row">
@@ -353,7 +534,7 @@ SPDX-License-Identifier: Apache-2.0 -->
 																role="tabpanel" 
 																aria-labelledby="moreEditThingModal-deviceOperation-tab" 
 																tabindex="0"
-																style="height: 300px;"
+																style="height: 400px;"
 															>
 																<!-- 设备操作 -->
 																<div class="row">
@@ -440,6 +621,7 @@ SPDX-License-Identifier: Apache-2.0 -->
 										</div>
                                     </div>
 
+									<!-- 扫描添加-网络配置弹框 -->
                                     <div 
 										class="modal fade" 
 										id="deviceNetCfgModal" 
@@ -454,49 +636,76 @@ SPDX-License-Identifier: Apache-2.0 -->
 											<div class="modal-content">
 												<div class="modal-header">
 													<h1 class="modal-title" id="scanThingsModalLabel">设备设置</h1>
-													<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+													<button 
+														type="button" 
+														class="btn-close" 
+														data-bs-dismiss="modal" 
+														aria-label="Close" 
+														onclick="scanThingsModal.show();"
+													></button>
 												</div>
 												<div class="modal-body">
-												<div class="mb-3">
-													<label for="alias" class="form-label">设备名称</label>
-													<input type="text" class="form-control" name="alias" id="alias-deviceNetCfg" placeholder="设备名称" maxlength="20" />
-													<div id="aliasError" class="text-danger"></div>
-												</div>
-												<div class="mb-3">
-													<label for="dhcp_enable" class="form-label">设置IP</label>
-													<select class="form-control" name="dhcp_enable" id="dhcp_enable-deviceNetCfg">
-														<option value="0">手动</option>
-														<option value="1">自动</option>
-													</select>
-												</div>
-												<div class="mb-3">
-													<label for="ip" class="form-label">IP地址</label>
-													<input type="text" class="form-control" name="ip" id="ip-deviceNetCfg" placeholder="IP地址" />
-													<div id="ipError" class="text-danger"></div>
-												</div>
-												<div class="mb-3">
-													<label for="gateway" class="form-label">网关</label>
-													<input type="text" class="form-control" name="gateway" id="gateway-deviceNetCfg" placeholder="网关" />
-													<div id="gatewayError" class="text-danger"></div>
-												</div>
-												<div class="mb-3">
-													<label for="netmask" class="form-label">子网掩码</label>
-													<input type="text" class="form-control" name="netmask" id="netmask-deviceNetCfg" placeholder="子网掩码" />
-													<div id="netmaskError" class="text-danger"></div>
-												</div>
-												<div class="mb-3">
-													<label for="dns1" class="form-label">主DNS</label>
-													<input type="text" class="form-control" name="dns1" id="dns1-deviceNetCfg" placeholder="主DNS" />
-													<div id="dns1Error" class="text-danger"></div>
-												</div>
-												<div class="mb-3">
-													<label for="dns2" class="form-label">从DNS</label>
-													<input type="text" class="form-control" name="dns2" id="dns2-deviceNetCfg" placeholder="从DNS" />
-													<div id="dns2Error" class="text-danger"></div>
-												</div>
+													<div class="mb-3 row">
+														<label for="alias" class="col-sm-3 col-form-label">设备名称</label>
+														<div class="col-sm-9">
+															<input 
+																type="text" 
+																class="form-control" 
+																name="alias" 
+																id="alias-deviceNetCfg" 
+																placeholder="设备名称" 
+																maxlength="20" 
+															/>
+															<div id="aliasError" class="text-danger inputError"></div>
+														</div>
+													</div>
+													<div class="mb-3 row">
+														<label for="dhcp_enable" class="col-sm-3 col-form-label">设置IP</label>
+														<div class="col-sm-9">
+															<select class="form-control" name="dhcp_enable" id="dhcp_enable-deviceNetCfg">
+																<option value="0">手动</option>
+																<option value="1">自动</option>
+															</select>
+														</div>
+													</div>
+													<div class="mb-3 row">
+														<label for="ip" class="col-sm-3 col-form-label">IP地址</label>
+														<div class="col-sm-9">
+															<input type="text" class="form-control" name="ip" id="ip-deviceNetCfg" placeholder="IP地址" />
+															<div id="ipError" class="text-danger inputError"></div>
+														</div>
+													</div>
+													<div class="mb-3 row">
+														<label for="gateway" class="col-sm-3 col-form-label">网关</label>
+														<div class="col-sm-9">
+															<input type="text" class="form-control" name="gateway" id="gateway-deviceNetCfg" placeholder="网关" />
+															<div id="gatewayError" class="text-danger inputError"></div>
+														</div>
+													</div>
+													<div class="mb-3 row">
+														<label for="netmask" class="col-sm-3 col-form-label">子网掩码</label>
+														<div class="col-sm-9">
+															<input type="text" class="form-control" name="netmask" id="netmask-deviceNetCfg" placeholder="子网掩码" />
+															<div id="netmaskError" class="text-danger inputError"></div>
+														</div>
+													</div>
+													<div class="mb-3 row">
+														<label for="dns1" class="col-sm-3 col-form-label">主DNS</label>
+														<div class="col-sm-9">
+															<input type="text" class="form-control" name="dns1" id="dns1-deviceNetCfg" placeholder="主DNS" />
+															<div id="dns1Error" class="text-danger inputError"></div>
+														</div>
+													</div>
+													<div class="mb-3 row">
+														<label for="dns2" class="col-sm-3 col-form-label">从DNS</label>
+														<div class="col-sm-9">
+															<input type="text" class="form-control" name="dns2" id="dns2-deviceNetCfg" placeholder="从DNS" />
+															<div id="dns2Error" class="text-danger inputError"></div>
+														</div>
+													</div>
 												</div>
 												<div class="modal-footer">
-													<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+													<button type="button" class="btn btn-secondary" data-bs-dismiss="modal" onclick="scanThingsModal.show();">
 														<i class="fa-solid fa-xmark"></i> 取消
 													</button>
 													<button type="button" class="btn body-button" id="deviceNetCfgModal-confirm-button">
@@ -663,6 +872,7 @@ SPDX-License-Identifier: Apache-2.0 -->
 				const deviceNetCfgModal = new bootstrap.Modal(document.getElementById("deviceNetCfgModal")),
 					  editThingModal = new bootstrap.Modal(document.getElementById("editThingModal")),
 					  moreEditThingModal= new bootstrap.Modal(document.getElementById("moreEditThingModal")),
+					  scanThingsModal = new bootstrap.Modal(document.getElementById("scanThingsModal"));
 					  requiredMsg = '不能为空',
 					  url = window.location.href, // 获取当前页面的URL
 					  onlineStatusValue = (url.match(/onlineStatus=(\d+)/) || [])[1] || 
@@ -715,7 +925,7 @@ SPDX-License-Identifier: Apache-2.0 -->
 							netmask = deviceInfo.netcfg.static_netmask, 
 							dns1 = deviceInfo.netcfg.static_dns1, 
 							dns2 = deviceInfo.netcfg.static_dns2,
-							readOnly = false;
+							disabled = false;
 							if (dhcp_enable === "1") {
 								//自动
 								ip = deviceInfo.netcfg.dhcp_ip;
@@ -723,7 +933,7 @@ SPDX-License-Identifier: Apache-2.0 -->
 								netmask = deviceInfo.netcfg.dhcp_netmask;
 								dns1 = deviceInfo.netcfg.dhcp_dns1;
 								dns2 = deviceInfo.netcfg.dhcp_dns2;
-								readOnly = true;
+								disabled = true;
 
 								$('#ipError').empty();
 								$('#gatewayError').empty();
@@ -738,11 +948,11 @@ SPDX-License-Identifier: Apache-2.0 -->
 							$('#dns1-deviceNetCfg').val(dns1);
 							$('#dns2-deviceNetCfg').val(dns2);
 
-							$('#ip-deviceNetCfg').prop('readOnly', readOnly);
-							$('#gateway-deviceNetCfg').prop('readOnly', readOnly);
-							$('#netmask-deviceNetCfg').prop('readOnly', readOnly);
-							$('#dns1-deviceNetCfg').prop('readOnly', readOnly);
-							$('#dns2-deviceNetCfg').prop('readOnly', readOnly);
+							$('#ip-deviceNetCfg').prop('disabled', disabled);
+							$('#gateway-deviceNetCfg').prop('disabled', disabled);
+							$('#netmask-deviceNetCfg').prop('disabled', disabled);
+							$('#dns1-deviceNetCfg').prop('disabled', disabled);
+							$('#dns2-deviceNetCfg').prop('disabled', disabled);
 
 							scanNewThingsList = scanNewThingsList.map((item)=>{
 							if(item.device_name === deviceName) {
@@ -755,7 +965,7 @@ SPDX-License-Identifier: Apache-2.0 -->
 					//搜索添加设备-网络配置-手动-注册所有输入框的验证和保存逻辑
 					const netConfigArray = ['alias', 'ip', 'gateway', 'netmask', 'dns1', 'dns2'];
 					netConfigArray.forEach((config) => {
-						validateAndSave(config);
+						validateAndSave(config, "");
 					});
 
 					//搜索添加设备-网络配置-确认按钮
@@ -799,6 +1009,7 @@ SPDX-License-Identifier: Apache-2.0 -->
 								selectedNewThingNames.push(deviceName);
 							}
 							showNewThingsGrid(scanNewThingsList, selectedNewThingNames);
+							scanThingsModal.show();
 							deviceNetCfgModal.hide();
 						}
 					});
@@ -812,7 +1023,7 @@ SPDX-License-Identifier: Apache-2.0 -->
 					// 点击更多设置按钮时，切换显示更多设置-设备设置弹框
 					$('#moreSettingEditThingModal').click(function() {
 						const callback = function() {
-							const thingID = $('#moreEditThingModal').attr('data-id');
+							const thingID = $('#moreEditThingModal').attr('data-device_id');
 							const originalDevice = allThingsList.find(thing => thing.id === thingID);
 							initMoreEditThingModal(originalDevice);
 							editThingModal.hide();
@@ -827,7 +1038,7 @@ SPDX-License-Identifier: Apache-2.0 -->
 						if (newDeviceName) {
 							$(`#deviceNameErrorEditThingModal`).empty();
 							$('#deviceNameErrorEditThingModal').hide();
-							const thingID = $("#editThingModal").attr('data-id');
+							const thingID = $("#editThingModal").attr('data-device_id');
 							const originalDevice = allThingsList.find(thing => thing.id === thingID);
 							const originalDeviceAliase = originalDevice.metadata["aliase"] || "";
                     		const originalDeviceName = originalDevice.name;
@@ -841,40 +1052,10 @@ SPDX-License-Identifier: Apache-2.0 -->
 							$('#deviceNameErrorEditThingModal').show();
 						}
 					});
-
-					const tabEls = document.querySelectorAll('button[data-bs-toggle="pill"]');
-					const tabMappings = [
-						{ keyword: 'netConfig', selector: '#moreEditThingModal-netConfig' },
-						{ keyword: 'inChannels', selector: '#moreEditThingModal-inChannels' },
-						{ keyword: 'deviceLog', selector: '#moreEditThingModal-deviceLog' },
-						{ keyword: 'sysInfo', selector: '#moreEditThingModal-sysInfo' },
-						{ keyword: 'otherOperation', selector: '#moreEditThingModal-otherOperation' },
-						{ keyword: 'deviceOperation', selector: '#moreEditThingModal-deviceOperation' }
-					];
-					tabEls.forEach(tab => {
-						tab.addEventListener('shown.bs.tab', event => {
-							const targetID = event.target.id;
-							tabMappings.forEach(mapping => {
-								toggleTabVisibility(mapping.keyword, mapping.selector, targetID);
-							});
-						});
-					});
 				});
 				
 				// 在组件卸载时停止调用
 				window.addEventListener('beforeunload', stopFetchingDataThings);
-
-				//设备更多设置弹框切换tab的显示与隐藏
-				function toggleTabVisibility (keyword, selector, targetID) {
-					const element =	$(selector);
-					if (element) {
-						if (targetID.includes(keyword)) {
-							element.show();
-						} else {
-							element.hide();
-						}
-					}
-				};
 
 				// 停止轮询刷新数据
 				function stopFetchingDataThings() {
@@ -911,11 +1092,7 @@ SPDX-License-Identifier: Apache-2.0 -->
 										maxlength="20"
 										value="${channel.aliase}" 
 									/>
-									<div 
-										id="${channelType}_channel_aliase_error_${channel.id}" 
-										class="text-danger" 
-										style="margin-top: 10px; color: orangered;"
-									></div>
+									<div id="${channelType}_channel_aliase_error_${channel.id}" class="text-danger inputError"></div>
 								</div>
 								<div style="display: flex; margin-top: 7px;">
 									<input 
@@ -971,8 +1148,8 @@ SPDX-License-Identifier: Apache-2.0 -->
 				function editThing(id) {
 					const callback = function () {
 						const originalDevice = allThingsList.find(thing => thing.id === id);
-						$("#editThingModal").attr("data-id", id);
-						$('#moreEditThingModal').attr("data-id", id);
+						$("#editThingModal").attr("data-device_id", id);
+						$('#moreEditThingModal').attr("data-device_id", id);
 						$("#deviceNameEditThingModal").val(originalDevice.name);
 						$('#out_channels_container_EditThingModal').empty();
 						if (
@@ -991,6 +1168,47 @@ SPDX-License-Identifier: Apache-2.0 -->
 					getAllThingsList(callback);
 				}
 
+				//修改设备弹框-网络配置-切换手动、自动
+				function handleChangeDHCPEnable(radio) {
+					const deviceID = $(radio).attr("data-device_id");
+					const device = allThingsList.find(thing => thing.id === deviceID);
+					const deviceInfo = _.cloneDeep(device.metadata?.info);
+					const dhcp_enable = Number(radio.value) === 1 ? true : false;
+					let ip = deviceInfo.netcfg.static_ip, 
+							gateway = deviceInfo.netcfg.static_gateway,
+							netmask = deviceInfo.netcfg.static_netmask, 
+							dns1 = deviceInfo.netcfg.static_dns1, 
+							dns2 = deviceInfo.netcfg.static_dns2,
+							disabled = false;
+					if (dhcp_enable) {
+						//自动
+						ip = deviceInfo.netcfg.dhcp_ip;
+						gateway = deviceInfo.netcfg.dhcp_gateway;
+						netmask = deviceInfo.netcfg.dhcp_netmask;
+						dns1 = deviceInfo.netcfg.dhcp_dns1;
+						dns2 = deviceInfo.netcfg.dhcp_dns2;
+						disabled = true;
+
+						$('#ipError-moreEditThingModal').empty();
+						$('#gatewayError-moreEditThingModal').empty();
+						$('#netmaskError-moreEditThingModal').empty();
+						$('#dns1Error-moreEditThingModal').empty();
+						$('#dns2Error-moreEditThingModal').empty();
+					}
+
+					$('#ip-deviceNetCfg-moreEditThingModal').val(ip);
+					$('#gateway-deviceNetCfg-moreEditThingModal').val(gateway);
+					$('#netmask-deviceNetCfg-moreEditThingModal').val(netmask);
+					$('#dns1-deviceNetCfg-moreEditThingModal').val(dns1);
+					$('#dns2-deviceNetCfg-moreEditThingModal').val(dns2);
+
+					$('#ip-deviceNetCfg-moreEditThingModal').prop('disabled', disabled);
+					$('#gateway-deviceNetCfg-moreEditThingModal').prop('disabled', disabled);
+					$('#netmask-deviceNetCfg-moreEditThingModal').prop('disabled', disabled);
+					$('#dns1-deviceNetCfg-moreEditThingModal').prop('disabled', disabled);
+					$('#dns2-deviceNetCfg-moreEditThingModal').prop('disabled', disabled);
+				}
+
 				//初始化更多设置
 				function initMoreEditThingModal(device) {
 					$("#deviceNameTitleMoreEditThingModal").html(device.name || "");
@@ -999,9 +1217,114 @@ SPDX-License-Identifier: Apache-2.0 -->
 					bootstrap.Tab.getInstance(triggerEl).show();
 
 					$(".moreEditThingModal-sysInfo-content").empty();
+					$('#in_channels_container_EditThingModal').empty();
+
 					const deviceInfo = _.cloneDeep(device.metadata?.info);
 					if (deviceInfo && !_.isEmpty(deviceInfo)) {
-						$('#in_channels_container_EditThingModal').empty();
+						//网络设置
+						let ip = deviceInfo.netcfg.static_ip, 
+							gateway = deviceInfo.netcfg.static_gateway,
+							netmask = deviceInfo.netcfg.static_netmask, 
+							dns1 = deviceInfo.netcfg.static_dns1, 
+							dns2 = deviceInfo.netcfg.static_dns2;
+							dhcp_enable = deviceInfo.netcfg.dhcp_enable,
+							disabled = false,
+							deviceID = device.id;
+						if (dhcp_enable) {
+							ip = deviceInfo.netcfg.dhcp_ip;
+							gateway = deviceInfo.netcfg.dhcp_gateway;
+							netmask = deviceInfo.netcfg.dhcp_netmask;
+							dns1 = deviceInfo.netcfg.dhcp_dns1;
+							dns2 = deviceInfo.netcfg.dhcp_dns2;
+							disabled = true;
+							document.getElementById("dhcp_enable-deviceNetCfg-moreEditThingModal-manual").checked = false;
+							document.getElementById("dhcp_enable-deviceNetCfg-moreEditThingModal-auto").checked = true;
+						} else {
+							document.getElementById("dhcp_enable-deviceNetCfg-moreEditThingModal-manual").checked = true;
+							document.getElementById("dhcp_enable-deviceNetCfg-moreEditThingModal-auto").checked = false;
+						}
+
+						$('#ipError-moreEditThingModal').empty();
+						$('#gatewayError-moreEditThingModal').empty();
+						$('#netmaskError-moreEditThingModal').empty();
+						$('#dns1Error-moreEditThingModal').empty();
+						$('#dns2Error-moreEditThingModal').empty();
+						
+						$('#ip-deviceNetCfg-moreEditThingModal').attr('data-device_id', deviceID);
+						$('#gateway-deviceNetCfg-moreEditThingModal').attr('data-device_id', deviceID);
+						$('#netmask-deviceNetCfg-moreEditThingModal').attr('data-device_id', deviceID);
+						$('#dns1-deviceNetCfg-moreEditThingModal').attr('data-device_id', deviceID);
+						$('#dns2-deviceNetCfg-moreEditThingModal').attr('data-device_id', deviceID);
+						$('#dhcp_enable-deviceNetCfg-moreEditThingModal-manual').attr('data-device_id', deviceID);
+						$('#dhcp_enable-deviceNetCfg-moreEditThingModal-auto').attr('data-device_id', deviceID);
+						$('#deviceNetCfgModal-confirm-button-moreEditThingModal').attr('data-device_id', deviceID);
+
+						$('#ip-deviceNetCfg-moreEditThingModal').val(ip);
+						$('#gateway-deviceNetCfg-moreEditThingModal').val(gateway);
+						$('#netmask-deviceNetCfg-moreEditThingModal').val(netmask);
+						$('#dns1-deviceNetCfg-moreEditThingModal').val(dns1);
+						$('#dns2-deviceNetCfg-moreEditThingModal').val(dns2);
+
+						$('#ip-deviceNetCfg-moreEditThingModal').prop('disabled', disabled);
+						$('#gateway-deviceNetCfg-moreEditThingModal').prop('disabled', disabled);
+						$('#netmask-deviceNetCfg-moreEditThingModal').prop('disabled', disabled);
+						$('#dns1-deviceNetCfg-moreEditThingModal').prop('disabled', disabled);
+						$('#dns2-deviceNetCfg-moreEditThingModal').prop('disabled', disabled);
+
+						const netConfigArray = ['ip', 'gateway', 'netmask', 'dns1', 'dns2'];
+						netConfigArray.forEach((config) => {
+							validateAndSave(config, '-moreEditThingModal');
+						});
+
+						//设备网络配置修改-保存按钮
+						$('#deviceNetCfgModal-confirm-button-moreEditThingModal').on('click', function() {
+							const deviceID = $(this).attr('data-device_id');
+							const device = allThingsList.find(thing => thing.id === deviceID);
+							const deviceInfo = _.cloneDeep(device.metadata?.info);
+							const dhcp_enable = document.getElementById("dhcp_enable-deviceNetCfg-moreEditThingModal-auto").checked;
+							let canSave = true;
+
+							function validateAndUpdateError(inputId) {
+								const value =  $(`#${inputId}-deviceNetCfg-moreEditThingModal`).val();
+								if (!IPV4REGX.test(value)) {
+									$(`#${inputId}Error-moreEditThingModal`).html(IPERRORMSG);
+									canSave = false;
+								} else {
+									$(`#${inputId}Error-moreEditThingModal`).empty();
+								}
+							}
+
+							if (!dhcp_enable) {
+								validateAndUpdateError('ip');
+								validateAndUpdateError('gateway');
+								validateAndUpdateError('netmask');
+								validateAndUpdateError('dns1');
+								validateAndUpdateError('dns2');
+							}
+
+							if (canSave) {
+								deviceInfo.netcfg.dhcp_enable = dhcp_enable;
+								if (!dhcp_enable) {
+									deviceInfo.netcfg.static_ip = $(`#ip-deviceNetCfg-moreEditThingModal`).val();
+									deviceInfo.netcfg.static_gateway = $(`#gateway-deviceNetCfg-moreEditThingModal`).val();
+									deviceInfo.netcfg.static_netmask = $(`#netmask-deviceNetCfg-moreEditThingModal`).val();
+									deviceInfo.netcfg.static_dns1 = $(`#dns1-deviceNetCfg-moreEditThingModal`).val();
+									deviceInfo.netcfg.static_dns2 = $(`#dns2-deviceNetCfg-moreEditThingModal`).val();
+								}
+								const cancelCallback = function () {
+									moreEditThingModal.show();
+								};
+								moreEditThingModal.hide();
+								showConfirmModal("修改设备网络配置信息，设备会自动重启，确定要进行此操作吗，是否继续？", () => {
+									const callback = function () {
+										moreEditThingModal.hide();
+										editThingModal.hide();
+									}
+									controlThing(device.credentials.identity, "deviceInfoSet", deviceInfo, {}, false, callback);
+								}, cancelCallback);
+							}
+						});
+
 						//输入通道
 						if (
 							deviceInfo.in_channel && 
@@ -1009,13 +1332,11 @@ SPDX-License-Identifier: Apache-2.0 -->
 							deviceInfo.in_channel.channel.length
 						) {
 							$('#moreEditThingModal-inChannels-tab').show();
-							$('#moreEditThingModal-inChannels').show();
 							deviceInfo.in_channel.channel.forEach((channel)=>{
 								createChannelConfig(channel, 'in', device.credentials.identity);
 							});
 						} else {
 							$('#moreEditThingModal-inChannels-tab').hide();
-							$('#moreEditThingModal-inChannels').hide();
 						}
 
 						//显示设备信息
@@ -1033,75 +1354,98 @@ SPDX-License-Identifier: Apache-2.0 -->
 						$("#moreEditThingModal-sysInfo-wifiMAC").html(deviceInfo.wifi_mac_addr || "");
 						$("#moreEditThingModal-sysInfo-lanMAC").html(deviceInfo.eth_mac_addr || "");
 
+						$('#moreEditThingModal-localSpeech-tab').hide();
+						$('#moreEditThingModal-bluetooth-tab').hide();
+						$('#moreEditThingModal-otherOperation-tab').hide();
 						//其他设置
 						const feature_list = _.cloneDeep(deviceInfo.feature_list);
 						if (feature_list && !_.isEmpty(feature_list)) {
-							$('#moreEditThingModal-otherOperation-tab').show();
-							$('#moreEditThingModal-otherOperation').show();
-
-							// 状态灯、立体声按钮状态显示
-							function toggleButtonState(button, status) {
-								button.data('value', status);
-								if (status) {
-									button.removeClass('disabledBtn').addClass('primaryBtn');
-								} else {
-									button.removeClass('primaryBtn').addClass('disabledBtn');
+							//本地扩声
+							if (feature_list.has_local_speech) {
+								$('#moreEditThingModal-localSpeech-tab').show();
+								$('#localSpeech-moreEditThingModal').prop('checked', false);
+								if (deviceInfo.speech_cfg.speech_enable) {
+									$('#localSpeech-moreEditThingModal').prop('checked', true);
 								}
 							}
 
-							// 状态灯、立体声按钮初始化
-							function setupButton(button, feature_status, enable_status, controlFunction) {
-								button.show();
-								button.data('value', enable_status);
-								toggleButtonState(button, enable_status);
-
-								button.on('click', function () {
-									const callback = function (status) {
-										moreEditThingModal.show();
-										toggleButtonState(button, status);
-									};
-
-									const cancelCallback = function () {
-										moreEditThingModal.show();
-									};
-
-									moreEditThingModal.hide();
-									showConfirmModal("确定要进行此操作吗，是否继续？", () => {
-										const current_status = Boolean(button.data('value'));
-										controlFunction(!current_status, callback);
-									}, cancelCallback);
-								});
+							//蓝牙配置
+							if (feature_list.has_bluetooth_player) {
+								$('#moreEditThingModal-bluetooth-tab').show();
+								$('#bluetooth-player-moreEditThingModal').prop('checked', false);
+								if (deviceInfo.bluetooth_cfg.bluetooth_player_enable) {
+									$('#bluetooth-player-moreEditThingModal').prop('checked', true);
+								}
+								$('#bluetooth-whitelist-moreEditThingModal').prop('checked', false);
+								if (deviceInfo.bluetooth_cfg.whitelist_enable) {
+									$('#bluetooth-whitelist-moreEditThingModal').prop('checked', true);
+								}
 							}
-							// 状态灯
-							if (feature_list.has_status_led) {
-								setupButton(
-									$('#moreEditThingModal-otherOperation-ledBtn'),
-									feature_list.has_status_led,
-									feature_list.status_led_enable,
-									function(new_status, callback) {
-										controlThing(device.credentials.identity, "deviceLEDSet", {}, {}, new_status, callback(new_status));
+
+							if (feature_list.has_status_led || feature_list.has_stereo) {
+								$('#moreEditThingModal-otherOperation-tab').show();
+
+								// 状态灯、立体声按钮状态显示
+								function toggleButtonState(button, status) {
+									button.data('value', status);
+									if (status) {
+										button.removeClass('disabledBtn').addClass('primaryBtn');
+									} else {
+										button.removeClass('primaryBtn').addClass('disabledBtn');
 									}
-								);
-							} else {
-								$('#moreEditThingModal-otherOperation-ledBtn').hide();
-							}
+								}
 
-							// 立体声
-							if (feature_list.has_stereo) {
-								setupButton(
-									$('#moreEditThingModal-otherOperation-stereoBtn'),
-									feature_list.has_stereo,
-									feature_list.stereo_enable,
-									function(new_status, callback) {
-										controlThing(device.credentials.identity, "deviceStereoSet", {}, {}, new_status, callback(new_status));
-									}
-								);
-							} else {
-								$('#moreEditThingModal-otherOperation-stereoBtn').hide();
+								// 状态灯、立体声按钮初始化
+								function setupButton(button, feature_status, enable_status, controlFunction) {
+									button.show();
+									button.data('value', enable_status);
+									toggleButtonState(button, enable_status);
+
+									button.on('click', function () {
+										const callback = function (status) {
+											moreEditThingModal.show();
+											toggleButtonState(button, status);
+										};
+
+										const cancelCallback = function () {
+											moreEditThingModal.show();
+										};
+
+										moreEditThingModal.hide();
+										showConfirmModal("确定要进行此操作吗，是否继续？", () => {
+											const current_status = Boolean(button.data('value'));
+											controlFunction(!current_status, callback);
+										}, cancelCallback);
+									});
+								}
+							
+								// 状态灯
+								if (feature_list.has_status_led) {
+									setupButton(
+										$('#moreEditThingModal-otherOperation-ledBtn'),
+										feature_list.has_status_led,
+										feature_list.status_led_enable,
+										function(new_status, callback) {
+											controlThing(device.credentials.identity, "deviceLEDSet", {}, {}, new_status, callback(new_status));
+										}
+									);
+								} else {
+									$('#moreEditThingModal-otherOperation-ledBtn').hide();
+								}
+								// 立体声
+								if (feature_list.has_stereo) {
+									setupButton(
+										$('#moreEditThingModal-otherOperation-stereoBtn'),
+										feature_list.has_stereo,
+										feature_list.stereo_enable,
+										function(new_status, callback) {
+											controlThing(device.credentials.identity, "deviceStereoSet", {}, {}, new_status, callback(new_status));
+										}
+									);
+								} else {
+									$('#moreEditThingModal-otherOperation-stereoBtn').hide();
+								}
 							}
-						} else {
-							$('#moreEditThingModal-otherOperation-tab').hide();
-							$('#moreEditThingModal-otherOperation').hide();
 						}
 					}
 					
@@ -1566,18 +1910,23 @@ SPDX-License-Identifier: Apache-2.0 -->
 				}
 				
 				//扫描添加设备弹框中手动设置网络信息验证
-				function validateAndSave(property) {
-					const $inputElement = $(`#${property}-deviceNetCfg`);
+				function validateAndSave(property, postfix) {
+					const $inputElement = $(`#${property}-deviceNetCfg${postfix}`);
 					$inputElement.on('change blur keyup', function(event) {
-						const deviceName = $(this).attr('data-device_name');
-						const deviceInfo = scanNewThingsList.find(item => item.device_name === deviceName);
-						const dhcp_enable = deviceInfo.netcfg.dhcp_enable;
+						const deviceName = $(this).attr('data-device_name') || null;
+						const deviceID = $(this).attr('data-device_id') || null;
+						const deviceInfo = postfix ? 
+							allThingsList.find(thing => thing.id === deviceID) : 
+							scanNewThingsList.find(item => item.device_name === deviceName);
+						const dhcp_enable = postfix ?  
+							document.getElementById("dhcp_enable-deviceNetCfg-moreEditThingModal-auto").checked : 
+							deviceInfo.netcfg.dhcp_enable;
 						const value = $(this).val();
-						
+						const $errorElement = $(`#${property}Error${postfix}`);
 						if (property === 'alias') {
 							if (value) {
-								$(`#${property}Error`).empty();
-								if (event.type === 'blur') {
+								$errorElement.empty();
+								if (event.type === 'blur' && !postfix) {
 									scanNewThingsList = scanNewThingsList.map(item => {
 										if (item.device_name === deviceName) {
 											item[`device_aliase`] = value;
@@ -1586,13 +1935,13 @@ SPDX-License-Identifier: Apache-2.0 -->
 									});
 								}
 							} else {
-								$(`#${property}Error`).html('请输入设备名称');
+								$errorElement.html('请输入设备名称');
 							}
 						} else {
 							if (!dhcp_enable) {
 								if (IPV4REGX.test(value)) {
-									$(`#${property}Error`).empty();
-									if (event.type === 'blur') {
+									$errorElement.empty();
+									if (event.type === 'blur' && !postfix) {
 										scanNewThingsList = scanNewThingsList.map(item => {
 											if (item.device_name === deviceName) {
 												item.netcfg[`static_${property}`] = value;
@@ -1601,7 +1950,7 @@ SPDX-License-Identifier: Apache-2.0 -->
 										});
 									}
 								} else {
-									$(`#${property}Error`).html(IPERRORMSG);
+									$errorElement.html(IPERRORMSG);
 								}
 							}
 						}
@@ -1614,6 +1963,7 @@ SPDX-License-Identifier: Apache-2.0 -->
 						// 阻止事件冒泡或默认行为
 						e.stopPropagation();
 					} else {
+						scanThingsModal.hide();
 						deviceNetCfgModal.show();
 
 						$('#aliasError').empty();
@@ -1633,7 +1983,7 @@ SPDX-License-Identifier: Apache-2.0 -->
 							dns1 = deviceInfo.netcfg.static_dns1, 
 							dns2 = deviceInfo.netcfg.static_dns2;
 							dhcp_enable = "0",
-							readOnly = false;
+							disabled = false;
 						if (deviceInfo.netcfg.dhcp_enable) {
 							ip = deviceInfo.netcfg.dhcp_ip;
 							gateway = deviceInfo.netcfg.dhcp_gateway;
@@ -1641,7 +1991,7 @@ SPDX-License-Identifier: Apache-2.0 -->
 							dns1 = deviceInfo.netcfg.dhcp_dns1;
 							dns2 = deviceInfo.netcfg.dhcp_dns2;
 							dhcp_enable = "1";
-							readOnly = true;
+							disabled = true;
 						}
 
 						$('#dhcp_enable-deviceNetCfg').val(dhcp_enable);
@@ -1661,10 +2011,11 @@ SPDX-License-Identifier: Apache-2.0 -->
 						$('#dns1-deviceNetCfg').val(dns1);
 						$('#dns2-deviceNetCfg').val(dns2);
 
-						$('#ip-deviceNetCfg').prop('readOnly', readOnly);
-						$('#gateway-deviceNetCfg').prop('readOnly', readOnly);
-						$('#netmask-deviceNetCfg').prop('readOnly', readOnly);
-						$('#dns1-deviceNetCfg').prop('readOnly', readOnly);
+						$('#ip-deviceNetCfg').prop('disabled', disabled);
+						$('#gateway-deviceNetCfg').prop('disabled', disabled);
+						$('#netmask-deviceNetCfg').prop('disabled', disabled);
+						$('#dns1-deviceNetCfg').prop('disabled', disabled);
+						$('#dns2-deviceNetCfg').prop('disabled', disabled);
 					}
 				}
 
@@ -1718,7 +2069,6 @@ SPDX-License-Identifier: Apache-2.0 -->
 
 				//显示扫描添加设备弹框设备列表
 				function showNewThingsGrid (thingsList, selectedThingsIds) {
-					const scanThingsModal = new bootstrap.Modal(document.getElementById("scanThingsModal"));
 					scanThingsModal.show();
 					$(`#scanThingsGrid`).empty();
 

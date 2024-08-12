@@ -1445,3 +1445,8 @@ ul.gj-list img[src="/images/icon_channel.png"] {
 .device_more_setting_tab {
     width: 440px;
 }
+
+.inputError { 
+    margin-top: 10px; 
+    color: orangered;
+}
