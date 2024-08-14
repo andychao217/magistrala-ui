@@ -162,7 +162,11 @@ function handleThingMessage(data, defaultChannelId) {
             "OUT_CHANNEL_EDIT_REPLY", 
             "IN_CHANNEL_EDIT_REPLY",
             "LED_CFG_SET_REPLY",
-            "STEREO_CFG_SET_REPLY"
+            "STEREO_CFG_SET_REPLY",
+            "SPEECH_CFG_SET_REPLY",
+            "BLUETOOTH_CFG_SET_REPLY",
+            "BLUETOOTH_WHITELIST_ADD_REPLY",
+            "BLUETOOTH_WHITELIST_DELETE_REPLY",
         ].includes(data.msgName)
     ) {
         controlDeviceWebsocket(hostNameWebsocket, defaultChannelId, "deviceInfoGet");
