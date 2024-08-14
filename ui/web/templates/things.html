@@ -428,8 +428,8 @@ SPDX-License-Identifier: Apache-2.0 -->
 															>
 																<!-- 蓝牙配置 -->
 																<div class="mb-3 row">
-																	<label for="bluetooth-player-moreEditThingModal" class="col-sm-3 col-form-label">蓝牙播放器</label>
-																	<div class="col-sm-9">
+																	<label for="bluetooth-player-moreEditThingModal" class="col-sm-4 col-form-label">蓝牙播放器</label>
+																	<div class="col-sm-8">
 																		<div class="form-control form-check form-switch" style="border: none;">
 																			<input 
 																				class="form-check-input" 
@@ -442,22 +442,38 @@ SPDX-License-Identifier: Apache-2.0 -->
 																	</div>
 																</div>
 																<div class="mb-3 row">
-																	<label for="bluetooth-whitelist-enable-moreEditThingModal" class="col-sm-3 col-form-label">白名单</label>
-																	<div class="col-sm-9">
-																		<div class="form-control form-check form-switch" style="border: none;">
-																			<input 
-																				class="form-check-input" 
-																				type="checkbox" 
-																				role="switch" 
-																				name="bluetooth-whitelist-enable-moreEditThingModal" 
-																				id="bluetooth-whitelist-enable-moreEditThingModal" 
-																			/>
-																		</div>
+																	<label for="bluetooth-password-moreEditThingModal" class="col-sm-4 col-form-label">密码</label>
+																	<div class="col-sm-8">
+																		<input 
+																			type="text" 
+																			class="form-control name-field" 
+																			name="bluetooth-password-moreEditThingModal"
+																			id="bluetooth-password-moreEditThingModal"
+																			placeholder="请输入6位蓝牙密码"
+																			maxlength="6" 
+																		/>
+																		<div id="bluetooth-password-moreEditThingModalError" class="text-danger inputError"></div>
 																	</div>
 																</div>
 																<div class="mb-3 row">
-																	<label for="bluetooth-play-area-moreEditThingModal[]" class="col-sm-3 col-form-label">播放区域</label>
-																	<div class="col-sm-9">
+																	<label for="bluetooth_delay-moreEditThingModal" class="col-sm-4 col-form-label">播放延迟(ms)</label>
+																	<div class="col-sm-8">
+																		<input 
+																			type="number" 
+																			class="form-control name-field" 
+																			name="bluetooth_delay-moreEditThingModal"
+																			id="bluetooth_delay-moreEditThingModal"
+																			placeholder="请输入0-1000ms的延迟"
+																			min="0" 
+																			max="1000"
+																			maxlength="4"
+																		/>
+																		<div class="inputError">配置完成后，下次播放生效</div>
+																	</div>
+																</div>
+																<div class="mb-3 row">
+																	<label for="bluetooth-play-area-moreEditThingModal[]" class="col-sm-4 col-form-label">播放区域</label>
+																	<div class="col-sm-8">
 																		<select 
 																			name="bluetooth-play-area-moreEditThingModal[]" 
 																			id="bluetooth-play-area-moreEditThingModal"  
@@ -465,16 +481,6 @@ SPDX-License-Identifier: Apache-2.0 -->
 																			class="bluetooth-play-area-moreEditThingModal"
 																		>
 																		</select>
-																	</div>
-																</div>
-																<div class="mb-3 row" id="bluetooth-whitelist-moreEditThingModal-container">
-																	<label for="bluetooth-whitelist-moreEditThingModal" class="col-sm-3 col-form-label">白名单</label>
-																	<div class="col-sm-9">
-																		<input 
-																			type="text"
-																			name="bluetooth-whitelist-moreEditThingModal" 
-																			id="bluetooth-whitelist-moreEditThingModal"  
-																		/>
 																	</div>
 																</div>
 															</div>
@@ -955,9 +961,7 @@ SPDX-License-Identifier: Apache-2.0 -->
                   	newDevices = {},
                   	scanNewThingsList = [],
                   	selectedNewThingNames = [],
-					intervalRefreshDataThings = null,
 					allThingsList = [];
-					bluetooth_whitelist_tags = [];
 				const deviceNetCfgModal = new bootstrap.Modal(document.getElementById("deviceNetCfgModal")),
 					  editThingModal = new bootstrap.Modal(document.getElementById("editThingModal")),
 					  moreEditThingModal= new bootstrap.Modal(document.getElementById("moreEditThingModal")),
@@ -997,7 +1001,7 @@ SPDX-License-Identifier: Apache-2.0 -->
 						}
 						sessionStorage.setItem("onlineStatus", reqOnlineStatus);
 						window.location.href = `/ui/things?limit=1000&onlineStatus=${reqOnlineStatus}`;
-						stopFetchingDataThings();
+						stopPollingThings();
 						getThingsList(reqOnlineStatus);
 					});
 
@@ -1148,16 +1152,44 @@ SPDX-License-Identifier: Apache-2.0 -->
 					});
 				});
 				
-				// 在组件卸载时停止调用
-				window.addEventListener('beforeunload', stopFetchingDataThings);
+				// 启动轮询
+				function startPollingThings() {
+					return setInterval(refreshThingsData, 2000); // 每5秒轮询一次
+				}
 
-				// 停止轮询刷新数据
-				function stopFetchingDataThings() {
-					if (intervalRefreshDataThings) {
-						clearInterval(intervalRefreshDataThings);
-						intervalRefreshDataThings = null;
+				// 清理并重启轮询
+				function resetPollingThings(intervalId) {
+					clearInterval(intervalId);
+					return startPollingThings();
+				}
+
+				// 停止轮询
+				function stopPollingThings() {
+					if (pollingIntervalIdThings) {
+						clearInterval(pollingIntervalIdThings);
+						pollingIntervalIdThings = null;
 					}
 				}
+
+				// 初始启动轮询
+				let pollingIntervalIdThings = null;
+
+				// 每10分钟清理并重启轮询
+				setInterval(function() {
+					pollingIntervalIdThings = resetPollingThings(pollingIntervalIdThings);
+				}, 10 * 60 * 1000); // 10分钟
+
+				// 在组件卸载时停止调用
+				window.addEventListener('beforeunload', stopPollingThings);
+
+				document.addEventListener('visibilitychange', () => {
+					console.log('visibilitychange things: ', document.visibilityState);
+					if (document.visibilityState === 'hidden') {
+						stopPollingThings();
+					} else {
+						pollingIntervalIdThings = startPollingThings();
+					}
+				});
 
 				//打开弹框
 				function openModal(modal) {
@@ -1466,18 +1498,6 @@ SPDX-License-Identifier: Apache-2.0 -->
 						$('#moreEditThingModal-localSpeech-tab').hide();
 						$('#moreEditThingModal-bluetooth-tab').hide();
 						$('#moreEditThingModal-otherOperation-tab').hide();
-						$('#bluetooth-whitelist-moreEditThingModal-container').empty();
-						const $bluetoothWhitelistDom = $(`
-							<label for="bluetooth-whitelist-moreEditThingModal" class="col-sm-3 col-form-label">白名单</label>
-							<div class="col-sm-9">
-								<input 
-									type="text"
-									name="bluetooth-whitelist-moreEditThingModal" 
-									id="bluetooth-whitelist-moreEditThingModal"  
-								/>
-							</div>
-						`);
-						$('#bluetooth-whitelist-moreEditThingModal-container').append($bluetoothWhitelistDom);
 						//其他设置
 						const feature_list = _.cloneDeep(deviceInfo.feature_list);
 						if (feature_list && !_.isEmpty(feature_list)) {
@@ -1552,13 +1572,15 @@ SPDX-License-Identifier: Apache-2.0 -->
 
 								$('#bluetooth-player-moreEditThingModal').on('change', function () {
 									const bluetooth_player_enable = $(this).is(':checked');
-									const whitelist_enable = $('#bluetooth-whitelist-enable-moreEditThingModal').is(':checked');
 									const play_area_list = $('select[multiple].bluetooth-play-area-moreEditThingModal').val();
+									const bluetooth_delay = $('#bluetooth_delay-moreEditThingModal').val();
+									const password = $('#bluetooth-password-moreEditThingModal').val();
 									const bluetoothCfg = {
 										...deviceInfo.bluetooth_cfg,
 										bluetooth_player_enable,
-										whitelist_enable,
 										play_area: play_area_list.join(','),
+										bluetooth_delay: Number(bluetooth_delay),
+										password,
 									};
 									const data = {
 										controlType:  "deviceBluetoothCfgSet", 
@@ -1569,21 +1591,51 @@ SPDX-License-Identifier: Apache-2.0 -->
 									console.log("changedTag: ", data);
 								});
 
-								//白名单开关
-								$('#bluetooth-whitelist-enable-moreEditThingModal').prop('checked', false);
-								if (deviceInfo.bluetooth_cfg.whitelist_enable) {
-									$('#bluetooth-whitelist-enable-moreEditThingModal').prop('checked', true);
-								}
-
-								$('#bluetooth-whitelist-enable-moreEditThingModal').on('change', function () {
+								//蓝牙密码
+								$('#bluetooth-password-moreEditThingModal').val(deviceInfo.bluetooth_cfg.password);
+								$('#bluetooth-password-moreEditThingModal').on('input change blur', function (event) {
 									const bluetooth_player_enable = $('#bluetooth-player-moreEditThingModal').is(':checked');
-									const whitelist_enable = $(this).is(':checked');
 									const play_area_list = $('select[multiple].bluetooth-play-area-moreEditThingModal').val();
+									const bluetooth_delay = $('#bluetooth_delay-moreEditThingModal').val();
+									const password = $(this).val();
+									if (password) {
+										$(`#bluetooth-password-moreEditThingModalError`).empty();
+										$('#bluetooth-password-moreEditThingModalError').hide();
+										if (event.type === 'blur') {
+											const bluetoothCfg = {
+												...deviceInfo.bluetooth_cfg,
+												bluetooth_player_enable,
+												play_area: play_area_list.join(','),
+												bluetooth_delay: Number(bluetooth_delay),
+												password,
+											};
+											const data = {
+												controlType:  "deviceBluetoothCfgSet", 
+												thingIdentity: device.credentials.identity,
+												bluetoothCfg,
+											}
+											// controlThing(data);
+											console.log("changedTag: ", data);
+										}
+									} else {
+										$(`#bluetooth-password-moreEditThingModalError`).html(requiredMsg);
+										$('#bluetooth-password-moreEditThingModalError').show();
+									}
+								});
+
+								//蓝牙延迟
+								$('#bluetooth_delay-moreEditThingModal').val(deviceInfo.bluetooth_cfg.bluetooth_delay);
+								$('#bluetooth_delay-moreEditThingModal').on('blur', function (event) {
+									const bluetooth_player_enable = $('#bluetooth-player-moreEditThingModal').is(':checked');
+									const play_area_list = $('select[multiple].bluetooth-play-area-moreEditThingModal').val();
+									const bluetooth_delay = $(this).val();
+									const password = $('#bluetooth-password-moreEditThingModal').val();
 									const bluetoothCfg = {
 										...deviceInfo.bluetooth_cfg,
 										bluetooth_player_enable,
-										whitelist_enable,
 										play_area: play_area_list.join(','),
+										bluetooth_delay: Number(bluetooth_delay),
+										password,
 									};
 									const data = {
 										controlType:  "deviceBluetoothCfgSet", 
@@ -1627,13 +1679,15 @@ SPDX-License-Identifier: Apache-2.0 -->
 								}
 								$('select[multiple].bluetooth-play-area-moreEditThingModal').on('change', function () {
 									const bluetooth_player_enable = $('#bluetooth-player-moreEditThingModal').is(':checked');
-									const whitelist_enable = $('#bluetooth-whitelist-enable-moreEditThingModal').is(':checked');
 									const play_area_list = $(this).val();
+									const bluetooth_delay = $('#bluetooth_delay-moreEditThingModal').val();
+									const password = $('#bluetooth-password-moreEditThingModal').val();
 									const bluetoothCfg = {
 										...deviceInfo.bluetooth_cfg,
 										bluetooth_player_enable,
-										whitelist_enable,
 										play_area: play_area_list.join(','),
+										bluetooth_delay: Number(bluetooth_delay),
+										password,
 									};
 									const data = {
 										controlType:  "deviceBluetoothCfgSet", 
@@ -1643,95 +1697,6 @@ SPDX-License-Identifier: Apache-2.0 -->
 									// controlThing(data);
 									console.log("changedTag: ", data);
 								});
-
-								// 对比两个蓝牙白名单数组，找出新增和删除、修改的项
-								function compareWhiteListTags(arr1, arr2) {
-									let count1 = {};
-									let count2 = {};
-
-									// 计算第一个数组中每个项的出现次数
-									for (let item of arr1) {
-										count1[item] = (count1[item] || 0) + 1;
-									}
-
-									// 计算第二个数组中每个项的出现次数
-									for (let item of arr2) {
-										count2[item] = (count2[item] || 0) + 1;
-									}
-
-									// 查找更新的项
-									for (let item in count1) {
-										if (!count2[item] || count1[item] > count2[item]) {
-											// 找到一个在第一个数组中数量多于第二个数组的项，认为这是被删除的
-											for (let newItem in count2) {
-												if (!count1[newItem] || count2[newItem] > count1[newItem]) {
-													// 找到一个在第二个数组中数量多于第一个数组的项，认为这是新增的
-													return { type: "updated", oldItem: item, newItem: newItem };
-												}
-											}
-										}
-									}
-
-									// 查找被删除的项
-									for (let item in count1) {
-										if (!count2[item] || count1[item] > count2[item]) {
-											return { type: "deleted", deletedItem: item };
-										}
-									}
-
-									// 查找新增的项
-									for (let item in count2) {
-										if (!count1[item] || count2[item] > count1[item]) {
-											return { type: "added", addedItem: item };
-										}
-									}
-
-									return null;
-								}
-								bluetooth_whitelist_tags = deviceInfo.bluetooth_whitelist?.whitelist?.map((item) => item.bluetooth_name) || [];
-								$('#bluetooth-whitelist-moreEditThingModal').inputTags({
-									change: function($elem) {
-										const oldWhiteListTags = _.cloneDeep(bluetooth_whitelist_tags);
-										const newWhiteListTags = _.cloneDeep($elem.tags);
-										bluetooth_whitelist_tags = _.cloneDeep($elem.tags);
-										const changedTag = compareWhiteListTags(oldWhiteListTags, newWhiteListTags);
-										if (changedTag) {
-											if (changedTag.type === "deleted") {
-												const bluetoothWhitelist = {bluetooth_name: changedTag.deletedItem, bluetooth_addr: ""};
-												const data = {
-													controlType:  "deviceBluetoothWhitelistDelete", 
-													thingIdentity: device.credentials.identity,
-													bluetoothWhitelist,
-												}
-												// controlThing(data);
-												console.log("changedTag: ", data);
-											} else if (changedTag.type === "added") {
-												const bluetoothWhitelist = {bluetooth_name: changedTag.addedItem, bluetooth_addr: ""}
-												const data = {
-													controlType:  "deviceBluetoothWhitelistAdd", 
-													thingIdentity: device.credentials.identity,
-													bluetoothWhitelist,
-												}
-												// controlThing(data);
-												console.log("changedTag: ", data);
-											}
-										}
-									},
-									minLength: 1,
-									editable: false,
-									max: 20,
-									errors: {
-										empty: '注意，您不能添加空标签。',
-										minLength: '注意，您的标签必须至少有%s个字符。',
-										maxLength: '注意，您的标签不能超过%s个字符。',
-										max: '注意，标签的数量不能超过%s。',
-										email: '注意，您输入的电子邮件地址无效',
-										exists: '注意，这个标签已经存在了!',
-										autocomplete_only: '注意，您必须从列表中选择一个值。',
-										timeout: 5000
-									}
-								});
-								$(".inputTags-field").attr("placeholder", "+");
 							}
 
 							if (feature_list.has_status_led || feature_list.has_stereo) {
@@ -1984,9 +1949,11 @@ SPDX-License-Identifier: Apache-2.0 -->
 					if (onlineStatus) {
 						$(`#${thing.id}-thingCardContent`).css('background', 'white');
 						$(`#${thing.id}-rebootBtn`).css('display', 'block');
+						$(`#${thing.id}-editBtn`).css('display', 'block');
 					} else {
 						$(`#${thing.id}-thingCardContent`).css('background', 'lightgray');
 						$(`#${thing.id}-rebootBtn`).css('display', 'none');
+						$(`#${thing.id}-editBtn`).css('display', 'none');
 					}
 					$(`#${thing.id}-deviceName`).html(thing.name);
 					$(`#${thing.id}-deviceName`).prop("title", thing.name);
@@ -2181,6 +2148,7 @@ SPDX-License-Identifier: Apache-2.0 -->
 						method: "GET",
 					})
 						.then(response => {
+							pollingIntervalIdThings = startPollingThings();
 							if (!response.ok) {
 								throw new Error('Network response was not ok');
 							}
@@ -2210,7 +2178,6 @@ SPDX-License-Identifier: Apache-2.0 -->
 									updateThingsGrid(things);
 								}
 							}
-							intervalRefreshDataThings = setInterval(refreshThingsData, 2000);
 						})
 						.catch(error => {});
 				}

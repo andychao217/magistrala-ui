@@ -7,6 +7,19 @@ const hostNameWebsocket = getHostnameWebsocket(window.location),
       userInfoStrWebsocket = sessionStorage.getItem("userInfo"),
       userInfoWebsocket = JSON.parse(userInfoStrWebsocket);
 
+// 防抖动函数
+function debounce(func, wait) {
+    let timeout;
+    return function () {
+        const context = this, args = arguments;
+        clearTimeout(timeout);
+        timeout = setTimeout(() => func.apply(context, args), wait);
+    };
+}
+
+// 包装后的 httpUpdateThingWebsocket 函数
+const debouncedHttpUpdateThingWebsocket = debounce(httpUpdateThingWebsocket, 100);
+
 // 获取当前网页的域名
 function getHostnameWebsocket(url) {
     const parsedUrl = new URL(url);
@@ -131,7 +144,7 @@ function handleThingMessage(data, defaultChannelId) {
                     },
                     name: newDeviceInfo.device_aliase,
                 };
-                httpUpdateThingWebsocket(queryData, defaultChannelId);
+                debouncedHttpUpdateThingWebsocket(queryData, defaultChannelId);
             }
         }
     };
@@ -215,8 +228,11 @@ function httpGetDomainIdWebsocket() {
     }
 }
 
-// 设置消息监听器
+// 设置消息监听器，只调用一次
+let isMessageListenerSetup = false;
 function setupMessageListener(defaultChannelId) {
+    if (isMessageListenerSetup) return;
+    isMessageListenerSetup = true;
     window.addEventListener("message", function(event) {
         if (event.data.type === 'websocket-message') {
             const data = event.data.data, 

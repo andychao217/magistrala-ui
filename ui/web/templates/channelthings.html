@@ -158,8 +158,7 @@ SPDX-License-Identifier: Apache-2.0 -->
 				let currentDevices = {}, 
 					newDevices = {}, 
 					connectThingsModalList = [],  //关联设备弹框列表
-					selectedThingsIds = [], //关联设备弹框选中id
-					intervalRefreshDataThings = null; 
+					selectedThingsIds = []; //关联设备弹框选中id
 
 				$(document).ready(function() {
 					const currentUrl = window.location.href; // 获取当前页面的URL
@@ -195,7 +194,7 @@ SPDX-License-Identifier: Apache-2.0 -->
 						// 创建URL对象
 						const urlObj = new URL(currentUrl);
 						window.location.href = `${urlObj.pathname}?page=1&limit=1000&onlineStatus=${reqOnlineStatus}`;
-						stopFetchingDataThings();
+						stopPollingChannelThings();
 						getThingsList(reqOnlineStatus);
 					});
 
@@ -242,15 +241,44 @@ SPDX-License-Identifier: Apache-2.0 -->
 					});
 				});
 
-				// 在组件卸载时停止调用
-				window.addEventListener('beforeunload', stopFetchingDataThings);
+				// 启动轮询
+				function startPollingChannelThings() {
+					return setInterval(refreshThingsData, 2000); // 每5秒轮询一次
+				}
 
-				function stopFetchingDataThings() {
-					if (intervalRefreshDataThings) {
-						clearInterval(intervalRefreshDataThings);
-						intervalRefreshDataThings = null;
+				// 清理并重启轮询
+				function resetPollingChannelThings(intervalId) {
+					clearInterval(intervalId);
+					return startPollingChannelThings();
+				}
+
+				// 停止轮询
+				function stopPollingChannelThings() {
+					if (pollingIntervalIdChannelThings) {
+						clearInterval(pollingIntervalIdChannelThings);
+						pollingIntervalIdChannelThings = null;
 					}
 				}
+
+				// 初始启动轮询
+				let pollingIntervalIdChannelThings = null;
+
+				// 每10分钟清理并重启轮询
+				setInterval(function() {
+					pollingIntervalIdChannelThings = resetPollingChannelThings(pollingIntervalIdChannelThings);
+				}, 10 * 60 * 1000); // 10分钟
+
+				// 在组件卸载时停止调用
+				window.addEventListener('beforeunload', stopPollingChannelThings);
+
+				document.addEventListener('visibilitychange', () => {
+					console.log('visibilitychange channelThings: ', document.visibilityState);
+					if (document.visibilityState === 'hidden') {
+						stopPollingChannelThings();
+					} else {
+						pollingIntervalIdChannelThings = startPollingChannelThings();
+					}
+				});
 
 				//关联设备弹框设备列表-勾选设备
 				function onSelectNewThing(e) {
@@ -408,12 +436,10 @@ SPDX-License-Identifier: Apache-2.0 -->
 					const onlineStatus = thing.metadata && thing.metadata.is_online === "1";
 					if (onlineStatus) {
 						$(`#${thing.id}-thingCardContent`).css('background', 'white');
-						$(`#${thing.id}-rebootBtn`).css('display', 'block');
-						$(`#${thing.id}-deleteBtn`).css('display', 'none');
+						// $(`#${thing.id}-rebootBtn`).css('display', 'block');
 					} else {
 						$(`#${thing.id}-thingCardContent`).css('background', 'lightgray');
-						$(`#${thing.id}-rebootBtn`).css('display', 'none');
-						$(`#${thing.id}-deleteBtn`).css('display', 'block');
+						// $(`#${thing.id}-rebootBtn`).css('display', 'none');
 					}
 				}
 
@@ -564,6 +590,7 @@ SPDX-License-Identifier: Apache-2.0 -->
 						method: "GET",
 					})
 						.then(response => {
+							pollingIntervalIdChannelThings = startPollingChannelThings();
 							if (!response.ok) {
 								throw new Error('Network response was not ok');
 							}
@@ -589,7 +616,6 @@ SPDX-License-Identifier: Apache-2.0 -->
 									updateThingsGrid(things);
 								}
 							}
-							intervalRefreshDataThings = setInterval(refreshThingsData, 2000);
 						})
 						.catch(error => {
 							//

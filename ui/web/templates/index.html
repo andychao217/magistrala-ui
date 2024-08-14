@@ -116,7 +116,6 @@ SPDX-License-Identifier: Apache-2.0 -->
 					  enabledGroups = parseInt("{{.Summary.EnabledGroups}}"),
 					  disabledGroups = parseInt("{{.Summary.DisabledGroups}}"),
 					  myChart = echarts.init(document.getElementById('main'));
-				let intervalRefreshDataIndex = null;
 					  
 				// 指定图表的配置项和数据
 				let option = {
@@ -214,17 +213,35 @@ SPDX-License-Identifier: Apache-2.0 -->
 					});
 				}
 
-				intervalRefreshDataIndex = setInterval(refreshThingsPieChart, 2000);
+				// 启动轮询
+				function startPollingIndex() {
+					return setInterval(refreshThingsPieChart, 2000); // 每5秒轮询一次
+				}
 
-				// 在组件卸载时停止调用
-				window.addEventListener('beforeunload', stopFetchingDataIndex);
+				// 清理并重启轮询
+				function resetPollingIndex(intervalId) {
+					clearInterval(intervalId);
+					return startPollingIndex();
+				}
 
-				function stopFetchingDataIndex() {
-					if (intervalRefreshDataIndex) {
-						clearInterval(intervalRefreshDataIndex);
-						intervalRefreshDataIndex = null;
+				// 停止轮询
+				function stopPollingIndex() {
+					if (pollingIntervalIdIndex) {
+						clearInterval(pollingIntervalIdIndex);
+						pollingIntervalIdIndex = null;
 					}
 				}
+
+				// 初始启动轮询
+				let pollingIntervalIdIndex = startPollingIndex();
+
+				// 每10分钟清理并重启轮询
+				setInterval(function() {
+					pollingIntervalIdIndex = resetPollingIndex(pollingIntervalIdIndex);
+				}, 10 * 60 * 1000); // 10分钟
+
+				// 在组件卸载时停止调用
+				window.addEventListener('beforeunload', stopPollingIndex);
             </script>
         </body>
     </html>
