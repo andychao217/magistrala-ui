@@ -175,9 +175,9 @@ SPDX-License-Identifier: Apache-2.0 -->
 											</button>
 										</div>
                                     </div>
-                                    <div class="row">
+                                    <div class="cards-grid">
 										{{ range $i, $c := .Channels }}
-										<div class="mb-3" onclick="viewChannel('{{ $c.ID }}', event)" style="width: 20%;">
+										<div onclick="viewChannel('{{ $c.ID }}', event)">
 											<div class="hoverCard card">
 												<div class="card-body">
 													<div class="row">
@@ -185,7 +185,7 @@ SPDX-License-Identifier: Apache-2.0 -->
 															<img loading="lazy" src="/images/icon_organization_area.svg" class="hoverCardIcon" />
 														</div>
 														<div class="col">
-															<div class="dropdown" style="float: right;">
+															<div class="dropdown" style="float: right;" onclick="event.stopPropagation()">
 																<button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
 																	<i class="fa-solid fa-ellipsis"></i>
 																</button>

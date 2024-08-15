@@ -498,6 +498,8 @@ SPDX-License-Identifier: Apache-2.0 -->
                             iframe.src = curPageUrl;
                             if (stopPollingIndex && typeof stopPollingIndex === 'function') {
                                 stopPollingIndex();
+                                clearInterval(resetPollingIndexInterval);
+					            resetPollingIndexInterval = null;
                             }
                         } else {
                             $iframePageContainer.fadeOut();

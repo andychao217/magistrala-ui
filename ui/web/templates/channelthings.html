@@ -66,9 +66,9 @@ SPDX-License-Identifier: Apache-2.0 -->
 										</div>
                                     </div>
                                     {{ $channelID := .ChannelID }}
-                                    <div class="row" id="thingsGrid">
+                                    <div class="cards-grid" id="thingsGrid">
                                         {{ range $i, $t := .Things }}
-										<div class="mb-3" id="{{ $t.ID }}-thingCard"  style="width: 20%;">
+										<div id="{{ $t.ID }}-thingCard">
 											<div 
 												class="hoverCard card"  
 												id="{{ $t.ID }}-thingCardContent"
@@ -264,12 +264,16 @@ SPDX-License-Identifier: Apache-2.0 -->
 				let pollingIntervalIdChannelThings = null;
 
 				// 每10分钟清理并重启轮询
-				setInterval(function() {
+				let resetPollingChannelThingsInterval = setInterval(function() {
 					pollingIntervalIdChannelThings = resetPollingChannelThings(pollingIntervalIdChannelThings);
 				}, 10 * 60 * 1000); // 10分钟
 
 				// 在组件卸载时停止调用
-				window.addEventListener('beforeunload', stopPollingChannelThings);
+				window.addEventListener('beforeunload', ()=>{
+					stopPollingChannelThings();
+					clearInterval(resetPollingChannelThingsInterval);
+					resetPollingChannelThingsInterval = null;
+				});
 
 				document.addEventListener('visibilitychange', () => {
 					console.log('visibilitychange channelThings: ', document.visibilityState);
@@ -546,7 +550,7 @@ SPDX-License-Identifier: Apache-2.0 -->
 								const thingName = device.metadata.out_channel_array && device.metadata.out_channel_array.length > 1 ? 
 									device.metadata.aliase : device.name;
 								const $thingCard = $(`
-									<div class="mb-3" id="${device.id}-thingCard" style="width: 20%;">
+									<div id="${device.id}-thingCard">
 										<div class="hoverCard card" id="${device.id}-thingCardContent">
 											<div class="card-body">
 												<div class="row">

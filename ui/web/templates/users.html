@@ -183,45 +183,43 @@ SPDX-License-Identifier: Apache-2.0 -->
                                             </button>
                                         </div>
                                     </div>
-                                    <div class="row">
+                                    <div class="cards-grid">
                                         {{ range $i, $u := .Users }}
-                                        <div class="mb-3" style="width: 20%;">
-                                            <div class="hoverCard card">
-                                                <div class="card-body">
-                                                    <div class="row">
-                                                        <div class="col">
-                                                            <i class="fas fa-user"  style="width: 38px; height: 38px;"></i>
-                                                        </div>
-                                                        <div class="col">
-                                                            <div class="dropdown" style="float: right;">
-                                                                <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                                                    <i class="fa-solid fa-ellipsis"></i>
-                                                                </button>
-                                                                <ul class="dropdown-menu">
-                                                                    <!-- <li>
-                                                                        <a class="dropdown-item" onclick="viewUser('{{ $u.ID }}')">
-                                                                            <i class="fa-solid fa-info" style="width: 16px;"></i> 查看
-                                                                        </a>
-                                                                    </li> -->
-                                                                    <li>
-                                                                        <a class="dropdown-item" onclick="editUser('{{ $u.ID }}', '{{ $u.Name }}')">
-                                                                            <i class="fa-solid fa-pencil-alt" style="width: 16px;"></i> 修改
-                                                                        </a>
-                                                                    </li>
-                                                                </ul>
-                                                            </div>
+                                        <div class="hoverCard card">
+                                            <div class="card-body">
+                                                <div class="row">
+                                                    <div class="col">
+                                                        <i class="fas fa-user"  style="width: 38px; height: 38px;"></i>
+                                                    </div>
+                                                    <div class="col">
+                                                        <div class="dropdown" style="float: right;">
+                                                            <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                                                <i class="fa-solid fa-ellipsis"></i>
+                                                            </button>
+                                                            <ul class="dropdown-menu">
+                                                                <!-- <li>
+                                                                    <a class="dropdown-item" onclick="viewUser('{{ $u.ID }}')">
+                                                                        <i class="fa-solid fa-info" style="width: 16px;"></i> 查看
+                                                                    </a>
+                                                                </li> -->
+                                                                <li>
+                                                                    <a class="dropdown-item" onclick="editUser('{{ $u.ID }}', '{{ $u.Name }}')">
+                                                                        <i class="fa-solid fa-pencil-alt" style="width: 16px;"></i> 修改
+                                                                    </a>
+                                                                </li>
+                                                            </ul>
                                                         </div>
                                                     </div>
-                                                    <div class="row">
-                                                        <h5 
-                                                            class="card-title truncate-text"
-                                                            data-bs-toggle="tooltip" 
-                                                            data-bs-placement="bottom" 
-                                                            data-bs-title="{{ $u.Name }}" 
-                                                        >
-                                                            {{ $u.Name }}
-                                                        </h5>
-                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                    <h5 
+                                                        class="card-title truncate-text"
+                                                        data-bs-toggle="tooltip" 
+                                                        data-bs-placement="bottom" 
+                                                        data-bs-title="{{ $u.Name }}" 
+                                                    >
+                                                        {{ $u.Name }}
+                                                    </h5>
                                                 </div>
                                             </div>
                                         </div>

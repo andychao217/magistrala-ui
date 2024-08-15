@@ -314,6 +314,12 @@ body .body-button:hover {
     justify-content: space-between;
 }
 
+.cards-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+    grid-gap: 10px;
+}
+
 .table.table-hover > thead > tr > th {
     background: whitesmoke;
 }
@@ -1314,6 +1320,7 @@ table > thead > tr > th {
     margin-top: -3px; 
     margin-right: 5px;
 }
+.localSpeech-network_speech_area_Box,
 .playAreaBox {
     background: #eee; 
     height: 135px; 

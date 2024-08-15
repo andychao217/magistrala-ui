@@ -236,12 +236,16 @@ SPDX-License-Identifier: Apache-2.0 -->
 				let pollingIntervalIdIndex = startPollingIndex();
 
 				// 每10分钟清理并重启轮询
-				setInterval(function() {
+				let resetPollingIndexInterval = setInterval(function() {
 					pollingIntervalIdIndex = resetPollingIndex(pollingIntervalIdIndex);
 				}, 10 * 60 * 1000); // 10分钟
 
 				// 在组件卸载时停止调用
-				window.addEventListener('beforeunload', stopPollingIndex);
+				window.addEventListener('beforeunload', ()=>{
+					stopPollingIndex();
+					clearInterval(resetPollingIndexInterval);
+					resetPollingIndexInterval = null;
+				});
             </script>
         </body>
     </html>

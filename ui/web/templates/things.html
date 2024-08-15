@@ -310,8 +310,8 @@ SPDX-License-Identifier: Apache-2.0 -->
 																		<div id="dns2Error-moreEditThingModal" class="text-danger inputError"></div>
 																	</div>
 																</div>
-																<div class="mb-3 row">
-																	<div class="col-sm-9 offset-sm-3">
+																<div class="mb-3 row" style="text-align: center;">
+																	<div>
 																		<button type="button" class="btn body-button" id="deviceNetCfgModal-confirm-button-moreEditThingModal">
 																			<i class="fa-solid fa-floppy-disk"></i> 保存
 																		</button>
@@ -336,7 +336,7 @@ SPDX-License-Identifier: Apache-2.0 -->
 																tabindex="0"
 																style="min-height:400px;"
 															>
-																<!-- 本地扩声 -->
+																<!-- 扩声 -->
 																<div class="mb-3 row">
 																	<label for="localSpeech-moreEditThingModal" class="col-sm-3 col-form-label">扩声开关</label>
 																	<div class="col-sm-9">
@@ -361,6 +361,51 @@ SPDX-License-Identifier: Apache-2.0 -->
 																			class="localSpeech-local_speech_area-moreEditThingModal"
 																		>
 																		</select>
+																	</div>
+																</div>
+																<div class="mb-3 row" id="localSpeech-network_speech-moreEditThingModal-container" style="display: none;">
+																	<label for="localSpeech-network_speech-moreEditThingModal" class="col-sm-3 col-form-label">网络扩声</label>
+																	<div class="col-sm-9">
+																		<div class="form-control form-check form-switch" style="border: none;">
+																			<input 
+																				class="form-check-input" 
+																				type="checkbox" 
+																				role="switch" 
+																				name="localSpeech-network_speech-moreEditThingModal" 
+																				id="localSpeech-network_speech-moreEditThingModal" 
+																			/>
+																		</div>
+																	</div>
+																</div>
+																<div class="mb-3 row" id="localSpeech-network_speech_area-moreEditThingModal-container" style="display: none;">
+																	<label for="localSpeech-network_speech_area-moreEditThingModal" class="col-sm-3 col-form-label">广播区域</label>
+																	<div class="col-sm-9">
+																		<div class="localSpeech-network_speech_area_Box">
+																			<div class="row g-1" style="margin-bottom: 5px;">
+																				<div class="d-grid col-sm-6">
+																					<button 
+																						type="button" 
+																						class="btn btn-light" 
+																						style="color: dodgerblue;" 
+																						id="network_speech_areas_add_btn"
+																					>
+																						<i class="fa-solid fa-plus"></i> 添加
+																					</button>
+																				</div>
+																				<div class="d-grid col-sm-6">
+																					<button 
+																						type="button" 
+																						class="btn btn-light" 
+																						style="color: dimgray;" 
+																						id="network_speech_areas_detail_btn"
+																					>
+																						<i class="fa-solid fa-ellipsis"></i> 详情
+																					</button>
+																				</div>
+																			</div>
+																			<div class="row row-cols-6 g-1" id="network_speech_area_list_container"></div>
+																		</div>
+																		<div id="localSpeech-network_speech_area_Error" class="text-danger" style="margin-top: 10px;"></div>
 																	</div>
 																</div>
 																<div class="mb-3 row">
@@ -415,6 +460,13 @@ SPDX-License-Identifier: Apache-2.0 -->
 																			>
 																			</div>
 																		</div>
+																	</div>
+																</div>
+																<div class="mb-3 row" style="text-align: center;">
+																	<div>
+																		<button type="button" class="btn body-button" id="localSpeech-confirm-button-moreEditThingModal">
+																			<i class="fa-solid fa-floppy-disk"></i> 保存
+																		</button>
 																	</div>
 																</div>
 															</div>
@@ -680,6 +732,82 @@ SPDX-License-Identifier: Apache-2.0 -->
 										</div>
 									</div>
 
+									<!-- 广播区域详情弹框 -->
+									<div 
+										class="modal fade" 
+										id="networkSpeechAreasAddModal" 
+										tabindex="-1" 
+										role="dialog" 
+										aria-labelledby="network_speech_areas_AddModalLabel" 
+										aria-hidden="true"
+										data-bs-backdrop="static" 
+										data-bs-keyboard="false"  
+									>
+										<div class="modal-dialog" role="document">
+											<div class="modal-content" style="width: 580px;">
+												<div class="modal-header">
+													<h1 class="modal-title" id="networkSpeechAreasAddModal">广播区域</h1>
+													<button type="button" 
+														class="btn-close" 
+														data-bs-dismiss="modal" 
+														aria-label="Close" 
+														onclick="closeNetworkSpeechAreasAddModal();"
+													></button>
+												</div>
+												<div class="modal-body">
+													<div class="mb-3" style="max-height: 400px; overflow-y: auto;">
+														<div id="network_speech_area_tree"></div>
+													</div>
+													<div class="modal-footer">
+														<button 
+															type="button" 
+															class="btn btn-secondary" 
+															data-bs-dismiss="modal" 
+															onclick="closeNetworkSpeechAreasAddModal();"
+														>
+															<i class="fa-solid fa-xmark"></i> 取消
+														</button>
+														<button type="button" class="btn body-button" id="confirm_network_speech_areas_AddModalBtn">
+															<i class="fa-solid fa-floppy-disk"></i> 确定
+														</button>
+													</div>
+												</div>
+											</div>
+										</div>
+									</div>
+
+									<!-- 播放区域详情弹框 -->
+									<div 
+										class="modal fade" 
+										id="networkSpeechAreasDetailModal" 
+										tabindex="-1" 
+										role="dialog" 
+										aria-labelledby="network_speech_areas_detail_modal_label" 
+										aria-hidden="true"
+										data-bs-backdrop="static" 
+										data-bs-keyboard="false"  
+									>
+										<div class="modal-dialog" role="document">
+											<div class="modal-content" style="width: 580px;">
+												<div class="modal-header">
+													<h1 class="modal-title" id="networkSpeechAreasDetailModal">广播区域</h1>
+													<button 
+														type="button" 
+														class="btn-close" 
+														data-bs-dismiss="modal" 
+														aria-label="Close" 
+														onclick="moreEditThingModal.show();"
+													></button>
+												</div>
+												<div class="modal-body">
+													<div class="mb-3" style="max-height: 400px; overflow-y: auto;">
+														<div class="row row-cols-4 g-3" id="network_speech_areas_detail_list_container"></div>
+													</div>
+												</div>
+											</div>
+										</div>
+									</div>
+
                                     <!-- 扫描添加设备弹框 -->
                                     <div 
 										class="modal fade" 
@@ -828,9 +956,9 @@ SPDX-License-Identifier: Apache-2.0 -->
 											<label class="btn btn-outline-primary" for="btnOffline">离线</label>
 										</div>
 									</div>
-									<div class="row" id="thingsGrid">
+									<div class="cards-grid" id="thingsGrid">
 										{{ range $i, $t := .Things }}
-										<div class="mb-3" id="{{ $t.ID }}-thingCard" style="width: 20%;">
+										<div id="{{ $t.ID }}-thingCard">
 											<div 
 												class="hoverCard card"  
 												id="{{ $t.ID }}-thingCardContent"
@@ -961,10 +1089,14 @@ SPDX-License-Identifier: Apache-2.0 -->
                   	newDevices = {},
                   	scanNewThingsList = [],
                   	selectedNewThingNames = [],
-					allThingsList = [];
+					allThingsList = [],
+					network_speech_area_treeData = [], // 播放区域树数据
+					selected_network_speech_areas = []; //设备设置-选中的网络扩声区域;
 				const deviceNetCfgModal = new bootstrap.Modal(document.getElementById("deviceNetCfgModal")),
 					  editThingModal = new bootstrap.Modal(document.getElementById("editThingModal")),
 					  moreEditThingModal= new bootstrap.Modal(document.getElementById("moreEditThingModal")),
+					  networkSpeechAreasAddModal = new bootstrap.Modal(document.getElementById("networkSpeechAreasAddModal")), // 新增广播区域弹框
+					  networkSpeechAreasDetailModal = new bootstrap.Modal(document.getElementById("networkSpeechAreasDetailModal")), // 广播区域详情弹框
 					  scanThingsModal = new bootstrap.Modal(document.getElementById("scanThingsModal"));
 					  requiredMsg = '不能为空',
 					  url = window.location.href, // 获取当前页面的URL
@@ -1175,15 +1307,18 @@ SPDX-License-Identifier: Apache-2.0 -->
 				let pollingIntervalIdThings = null;
 
 				// 每10分钟清理并重启轮询
-				setInterval(function() {
+				let resetPollingThingsInterval = setInterval(function() {
 					pollingIntervalIdThings = resetPollingThings(pollingIntervalIdThings);
 				}, 10 * 60 * 1000); // 10分钟
 
 				// 在组件卸载时停止调用
-				window.addEventListener('beforeunload', stopPollingThings);
+				window.addEventListener('beforeunload', ()=>{
+					stopPollingThings();
+					clearInterval(resetPollingThingsInterval);
+					resetPollingThingsInterval = null;
+				});
 
 				document.addEventListener('visibilitychange', () => {
-					console.log('visibilitychange things: ', document.visibilityState);
 					if (document.visibilityState === 'hidden') {
 						stopPollingThings();
 					} else {
@@ -1343,6 +1478,195 @@ SPDX-License-Identifier: Apache-2.0 -->
 					$('#netmask-deviceNetCfg-moreEditThingModal').prop('disabled', disabled);
 					$('#dns1-deviceNetCfg-moreEditThingModal').prop('disabled', disabled);
 					$('#dns2-deviceNetCfg-moreEditThingModal').prop('disabled', disabled);
+				}
+
+				// 获取组装扩声区域设备树-扩声区域弹框
+				function getNetworkSpeechAreaTree() {
+					network_speech_area_treeData = [{
+						id: "root",
+						key: 'group_root',
+						text: "全部",
+						flagUrl: null,
+						children: [
+							{
+								id: "unassigned",
+								key: "group_unassigned",
+								text: "未分区",
+								flagUrl: "/images/icon_organization_area.svg",
+								metadata: {
+									"thing_ids": []
+								},
+								children: []
+							},
+						]
+					}];
+					allThingsList = [];
+					// 获取所有设备
+					fetch(`/ui/things/thingsInJSON?page=1&limit=1000&onlineStatus=2`, {
+						method: "GET",
+					})
+						.then(response => {
+							if (!response.ok) {
+								throw new Error('Network response was not ok');
+							}
+							return response.json(); // 直接将流转换为JSON对象
+						})
+						.then(json => {
+							const data = json.data;
+							const thingsData = JSON.parse(data).thingsData;
+							const things = thingsData.things;
+							if (things.length) {
+								allThingsList = things.map((thing) => thing);
+							}
+							// 获取所有分区
+							fetch(`/ui/channels/channelsInJSON?page=1&limit=1000`, {
+								method: "GET",
+							})
+								.then((response) => {
+									if (!response.ok) {
+										throw new Error("Network response was not ok");
+									}
+									return response.json(); // 直接将流转换为JSON对象
+								})
+								.then((json) => {
+									const data = json.data;
+									const channelsData = JSON.parse(data).channelsData;
+									const channels = channelsData.groups;
+									if (channels.length) {
+										channels.forEach((channel) => {
+											const channelNode = {
+												id: channel.id,
+												text: channel.name,
+												name: channel.name,
+												key: `group_${channel.id}`,
+												flagUrl: "/images/icon_organization_area.svg",
+												metadata: channel.metadata,
+												children: channel.metadata && channel.metadata.thing_ids && channel.metadata.thing_ids.length ? 
+												channel.metadata.thing_ids.map((thingId) => {
+													const targetThing = allThingsList.find((thing) => thingId === thing.id);
+													if (targetThing && targetThing.id) {
+														return {
+															id: targetThing.id,
+															text: targetThing.metadata.aliase,
+															name: targetThing.name,
+															key: `${targetThing.id}`,
+															flagUrl: "/images/icon_channel.png",
+															metadata: targetThing.metadata,
+														}
+													} else {
+														return {}
+													}
+												}).filter((thing)=>thing.id) : [],
+											};
+											network_speech_area_treeData[0].children.push(channelNode);
+										});
+										// 获取所有已连接分区的设备ID
+										const allConnectedThingsID = [...new Set(channels.flatMap(channel => {
+											// 检查 channel.metadata 是否存在以及 channel.metadata.thing_ids 是否存在
+											if (channel.metadata && Array.isArray(channel.metadata.thing_ids)) {
+												return channel.metadata.thing_ids;
+											} else {
+												// 如果不存在，返回一个空数组，不会影响 flatMap 的结果
+												return [];
+											}
+										}))];
+										// 获取所有未连接分区的设备
+										const allUnconnectedThings = allThingsList.filter((thing) => !allConnectedThingsID.includes(thing.id)); 
+										// 未分区
+										allUnconnectedThings.forEach((thing) => {
+											const thingNode = {
+												id: thing.id,
+												text: thing.metadata.aliase,
+												name: thing.name,
+												key: `${thing.id}`,
+												flagUrl: "/images/icon_channel.png",
+												metadata: thing.metadata,
+											};
+											network_speech_area_treeData[0].children[0].children.push(thingNode);
+										});
+									} else {
+										//没有分区时，所有设备都属于未分区
+										allThingsList.forEach((thing) => {
+											const thingNode = {
+												id: thing.id,
+												text: thing.metadata.aliase,
+												name: thing.name,
+												key: `${thing.id}`,
+												flagUrl: "/images/icon_channel.png",
+												metadata: thing.metadata,
+											};
+											network_speech_area_treeData[0].children[0].children.push(thingNode);
+										});
+									}
+									$network_speech_area_tree = $('#network_speech_area_tree').tree({
+										primaryKey: 'key',
+										uiLibrary: 'bootstrap5',
+										dataSource: network_speech_area_treeData,
+										checkboxes: true,
+										imageUrlField: 'flagUrl',
+										icons: {
+											expand: '<i class="fa-solid fa-angle-down"></i>',
+											collapse: '<i class="fa-solid fa-angle-up"></i>'
+										}
+									});
+								});
+						})
+						.catch(error => {});
+				}
+			
+				// 生成网络扩声-扩声区域
+				function createNetworkSpeechAreaList(){
+					$('#network_speech_area_list_container').empty();
+					if (selected_network_speech_areas.length) {
+						const limit = selected_network_speech_areas.length >= 4 ? 4 : selected_network_speech_areas.length;
+						for (let i = 0; i < limit; i++) {
+							const $network_speech_area = $(`
+								<div class="d-grid col-6" title="${selected_network_speech_areas[i].metadata.aliase}">
+									<button disabled type="button" class="btn btn-light truncate-text" style="color: #20afbf;">
+										<img loading="lazy" src="/images/icon_channel.png" class="channel-icon" />
+										<span>${selected_network_speech_areas[i].metadata.aliase}</span>
+									</button>
+								</div>
+							`);
+							$('#network_speech_area_list_container').append($network_speech_area);
+						}
+					}
+				}
+
+				// 关闭添加播放区域弹框-添加播放区域弹框
+				function closeNetworkSpeechAreasAddModal() {
+					networkSpeechAreasAddModal.hide();
+					moreEditThingModal.show();
+					if (selected_network_speech_areas && selected_network_speech_areas.length) {
+						$('#localSpeech-network_speech_area_Error').hide();
+						$('#localSpeech-network_speech_area_Error').empty();
+					} else {
+						$('#localSpeech-network_speech_area_Error').html(requiredMsg);
+						$('#localSpeech-network_speech_area_Error').show();
+					}
+				}
+
+				// 生成播放区域详情列表-播放区域详情弹框
+				function createNetworkSpeechAreasAreasDetailList() {
+					$('#network_speech_areas_detail_list_container').empty();
+					if (selected_network_speech_areas.length) {
+						const limit = selected_network_speech_areas.length;
+						for (let i = 0; i < limit; i++) {
+							const $network_speech_areas_detail_item = $(`
+								<div class="d-grid col-4" title="${selected_network_speech_areas[i].metadata.aliase}">
+									<div class="hoverCard card" style="height:95px;">
+										<div class="card-body" style="text-align: center;">
+											<img loading="lazy" src="/images/icon_channel.png" style="margin-bottom: 5px; width: 32px;" />
+											<div class="truncate-text" style="font-size: 14px; width: 100%;">
+												${selected_network_speech_areas[i].metadata.aliase}
+											</div>
+										</div>
+									</div>
+								</div>
+							`);
+							$('#network_speech_areas_detail_list_container').append($network_speech_areas_detail_item);
+						}
+					}
 				}
 
 				//初始化更多设置
@@ -1509,6 +1833,7 @@ SPDX-License-Identifier: Apache-2.0 -->
 								if (deviceInfo.speech_cfg.speech_enable) {
 									$('#localSpeech-moreEditThingModal').prop('checked', true);
 								}
+
 								//本地扩声区域
 								$('select[multiple].localSpeech-local_speech_area-moreEditThingModal').multiselect({
 									columns  : 1,
@@ -1544,6 +1869,81 @@ SPDX-License-Identifier: Apache-2.0 -->
 									}
 								}
 
+								//网络扩声
+								$('#localSpeech-network_speech-moreEditThingModal-container').hide();
+								$('#localSpeech-network_speech_area-moreEditThingModal-container').hide();
+								$('#localSpeech-network_speech_area_Error').hide();
+								$('#localSpeech-network_speech_area_Error').empty();
+								if (deviceInfo.product_name.includes('2204')) {
+									$('#localSpeech-network_speech-moreEditThingModal-container').show();
+									$('#localSpeech-network_speech-moreEditThingModal').prop('checked', false);
+									if (deviceInfo.speech_cfg.network_speech_area) {
+										getNetworkSpeechAreaTree();
+										$('#localSpeech-network_speech-moreEditThingModal').prop('checked', true);
+										$('#localSpeech-network_speech_area-moreEditThingModal-container').show();
+										const network_speech_area_array = deviceInfo.speech_cfg?.network_speech_area ? 
+											deviceInfo.speech_cfg.network_speech_area.split(',').map((area)=>{
+												if(area.includes('_1')){
+													return area.split('_')[0];
+												} else {
+													return area;
+												}
+											}) : [];
+										selected_network_speech_areas = allThingsList.filter(thing => network_speech_area_array.includes(thing.credentials.identity));
+										createNetworkSpeechAreaList();
+									}
+
+									$('#localSpeech-network_speech-moreEditThingModal').on('change', function () {
+										const network_speech_enable = $(this).is(':checked');
+										if (network_speech_enable) {
+											getNetworkSpeechAreaTree();
+											$('#localSpeech-network_speech_area-moreEditThingModal-container').show();
+										} else {
+											selected_network_speech_areas = [];
+											$('#localSpeech-network_speech_area-moreEditThingModal-container').hide();
+											$('#localSpeech-network_speech_area_Error').hide();
+											$('#localSpeech-network_speech_area_Error').empty();
+										}
+									});
+
+									// 点击添加广播区域按钮
+									$('#network_speech_areas_add_btn').click(function() {
+										moreEditThingModal.hide();
+										networkSpeechAreasAddModal.show();
+
+										$network_speech_area_tree.uncheckAll();
+										$network_speech_area_tree.collapseAll();  
+
+										const node = $network_speech_area_tree.getNodeByText('全部');
+										$network_speech_area_tree.expand(node);
+										if(selected_network_speech_areas) {
+											const selected_network_speech_areaIds = selected_network_speech_areas.map(playArea => playArea.id);
+											selected_network_speech_areaIds.forEach(areaId => {
+												const node = $network_speech_area_tree.getNodeById(areaId);
+												$network_speech_area_tree.check(node);
+											});
+										}
+									});
+
+									// 点击添加广播区域弹框确定按钮
+									$('#confirm_network_speech_areas_AddModalBtn').click(function() {
+										const checkedIds = $network_speech_area_tree.getCheckedNodes().filter(id => !id.includes("group_"));
+										const checked_network_speech_areas = allThingsList.filter(thing => checkedIds.includes(thing.id));
+										selected_network_speech_areas = checked_network_speech_areas.map(thing => thing);
+										closeNetworkSpeechAreasAddModal();
+									});
+
+									// 点击广播区域详情按钮-任务弹框
+									$('#network_speech_areas_detail_btn').click(function() {
+										if (selected_network_speech_areas.length) {
+											moreEditThingModal.hide();
+											networkSpeechAreasDetailModal.show();
+											createNetworkSpeechAreasAreasDetailList();
+										}
+									});
+
+								}
+
 								//音量
 								$('#localSpeech-volume-moreEditThingModal').val(deviceInfo.speech_cfg.volume);
 								$('#localSpeech-volume-label-moreEditThingModal').html(deviceInfo.speech_cfg.volume);
@@ -1551,12 +1951,80 @@ SPDX-License-Identifier: Apache-2.0 -->
 									const volume = $(this).val();
 									$('#localSpeech-volume-label-moreEditThingModal').html(volume);
 								});
+
 								//触发灵敏度
 								$('#localSpeech-trigger_threshold-moreEditThingModal').val(deviceInfo.speech_cfg.trigger_threshold);
 								$('#localSpeech-trigger_threshold-label-moreEditThingModal').html(deviceInfo.speech_cfg.trigger_threshold);
 								$('#localSpeech-trigger_threshold-moreEditThingModal').on('change', function () {
 									const trigger_threshold = $(this).val();
 									$('#localSpeech-trigger_threshold-label-moreEditThingModal').html(trigger_threshold);
+								});
+
+								//本地扩声保存按钮
+								$('#localSpeech-confirm-button-moreEditThingModal').on('click', function () {
+									const save_local_speech = function () {
+										const speech_enable = $('#localSpeech-volume-moreEditThingModal').is(':checked');
+										const volume = $('#localSpeech-volume-moreEditThingModal').val();
+										const local_speech_area_list = $('select[multiple].localSpeech-local_speech_area-moreEditThingModal').val();
+										const trigger_threshold = $('#localSpeech-trigger_threshold-label-moreEditThingModal').val();
+										const network_speech_enable = $('#localSpeech-network_speech-moreEditThingModal').is(':checked');
+										// 广播区域
+										const network_speech_array = selected_network_speech_areas.map((area) => {
+											const identity = area.credentials.identity;
+											if (!identity.includes("_")) {
+												return `${identity}_1`;
+											} else {
+												return identity
+											}
+										});
+										const speechCfg = {
+											...deviceInfo.speech_cfg,
+											speech_enable,
+											local_speech_area: local_speech_area_list.join(','),
+											trigger_threshold: Number(trigger_threshold),
+											volume: Number(volume),
+											network_speech_area: network_speech_array.join(','),
+										};
+										const data = {
+											controlType:  "deviceSpeechCfgSet", 
+											thingIdentity: device.credentials.identity,
+											speechCfg,
+										}
+										const callback = function () {
+											moreEditThingModal.hide();
+											editThingModal.hide();
+										}
+										// controlThing(data，callback);
+										console.log("speech_cfg: ", data);
+									}
+
+									const cancelCallback = function () {
+										moreEditThingModal.show();
+									};
+
+									const run_save_local_speech = function () {
+										moreEditThingModal.hide();
+										showConfirmModal("修改设备扩声配置信息，设备会自动重启，确定要进行此操作吗，是否继续？", () => {
+											save_local_speech();
+										}, cancelCallback);
+									}
+
+									//当产品为 2204 且 网络扩声 开启时，需要选择网络扩声区域
+									if (deviceInfo.product_name.includes('2204')) {
+										const network_speech_enable = $('#localSpeech-network_speech-moreEditThingModal').is(':checked');
+										if (network_speech_enable) {
+											if (selected_network_speech_areas.length) {
+												run_save_local_speech();
+											} else {
+												$('#localSpeech-network_speech_area_Error').show();
+												$('#localSpeech-network_speech_area_Error').html(requiredMsg);
+											}
+										} else {
+											run_save_local_speech();
+										}
+									} else {
+										run_save_local_speech();
+									}
 								});
 							}
 
@@ -1588,7 +2056,7 @@ SPDX-License-Identifier: Apache-2.0 -->
 										bluetoothCfg,
 									}
 									// controlThing(data);
-									console.log("changedTag: ", data);
+									console.log("bluetooth: ", data);
 								});
 
 								//蓝牙密码
@@ -1615,7 +2083,7 @@ SPDX-License-Identifier: Apache-2.0 -->
 												bluetoothCfg,
 											}
 											// controlThing(data);
-											console.log("changedTag: ", data);
+											console.log("bluetooth: ", data);
 										}
 									} else {
 										$(`#bluetooth-password-moreEditThingModalError`).html(requiredMsg);
@@ -1643,7 +2111,7 @@ SPDX-License-Identifier: Apache-2.0 -->
 										bluetoothCfg,
 									}
 									// controlThing(data);
-									console.log("changedTag: ", data);
+									console.log("bluetooth: ", data);
 								});
 
 								//蓝牙播放区域
@@ -1695,7 +2163,7 @@ SPDX-License-Identifier: Apache-2.0 -->
 										bluetoothCfg,
 									}
 									// controlThing(data);
-									console.log("changedTag: ", data);
+									console.log("bluetooth: ", data);
 								});
 							}
 
@@ -2111,7 +2579,7 @@ SPDX-License-Identifier: Apache-2.0 -->
 								</div>
 							` : ``;
 					const $thingCard = $(`
-						<div class="mb-3" id="${device.id}-thingCard" style="width: 20%;">
+						<div class="cards-grid" id="${device.id}-thingCard">
 							<div class="hoverCard card" id="${device.id}-thingCardContent" >
 								<div class="card-body">
 									<div class="row">
