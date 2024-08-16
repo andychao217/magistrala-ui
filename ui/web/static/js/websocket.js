@@ -180,6 +180,11 @@ function handleThingMessage(data, defaultChannelId) {
             "BLUETOOTH_CFG_SET_REPLY",
             "BLUETOOTH_WHITELIST_ADD_REPLY",
             "BLUETOOTH_WHITELIST_DELETE_REPLY",
+            "AMP_CHECK_CFG_SET_REPLY",
+            "AUDIO_MATRIX_CFG_SET_REPLY",
+            "RADIO_FREQ_ADD_REPLY",
+            "RADIO_FREQ_SET_REPLY",
+            "RADIO_FREQ_DELETE_REPLY"
         ].includes(data.msgName)
     ) {
         controlDeviceWebsocket(hostNameWebsocket, defaultChannelId, "deviceInfoGet");
@@ -217,7 +222,7 @@ function httpGetDomainIdWebsocket() {
               if (domainID && defaultChannelId) {
                 connectWebSocket(hostNameWebsocket, port, defaultChannelId);
                 httpGetAllThingsListWebsocket(hostNameWebsocket, defaultChannelId, true);
-                setupMessageListener(defaultChannelId);
+                // setupMessageListener(defaultChannelId);
               }
             })
     } else {
@@ -316,7 +321,7 @@ function controlDeviceWebsocket(host, comID, controlType) {
             // 处理所有的结果
             results.forEach((result) => {
                 if (result.status === 'fulfilled') {
-                    console.log('成功:', result.value);
+                    // console.log('成功:', result.value);
                 } else if (result.status === 'rejected') {
                     console.error('失败:', result.reason);
                 }

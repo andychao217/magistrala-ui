@@ -133,6 +133,30 @@ SPDX-License-Identifier: Apache-2.0 -->
 															</button>
 															<button 
 																class="nav-link" 
+																id="moreEditThingModal-powerCfg-tab" 
+																data-bs-toggle="pill" 
+																data-bs-target="#moreEditThingModal-powerCfg" 
+																type="button" 
+																role="tab" 
+																aria-controls="moreEditThingModal-powerCfg" 
+																aria-selected="false"
+															>
+																功率设置
+															</button>
+															<button 
+																class="nav-link" 
+																id="moreEditThingModal-audioMatrix-tab" 
+																data-bs-toggle="pill" 
+																data-bs-target="#moreEditThingModal-audioMatrix" 
+																type="button" 
+																role="tab" 
+																aria-controls="moreEditThingModal-audioMatrix" 
+																aria-selected="false"
+															>
+																音频矩阵
+															</button>
+															<button 
+																class="nav-link" 
 																id="moreEditThingModal-localSpeech-tab" 
 																data-bs-toggle="pill" 
 																data-bs-target="#moreEditThingModal-localSpeech" 
@@ -142,6 +166,18 @@ SPDX-License-Identifier: Apache-2.0 -->
 																aria-selected="false"
 															>
 																扩声
+															</button>
+															<button 
+																class="nav-link" 
+																id="moreEditThingModal-radio-tab" 
+																data-bs-toggle="pill" 
+																data-bs-target="#moreEditThingModal-radio" 
+																type="button" 
+																role="tab" 
+																aria-controls="moreEditThingModal-radio" 
+																aria-selected="false"
+															>
+																收音机
 															</button>
 															<button 
 																class="nav-link" 
@@ -215,7 +251,7 @@ SPDX-License-Identifier: Apache-2.0 -->
 																role="tabpanel" 
 																aria-labelledby="moreEditThingModal-netConfig-tab" 
 																tabindex="0"
-																style="min-height: 400px;"
+																style="min-height:  450px;"
 															>
 																<!-- 网络配置 -->
 																<div class="mb-3 row">
@@ -324,9 +360,67 @@ SPDX-License-Identifier: Apache-2.0 -->
 																role="tabpanel" 
 																aria-labelledby="moreEditThingModal-inChannels-tab" 
 																tabindex="0"
+																style="min-height: 450px;"
 															>
 																<!-- 输入通道 -->
-																<div id="in_channels_container_EditThingModal" style="min-height:400px;"></div>
+																<div id="in_channels_container_EditThingModal"></div>
+															</div>
+															<div 
+																class="tab-pane fade device_more_setting_tab" 
+																id="moreEditThingModal-powerCfg" 
+																role="tabpanel" 
+																aria-labelledby="moreEditThingModal-powerCfg-tab" 
+																tabindex="0"
+																style="min-height: 450px;"
+															>
+																<!-- 功率设置 -->
+																<table 
+																	id="powerCfgTable"
+																	class="table table-hover"
+																	data-click-to-select="false"
+																>
+																	<thead>
+																		<tr>
+																			<th data-radio="true"></th>
+																			<th data-field="out_1_power">通道1</th>
+																			<th data-field="out_2_power">通道2</th>
+																			<th data-field="out_3_power">通道3</th>
+																			<th data-field="out_4_power">通道4</th>
+																		</tr>
+																	</thead>
+																</table>
+															</div>
+															<div 
+																class="tab-pane fade device_more_setting_tab" 
+																id="moreEditThingModal-audioMatrix" 
+																role="tabpanel" 
+																aria-labelledby="moreEditThingModal-audioMatrix-tab" 
+																tabindex="0"
+																style="min-height: 450px;"
+															>
+																<!-- 音频矩阵 -->
+																<div class="mb-3 row">
+																	<label for="audio_matrix-enable-moreEditThingModal" class="col-sm-3 col-form-label">开启状态</label>
+																	<div class="col-sm-9">
+																		<div class="form-control form-check form-switch" style="border: none;">
+																			<input 
+																				class="form-check-input" 
+																				type="checkbox" 
+																				role="switch" 
+																				name="audio_matrix-enable-moreEditThingModal" 
+																				id="audio_matrix-enable-moreEditThingModal" 
+																			/>
+																		</div>
+																	</div>
+																</div>
+																<div id="audio_matrix-audio_route-container"></div>
+																<div class="mb-3 row" style="text-align: center;">
+																	<div>
+																		<button type="button" class="btn body-button" id="audio_matrix-confirm-button-moreEditThingModal">
+																			<i class="fa-solid fa-floppy-disk"></i> 保存
+																		</button>
+																	</div>
+																</div>
 															</div>
 															<div 
 																class="tab-pane fade device_more_setting_tab" 
@@ -334,7 +428,7 @@ SPDX-License-Identifier: Apache-2.0 -->
 																role="tabpanel" 
 																aria-labelledby="moreEditThingModal-localSpeech-tab" 
 																tabindex="0"
-																style="min-height:400px;"
+																style="min-height: 450px;"
 															>
 																<!-- 扩声 -->
 																<div class="mb-3 row">
@@ -472,11 +566,21 @@ SPDX-License-Identifier: Apache-2.0 -->
 															</div>
 															<div 
 																class="tab-pane fade device_more_setting_tab" 
+																id="moreEditThingModal-radio" 
+																role="tabpanel" 
+																aria-labelledby="moreEditThingModal-radio-tab" 
+																tabindex="0"
+																style="min-height: 450px;"
+															>
+																<!-- 收音机 -->
+															</div>
+															<div 
+																class="tab-pane fade device_more_setting_tab" 
 																id="moreEditThingModal-bluetooth" 
 																role="tabpanel" 
 																aria-labelledby="moreEditThingModal-bluetooth-tab" 
 																tabindex="0"
-																style="min-height:400px;"
+																style="min-height: 450px;"
 															>
 																<!-- 蓝牙配置 -->
 																<div class="mb-3 row">
@@ -551,7 +655,7 @@ SPDX-License-Identifier: Apache-2.0 -->
 																role="tabpanel" 
 																aria-labelledby="moreEditThingModal-sysInfo-tab" 
 																tabindex="0"
-																style="font-size: 14px; height: 400px;"
+																style="font-size: 14px; height:  450px;"
 															>
 																<!-- 系统信息 -->
 																<div class="row mb-2">
@@ -642,10 +746,23 @@ SPDX-License-Identifier: Apache-2.0 -->
 																role="tabpanel" 
 																aria-labelledby="moreEditThingModal-otherOperation-tab" 
 																tabindex="0"
-																style="height: 400px;"
+																style="height:  450px;"
 															>
 																<!-- 其他设置 -->
 																<div class="row">
+																	<div
+																		class="hoverCard card deviceOperation-btn primaryBtn"
+																		id="moreEditThingModal-otherOperation-ampCheckBtn"
+																	>
+																		<div class="card-body deviceOperation-btn-container">
+																			<div class="deviceOperation-btn-icon">
+																				<i class="fa-brands fa-nfc-directional"></i>
+																			</div>
+																			<div class="row">
+																				功放检测
+																			</div>
+																		</div>
+																	</div>
 																	<div
 																		class="hoverCard card deviceOperation-btn primaryBtn"
 																		id="moreEditThingModal-otherOperation-ledBtn"
@@ -680,7 +797,7 @@ SPDX-License-Identifier: Apache-2.0 -->
 																role="tabpanel" 
 																aria-labelledby="moreEditThingModal-deviceOperation-tab" 
 																tabindex="0"
-																style="height: 400px;"
+																style="height:  450px;"
 															>
 																<!-- 设备操作 -->
 																<div class="row">
@@ -755,7 +872,7 @@ SPDX-License-Identifier: Apache-2.0 -->
 													></button>
 												</div>
 												<div class="modal-body">
-													<div class="mb-3" style="max-height: 400px; overflow-y: auto;">
+													<div class="mb-3" style="max-height:  450px; overflow-y: auto;">
 														<div id="network_speech_area_tree"></div>
 													</div>
 													<div class="modal-footer">
@@ -800,7 +917,7 @@ SPDX-License-Identifier: Apache-2.0 -->
 													></button>
 												</div>
 												<div class="modal-body">
-													<div class="mb-3" style="max-height: 400px; overflow-y: auto;">
+													<div class="mb-3" style="max-height:  450px; overflow-y: auto;">
 														<div class="row row-cols-4 g-3" id="network_speech_areas_detail_list_container"></div>
 													</div>
 												</div>
@@ -827,7 +944,7 @@ SPDX-License-Identifier: Apache-2.0 -->
 												</div>
 												<div class="modal-body">
 													<div class="row">
-													<ul class="list-group" id="scanThingsGrid" style="padding-left: 10px; max-height: 400px; overflow-y: auto;">
+													<ul class="list-group" id="scanThingsGrid" style="padding-left: 10px; max-height:  450px; overflow-y: auto;">
 													</ul>
 													</div>
 												</div>
@@ -1090,6 +1207,7 @@ SPDX-License-Identifier: Apache-2.0 -->
                   	scanNewThingsList = [],
                   	selectedNewThingNames = [],
 					allThingsList = [],
+					$network_speech_area_tree = null, // 网络扩声区域树
 					network_speech_area_treeData = [], // 播放区域树数据
 					selected_network_speech_areas = []; //设备设置-选中的网络扩声区域;
 				const deviceNetCfgModal = new bootstrap.Modal(document.getElementById("deviceNetCfgModal")),
@@ -1097,12 +1215,13 @@ SPDX-License-Identifier: Apache-2.0 -->
 					  moreEditThingModal= new bootstrap.Modal(document.getElementById("moreEditThingModal")),
 					  networkSpeechAreasAddModal = new bootstrap.Modal(document.getElementById("networkSpeechAreasAddModal")), // 新增广播区域弹框
 					  networkSpeechAreasDetailModal = new bootstrap.Modal(document.getElementById("networkSpeechAreasDetailModal")), // 广播区域详情弹框
-					  scanThingsModal = new bootstrap.Modal(document.getElementById("scanThingsModal"));
+					  scanThingsModal = new bootstrap.Modal(document.getElementById("scanThingsModal")),
+					  $powerCfgTable = $('#powerCfgTable');
 					  requiredMsg = '不能为空',
 					  url = window.location.href, // 获取当前页面的URL
 					  onlineStatusValue = (url.match(/onlineStatus=(\d+)/) || [])[1] || 
 					  	sessionStorage.getItem("onlineStatus") || '1'; // 从URL获取onlineStatus的值
-				
+
 				$(document).ready(function() {
 					sessionStorage.setItem("onlineStatus", onlineStatusValue);
 					getThingsList(onlineStatusValue, false);
@@ -1640,6 +1759,7 @@ SPDX-License-Identifier: Apache-2.0 -->
 					if (selected_network_speech_areas && selected_network_speech_areas.length) {
 						$('#localSpeech-network_speech_area_Error').hide();
 						$('#localSpeech-network_speech_area_Error').empty();
+						createNetworkSpeechAreaList();
 					} else {
 						$('#localSpeech-network_speech_area_Error').html(requiredMsg);
 						$('#localSpeech-network_speech_area_Error').show();
@@ -1775,7 +1895,7 @@ SPDX-License-Identifier: Apache-2.0 -->
 									moreEditThingModal.show();
 								};
 								moreEditThingModal.hide();
-								showConfirmModal("修改设备网络配置信息，设备会自动重启，确定要进行此操作吗，是否继续？", () => {
+								showConfirmModal("修改设备网络配置，设备会自动重启，确定要进行此操作吗，是否继续？", () => {
 									const callback = function () {
 										moreEditThingModal.hide();
 										editThingModal.hide();
@@ -1797,7 +1917,7 @@ SPDX-License-Identifier: Apache-2.0 -->
 							deviceInfo.in_channel.channel.length
 						) {
 							$('#moreEditThingModal-inChannels-tab').show();
-							deviceInfo.in_channel.channel.forEach((channel)=>{
+							deviceInfo.in_channel.channel.filter((channel) => !channel.ignore).forEach((channel)=>{
 								createChannelConfig(channel, 'in', device.credentials.identity);
 							});
 						} else {
@@ -1822,9 +1942,201 @@ SPDX-License-Identifier: Apache-2.0 -->
 						$('#moreEditThingModal-localSpeech-tab').hide();
 						$('#moreEditThingModal-bluetooth-tab').hide();
 						$('#moreEditThingModal-otherOperation-tab').hide();
+						$('#moreEditThingModal-powerCfg-tab').hide();
+						$('#moreEditThingModal-audioMatrix-tab').hide();
+						$('#moreEditThingModal-radio-tab').hide();
 						//其他设置
 						const feature_list = _.cloneDeep(deviceInfo.feature_list);
 						if (feature_list && !_.isEmpty(feature_list)) {
+							//功率设置
+							if (feature_list.has_device_power_cfg) {
+								$('#moreEditThingModal-powerCfg-tab').show();
+								let powerCfgTableData = [];
+								const total_power = deviceInfo.device_power?.total_power || 0;
+								if (total_power > 0) {
+									powerCfgTableData = [
+										{
+											//2-2-2-2
+											id: '2222', 
+											out_1_power: (total_power/4).toFixed(0), 
+											out_2_power: (total_power/4).toFixed(0), 
+											out_3_power: (total_power/4).toFixed(0), 
+											out_4_power: (total_power/4).toFixed(0)
+										},
+										{
+											//3-2-1-1
+											id: '3211', 
+											out_1_power: (total_power/2).toFixed(0), 
+											out_2_power: (total_power/4).toFixed(0), 
+											out_3_power: (total_power/8).toFixed(0), 
+											out_4_power: (total_power/8).toFixed(0)
+										},
+										{
+											//3-2-2-0
+											id: '3220', 
+											out_1_power: (total_power/2).toFixed(0), 
+											out_2_power: (total_power/4).toFixed(0), 
+											out_3_power: (total_power/4).toFixed(0), 
+											out_4_power: 0
+										},
+									];
+									$powerCfgTable.bootstrapTable({
+										data: powerCfgTableData,
+										onCheck: function (row) {
+											let devicePowerPack = { ...deviceInfo.device_power };
+											if (row.id === '2222') {
+												devicePowerPack.out_1_power = 2;
+												devicePowerPack.out_2_power = 2;
+												devicePowerPack.out_3_power = 2;
+												devicePowerPack.out_4_power = 2;
+											} else if (row.id === '3211') {
+												devicePowerPack.out_1_power = 3;
+												devicePowerPack.out_2_power = 2;
+												devicePowerPack.out_3_power = 1;
+												devicePowerPack.out_4_power = 1;
+											} else if (row.id === '3220') {
+												devicePowerPack.out_1_power = 3;
+												devicePowerPack.out_2_power = 2;
+												devicePowerPack.out_3_power = 2;
+												devicePowerPack.out_4_power = 0;
+											}
+											const data = {
+												controlType:  "devicePowerCfgSet", 
+												thingIdentity: device.credentials.identity,
+												devicePowerPack,
+											}
+											controlThing(data);
+										}
+									});
+									$powerCfgTable.removeClass('table-bordered');
+									const powerStr = "" + 
+										deviceInfo.device_power?.out_1_power + 
+										deviceInfo.device_power?.out_2_power + 
+										deviceInfo.device_power?.out_3_power + 
+										deviceInfo.device_power?.out_4_power;
+									if (powerStr === "2222") {
+										$powerCfgTable.bootstrapTable('check', 0);
+									} else if (powerStr === "3211") {
+										$powerCfgTable.bootstrapTable('check', 1)
+									} else if (powerStr === "3220") {
+										$powerCfgTable.bootstrapTable('check', 2)
+									} else {
+										$powerCfgTable.bootstrapTable('uncheckAll')
+									}
+								}
+							}
+
+							//音频矩阵
+							if (feature_list.has_audio_matrix) {
+								$('#moreEditThingModal-audioMatrix-tab').show();
+								$('#audio_matrix-enable-moreEditThingModal').prop('checked', false);
+								if (deviceInfo.audio_matrix?.enable) {
+									$('#audio_matrix-enable-moreEditThingModal').prop('checked', true);
+								}
+								$('#audio_matrix-audio_route-container').empty();
+								const audio_route = deviceInfo.audio_matrix?.audio_route || [];
+								audio_route.forEach((audio_route_item, index) => {
+									const $audio_route = $(`
+										<div class="mb-3 row">
+											<label 
+												for="audio_matrix-audio_route-${audio_route_item.in_channel}-moreEditThingModal[]" 
+												class="col-sm-3 col-form-label"
+											>
+												输入${audio_route_item.in_channel}
+											</label>
+											<div class="col-sm-9">
+												<select 
+													multiple="multiple" 
+													name="audio_matrix-audio_route-${audio_route_item.in_channel}-moreEditThingModal[]" 
+													id="audio_matrix-audio_route-${audio_route_item.in_channel}-moreEditThingModal"
+													class="audio_matrix-audio_route-${audio_route_item.in_channel}-moreEditThingModal audio_route-selector"
+													data-in_channel="${audio_route_item.in_channel}"
+												>
+												</select>
+											</div>
+										</div>
+									`);
+									$('#audio_matrix-audio_route-container').append($audio_route);
+									$(`select[multiple].audio_matrix-audio_route-${audio_route_item.in_channel}-moreEditThingModal`).multiselect({
+										columns  : 1,
+										search   : false,
+										selectAll: true,
+										texts    : {
+											placeholder    : '请选择',
+											selectedOptions: ' 选中',
+											selectAll      : '全选', 
+											unselectAll    : '取消全选',
+											noneSelected   : '没选中'
+										}
+									});
+									const audio_route_options = deviceInfo.out_channel?.channel?.map((channel)=>{
+										return {
+											name   : channel.aliase,
+											value  : channel.id,
+											checked: audio_route_item.out_channel.includes(channel.id)
+										}
+									});
+									$(`select[multiple].audio_matrix-audio_route-${audio_route_item.in_channel}-moreEditThingModal`).multiselect('loadOptions', audio_route_options);
+									const audio_route_selectedOptionNames = audio_route_options.filter((item)=>item.checked).map(item=>item.name).join(', ');
+									// 通过 ID 选择器选择 <select> 元素
+									const audio_route_selectElement = $(`#audio_matrix-audio_route-${audio_route_item.in_channel}-moreEditThingModal`);
+									// 选择 <select> 元素的紧邻兄弟元素 div
+									const audio_route_msOptionsWrap = audio_route_selectElement.next(".ms-options-wrap.ms-has-selections");
+									// 确定已经找到该元素
+									if (audio_route_msOptionsWrap.length) {
+										// 查找 ms-options-wrap 下的 button > span 元素
+										const audio_route_buttonSpan = audio_route_msOptionsWrap.find("button > span");
+										if (audio_route_buttonSpan.length) {
+											audio_route_buttonSpan.html(audio_route_selectedOptionNames);
+										}
+									}
+								});
+
+								//音频矩阵-保存按钮
+								$('#audio_matrix-confirm-button-moreEditThingModal').on('click', function () {
+									const enable = $('#audio_matrix-enable-moreEditThingModal').is(':checked');
+									const audio_route_selectors = $('.audio_route-selector');
+									const audio_route = [];
+									audio_route_selectors.each(function (index, element) {
+										const in_channel = $(element).data('in_channel');
+										const out_channel_array = $(element).val();
+										const out_channel = out_channel_array.join(',');
+										audio_route.push({
+											in_channel,
+											out_channel,
+										});
+									});
+									const audioMatrix = {
+										enable,
+										audio_route,
+									}
+									const cancelCallback = function () {
+										moreEditThingModal.show();
+									};
+									moreEditThingModal.hide();
+									showConfirmModal("修改设备音频矩阵，设备会自动重启，确定要进行此操作吗，是否继续？", () => {
+										const callback = function () {
+											moreEditThingModal.hide();
+											editThingModal.hide();
+										}
+										const data = {
+											controlType:  "deviceAudioMatrixCfgSet", 
+											thingIdentity: device.credentials.identity,
+											audioMatrix,
+										}
+										const cancelCallback = function () {
+											moreEditThingModal.show();
+										};
+										controlThing(data); 
+									}, cancelCallback);
+								});
+							}
+
+							//收音机
+							if (feature_list.has_radio) {
+								$('#moreEditThingModal-radio-tab').show();
+							}
+
 							//本地扩声
 							if (feature_list.has_local_speech) {
 								$('#moreEditThingModal-localSpeech-tab').show();
@@ -1877,8 +2189,8 @@ SPDX-License-Identifier: Apache-2.0 -->
 								if (deviceInfo.product_name.includes('2204')) {
 									$('#localSpeech-network_speech-moreEditThingModal-container').show();
 									$('#localSpeech-network_speech-moreEditThingModal').prop('checked', false);
+									getNetworkSpeechAreaTree();
 									if (deviceInfo.speech_cfg.network_speech_area) {
-										getNetworkSpeechAreaTree();
 										$('#localSpeech-network_speech-moreEditThingModal').prop('checked', true);
 										$('#localSpeech-network_speech_area-moreEditThingModal-container').show();
 										const network_speech_area_array = deviceInfo.speech_cfg?.network_speech_area ? 
@@ -1896,10 +2208,10 @@ SPDX-License-Identifier: Apache-2.0 -->
 									$('#localSpeech-network_speech-moreEditThingModal').on('change', function () {
 										const network_speech_enable = $(this).is(':checked');
 										if (network_speech_enable) {
-											getNetworkSpeechAreaTree();
 											$('#localSpeech-network_speech_area-moreEditThingModal-container').show();
 										} else {
 											selected_network_speech_areas = [];
+											createNetworkSpeechAreaList();
 											$('#localSpeech-network_speech_area-moreEditThingModal-container').hide();
 											$('#localSpeech-network_speech_area_Error').hide();
 											$('#localSpeech-network_speech_area_Error').empty();
@@ -1994,8 +2306,7 @@ SPDX-License-Identifier: Apache-2.0 -->
 											moreEditThingModal.hide();
 											editThingModal.hide();
 										}
-										// controlThing(data，callback);
-										console.log("speech_cfg: ", data);
+										controlThing(data, callback);
 									}
 
 									const cancelCallback = function () {
@@ -2004,7 +2315,7 @@ SPDX-License-Identifier: Apache-2.0 -->
 
 									const run_save_local_speech = function () {
 										moreEditThingModal.hide();
-										showConfirmModal("修改设备扩声配置信息，设备会自动重启，确定要进行此操作吗，是否继续？", () => {
+										showConfirmModal("修改设备扩声配置，设备会自动重启，确定要进行此操作吗，是否继续？", () => {
 											save_local_speech();
 										}, cancelCallback);
 									}
@@ -2055,8 +2366,7 @@ SPDX-License-Identifier: Apache-2.0 -->
 										thingIdentity: device.credentials.identity,
 										bluetoothCfg,
 									}
-									// controlThing(data);
-									console.log("bluetooth: ", data);
+									controlThing(data);
 								});
 
 								//蓝牙密码
@@ -2082,8 +2392,7 @@ SPDX-License-Identifier: Apache-2.0 -->
 												thingIdentity: device.credentials.identity,
 												bluetoothCfg,
 											}
-											// controlThing(data);
-											console.log("bluetooth: ", data);
+											controlThing(data);
 										}
 									} else {
 										$(`#bluetooth-password-moreEditThingModalError`).html(requiredMsg);
@@ -2110,8 +2419,7 @@ SPDX-License-Identifier: Apache-2.0 -->
 										thingIdentity: device.credentials.identity,
 										bluetoothCfg,
 									}
-									// controlThing(data);
-									console.log("bluetooth: ", data);
+									controlThing(data);
 								});
 
 								//蓝牙播放区域
@@ -2162,15 +2470,14 @@ SPDX-License-Identifier: Apache-2.0 -->
 										thingIdentity: device.credentials.identity,
 										bluetoothCfg,
 									}
-									// controlThing(data);
-									console.log("bluetooth: ", data);
+									controlThing(data);
 								});
 							}
 
-							if (feature_list.has_status_led || feature_list.has_stereo) {
+							if (feature_list.has_status_led || feature_list.has_stereo || feature_list.has_amp_check) {
 								$('#moreEditThingModal-otherOperation-tab').show();
 
-								// 状态灯、立体声按钮状态显示
+								// 状态灯、立体声、功放检测按钮状态显示
 								function toggleButtonState(button, status) {
 									button.data('value', status);
 									if (status) {
@@ -2180,7 +2487,7 @@ SPDX-License-Identifier: Apache-2.0 -->
 									}
 								}
 
-								// 状态灯、立体声按钮初始化
+								// 状态灯、立体声、功放检测按钮初始化
 								function setupButton(button, feature_status, enable_status, controlFunction) {
 									button.show();
 									button.data('value', enable_status);
@@ -2202,6 +2509,25 @@ SPDX-License-Identifier: Apache-2.0 -->
 											controlFunction(!current_status, callback);
 										}, cancelCallback);
 									});
+								}
+								
+								// 功放检测
+								if (feature_list.has_amp_check) {
+									setupButton(
+										$('#moreEditThingModal-otherOperation-ampCheckBtn'),
+										feature_list.has_amp_check,
+										feature_list.amp_check_enable,
+										function(new_status, callback) {
+											const data = {
+												controlType:  "deviceAmpCheckSet", 
+												thingIdentity: device.credentials.identity,
+												enabled: new_status,
+											}
+											controlThing(data, callback(new_status));
+										}
+									)
+								} else {
+									$('#moreEditThingModal-otherOperation-ampCheckBtn').hide();
 								}
 							
 								// 状态灯
