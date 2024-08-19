@@ -573,6 +573,7 @@ SPDX-License-Identifier: Apache-2.0 -->
 																style="min-height: 450px;"
 															>
 																<!-- 收音机 -->
+																<div id="moreEditThingModal-radioFreq-container"></div>
 															</div>
 															<div 
 																class="tab-pane fade device_more_setting_tab" 
@@ -749,7 +750,7 @@ SPDX-License-Identifier: Apache-2.0 -->
 																style="height:  450px;"
 															>
 																<!-- 其他设置 -->
-																<div class="row">
+																<div id="moreEditThingModal-otherOperation-container">
 																	<div
 																		class="hoverCard card deviceOperation-btn primaryBtn"
 																		id="moreEditThingModal-otherOperation-ampCheckBtn"
@@ -849,7 +850,7 @@ SPDX-License-Identifier: Apache-2.0 -->
 										</div>
 									</div>
 
-									<!-- 广播区域详情弹框 -->
+									<!-- 广播区域添加弹框 -->
 									<div 
 										class="modal fade" 
 										id="networkSpeechAreasAddModal" 
@@ -893,7 +894,7 @@ SPDX-License-Identifier: Apache-2.0 -->
 										</div>
 									</div>
 
-									<!-- 播放区域详情弹框 -->
+									<!-- 广播区域详情弹框 -->
 									<div 
 										class="modal fade" 
 										id="networkSpeechAreasDetailModal" 
@@ -924,6 +925,78 @@ SPDX-License-Identifier: Apache-2.0 -->
 											</div>
 										</div>
 									</div>
+
+									<!-- 收音机添加弹框 -->
+									<div 
+										class="modal fade" 
+										id="addRadioFreqModal" 
+										tabindex="-1" 
+										role="dialog" 
+										aria-labelledby="addRadioFreqModalLabel" 
+										data-bs-backdrop="static" 
+										data-bs-keyboard="false" 
+										aria-hidden="true"
+                                    >
+										<div class="modal-dialog" role="document">
+											<div class="modal-content" style="width: 580px;">
+												<div class="modal-header">
+													<h1 class="modal-title">添加频道</h1>
+													<button 
+														type="button" 
+														class="btn-close" 
+														data-bs-dismiss="modal" 
+														aria-label="Close" 
+														onclick="moreEditThingModal.show();"
+													></button>
+												</div>
+												<form id="form-addRadioFreqModal">
+													<div class="modal-body" style="padding: 35px;">
+														<div class="mb-3 row">
+															<label for="name" class="col-sm-3 col-form-label">频道名称</label>
+															<div class="col-sm-9">
+																<input 
+																	type="text" 
+																	class="form-control name-field" 
+																	name="name" 
+																	id="name-addRadioFreqModal" 
+																	placeholder="频道名称" 
+																	maxlength="20" 
+																/>
+																<div id="name-error-addRadioFreqModal" class="text-danger inputError"></div>
+															</div>
+														</div>
+														<div class="mb-3 row">
+															<label for="freq" class="col-sm-3 col-form-label">频道号</label>
+															<div class="col-sm-9">
+																<input 
+																	type="text" 
+																	class="form-control name-field" 
+																	name="freq" 
+																	id="freq-addRadioFreqModal" 
+																	placeholder="频道号" 
+																	maxlength="20" 
+																/>
+																<div id="freq-error-addRadioFreqModal" class="text-danger inputError"></div>
+															</div>
+														</div>
+													</div>
+													<div class="modal-footer">
+														<button 
+															type="button" 
+															class="btn btn-secondary" 
+															data-bs-dismiss="modal" 
+															onclick="moreEditThingModal.show();"
+														>
+															<i class="fa-solid fa-xmark"></i> 取消
+														</button>
+														<button type="button" class="btn body-button" id="confirm-btn-addRadioFreqModal">
+															<i class="fa-solid fa-floppy-disk"></i> 确定
+														</button>
+													</div>
+												</form>
+											</div>
+										</div>
+                                    </div>
 
                                     <!-- 扫描添加设备弹框 -->
                                     <div 
@@ -1207,17 +1280,20 @@ SPDX-License-Identifier: Apache-2.0 -->
                   	scanNewThingsList = [],
                   	selectedNewThingNames = [],
 					allThingsList = [],
+					curDevice = {}, //当前设备
 					$network_speech_area_tree = null, // 网络扩声区域树
 					network_speech_area_treeData = [], // 播放区域树数据
 					selected_network_speech_areas = []; //设备设置-选中的网络扩声区域;
-				const deviceNetCfgModal = new bootstrap.Modal(document.getElementById("deviceNetCfgModal")),
-					  editThingModal = new bootstrap.Modal(document.getElementById("editThingModal")),
-					  moreEditThingModal= new bootstrap.Modal(document.getElementById("moreEditThingModal")),
+				const deviceNetCfgModal = new bootstrap.Modal(document.getElementById("deviceNetCfgModal")), // 设备网络配置弹框
+					  editThingModal = new bootstrap.Modal(document.getElementById("editThingModal")), // 设备设置弹框
+					  moreEditThingModal= new bootstrap.Modal(document.getElementById("moreEditThingModal")), // 设备高级设置弹框
 					  networkSpeechAreasAddModal = new bootstrap.Modal(document.getElementById("networkSpeechAreasAddModal")), // 新增广播区域弹框
 					  networkSpeechAreasDetailModal = new bootstrap.Modal(document.getElementById("networkSpeechAreasDetailModal")), // 广播区域详情弹框
-					  scanThingsModal = new bootstrap.Modal(document.getElementById("scanThingsModal")),
+					  scanThingsModal = new bootstrap.Modal(document.getElementById("scanThingsModal")), // 扫描设备弹框
+					  addRadioFreqModal = new bootstrap.Modal(document.getElementById("addRadioFreqModal")), // 添加收音机频率弹框
 					  $powerCfgTable = $('#powerCfgTable');
 					  requiredMsg = '不能为空',
+					  radioFreqListErrorMsg = '只能输入正整数或者一位小数',
 					  url = window.location.href, // 获取当前页面的URL
 					  onlineStatusValue = (url.match(/onlineStatus=(\d+)/) || [])[1] || 
 					  	sessionStorage.getItem("onlineStatus") || '1'; // 从URL获取onlineStatus的值
@@ -1789,8 +1865,200 @@ SPDX-License-Identifier: Apache-2.0 -->
 					}
 				}
 
+				// 验证收音机频率
+				function validateRadioFreq(value) {
+					const regex = /^(0\.[1-9]|[1-9]\d*(\.\d)?)$/;
+					return regex.test(value)
+				}
+
+				// 生成收音机列表
+				function createRadioFreqList(radioFreqList) {
+					const $radioFreqListContainer = $('#moreEditThingModal-radioFreq-container');
+					$radioFreqListContainer.empty();
+					const $addRadioFreqButton = $(`
+						<div
+							class="hoverCard card deviceOperation-btn addBtn"
+							id="moreEditThingModal-radioFreq-addBtn"
+						>
+							<div class="card-body deviceOperation-btn-container">
+								<div class="deviceOperation-btn-icon">
+									<i class="fa-solid fa-plus"></i>
+								</div>
+								<div class="row">
+									新增
+								</div>
+							</div>
+						</div>
+					`);
+
+					if (radioFreqList && radioFreqList.length) {
+						radioFreqList.forEach((radioFreq, index) => {
+							const $radioFreqItem = $(`
+								<div
+									class="
+										hoverCard 
+										card 
+										deviceOperation-btn 
+										${radioFreq.used ? 'primaryBtn' : 'disabledBtn'}
+									"
+									id="moreEditThingModal-radioFreq-${index}"
+								>
+									<div class="card-body deviceOperation-btn-container">
+										<div 
+											class="deviceOperation-btn-icon" 
+											id="moreEditThingModal-radioFreq-${index}-iconContainer"
+										>
+											<i class="fa-solid fa-radio"></i>
+										</div>
+										<div class="row" style="margin-top: -15px; margin-bottom: 10px;">
+											${radioFreq.name}
+										</div>
+										<div 
+											class="row" 
+											style="cursor: pointer"
+											id="moreEditThingModal-radioFreq-${index}-toggleBtn"
+										>
+											${radioFreq.used ? '启用' : '未启用'}
+										</div>
+									</div>
+								</div>
+							`);
+							$radioFreqListContainer.append($radioFreqItem);
+							//鼠标移入收音机按钮切换为删除按钮
+							$(`#moreEditThingModal-radioFreq-${index}`).mouseenter(function() {
+								$(this).removeClass("primaryBtn disabledBtn").addClass("dangerBtn");
+								$(`#moreEditThingModal-radioFreq-${index}-iconContainer`).empty();
+								const $trashIcon = $(`
+									<span id="moreEditThingModal-radioFreq-${index}-deleteBtn">
+										<i class="fa-solid fa-trash-can"></i>
+									</span>
+								`);
+								$(`#moreEditThingModal-radioFreq-${index}-iconContainer`).append($trashIcon);
+								//点击删除按钮
+								$(`#moreEditThingModal-radioFreq-${index}-deleteBtn`).click(function() {
+									const data = {
+										controlType:  "deviceRadioFreqDelete", 
+										thingIdentity: curDevice.credentials.identity, 
+										radioFreq,
+									}
+									controlThing(data, controlThing({controlType: 'deviceRadioFreqGet'}));
+								});
+							});
+
+							//鼠标移出收音机按钮切换为正常按钮
+							$(`#moreEditThingModal-radioFreq-${index}`).mouseleave(function() {
+								const addClass = radioFreq.used ? 'primaryBtn' : 'disabledBtn';
+								$(this).removeClass("dangerBtn").addClass(addClass);
+								$(`#moreEditThingModal-radioFreq-${index}-iconContainer`).empty();
+								const $radioIcon = $(`<i class="fa-solid fa-radio"></i>`);
+								$(`#moreEditThingModal-radioFreq-${index}-iconContainer`).append($radioIcon);
+							});
+
+							//点击收音机按钮切换状态
+							$(`#moreEditThingModal-radioFreq-${index}-toggleBtn`).click(function() {
+								const data = {
+									controlType:  "deviceSpeechCfgSet", 
+									thingIdentity: curDevice.credentials.identity, 
+									radioFreq: {
+										...radioFreq,
+										used: !radioFreq.used,
+									},
+								};
+								controlThing(data, controlThing({controlType: 'deviceRadioFreqGet'}));
+							});
+						})
+					}
+					$radioFreqListContainer.append($addRadioFreqButton);
+					//点击新增收音机按钮
+					$(`#moreEditThingModal-radioFreq-addBtn`).click(function() {
+						moreEditThingModal.hide();
+						addRadioFreqModal.show();
+						$('#name-addRadioFreqModal').val('');
+						$('#freq-addRadioFreqModal').val('');
+					});
+
+					// 验证频率名称
+					$('#name-addRadioFreqModal').on('input change blur', function() {
+						const name = $(this).val();
+						if (name) {
+							$(`#name-error-addRadioFreqModal`).empty();
+							$('#name-error-addRadioFreqModal').hide();
+						} else {
+							$(`#name-error-addRadioFreqModal`).html(requiredMsg);
+							$('#name-error-addRadioFreqModal').show();
+						}
+					});
+
+					// 验证频率值
+					$('#freq-addRadioFreqModal').on('input change blur', function() {
+						const freq = $(this).val();
+						if (freq) {
+							if (validateRadioFreq(freq)) {
+								$(`#freq-error-addRadioFreqModal`).empty();
+								$('#freq-error-addRadioFreqModal').hide();
+							} else {
+								$(`#freq-error-addRadioFreqModal`).html(radioFreqListErrorMsg);
+								$('#freq-error-addRadioFreqModal').show();
+							}
+						} else {
+							$(`#freq-error-addRadioFreqModal`).html(requiredMsg);
+							$('#freq-error-addRadioFreqModal').show();
+						}
+					});
+
+					$('#confirm-btn-addRadioFreqModal').click(function() {
+						const name = $('#name-addRadioFreqModal').val();
+						const freq = $('#freq-addRadioFreqModal').val();
+						let canSave = true;
+
+						if (!name) {
+							canSave = false;
+							$(`#name-error-addRadioFreqModal`).html(requiredMsg);
+							$('#name-error-addRadioFreqModal').show();
+						} else {
+							canSave = true;
+							$(`#name-error-addRadioFreqModal`).empty();
+							$('#name-error-addRadioFreqModal').hide();
+						}
+						if (!freq) {
+							canSave = false;
+							$(`#freq-error-addRadioFreqModal`).html(requiredMsg);
+							$('#freq-error-addRadioFreqModal').show();
+						} else {
+							if (validateRadioFreq(freq)) {
+								canSave = true;
+								$(`#freq-error-addRadioFreqModal`).empty();
+								$('#freq-error-addRadioFreqModal').hide();
+							} else {
+								canSave = false;
+								$(`#freq-error-addRadioFreqModal`).html(radioFreqListErrorMsg);
+								$('#freq-error-addRadioFreqModal').show();
+							}
+						}
+
+						if (canSave) {
+							const callback = () => {
+								addRadioFreqModal.hide();
+								moreEditThingModal.show();
+								controlThing({controlType: 'deviceRadioFreqGet'})
+							};
+							const data = {
+								controlType:  "deviceSpeechCfgAdd", 
+								thingIdentity: curDevice.credentials.identity, 
+								radioFreq: {
+									name,
+									freq: Number(freq),
+									used: false,
+								},
+							};
+							controlThing(data, callback);
+						}
+					});
+				}
+
 				//初始化更多设置
 				function initMoreEditThingModal(device) {
+					curDevice = _.cloneDeep(device);
 					$("#deviceNameTitleMoreEditThingModal").html(device.name || "");
 					//显示第一个tab标签
 					const triggerEl = document.querySelector('#v-pills-tab button[data-bs-toggle="pill"]')
@@ -2133,8 +2401,10 @@ SPDX-License-Identifier: Apache-2.0 -->
 							}
 
 							//收音机
-							if (feature_list.has_radio) {
+							if (feature_list.has_radio && feature_list.radio_enable) {
 								$('#moreEditThingModal-radio-tab').show();
+								controlThing({controlType: 'deviceRadioFreqGet'});
+								createRadioFreqList();
 							}
 
 							//本地扩声
@@ -2474,7 +2744,12 @@ SPDX-License-Identifier: Apache-2.0 -->
 								});
 							}
 
-							if (feature_list.has_status_led || feature_list.has_stereo || feature_list.has_amp_check) {
+							//状态灯、立体声、功放检测
+							if (
+								feature_list.has_status_led || 
+								feature_list.has_stereo || 
+								feature_list.has_amp_check
+							) {
 								$('#moreEditThingModal-otherOperation-tab').show();
 
 								// 状态灯、立体声、功放检测按钮状态显示

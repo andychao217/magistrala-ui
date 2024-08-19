@@ -122,7 +122,7 @@ function createCard(data) {
 				</a>
 				<div class="card-footer buttons">
 					<button type="button" class="btn me-2" onclick="deleteDashboard('${dashboard.id}')">
-						<i class="fas fa-trash-alt"></i>
+						<i class="fa-solid fa-trash-can"></i>
 					</button>
 					<button
 						type="button"

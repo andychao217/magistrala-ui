@@ -91,7 +91,7 @@ SPDX-License-Identifier: Apache-2.0 -->
                                                             <form action="{{ printf " %s/things/%s/channels/disconnect?item=things" pathPrefix $thingID }}" method="post">
                                                                 <input type="hidden" name="channelID" id="channelID" value="{{ $c.ID }}" />
                                                                 <button type="submit" class="btn" {{ if not $shareButton }}disabled{{ end }}>
-                                                                    <i class="fas fa-trash-alt"></i>
+                                                                    <i class="fa-solid fa-trash-can"></i>
                                                                 </button>
                                                             </form>
                                                         </td>

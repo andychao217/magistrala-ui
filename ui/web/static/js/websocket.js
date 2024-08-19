@@ -188,7 +188,19 @@ function handleThingMessage(data, defaultChannelId) {
         ].includes(data.msgName)
     ) {
         controlDeviceWebsocket(hostNameWebsocket, defaultChannelId, "deviceInfoGet");
-    } else if (data.msgName === "GET_LOG_REPLY") {
+    } else if (data.msgName === "RADIO_FREQ_GET_REPLY") {
+        const radioFreqList = data.data?.rf;
+        if (radioFreqList && radioFreqList.length > 0) {
+            const radioFreqContainer = iframe ? 
+                iframe.contentDocument.getElementById('moreEditThingModal-radioFreq-container') : 
+                document.getElementById('moreEditThingModal-radioFreq-container');
+            if (radioFreqContainer) {
+                if (createRadioFreqList && typeof createRadioFreqList === "function") {
+                    createRadioFreqList(radioFreqList);
+                }
+            }
+        }
+    }  else if (data.msgName === "GET_LOG_REPLY") {
         const logs = data.data?.log;
         const logContainer = iframe ? 
             iframe.contentDocument.getElementById('moreEditThingModal-deviceLog') : 

@@ -1429,6 +1429,7 @@ ul.gj-list img[src="/images/icon_channel.png"] {
     margin-right: 10px;
     padding: 0;
     color: white;
+    margin-bottom: 10px;
 }
 .hoverCard.card.deviceOperation-btn.dangerBtn {
     background: #ff5555;
@@ -1439,6 +1440,25 @@ ul.gj-list img[src="/images/icon_channel.png"] {
 .hoverCard.card.deviceOperation-btn.disabledBtn {
     background: #73879c;
 }
+.hoverCard.card.deviceOperation-btn.addBtn {
+    border: thin dashed gray;
+    border-radius: 5px;
+    color: gray;
+    background-color: whitesmoke;
+}
+.hoverCard.card.deviceOperation-btn.addBtn:hover {
+    border-color: #0064de;
+    color: #0064de;
+}
+
+#moreEditThingModal-otherOperation-container,
+#moreEditThingModal-radioFreq-container{
+    --bs-gutter-x: 1.5rem;
+    --bs-gutter-y: 0;
+    display: flex;
+    flex-wrap: wrap;
+}
+
 .card-body.deviceOperation-btn-container {
     display: flex;
     flex-direction: column;
