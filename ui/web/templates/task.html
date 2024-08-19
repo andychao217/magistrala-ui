@@ -1418,7 +1418,16 @@ SPDX-License-Identifier: Apache-2.0 -->
 				} else {
 					taskList = allTaskList.map((task) => task);
 				}
-				taskList.forEach(function(task) {
+				taskList.sort((a, b) => {
+					// 使用 Moment.js 解析时间部分
+					const timeA = moment(a.start_date, 'YYYY-MM-DD HH:mm:ss').format('HH:mm:ss');
+					const timeB = moment(b.start_date, 'YYYY-MM-DD HH:mm:ss').format('HH:mm:ss');
+
+					// 比较时间部分
+					if (timeA < timeB) return -1;
+					if (timeA > timeB) return 1;
+					return 0;
+				}).forEach(function(task) {
 					createTaskItem(task);
 				});
 				setTaskDateBadgeValue(taskList.length);
