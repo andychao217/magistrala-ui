@@ -2375,20 +2375,20 @@ SPDX-License-Identifier: Apache-2.0 -->
 					const deviceInfo = _.cloneDeep(device.metadata?.info);
 					if (deviceInfo && !_.isEmpty(deviceInfo)) {
 						//网络设置
-						let ip = deviceInfo.netcfg.static_ip, 
-							gateway = deviceInfo.netcfg.static_gateway,
-							netmask = deviceInfo.netcfg.static_netmask, 
-							dns1 = deviceInfo.netcfg.static_dns1, 
-							dns2 = deviceInfo.netcfg.static_dns2;
-							dhcp_enable = deviceInfo.netcfg.dhcp_enable,
+						let ip = deviceInfo.netcfg?.static_ip, 
+							gateway = deviceInfo.netcfg?.static_gateway,
+							netmask = deviceInfo.netcfg?.static_netmask, 
+							dns1 = deviceInfo.netcfg?.static_dns1, 
+							dns2 = deviceInfo.netcfg?.static_dns2;
+							dhcp_enable = deviceInfo.netcfg?.dhcp_enable,
 							disabled = false,
 							deviceID = device.id;
 						if (dhcp_enable) {
-							ip = deviceInfo.netcfg.dhcp_ip;
-							gateway = deviceInfo.netcfg.dhcp_gateway;
-							netmask = deviceInfo.netcfg.dhcp_netmask;
-							dns1 = deviceInfo.netcfg.dhcp_dns1;
-							dns2 = deviceInfo.netcfg.dhcp_dns2;
+							ip = deviceInfo.netcfg?.dhcp_ip;
+							gateway = deviceInfo.netcfg?.dhcp_gateway;
+							netmask = deviceInfo.netcfg?.dhcp_netmask;
+							dns1 = deviceInfo.netcfg?.dhcp_dns1;
+							dns2 = deviceInfo.netcfg?.dhcp_dns2;
 							disabled = true;
 							document.getElementById("dhcp_enable-deviceNetCfg-moreEditThingModal-manual").checked = false;
 							document.getElementById("dhcp_enable-deviceNetCfg-moreEditThingModal-auto").checked = true;
@@ -2486,12 +2486,12 @@ SPDX-License-Identifier: Apache-2.0 -->
 						//输入通道
 						if (
 							deviceInfo.in_channel && 
-							deviceInfo.in_channel.channel && 
-							deviceInfo.in_channel.channel.length
+							deviceInfo.in_channel?.channel && 
+							deviceInfo.in_channel?.channel?.length
 						) {
 							$('#moreEditThingModal-inChannels-tab').show();
-							deviceInfo.in_channel.channel.filter((channel) => !channel.ignore).forEach((channel)=>{
-								createChannelConfig(channel, 'in', device.credentials.identity);
+							deviceInfo.in_channel?.channel?.filter((channel) => !channel.ignore).forEach((channel)=>{
+								createChannelConfig(channel, 'in', device.credentials?.identity);
 							});
 						} else {
 							$('#moreEditThingModal-inChannels-tab').hide();
@@ -2810,12 +2810,12 @@ SPDX-License-Identifier: Apache-2.0 -->
 									const $option = $(`<option value="${i}">${i === 0 ? '随机' : i}</option>`);
 									$('#u-channel-moreEditThingModal').append($option);
 								}
-								$('#u-channel-moreEditThingModal').val(deviceInfo.misc_cfg.u_channel);
+								$('#u-channel-moreEditThingModal').val(deviceInfo.misc_cfg?.u_channel);
 								$('#u-channel-moreEditThingModal').on('change', function () {
 									const uChannel = $(this).val();
 									const data = {
 										controlType:  "deviceUChannelSet", 
-										thingIdentity: device.credentials.identity,
+										thingIdentity: device.credentials?.identity,
 										uChannel: Number(uChannel),
 									}
 									controlThing(data);
@@ -2848,7 +2848,7 @@ SPDX-License-Identifier: Apache-2.0 -->
 									return {
 										name   : item.aliase,
 										value  : item.id,
-										checked: deviceInfo.speech_cfg.local_speech_area.includes(item.id)
+										checked: deviceInfo.speech_cfg.local_speech_area?.includes(item.id)
 									}
 								});
 								$('select[multiple].localSpeech-local_speech_area-moreEditThingModal').multiselect('loadOptions', local_speech_area_options );
@@ -2871,15 +2871,15 @@ SPDX-License-Identifier: Apache-2.0 -->
 								$('#localSpeech-network_speech_area-moreEditThingModal-container').hide();
 								$('#localSpeech-network_speech_area_Error').hide();
 								$('#localSpeech-network_speech_area_Error').empty();
-								if (deviceInfo.product_name.includes('2204')) {
+								if (deviceInfo.product_name?.includes('2204')) {
 									$('#localSpeech-network_speech-moreEditThingModal-container').show();
 									$('#localSpeech-network_speech-moreEditThingModal').prop('checked', false);
 									getNetworkSpeechAreaTree();
-									if (deviceInfo.speech_cfg.network_speech_area) {
+									if (deviceInfo.speech_cfg?.network_speech_area) {
 										$('#localSpeech-network_speech-moreEditThingModal').prop('checked', true);
 										$('#localSpeech-network_speech_area-moreEditThingModal-container').show();
 										const network_speech_area_array = deviceInfo.speech_cfg?.network_speech_area ? 
-											deviceInfo.speech_cfg.network_speech_area.split(',').map((area)=>{
+											deviceInfo.speech_cfg?.network_speech_area?.split(',').map((area)=>{
 												if(area.includes('_1')){
 													return area.split('_')[0];
 												} else {
@@ -2942,16 +2942,16 @@ SPDX-License-Identifier: Apache-2.0 -->
 								}
 
 								//音量
-								$('#localSpeech-volume-moreEditThingModal').val(deviceInfo.speech_cfg.volume);
-								$('#localSpeech-volume-label-moreEditThingModal').html(deviceInfo.speech_cfg.volume);
+								$('#localSpeech-volume-moreEditThingModal').val(deviceInfo.speech_cfg?.volume || 0);
+								$('#localSpeech-volume-label-moreEditThingModal').html(deviceInfo.speech_cfg?.volume || 0);
 								$('#localSpeech-volume-moreEditThingModal').on('change', function () {
 									const volume = $(this).val();
 									$('#localSpeech-volume-label-moreEditThingModal').html(volume);
 								});
 
 								//触发灵敏度
-								$('#localSpeech-trigger_threshold-moreEditThingModal').val(deviceInfo.speech_cfg.trigger_threshold);
-								$('#localSpeech-trigger_threshold-label-moreEditThingModal').html(deviceInfo.speech_cfg.trigger_threshold);
+								$('#localSpeech-trigger_threshold-moreEditThingModal').val(deviceInfo.speech_cfg?.trigger_threshold || 0);
+								$('#localSpeech-trigger_threshold-label-moreEditThingModal').html(deviceInfo.speech_cfg?.trigger_threshold || 0);
 								$('#localSpeech-trigger_threshold-moreEditThingModal').on('change', function () {
 									const trigger_threshold = $(this).val();
 									$('#localSpeech-trigger_threshold-label-moreEditThingModal').html(trigger_threshold);
@@ -3055,7 +3055,7 @@ SPDX-License-Identifier: Apache-2.0 -->
 								});
 
 								//蓝牙密码
-								$('#bluetooth-password-moreEditThingModal').val(deviceInfo.bluetooth_cfg.password);
+								$('#bluetooth-password-moreEditThingModal').val(deviceInfo.bluetooth_cfg?.password || '');
 								$('#bluetooth-password-moreEditThingModal').on('input change blur', function (event) {
 									const bluetooth_player_enable = $('#bluetooth-player-moreEditThingModal').is(':checked');
 									const play_area_list = $('select[multiple].bluetooth-play-area-moreEditThingModal').val();
@@ -3086,7 +3086,7 @@ SPDX-License-Identifier: Apache-2.0 -->
 								});
 
 								//蓝牙延迟
-								$('#bluetooth_delay-moreEditThingModal').val(deviceInfo.bluetooth_cfg.bluetooth_delay);
+								$('#bluetooth_delay-moreEditThingModal').val(deviceInfo.bluetooth_cfg?.bluetooth_delay || 0);
 								$('#bluetooth_delay-moreEditThingModal').on('blur', function (event) {
 									const bluetooth_player_enable = $('#bluetooth-player-moreEditThingModal').is(':checked');
 									const play_area_list = $('select[multiple].bluetooth-play-area-moreEditThingModal').val();
