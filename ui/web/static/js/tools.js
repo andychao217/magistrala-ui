@@ -264,3 +264,10 @@ function redirectToLogin() {
         window.location.href = url;
     }
 }
+
+
+//设置rangeInput的value值时，改变其背景色
+function updateRangeBackground(rangeInput) {
+    const value = (rangeInput.value - rangeInput.min) / (rangeInput.max - rangeInput.min) * 100;
+    rangeInput.style.setProperty('--value', `${value}%`);
+}

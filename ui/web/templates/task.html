@@ -197,12 +197,13 @@ SPDX-License-Identifier: Apache-2.0 -->
 													<div class="col-sm-10" style="display: flex; margin-top: 7px;">
 														<input 
 															type="range" 
-															class="form-conrtol form-range" 
+															class="form-conrtol rangeInput" 
 															min="-7" 
 															max="7" 
 															step="1" 
 															id="volumeControl"
 															name="volumeControl"
+															style="width: 100%; margin-top: 8px;"
 														/>
 														<div id="volumeLabel" style="text-align: right; width: 30px; line-height: 25px;">0</div>
 													</div>
@@ -702,7 +703,7 @@ SPDX-License-Identifier: Apache-2.0 -->
 				});
 
 				// 音量微调选择框变化时，改变音量标签-任务弹框
-				$('#volumeControl').change(function() {
+				$('#volumeControl').on('input change blur', (event) => {
 					const volumeControlValue = $(this).val();
 					$('#volumeLabel').html(volumeControlValue);
 				});
@@ -1144,6 +1145,13 @@ SPDX-License-Identifier: Apache-2.0 -->
 
 				// 获取播放区域列表树
 				getPlayAreaTree();
+
+				//设置rangeInput的value值时，改变其背景色
+				const rangeInputs = document.querySelectorAll('.rangeInput');
+				rangeInputs.forEach(rangeInput => {
+					rangeInput.addEventListener('input', () => updateRangeBackground(rangeInput));
+					updateRangeBackground(rangeInput); // 初始化背景
+				});
 			});
 
 			// 页面初始化时，获取任务列表

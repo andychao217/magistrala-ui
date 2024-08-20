@@ -193,6 +193,42 @@ SPDX-License-Identifier: Apache-2.0 -->
 															</button>
 															<button 
 																class="nav-link" 
+																id="moreEditThingModal-speaker-volume-tab" 
+																data-bs-toggle="pill" 
+																data-bs-target="#moreEditThingModal-speaker-volume" 
+																type="button" 
+																role="tab" 
+																aria-controls="moreEditThingModal-speaker-volume" 
+																aria-selected="false"
+															>
+																音量配置
+															</button>
+															<button 
+																class="nav-link" 
+																id="moreEditThingModal-eqCfg-tab" 
+																data-bs-toggle="pill" 
+																data-bs-target="#moreEditThingModal-eqCfg" 
+																type="button" 
+																role="tab" 
+																aria-controls="moreEditThingModal-eqCfg" 
+																aria-selected="false"
+															>
+																话筒EQ
+															</button>
+															<button 
+																class="nav-link" 
+																id="moreEditThingModal-u-channel-tab" 
+																data-bs-toggle="pill" 
+																data-bs-target="#moreEditThingModal-u-channel" 
+																type="button" 
+																role="tab" 
+																aria-controls="moreEditThingModal-u-channel" 
+																aria-selected="false"
+															>
+																U段配置
+															</button>
+															<button 
+																class="nav-link" 
 																id="moreEditThingModal-deviceLog-tab" 
 																data-bs-toggle="pill" 
 																data-bs-target="#moreEditThingModal-deviceLog" 
@@ -359,7 +395,7 @@ SPDX-License-Identifier: Apache-2.0 -->
 																id="moreEditThingModal-inChannels" 
 																role="tabpanel" 
 																aria-labelledby="moreEditThingModal-inChannels-tab" 
-																tabindex="0"
+																tabindex="1"
 																style="min-height: 450px;"
 															>
 																<!-- 输入通道 -->
@@ -370,7 +406,7 @@ SPDX-License-Identifier: Apache-2.0 -->
 																id="moreEditThingModal-powerCfg" 
 																role="tabpanel" 
 																aria-labelledby="moreEditThingModal-powerCfg-tab" 
-																tabindex="0"
+																tabindex="2"
 																style="min-height: 450px;"
 															>
 																<!-- 功率设置 -->
@@ -395,7 +431,7 @@ SPDX-License-Identifier: Apache-2.0 -->
 																id="moreEditThingModal-audioMatrix" 
 																role="tabpanel" 
 																aria-labelledby="moreEditThingModal-audioMatrix-tab" 
-																tabindex="0"
+																tabindex="3"
 																style="min-height: 450px;"
 															>
 																<!-- 音频矩阵 -->
@@ -427,7 +463,7 @@ SPDX-License-Identifier: Apache-2.0 -->
 																id="moreEditThingModal-localSpeech" 
 																role="tabpanel" 
 																aria-labelledby="moreEditThingModal-localSpeech-tab" 
-																tabindex="0"
+																tabindex="4"
 																style="min-height: 450px;"
 															>
 																<!-- 扩声 -->
@@ -514,12 +550,13 @@ SPDX-License-Identifier: Apache-2.0 -->
 																		<div style="display: flex;">
 																			<input 
 																				type="range" 
-																				class="form-conrtol form-range" 
+																				class="form-conrtol rangeInput" 
 																				min="0" 
 																				max="15" 
 																				step="1" 
 																				value="0" 
 																				id="localSpeech-volume-moreEditThingModal"
+																				style="width: 100%; margin-top: 8px;"
 																			/>
 																			<div 
 																				id="localSpeech-volume-label-moreEditThingModal" 
@@ -541,12 +578,13 @@ SPDX-License-Identifier: Apache-2.0 -->
 																		<div style="display: flex;">
 																			<input 
 																				type="range" 
-																				class="form-conrtol form-range" 
+																				class="form-conrtol rangeInput" 
 																				min="0" 
 																				max="15" 
 																				step="1" 
 																				value="0" 
 																				id="localSpeech-trigger_threshold-moreEditThingModal"
+																				style="width: 100%; margin-top: 8px;"
 																			/>
 																			<div 
 																				id="localSpeech-trigger_threshold-label-moreEditThingModal" 
@@ -569,7 +607,7 @@ SPDX-License-Identifier: Apache-2.0 -->
 																id="moreEditThingModal-radio" 
 																role="tabpanel" 
 																aria-labelledby="moreEditThingModal-radio-tab" 
-																tabindex="0"
+																tabindex="5"
 																style="min-height: 450px;"
 															>
 																<!-- 收音机 -->
@@ -580,7 +618,7 @@ SPDX-License-Identifier: Apache-2.0 -->
 																id="moreEditThingModal-bluetooth" 
 																role="tabpanel" 
 																aria-labelledby="moreEditThingModal-bluetooth-tab" 
-																tabindex="0"
+																tabindex="6"
 																style="min-height: 450px;"
 															>
 																<!-- 蓝牙配置 -->
@@ -643,10 +681,263 @@ SPDX-License-Identifier: Apache-2.0 -->
 															</div>
 															<div 
 																class="tab-pane fade device_more_setting_tab" 
+																id="moreEditThingModal-speaker-volume" 
+																role="tabpanel" 
+																aria-labelledby="moreEditThingModal-speaker-volume-tab" 
+																tabindex="6"
+																style="min-height: 450px;"
+															>
+																<!-- 音量配置 -->
+																<div class="mb-3" style="text-align: center;">
+																	<img src="/images/volume_0.png" id="moreEditThingModal-speaker-volume-pic" class="volume-pic">
+																</div>
+																<div class="range-container">
+																	<div class="range-wrapper speaker-volume-wrapper" id="speaker-volume-range-wrapper-1">
+																		<div class="range-label">低音1</div>
+																		<div class="range-gap speaker-volume-gap"></div>
+																	  	<div class="range-value" id="speaker-volume-indicator-1">0</div>
+																		<input
+																			type="range"
+																			min="0"
+																			max="15"
+																			class="vertical-range rangeInput"
+																			value="0"
+																			id="speaker-volume-1"
+																			oninput="updateVerticalRangeValue(this)"
+																		/>
+																	</div>
+																	<div class="range-wrapper speaker-volume-wrapper" id="speaker-volume-range-wrapper-2">
+																		<div class="range-label">低音2</div>
+																		<div class="range-gap speaker-volume-gap"></div>
+																		<div class="range-value" id="speaker-volume-indicator-2">0</div>
+																		<input
+																			type="range"
+																			min="0"
+																			max="15"
+																			class="vertical-range rangeInput"
+																			value="0"
+																			id="speaker-volume-2"
+																			oninput="updateVerticalRangeValue(this)"
+																		/>
+																	</div>
+																	<div class="range-wrapper speaker-volume-wrapper" id="speaker-volume-range-wrapper-3">
+																		<div class="range-label">低音3</div>
+																		<div class="range-gap speaker-volume-gap"></div>
+																		<div class="range-value" id="speaker-volume-indicator-3">0</div>
+																		<input
+																			type="range"
+																			min="0"
+																			max="15"
+																			class="vertical-range rangeInput"
+																			value="0"
+																			id="speaker-volume-3"
+																			oninput="updateVerticalRangeValue(this)"
+																		/>
+																	</div>
+																	<div class="range-wrapper speaker-volume-wrapper" id="speaker-volume-range-wrapper-4">
+																		<div class="range-label">低音4</div>
+																		<div class="range-gap speaker-volume-gap"></div>
+																		<div class="range-value" id="speaker-volume-indicator-4">0</div>
+																		<input
+																			type="range"
+																			min="0"
+																			max="15"
+																			class="vertical-range rangeInput"
+																			value="0"
+																			id="speaker-volume-4"
+																			oninput="updateVerticalRangeValue(this)"
+																		/>
+																	</div>
+																	<div class="range-wrapper speaker-volume-wrapper" id="speaker-volume-range-wrapper-5">
+																		<div class="range-label">高音1</div>
+																		<div class="range-gap speaker-volume-gap"></div>
+																		<div class="range-value" id="speaker-volume-indicator-5">0</div>
+																		<input
+																			type="range"
+																			min="0"
+																			max="15"
+																			class="vertical-range rangeInput"
+																			value="0"
+																			id="speaker-volume-5"
+																			oninput="updateVerticalRangeValue(this)"
+																		/>
+																	</div>
+																	<div class="range-wrapper speaker-volume-wrapper" id="speaker-volume-range-wrapper-6">
+																		<div class="range-label">高音2</div>
+																		<div class="range-gap speaker-volume-gap"></div>
+																		<div class="range-value" id="speaker-volume-indicator-6">0</div>
+																		<input
+																			type="range"
+																			min="0"
+																			max="15"
+																			class="vertical-range rangeInput"
+																			value="0"
+																			id="speaker-volume-6"
+																			oninput="updateVerticalRangeValue(this)"
+																		/>
+																	</div>
+																</div>
+															</div>
+															<div 
+																class="tab-pane fade device_more_setting_tab" 
+																id="moreEditThingModal-eqCfg" 
+																role="tabpanel" 
+																aria-labelledby="moreEditThingModal-eqCfg-tab" 
+																tabindex="7"
+																style="min-height: 450px;"
+															>
+																<!-- 话筒EQ -->
+																<div class="mb-3" style="text-align: center;">
+																	<img src="/images/volume_0.png" alt="speaker-volume" class="volume-pic">
+																</div>
+																<div class="range-container">
+																	<div class="range-wrapper">
+																		<div class="range-label">75</div>
+																		<div class="range-gap"></div>
+																	  	<div class="range-value" id="eqCfg-indicator-75">0</div>
+																		<input
+																			type="range"
+																			min="-10"
+																			max="10"
+																			class="vertical-range rangeInput"
+																			value="0"
+																			id="eqCfg-range-75"
+																			oninput="updateVerticalRangeValue(this)"
+																		/>
+																	</div>
+																	<div class="range-wrapper">
+																		<div class="range-label">125</div>
+																		<div class="range-gap"></div>
+																		<div class="range-value" id="eqCfg-indicator-125">0</div>
+																		<input
+																			type="range"
+																			min="-10"
+																			max="10"
+																			class="vertical-range rangeInput"
+																			value="0"
+																			id="eqCfg-range-125"
+																			oninput="updateVerticalRangeValue(this)"
+																		/>
+																	</div>
+																	<div class="range-wrapper">
+																		<div class="range-label">250</div>
+																		<div class="range-gap"></div>
+																		<div class="range-value" id="eqCfg-indicator-250">0</div>
+																		<input
+																			type="range"
+																			min="-10"
+																			max="10"
+																			class="vertical-range rangeInput"
+																			value="0"
+																			id="eqCfg-range-250"
+																			oninput="updateVerticalRangeValue(this)"
+																		/>
+																	</div>
+																	<div class="range-wrapper">
+																		<div class="range-label">500</div>
+																		<div class="range-gap"></div>
+																		<div class="range-value" id="eqCfg-indicator-500">0</div>
+																		<input
+																			type="range"
+																			min="-10"
+																			max="10"
+																			class="vertical-range rangeInput"
+																			value="0"
+																			id="eqCfg-range-500"
+																			oninput="updateVerticalRangeValue(this)"
+																		/>
+																	</div>
+																	<div class="range-wrapper">
+																		<div class="range-label">1k</div>
+																		<div class="range-gap"></div>
+																		<div class="range-value" id="eqCfg-indicator-1000">0</div>
+																		<input
+																			type="range"
+																			min="-10"
+																			max="10"
+																			class="vertical-range rangeInput"
+																			value="0"
+																			id="eqCfg-range-1000"
+																			oninput="updateVerticalRangeValue(this)"
+																		/>
+																	</div>
+																	<div class="range-wrapper">
+																		<div class="range-label">2k</div>
+																		<div class="range-gap"></div>
+																		<div class="range-value" id="eqCfg-indicator-2000">0</div>
+																		<input
+																			type="range"
+																			min="-10"
+																			max="10"
+																			class="vertical-range rangeInput"
+																			value="0"
+																			id="eqCfg-range-2000"
+																			oninput="updateVerticalRangeValue(this)"
+																		/>
+																	</div>
+																	<div class="range-wrapper">
+																		<div class="range-label">4k</div>
+																		<div class="range-gap"></div>
+																		<div class="range-value" id="eqCfg-indicator-4000">0</div>
+																		<input
+																			type="range"
+																			min="-10"
+																			max="10"
+																			class="vertical-range rangeInput"
+																			value="0"
+																			id="eqCfg-range-4000"
+																			oninput="updateVerticalRangeValue(this)"
+																		/>
+																	</div>
+																	<div class="range-wrapper">
+																		<div class="range-label">8k</div>
+																		<div class="range-gap"></div>
+																		<div class="range-value" id="eqCfg-indicator-8000">0</div>
+																		<input
+																			type="range"
+																			min="-10"
+																			max="10"
+																			class="vertical-range rangeInput"
+																			value="0"
+																			id="eqCfg-range-8000"
+																			oninput="updateVerticalRangeValue(this)"
+																		/>
+																	</div>
+																</div>
+															</div>
+															<div 
+																class="tab-pane fade device_more_setting_tab" 
+																id="moreEditThingModal-u-channel" 
+																role="tabpanel" 
+																aria-labelledby="moreEditThingModal-u-channel-tab" 
+																tabindex="8"
+																style="min-height: 450px;"
+															>
+																<!-- U段配置 -->
+																<div class="mb-3 row">
+																	<label 
+																		for="u-channel-moreEditThingModal" 
+																		class="col-sm-3 col-form-label"
+																	>
+																		U段值
+																	</label>
+																	<div class="col-sm-9">
+																		<select 
+																			class="form-control form-select"
+																			id="u-channel-moreEditThingModal" 
+																			name="u-channel-moreEditThingModal" 
+																			placeholder="请选择U段值" 
+																			required
+																		></select>
+																	</div>
+																</div>
+															</div>
+															<div 
+																class="tab-pane fade device_more_setting_tab" 
 																id="moreEditThingModal-deviceLog" 
 																role="tabpanel" 
 																aria-labelledby="moreEditThingModal-deviceLog-tab" 
-																tabindex="0"
+																tabindex="9"
 															>
 																<!-- 设备日志 -->
 															</div>
@@ -655,7 +946,7 @@ SPDX-License-Identifier: Apache-2.0 -->
 																id="moreEditThingModal-sysInfo" 
 																role="tabpanel" 
 																aria-labelledby="moreEditThingModal-sysInfo-tab" 
-																tabindex="0"
+																tabindex="10"
 																style="font-size: 14px; height:  450px;"
 															>
 																<!-- 系统信息 -->
@@ -746,7 +1037,7 @@ SPDX-License-Identifier: Apache-2.0 -->
 																id="moreEditThingModal-otherOperation" 
 																role="tabpanel" 
 																aria-labelledby="moreEditThingModal-otherOperation-tab" 
-																tabindex="0"
+																tabindex="11"
 																style="height:  450px;"
 															>
 																<!-- 其他设置 -->
@@ -797,7 +1088,7 @@ SPDX-License-Identifier: Apache-2.0 -->
 																id="moreEditThingModal-deviceOperation" 
 																role="tabpanel" 
 																aria-labelledby="moreEditThingModal-deviceOperation-tab" 
-																tabindex="0"
+																tabindex="12"
 																style="height:  450px;"
 															>
 																<!-- 设备操作 -->
@@ -1553,12 +1844,13 @@ SPDX-License-Identifier: Apache-2.0 -->
 								<div style="display: flex; margin-top: 7px;">
 									<input 
 										type="range" 
-										class="form-conrtol form-range" 
+										class="form-conrtol rangeInput" 
 										min="0" 
 										max="15" 
 										step="1" 
 										value="${channel.volume}" 
 										id="${channelType}_channel_volume_${channel.id}"
+										style="width: 100%; margin-top: 8px;;"
 									/>
 									<div 
 										id="${channelType}_channel_volumeLabel_${channel.id}" 
@@ -1594,19 +1886,24 @@ SPDX-License-Identifier: Apache-2.0 -->
 						}
 					});
 
-					$(`#${channelType}_channel_volume_${channel.id}`).on('input blur', function(event) {
+					$(`#${channelType}_channel_volume_${channel.id}`).on('input', function(event) {
 						const channel_volume = $(this).val();
 						$(`#${channelType}_channel_volumeLabel_${channel.id}`).html(channel_volume);
 						const queryData = _.cloneDeep(channel);
 						queryData.volume = Number(channel_volume);
-						if (event.type === 'blur') {
-							const data = {
-								controlType:  controlType, 
-								thingIdentity: thingIdentity,
-								channelAttr: queryData,
-							}
-							controlThing(data);
+						const data = {
+							controlType:  controlType, 
+							thingIdentity: thingIdentity,
+							channelAttr: queryData,
 						}
+						controlThing(data);
+					});
+
+					//设置rangeInput的value值时，改变其背景色
+					const rangeInputs = document.querySelectorAll('.rangeInput');
+					rangeInputs.forEach(rangeInput => {
+						rangeInput.addEventListener('input', () => updateRangeBackground(rangeInput));
+						updateRangeBackground(rangeInput); // 初始化背景
 					});
 				}
 
@@ -2056,6 +2353,12 @@ SPDX-License-Identifier: Apache-2.0 -->
 					});
 				}
 
+				// 竖向range滑动条联动指示数字
+				function updateVerticalRangeValue(range) {
+					const valueDiv = range.previousElementSibling;
+					valueDiv.textContent = range.value;
+				}
+
 				//初始化更多设置
 				function initMoreEditThingModal(device) {
 					curDevice = _.cloneDeep(device);
@@ -2213,6 +2516,92 @@ SPDX-License-Identifier: Apache-2.0 -->
 						$('#moreEditThingModal-powerCfg-tab').hide();
 						$('#moreEditThingModal-audioMatrix-tab').hide();
 						$('#moreEditThingModal-radio-tab').hide();
+						$('#moreEditThingModal-u-channel-tab').hide();
+						$('#moreEditThingModal-speaker-volume-tab').hide();
+						$('#moreEditThingModal-eqCfg-tab').hide();
+
+						//NXT3602的6组扬声器音量、话筒EQ
+						if (deviceInfo.product_name.includes("3602")) {
+							//音量设置
+							$('#moreEditThingModal-speaker-volume-tab').show();
+							for(let i = 1; i <= 6; i++) {
+								$(`#speaker-volume-range-wrapper-${i}`).mouseenter(() => {
+									$('#moreEditThingModal-speaker-volume-pic').attr('src', `/images/volume_${i}.png`);
+								});
+								$(`#speaker-volume-range-wrapper-${i}`).mouseleave(() => {
+									$('#moreEditThingModal-speaker-volume-pic').attr('src', '/images/volume_0.png');
+								});
+
+								const initialValue = deviceInfo.misc_cfg?.speaker_volume[`volume${i}`] || 0;
+								$(`#speaker-volume-${i}`).val(initialValue);
+								$(`#speaker-volume-indicator-${i}`).html(initialValue);
+								$(`#speaker-volume-${i}`).on('input', (event) => {
+									const value = $(event.currentTarget).val(),
+										  volume1 = $(`#speaker-volume-1`).val(),
+										  volume2 = $(`#speaker-volume-2`).val(),
+										  volume3 = $(`#speaker-volume-3`).val(),
+										  volume4 = $(`#speaker-volume-4`).val(),
+										  volume5 = $(`#speaker-volume-5`).val(),
+										  volume6 = $(`#speaker-volume-6`).val();
+									$(`#speaker-volume-indicator-${i}`).html(value);
+									const speakerVolume = {
+										...deviceInfo.misc_cfg?.speaker_volume,
+										volume1: Number(volume1),
+										volume2: Number(volume2),
+										volume3: Number(volume3),
+										volume4: Number(volume4),
+										volume5: Number(volume5),
+										volume6: Number(volume6),
+									};
+									const data = {
+										controlType:  "deviceSpeakerVolumeSet", 
+										thingIdentity: device.credentials.identity,
+										speakerVolume,
+									}
+									controlThing(data);
+								});
+							}
+
+							//EQ设置
+							$('#moreEditThingModal-eqCfg-tab').show();
+							const eqCfgArray = ['75', '125', '250', '500', '1000', '2000', '4000', '8000'];
+							eqCfgArray.forEach((eq, index) => {
+								const initialValue = deviceInfo.misc_cfg?.eq_cfg[`eq_${eq}`] || 0
+								$(`#eqCfg-range-${eq}`).val(initialValue);
+								$(`#eqCfg-indicator-${eq}`).html(initialValue);
+
+								$(`#eqCfg-range-${eq}`).on('input', (event) => {
+									const value = $(event.currentTarget).val();
+										  eq_75 = $(`#eqCfg-range-75`).val(),
+										  eq_125 = $(`#eqCfg-range-125`).val(),
+										  eq_250 = $(`#eqCfg-range-250`).val(),
+										  eq_500 = $(`#eqCfg-range-500`).val(),
+										  eq_1000 = $(`#eqCfg-range-1000`).val(),
+										  eq_2000 = $(`#eqCfg-range-2000`).val(),
+										  eq_4000 = $(`#eqCfg-range-4000`).val(),
+										  eq_8000 = $(`#eqCfg-range-8000`).val();
+									$(`#eqCfg-indicator-${eq}`).html(value);
+									const eqCfg = {
+										...deviceInfo.misc_cfg?.eq_cfg,
+										eq_75: Number(eq_75),
+										eq_125: Number(eq_125),
+										eq_250: Number(eq_250),
+										eq_500: Number(eq_500),
+										eq_1000: Number(eq_1000),
+										eq_2000: Number(eq_2000),
+										eq_4000: Number(eq_4000),
+										eq_8000: Number(eq_8000),
+									};
+									const data = {
+										controlType:  "deviceEqCfgSet", 
+										thingIdentity: device.credentials.identity,
+										eqCfg,
+									}
+									controlThing(data);
+								});
+							});
+						}
+
 						//其他设置
 						const feature_list = _.cloneDeep(deviceInfo.feature_list);
 						if (feature_list && !_.isEmpty(feature_list)) {
@@ -2405,6 +2794,26 @@ SPDX-License-Identifier: Apache-2.0 -->
 								$('#moreEditThingModal-radio-tab').show();
 								controlThing({controlType: 'deviceRadioFreqGet'});
 								createRadioFreqList();
+							}
+
+							//U段配置
+							if (feature_list.has_u_module && feature_list.u_module_enable) {
+								$('#moreEditThingModal-u-channel-tab').show();
+								$('#u-channel-moreEditThingModal').empty();
+								for(let i = 0; i <= 39; i++) {
+									const $option = $(`<option value="${i}">${i === 0 ? '随机' : i}</option>`);
+									$('#u-channel-moreEditThingModal').append($option);
+								}
+								$('#u-channel-moreEditThingModal').val(deviceInfo.misc_cfg.u_channel);
+								$('#u-channel-moreEditThingModal').on('change', function () {
+									const uChannel = $(this).val();
+									const data = {
+										controlType:  "deviceUChannelSet", 
+										thingIdentity: device.credentials.identity,
+										uChannel: Number(uChannel),
+									}
+									controlThing(data);
+								});
 							}
 
 							//本地扩声
@@ -2843,6 +3252,13 @@ SPDX-License-Identifier: Apache-2.0 -->
 								}
 							}
 						}
+						
+						//设置rangeInput的value值时，改变其背景色
+						const rangeInputs = document.querySelectorAll('.rangeInput');
+						rangeInputs.forEach(rangeInput => {
+							rangeInput.addEventListener('input', () => updateRangeBackground(rangeInput));
+							updateRangeBackground(rangeInput); // 初始化背景
+						});
 					}
 					
 					//获取日志
