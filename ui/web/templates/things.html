@@ -1886,17 +1886,19 @@ SPDX-License-Identifier: Apache-2.0 -->
 						}
 					});
 
-					$(`#${channelType}_channel_volume_${channel.id}`).on('input', function(event) {
-						const channel_volume = $(this).val();
+					$(`#${channelType}_channel_volume_${channel.id}`).on('input change', function(event) {
+						const channel_volume = $(event.currentTarget).val();
 						$(`#${channelType}_channel_volumeLabel_${channel.id}`).html(channel_volume);
-						const queryData = _.cloneDeep(channel);
-						queryData.volume = Number(channel_volume);
-						const data = {
-							controlType:  controlType, 
-							thingIdentity: thingIdentity,
-							channelAttr: queryData,
+						if (event.type === 'change') {
+							const queryData = _.cloneDeep(channel);
+							queryData.volume = Number(channel_volume);
+							const data = {
+								controlType:  controlType, 
+								thingIdentity: thingIdentity,
+								channelAttr: queryData,
+							}
+							controlThing(data);
 						}
-						controlThing(data);
 					});
 
 					//设置rangeInput的value值时，改变其背景色
@@ -2535,7 +2537,7 @@ SPDX-License-Identifier: Apache-2.0 -->
 								const initialValue = deviceInfo.misc_cfg?.speaker_volume[`volume${i}`] || 0;
 								$(`#speaker-volume-${i}`).val(initialValue);
 								$(`#speaker-volume-indicator-${i}`).html(initialValue);
-								$(`#speaker-volume-${i}`).on('input', (event) => {
+								$(`#speaker-volume-${i}`).on('input change', (event) => {
 									const value = $(event.currentTarget).val(),
 										  volume1 = $(`#speaker-volume-1`).val(),
 										  volume2 = $(`#speaker-volume-2`).val(),
@@ -2544,21 +2546,23 @@ SPDX-License-Identifier: Apache-2.0 -->
 										  volume5 = $(`#speaker-volume-5`).val(),
 										  volume6 = $(`#speaker-volume-6`).val();
 									$(`#speaker-volume-indicator-${i}`).html(value);
-									const speakerVolume = {
-										...deviceInfo.misc_cfg?.speaker_volume,
-										volume1: Number(volume1),
-										volume2: Number(volume2),
-										volume3: Number(volume3),
-										volume4: Number(volume4),
-										volume5: Number(volume5),
-										volume6: Number(volume6),
-									};
-									const data = {
-										controlType:  "deviceSpeakerVolumeSet", 
-										thingIdentity: device.credentials.identity,
-										speakerVolume,
+									if (event.type === 'change') {
+										const speakerVolume = {
+											...deviceInfo.misc_cfg?.speaker_volume,
+											volume1: Number(volume1),
+											volume2: Number(volume2),
+											volume3: Number(volume3),
+											volume4: Number(volume4),
+											volume5: Number(volume5),
+											volume6: Number(volume6),
+										};
+										const data = {
+											controlType:  "deviceSpeakerVolumeSet", 
+											thingIdentity: device.credentials.identity,
+											speakerVolume,
+										}
+										controlThing(data);
 									}
-									controlThing(data);
 								});
 							}
 
@@ -2570,7 +2574,7 @@ SPDX-License-Identifier: Apache-2.0 -->
 								$(`#eqCfg-range-${eq}`).val(initialValue);
 								$(`#eqCfg-indicator-${eq}`).html(initialValue);
 
-								$(`#eqCfg-range-${eq}`).on('input', (event) => {
+								$(`#eqCfg-range-${eq}`).on('input change', (event) => {
 									const value = $(event.currentTarget).val();
 										  eq_75 = $(`#eqCfg-range-75`).val(),
 										  eq_125 = $(`#eqCfg-range-125`).val(),
@@ -2581,23 +2585,25 @@ SPDX-License-Identifier: Apache-2.0 -->
 										  eq_4000 = $(`#eqCfg-range-4000`).val(),
 										  eq_8000 = $(`#eqCfg-range-8000`).val();
 									$(`#eqCfg-indicator-${eq}`).html(value);
-									const eqCfg = {
-										...deviceInfo.misc_cfg?.eq_cfg,
-										eq_75: Number(eq_75),
-										eq_125: Number(eq_125),
-										eq_250: Number(eq_250),
-										eq_500: Number(eq_500),
-										eq_1000: Number(eq_1000),
-										eq_2000: Number(eq_2000),
-										eq_4000: Number(eq_4000),
-										eq_8000: Number(eq_8000),
-									};
-									const data = {
-										controlType:  "deviceEqCfgSet", 
-										thingIdentity: device.credentials.identity,
-										eqCfg,
+									if (event.type === 'change') {
+										const eqCfg = {
+											...deviceInfo.misc_cfg?.eq_cfg,
+											eq_75: Number(eq_75),
+											eq_125: Number(eq_125),
+											eq_250: Number(eq_250),
+											eq_500: Number(eq_500),
+											eq_1000: Number(eq_1000),
+											eq_2000: Number(eq_2000),
+											eq_4000: Number(eq_4000),
+											eq_8000: Number(eq_8000),
+										};
+										const data = {
+											controlType:  "deviceEqCfgSet", 
+											thingIdentity: device.credentials.identity,
+											eqCfg,
+										}
+										controlThing(data);
 									}
-									controlThing(data);
 								});
 							});
 						}

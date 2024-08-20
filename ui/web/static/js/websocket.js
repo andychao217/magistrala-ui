@@ -187,7 +187,12 @@ function handleThingMessage(data, defaultChannelId) {
             "SPEAKER_VOLUME_SET_REPLY",
         ].includes(data.msgName)
     ) {
-        controlDeviceWebsocket(hostNameWebsocket, defaultChannelId, "deviceInfoGet");
+        controlDeviceWebsocketSingle(
+            hostNameWebsocket, 
+            defaultChannelId,
+            "deviceInfoGet", 
+            data.source
+        );
     } else if (data.msgName === "RADIO_FREQ_GET_REPLY") {
         const radioFreqList = data.data?.rf;
         if (radioFreqList && radioFreqList.length > 0) {
@@ -294,7 +299,7 @@ function httpGetAllThingsListWebsocket(host, comID, notifyDevice) {
                 const url = window.location.href;
                 if (url.indexOf("things") !== -1) {
                     // 进入设备页面时，发送请求获取设备信息
-					controlDeviceWebsocket(host, comID, "deviceInfoGet");
+					controlDeviceWebsocketToAll(host, comID, "deviceInfoGet");
                 }
             }
         })
@@ -303,8 +308,8 @@ function httpGetAllThingsListWebsocket(host, comID, notifyDevice) {
         });
 }
 
-// 给设备发送消息
-function controlDeviceWebsocket(host, comID, controlType) {
+// 给所有设备发送消息
+function controlDeviceWebsocketToAll(host, comID, controlType) {
     const out_channel_unique_array = [...new Set(allThingsListWebsocket.map((item) => item.credentials.identity.split('_')[0]))];
     let data = {
         channelID: comID,
@@ -346,6 +351,27 @@ function controlDeviceWebsocket(host, comID, controlType) {
 
     // 调用异步函数
     processRequests();
+}
+
+// 给单个设备发送消息
+function controlDeviceWebsocketSingle(host, comID, controlType, thingIdentity) {
+    const out_channel_unique_array = [...new Set(allThingsListWebsocket.map((item) => item.credentials.identity.split('_')[0]))];
+    let data = {
+        channelID: comID,
+        host,
+        comID,
+        controlType,
+        username: userInfoWebsocket.credentials.identity,
+    };
+    const url = `${protocolWebsocket}//${hostNameWebsocket}:${portSocketBridge}/controlDevice`;
+    const queryData = {...data, thingIdentity};
+    fetch(url, {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+        },
+        body: JSON.stringify(queryData),
+    });
 }
 
 // 更新设备信息
