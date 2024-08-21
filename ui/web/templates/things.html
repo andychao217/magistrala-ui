@@ -3724,6 +3724,7 @@ SPDX-License-Identifier: Apache-2.0 -->
 						method: "POST",
 						headers: {
 							"Content-Type": "application/json",
+							"Authorization": getCookie('session'),
 						},
 						body: JSON.stringify(queryData),
 					})
@@ -3975,6 +3976,7 @@ SPDX-License-Identifier: Apache-2.0 -->
 					scanNewThingsList = []; selectedNewThingNames = [];
 					fetch(`http://${address.hostname}:${port}/devices`, {
 						method: "GET",
+						"Authorization": getCookie('session'),
 					})
 						.then(response => {
 							// 检查响应的内容类型是否为JSON
@@ -4065,6 +4067,7 @@ SPDX-License-Identifier: Apache-2.0 -->
 										method: "POST",
 										headers: {
 											"Content-Type": "application/json",
+											"Authorization": getCookie('session'),
 										},
 										body: JSON.stringify(newQueryData),
 									})

@@ -1227,7 +1227,8 @@ SPDX-License-Identifier: Apache-2.0 -->
 				fetch(`${protocol}//${hostname}:${port}/taskList`, {
 					method: 'POST',
 					headers: {
-						'Content-Type': 'application/json'
+						'Content-Type': 'application/json',
+						"Authorization": getCookie('session'),
 					},
 					body: JSON.stringify(queryData)
 				})
@@ -1541,7 +1542,8 @@ SPDX-License-Identifier: Apache-2.0 -->
 					fetch(`${protocol}//${hostname}:${port}/controlDevice`, {
 						method: 'POST',
 						headers: {
-							'Content-Type': 'application/json'
+							'Content-Type': 'application/json',
+							"Authorization": getCookie('session'),
 						},
 						body: JSON.stringify(queryData)
 					});
@@ -1610,7 +1612,8 @@ SPDX-License-Identifier: Apache-2.0 -->
 				fetch(`${protocol}//${hostname}:${port}/addTask`, {
 					method: 'POST',
 					headers: {
-						'Content-Type': 'application/json'
+						'Content-Type': 'application/json',
+						"Authorization": getCookie('session'),
 					},
 					body: JSON.stringify(queryData)
 				})
@@ -1637,7 +1640,8 @@ SPDX-License-Identifier: Apache-2.0 -->
 				fetch(`${protocol}//${hostname}:${port}/updateTask`, {
 					method: 'PUT',
 					headers: {
-						'Content-Type': 'application/json'
+						'Content-Type': 'application/json',
+						"Authorization": getCookie('session'),
 					},
 					body: JSON.stringify(queryData)
 				})
@@ -1753,7 +1757,8 @@ SPDX-License-Identifier: Apache-2.0 -->
 				fetch(`${protocol}//${hostname}:${port}/copyTask`, {
 					method: 'POST',
 					headers: {
-						'Content-Type': 'application/json'
+						'Content-Type': 'application/json',
+						"Authorization": getCookie('session'),
 					},
 					body: JSON.stringify(queryData)
 				})
@@ -1902,7 +1907,8 @@ SPDX-License-Identifier: Apache-2.0 -->
 					fetch(`${protocol}//${hostname}:${port}/deleteTask`, {
 						method: 'DELETE',
 						headers: {
-							'Content-Type': 'application/json'
+							'Content-Type': 'application/json',
+							"Authorization": getCookie('session'),
 						},
 						body: JSON.stringify(queryData)
 					})
@@ -2343,7 +2349,8 @@ SPDX-License-Identifier: Apache-2.0 -->
 				fetch(`${protocol}//${hostname}:9102/resourceList`, {
 					method: 'POST',
 					headers: {
-						'Content-Type': 'application/json'
+						'Content-Type': 'application/json',
+						"Authorization": getCookie('session'),
 					},
 					body: JSON.stringify(queryData)
 				})

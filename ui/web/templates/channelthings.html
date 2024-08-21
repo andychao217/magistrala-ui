@@ -642,6 +642,7 @@ SPDX-License-Identifier: Apache-2.0 -->
 						method: "POST",
 						headers: {
 							"Content-Type": "application/json",
+							"Authorization": getCookie('session'),
 						},
 						body: JSON.stringify(queryData),
 					})

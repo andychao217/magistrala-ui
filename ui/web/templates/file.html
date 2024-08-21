@@ -245,7 +245,8 @@ SPDX-License-Identifier: Apache-2.0 -->
 				fetch(`${protocol}//${hostname}:9102/resourceList`, {
 					method: 'POST',
 					headers: {
-						'Content-Type': 'application/json'
+						'Content-Type': 'application/json',
+						"Authorization": getCookie('session'),
 					},
 					body: JSON.stringify(queryData)
 				})
@@ -406,7 +407,8 @@ SPDX-License-Identifier: Apache-2.0 -->
 					fetch(`${protocol}//${hostname}:9102/createFolder`, {
 						method: 'POST',
 						headers: {
-							'Content-Type': 'application/json'
+							'Content-Type': 'application/json',
+							"Authorization": getCookie('session'),
 						},
 						body: JSON.stringify(queryData)
 					})
@@ -436,7 +438,8 @@ SPDX-License-Identifier: Apache-2.0 -->
 						fetch(`${protocol}//${hostname}:9102/delete`, {
 							method: 'DELETE',
 							headers: {
-								'Content-Type': 'application/json'
+								'Content-Type': 'application/json',
+								"Authorization": getCookie('session'),
 							},
 							body: JSON.stringify(queryData)
 						})
@@ -463,7 +466,8 @@ SPDX-License-Identifier: Apache-2.0 -->
 						fetch(`${protocol}//${hostname}:9102/download`, {
 							method: 'POST',
 							headers: {
-								'Content-Type': 'application/json'
+								'Content-Type': 'application/json',
+								"Authorization": getCookie('session'),
 							},
 							body: JSON.stringify(queryData)
 						})

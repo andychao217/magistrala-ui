@@ -328,6 +328,7 @@ function controlDeviceWebsocketToAll(host, comID, controlType) {
                     method: "POST",
                     headers: {
                         "Content-Type": "application/json",
+                        "Authorization": getCookie('session'),
                     },
                     body: JSON.stringify(queryData),
                 });
@@ -369,6 +370,7 @@ function controlDeviceWebsocketSingle(host, comID, controlType, thingIdentity) {
         method: "POST",
         headers: {
             "Content-Type": "application/json",
+            "Authorization": getCookie('session'),
         },
         body: JSON.stringify(queryData),
     });
