@@ -10,6 +10,7 @@ SPDX-License-Identifier: Apache-2.0 -->
         </head>
         <body class="login-body">
             <p id="socketBridgePort" style="display: none;">{{ .SocketBridgePort }}</p>
+            <p id="minioBridgePort" style="display: none;">{{ .MinioBridgePort }}</p>
             <div class="container-fluid mt-5 pt-5">
                 <div class="row p-5">
                     <div class="login-card mx-auto mt-5" style="width: 700px;">
@@ -134,6 +135,10 @@ SPDX-License-Identifier: Apache-2.0 -->
                     const socketBridgePort = document.getElementById('socketBridgePort').innerText;
                     if (socketBridgePort) {
                         sessionStorage.setItem("socketBridgePort", socketBridgePort);
+                    }
+                    const minioBridgePort = document.getElementById('minioBridgePort').innerText;
+                    if (minioBridgePort) {
+                        sessionStorage.setItem("minioBridgePort", minioBridgePort);
                     }
 
                     // Code for toggling the visibility of the password

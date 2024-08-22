@@ -172,6 +172,17 @@ SPDX-License-Identifier: Apache-2.0 -->
                 </a>
             </li>
             <li class="nav-item mb-2 mx-2">
+                {{ $navbarActive = "broadcast" }}
+                <a
+                    class="nav-link sidebar-link {{ if eq .NavbarActive $navbarActive }}active{{ end }}"
+                    onclick="changePage('/ui/broadcast', 'broadcast')"
+                    id="broadcastPage"
+                >
+                    <img loading="lazy" src="/images/icon_assess.svg" class="channel-icon" style="height: 18px;" />
+                    <span>实时</span>
+                </a>
+            </li>
+            <li class="nav-item mb-2 mx-2">
                 {{ $navbarActive = "task" }}
                 <a
                     class="nav-link sidebar-link {{ if eq .NavbarActive $navbarActive }}active{{ end }}"

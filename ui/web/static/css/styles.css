@@ -979,6 +979,7 @@ table > thead > tr > th {
 /* file page */
 #fileTableContainer {
     backdrop-filter: blur(7px);
+    -webkit-backdrop-filter: blur(7px);
     background: rgba(255, 255, 255, 0.2);
     height: calc(100vh - 270px);
     overflow-y: auto;
@@ -1032,6 +1033,7 @@ table > thead > tr > th {
 
 .dropdown-menu.show {
     backdrop-filter: blur(5px);
+    -webkit-backdrop-filter: blur(5px);
     background: rgba(255, 255, 255, 0.1);
 }
 .dropdown-item {

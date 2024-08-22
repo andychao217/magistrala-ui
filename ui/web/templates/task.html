@@ -600,7 +600,8 @@ SPDX-License-Identifier: Apache-2.0 -->
 				  port =  sessionStorage.getItem("socketBridgePort") || "63001",
 				  domainID = sessionStorage.getItem("domainID"), // 当前机构ID
 				  userInfoStr = sessionStorage.getItem("userInfo"),
-				  userInfo = JSON.parse(userInfoStr);
+				  userInfo = JSON.parse(userInfoStr),
+				  minioBridgePort =  sessionStorage.getItem("minioBridgePort") || "9102";
 			let comID = "",
 				isListAllTask = false, // 是否显示全部任务
 				selectedDate = moment().format('YYYY-MM-DD'), // 当前选中日期
@@ -2346,7 +2347,7 @@ SPDX-License-Identifier: Apache-2.0 -->
 					generateBreadCrumb(breadCrumbFolderList);
 				}
 				const queryData = { path: folder, comID: comID };
-				fetch(`${protocol}//${hostname}:9102/resourceList`, {
+				fetch(`${protocol}//${hostname}:${minioBridgePort}/resourceList`, {
 					method: 'POST',
 					headers: {
 						'Content-Type': 'application/json',
@@ -2431,6 +2432,7 @@ SPDX-License-Identifier: Apache-2.0 -->
 				loadFilesTable(key);
 			}
 
+			//点击文件夹-文件弹框
 			function onClickFolder(e) {
 				// Use event.currentTarget to get the element that the event listener is attached to
 				// event.currentTarget：指向事件监听器所附加的元素，即 <div> 元素。

@@ -1070,6 +1070,15 @@ func (mm *metricsMiddleware) File(s ui.Session) ([]byte, error) {
 	return mm.svc.File(s)
 }
 
+func (mm *metricsMiddleware) Broadcast(s ui.Session) ([]byte, error) {
+	defer func(begin time.Time) {
+		mm.counter.With("method", "view_broadcast").Add(1)
+		mm.latency.With("method", "view_broadcast").Observe(time.Since(begin).Seconds())
+	}(time.Now())
+
+	return mm.svc.Broadcast(s)
+}
+
 func (mm *metricsMiddleware) Task(s ui.Session) ([]byte, error) {
 	defer func(begin time.Time) {
 		mm.counter.With("method", "view_task").Add(1)

@@ -874,6 +874,15 @@ func MakeHandler(svc ui.Service, r *chi.Mux, instanceID, prefix string, secureCo
 					).ServeHTTP)
 				})
 
+				r.Route("/broadcast", func(r chi.Router) {
+					r.Get("/", kithttp.NewServer(
+						listBroadcastEndpoint(svc),
+						decodeBroadcastRequest,
+						encodeResponse,
+						opts...,
+					).ServeHTTP)
+				})
+
 				r.Route("/blank", func(r chi.Router) {
 					r.Get("/", kithttp.NewServer(
 						listBlankEndpoint(svc),
@@ -2614,6 +2623,17 @@ func decodeFileRequest(_ context.Context, r *http.Request) (interface{}, error) 
 	}
 
 	return fileReq{
+		Session: session,
+	}, nil
+}
+
+func decodeBroadcastRequest(_ context.Context, r *http.Request) (interface{}, error) {
+	session, err := sessionFromHeader(r)
+	if err != nil {
+		return nil, err
+	}
+
+	return broadcastReq{
 		Session: session,
 	}, nil
 }

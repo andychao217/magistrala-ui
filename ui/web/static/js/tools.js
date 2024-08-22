@@ -265,6 +265,11 @@ function redirectToLogin() {
     }
 }
 
+// 竖向range滑动条联动指示数字
+function updateVerticalRangeValue(range) {
+    const valueDiv = range.previousElementSibling;
+    valueDiv.textContent = range.value;
+}
 
 //设置rangeInput的value值时，改变其背景色
 function updateRangeBackground(rangeInput) {

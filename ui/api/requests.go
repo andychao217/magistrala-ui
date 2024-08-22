@@ -1263,6 +1263,17 @@ func (req fileReq) validate() error {
 	return nil
 }
 
+type broadcastReq struct {
+	ui.Session
+}
+
+func (req broadcastReq) validate() error {
+	if req.Token == "" {
+		return errInvalidCredentials
+	}
+	return nil
+}
+
 type taskReq struct {
 	ui.Session
 }

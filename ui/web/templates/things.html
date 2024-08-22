@@ -1850,7 +1850,7 @@ SPDX-License-Identifier: Apache-2.0 -->
 										step="1" 
 										value="${channel.volume}" 
 										id="${channelType}_channel_volume_${channel.id}"
-										style="width: 100%; margin-top: 8px;;"
+										style="width: 100%; margin-top: 8px;"
 									/>
 									<div 
 										id="${channelType}_channel_volumeLabel_${channel.id}" 
@@ -2355,12 +2355,6 @@ SPDX-License-Identifier: Apache-2.0 -->
 					});
 				}
 
-				// 竖向range滑动条联动指示数字
-				function updateVerticalRangeValue(range) {
-					const valueDiv = range.previousElementSibling;
-					valueDiv.textContent = range.value;
-				}
-
 				//初始化更多设置
 				function initMoreEditThingModal(device) {
 					curDevice = _.cloneDeep(device);
@@ -2525,6 +2519,7 @@ SPDX-License-Identifier: Apache-2.0 -->
 						//NXT3602的6组扬声器音量、话筒EQ
 						if (deviceInfo.product_name.includes("3602")) {
 							//音量设置
+							const volume_trans_array = [-90, -30, -25, -22, -19, -16, -13, -10, -8, -6, -5, -4, -3, -2, -1, 0];
 							$('#moreEditThingModal-speaker-volume-tab').show();
 							for(let i = 1; i <= 6; i++) {
 								$(`#speaker-volume-range-wrapper-${i}`).mouseenter(() => {
@@ -2534,27 +2529,27 @@ SPDX-License-Identifier: Apache-2.0 -->
 									$('#moreEditThingModal-speaker-volume-pic').attr('src', '/images/volume_0.png');
 								});
 
-								const initialValue = deviceInfo.misc_cfg?.speaker_volume[`volume${i}`] || 0;
+								const initialValue = volume_trans_array.findIndex((value) => value === (deviceInfo.misc_cfg?.speaker_volume[`volume${i}`] || -90));
 								$(`#speaker-volume-${i}`).val(initialValue);
 								$(`#speaker-volume-indicator-${i}`).html(initialValue);
 								$(`#speaker-volume-${i}`).on('input change', (event) => {
 									const value = $(event.currentTarget).val(),
-										  volume1 = $(`#speaker-volume-1`).val(),
-										  volume2 = $(`#speaker-volume-2`).val(),
-										  volume3 = $(`#speaker-volume-3`).val(),
-										  volume4 = $(`#speaker-volume-4`).val(),
-										  volume5 = $(`#speaker-volume-5`).val(),
-										  volume6 = $(`#speaker-volume-6`).val();
+										  volume1 = volume_trans_array[Number($(`#speaker-volume-1`).val())],
+										  volume2 = volume_trans_array[Number($(`#speaker-volume-2`).val())],
+										  volume3 = volume_trans_array[Number($(`#speaker-volume-3`).val())],
+										  volume4 = volume_trans_array[Number($(`#speaker-volume-4`).val())],
+										  volume5 = volume_trans_array[Number($(`#speaker-volume-5`).val())],
+										  volume6 = volume_trans_array[Number($(`#speaker-volume-6`).val())];
 									$(`#speaker-volume-indicator-${i}`).html(value);
 									if (event.type === 'change') {
 										const speakerVolume = {
 											...deviceInfo.misc_cfg?.speaker_volume,
-											volume1: Number(volume1),
-											volume2: Number(volume2),
-											volume3: Number(volume3),
-											volume4: Number(volume4),
-											volume5: Number(volume5),
-											volume6: Number(volume6),
+											volume1,
+											volume2,
+											volume3,
+											volume4,
+											volume5,
+											volume6,
 										};
 										const data = {
 											controlType:  "deviceSpeakerVolumeSet", 

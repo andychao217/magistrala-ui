@@ -57,6 +57,7 @@ const (
 	membersActive           = "members"
 	invitationsActive       = "invitations"
 	fileActive              = "file"
+	broadcastActive         = "broadcast"
 	blankActive             = "blank"
 	taskActive              = "task"
 	domainInvitationsActive = "domaininvitations"
@@ -382,6 +383,8 @@ type Service interface {
 	DeleteInvitation(token, userID, domainID string) error
 	// view file page
 	File(s Session) ([]byte, error)
+	// view broadcast page
+	Broadcast(s Session) ([]byte, error)
 	// view blank page
 	Blank(s Session) ([]byte, error)
 	// view task page
@@ -548,13 +551,16 @@ func (us *uiService) RegisterUser(user sdk.User) (sdk.Token, error) {
 
 func (us *uiService) Login() ([]byte, error) {
 	socketBridgePort := os.Getenv("MG_SOCKET_BRIDGE_PORT")
+	minioBridgePort := os.Getenv("MINIO_BRIDGE_PORT")
 
 	data := struct {
 		Providers        []oauth2.Provider
 		SocketBridgePort string
+		MinioBridgePort  string
 	}{
 		us.providers,
 		socketBridgePort,
+		minioBridgePort,
 	}
 
 	var btpl bytes.Buffer
@@ -2865,6 +2871,31 @@ func (us *uiService) File(s Session) ([]byte, error) {
 
 	var btpl bytes.Buffer
 	if err := us.tpls.ExecuteTemplate(&btpl, "file", data); err != nil {
+		return []byte{}, errors.Wrap(ErrExecTemplate, err)
+	}
+
+	return btpl.Bytes(), nil
+}
+
+func (us *uiService) Broadcast(s Session) ([]byte, error) {
+	crumbs := []breadcrumb{
+		{Name: broadcastActive},
+	}
+
+	data := struct {
+		NavbarActive   string
+		CollapseActive string
+		Breadcrumbs    []breadcrumb
+		Session        Session
+	}{
+		broadcastActive,
+		broadcastActive,
+		crumbs,
+		s,
+	}
+
+	var btpl bytes.Buffer
+	if err := us.tpls.ExecuteTemplate(&btpl, "broadcast", data); err != nil {
 		return []byte{}, errors.Wrap(ErrExecTemplate, err)
 	}
 

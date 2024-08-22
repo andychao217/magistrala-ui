@@ -1881,7 +1881,7 @@ func (lm *loggingMiddleware) Blank(s ui.Session) (b []byte, err error) {
 		lm.logger.Info("View Blank completed successfully")
 	}(time.Now())
 
-	return lm.svc.File(s)
+	return lm.svc.Blank(s)
 }
 
 func (lm *loggingMiddleware) File(s ui.Session) (b []byte, err error) {
@@ -1894,6 +1894,18 @@ func (lm *loggingMiddleware) File(s ui.Session) (b []byte, err error) {
 	}(time.Now())
 
 	return lm.svc.File(s)
+}
+
+func (lm *loggingMiddleware) Broadcast(s ui.Session) (b []byte, err error) {
+	defer func(begin time.Time) {
+		if err != nil {
+			lm.logger.Warn("View Broadcast failed to complete successfully")
+			return
+		}
+		lm.logger.Info("View Broadcast completed successfully")
+	}(time.Now())
+
+	return lm.svc.Broadcast(s)
 }
 
 func (lm *loggingMiddleware) Task(s ui.Session) (b []byte, err error) {

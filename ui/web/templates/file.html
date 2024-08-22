@@ -164,7 +164,8 @@ SPDX-License-Identifier: Apache-2.0 -->
 				  $createFolderNameInputElement = $(`#createFolderName`),
 				  protocol = window.location.protocol,
 				  hostname = window.location.hostname,
-				  domainID = sessionStorage.getItem("domainID");
+				  domainID = sessionStorage.getItem("domainID"),
+				  minioBridgePort =  sessionStorage.getItem("minioBridgePort") || "9102";
 			let comID = "";
 			if (domainID) {
 				fetch(`/ui/domains/${domainID}/domainInJSON`, {
@@ -242,7 +243,7 @@ SPDX-License-Identifier: Apache-2.0 -->
 					generateBreadCrumb(breadCrumbFolderList);
 				}
 				const queryData = { path: folder, comID: comID };
-				fetch(`${protocol}//${hostname}:9102/resourceList`, {
+				fetch(`${protocol}//${hostname}:${minioBridgePort}/resourceList`, {
 					method: 'POST',
 					headers: {
 						'Content-Type': 'application/json',
@@ -371,7 +372,7 @@ SPDX-License-Identifier: Apache-2.0 -->
 				}
 				$audio = $(`
 					<audio controls autoplay style="width: 500px;" id="audioPreview">
-						<source src="${protocol}//${hostname}:9102/previewFile?key=${key}" type="${sourceType}">
+						<source src="${protocol}//${hostname}:${minioBridgePort}/previewFile?key=${key}" type="${sourceType}">
 						您的浏览器不支持 audio 元素。
 					</audio>
 				`);
@@ -404,7 +405,7 @@ SPDX-License-Identifier: Apache-2.0 -->
 						return;
 					}
 					const queryData = { currentPath: "/"+currentPath, folderName: folderName };
-					fetch(`${protocol}//${hostname}:9102/createFolder`, {
+					fetch(`${protocol}//${hostname}:${minioBridgePort}/createFolder`, {
 						method: 'POST',
 						headers: {
 							'Content-Type': 'application/json',
@@ -435,7 +436,7 @@ SPDX-License-Identifier: Apache-2.0 -->
 					showConfirmModal("确定要删除所选数据吗？", () => {
 						const keyList = selectedRows.map(row => row.key);
 						const queryData = { keyList: keyList };
-						fetch(`${protocol}//${hostname}:9102/delete`, {
+						fetch(`${protocol}//${hostname}:${minioBridgePort}/delete`, {
 							method: 'DELETE',
 							headers: {
 								'Content-Type': 'application/json',
@@ -463,7 +464,7 @@ SPDX-License-Identifier: Apache-2.0 -->
 				if (selectedRows.length) {
 					selectedRows.forEach((row, index) => {
 						const queryData = { key: row.key };
-						fetch(`${protocol}//${hostname}:9102/download`, {
+						fetch(`${protocol}//${hostname}:${minioBridgePort}/download`, {
 							method: 'POST',
 							headers: {
 								'Content-Type': 'application/json',
@@ -604,7 +605,7 @@ SPDX-License-Identifier: Apache-2.0 -->
 				}
 				progressBar.style.display = 'block';
 				const xhr = new XMLHttpRequest();
-				xhr.open('POST', `${protocol}//${hostname}:9102/upload`, true);
+				xhr.open('POST', `${protocol}//${hostname}:${minioBridgePort}/upload`, true);
 				xhr.upload.onprogress = (event) => {
 					if (event.lengthComputable) {
 						const percentComplete = (event.loaded / event.total) * 100;
