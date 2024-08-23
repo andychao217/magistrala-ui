@@ -1604,3 +1604,162 @@ input[type='range']::-ms-thumb {
     position: absolute;
     bottom: 100px;
 }
+
+/*实时广播页面*/
+.broadcast-page {
+    display: flex;
+    justify-content: space-between;
+    padding: 0;
+}
+/* 左右布局 */
+.broadcast-page-right-panel,
+.broadcast-page-left-panel {
+    display: flex;  
+    flex-direction: column;
+    justify-content: space-between;
+}
+.broadcast-page-left-panel {
+    width: 100%;
+}
+/* 左布局最上部的设备、场景选择框 */
+.broadcast-page-left-panel-header {
+    display: flex; 
+    justify-content: space-between; 
+    padding: 10px;
+}
+/* 播放区域 */
+.broadcast-page-playarea-container {
+    display: flex;
+    flex-direction: column;
+    backdrop-filter: blur(5px);
+    -webkit-backdrop-filter: blur(5px);
+    background: rgba(0, 0, 0, 0.05);
+    height: calc(100vh - 560px);
+    margin: 0px 10px;
+    border-radius: 5px;
+    padding: 10px;
+}
+/* 播放区域标题行 */
+.broadcast-page-playarea-header {
+    display: flex; 
+    justify-content: space-between; 
+    margin-bottom: 7px;
+}
+/* 播放区域卡片内容 */
+#broadcast_playarea_channels_container {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+    grid-gap: 10px;
+    overflow-y: auto;
+}
+/* 音量控制区域 */
+.broadcast-page-volume-control-container{
+    display: flex;
+    flex-direction: column;
+    height: 330px;
+    margin: 10px 10px 0px 10px;
+    border-top-left-radius: 5px;
+    border-top-right-radius: 5px;
+    backdrop-filter: blur(5px);
+    -webkit-backdrop-filter: blur(5px);
+    background: rgba(0, 0, 0, 0.05);
+}
+/* 音量控制区域标题行 */
+.broadcast-page-volume-control-header {
+    display: flex; 
+    justify-content: space-evenly; 
+    border-bottom: thin solid lightgray;
+    height: 64px;
+    padding: 10px;
+}
+.broadcast-page-volume-range-container {
+    display: flex; 
+    justify-content: space-evenly; 
+    padding: 10px;
+}
+.broadcast_volumeFormItemLine-container {
+    text-align: center; 
+    width: 64px;
+}
+.broadcast_volumeFormItemLine {
+    height: 8px;
+    width: 50px;
+    margin: 10px auto 5px;
+    background-color: #d8d8d8;
+    border-radius: 6px;
+    cursor: pointer;
+}
+.broadcast_volumeFormItemLine.selected {
+    background-color: #28c840;
+}
+/* 右面板 */
+.broadcast-page-right-panel {
+    width: 450px;
+}
+/* 播放文件列表 */
+.broadcast-page-playlist {
+    padding: 10px; 
+    background: whitesmoke; 
+    border-bottom-left-radius: 5px;
+}
+.broadcast-page-playlist-header {
+    display: flex; 
+    justify-content: space-between;
+}
+.broadcast-page-playlist-header-label {
+    line-height: 38px;
+}
+.broadcast-page-playlist-container {
+    margin-top: 10px;
+    height: calc(100vh - 480px);
+    overflow-y: auto;
+    background: whitesmoke; 
+}
+.broadcast-page-player-contol-container {
+    margin-top: 10px; 
+    margin-bottom: 10px;
+    border-bottom-left-radius: 5px; 
+    border-top-left-radius: 5px;
+    height: 170px;
+    padding: 5px;
+    backdrop-filter: blur(5px);
+    -webkit-backdrop-filter: blur(5px);
+    background: rgba(0, 0, 0, 0.05);
+}
+/* 播放器区域 */
+.broadcast-page-player-contol-icon {
+    width: 33px; 
+    height: 33px;
+}
+.broadcast-page-player-contol {
+    width: 100%; 
+    text-align: center; 
+    margin-top: 15px;
+}
+.broadcast-page-player-contol-time-label {
+    display: flex; 
+    justify-content: space-between; 
+    padding: 10px;
+}
+/* 右下角播放按钮 */
+.broadcast-page-player-contol-buttons {
+    display: flex; 
+    justify-content: space-evenly;
+}
+#playlist-play-pause-btn {
+    font-size: 30px;
+}
+#playlist-play-pause-btn,
+#playlist-play-prev-btn,
+#playlist-play-next-btn {
+    line-height: 45px; 
+    cursor: pointer;
+}
+/* 开始广播按钮 */
+.broadcast-page-broadcast-btn-container {
+    padding: 10px;
+    border-top-left-radius: 5px;
+    backdrop-filter: blur(5px);
+    -webkit-backdrop-filter: blur(5px);
+    background: rgba(0, 0, 0, 0.05);
+}

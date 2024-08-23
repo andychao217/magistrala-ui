@@ -7,25 +7,6 @@ SPDX-License-Identifier: Apache-2.0 -->
 <head>
 	<title>实时</title>
 	{{ template "header" }}
-	<style>
-		.volumeFormItemLine {
-			height: 8px;
-			width: 50px;
-			margin: 10px auto 5px;
-			background-color: #d8d8d8;
-			border-radius: 6px;
-			cursor: pointer;
-		}
-		.volumeFormItemLine.selected {
-			background-color: #28c840;
-		}
-		#playarea_channels_container {
-			display: grid;
-			grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
-			grid-gap: 10px;
-			overflow-y: auto;
-		}
-	</style>
 </head>
 <body>
 	{{ template "navbar" . }}
@@ -48,7 +29,7 @@ SPDX-License-Identifier: Apache-2.0 -->
 							<div class="modal-content" style="width: 580px;">
 								<div class="modal-header">
 									<h1 class="modal-title" id="filesModal">音频文件</h1>
-									<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" onclick="sourceModal.show();"></button>
+									<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 								</div>
 								<div class="modal-body">
 									<div class="mb-3">
@@ -72,7 +53,7 @@ SPDX-License-Identifier: Apache-2.0 -->
 										</table>
 									</div>
 									<div class="modal-footer">
-										<button type="button" class="btn btn-secondary" data-bs-dismiss="modal" onclick="sourceModal.show();">
+										<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
 											<i class="fa-solid fa-xmark"></i> 取消
 										</button>
 										<button type="button" class="btn body-button" id="confirmFileBtn">
@@ -84,23 +65,53 @@ SPDX-License-Identifier: Apache-2.0 -->
 						</div>
 					</div>
 
+					<!-- 播放区域选择弹框 -->
 					<div 
-						class="table-responsive table-container" 
-						style="
-							display: flex;
-							justify-content: space-between;
-							padding: 0;
-						"
+						class="modal fade" 
+						id="playAreasModal" 
+						tabindex="-1" 
+						role="dialog" 
+						aria-labelledby="playAreasModalLabel" 
+						aria-hidden="true"
+						data-bs-backdrop="static" 
+						data-bs-keyboard="false"  
 					>
-						<div 
-							style="
-								width: 100%;
-								display: flex;  
-								flex-direction: column;
-								justify-content: space-between;
-							"
-						>
-							<div style="display: flex; justify-content: space-between; padding: 10px;">
+						<div class="modal-dialog" role="document">
+							<div class="modal-content" style="width: 580px;">
+								<div class="modal-header">
+									<h1 class="modal-title" id="playAreasModal">播放通道</h1>
+									<button 
+										type="button" 
+										class="btn-close" 
+										data-bs-dismiss="modal" 
+										aria-label="Close"
+										onclick="closePlayareaSelectModal()"
+									></button>
+								</div>
+								<div class="modal-body">
+									<div class="mb-3 row modalTableContainer">
+										<table 
+											id="playAreasModalTable"
+											class="table table-hover"
+											data-checkbox-header="true"
+											data-click-to-select="false"
+										>
+											<thead>
+												<tr>
+													<th data-field="state" data-checkbox="true"></th>
+													<th data-field="channelName" data-formatter="channelNameTableFormatter">通道名</th>
+												</tr>
+											</thead>
+										</table>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+
+					<div class="table-responsive table-container broadcast-page">
+						<div class="broadcast-page-left-panel">
+							<div class="broadcast-page-left-panel-header">
 								<div style="display: flex;">
 									<div style="width: 110px; line-height: 38px;">调音设备: </div>
 									<select class="form-control form-select" id="thingsSelect" placeholder="请选择调音设备"></select>
@@ -109,20 +120,8 @@ SPDX-License-Identifier: Apache-2.0 -->
 									<select class="form-control form-select" id="sceneSelect" placeholder="请选择场景"></select>
 								</div>
 							</div>
-							<div 
-								style="
-									display: flex;
-									flex-direction: column;
-									backdrop-filter: blur(5px);
-									-webkit-backdrop-filter: blur(5px);
-									background: rgba(0, 0, 0, 0.05);
-									height: calc(100vh - 560px);
-									margin: 0px 10px;
-									border-radius: 5px;
-									padding: 10px;
-								"
-							>
-								<div style="display: flex; justify-content: space-between; margin-bottom: 7px;">
+							<div class="broadcast-page-playarea-container">
+								<div class="broadcast-page-playarea-header">
 									<div>播放区域</div>
 									<div
 										id="play-area-select-unselect-all-btn" 
@@ -132,51 +131,25 @@ SPDX-License-Identifier: Apache-2.0 -->
 										<i class="fa-solid fa-list-check"></i>
 									</div>
 								</div>
-								<div id="playarea_channels_container"></div>
+								<div id="broadcast_playarea_channels_container"></div>
 							</div>
-							<div 
-								style="
-									display: flex;
-									flex-direction: column;
-									height: 330px;
-									margin: 10px 10px 0px 10px;
-									border-top-left-radius: 5px;
-									border-top-right-radius: 5px;
-									backdrop-filter: blur(5px);
-									-webkit-backdrop-filter: blur(5px);
-									background: rgba(0, 0, 0, 0.05);
-								"
-							>
-								<div 
-									style="
-										display: flex; 
-										justify-content: space-evenly; 
-										border-bottom: thin solid lightgray;
-										height: 64px;
-										padding: 10px;
-									"
-								>
-									<div style="text-align: center; width: 64px;">
-										<div class="volumeFormItemLine"></div>
+							<div class="broadcast-page-volume-control-container">
+								<div class="broadcast-page-volume-control-header">
+									<div class="broadcast_volumeFormItemLine-container">
+										<div class="broadcast_volumeFormItemLine"></div>
 										<div>线路输入</div>
 									</div>
-									<div style="text-align: center; width: 64px;">
-										<div class="volumeFormItemLine selected"></div>
+									<div class="broadcast_volumeFormItemLine-container">
+										<div class="broadcast_volumeFormItemLine selected"></div>
 										<div>麦克风</div>
 									</div>
-									<div style="text-align: center; width: 64px;">
-										<div class="volumeFormItemLine selected"></div>
+									<div class="broadcast_volumeFormItemLine-container">
+										<div class="broadcast_volumeFormItemLine selected"></div>
 										<div>文件</div>
 									</div>
 								</div>
-								<div 
-									style="
-										display: flex; 
-										justify-content: space-evenly; 
-										padding: 10px;
-									"
-								>
-									<div style="text-align: center; width: 64px;">
+								<div class="broadcast-page-volume-range-container">
+									<div class="broadcast_volumeFormItemLine-container">
 										<div class="range-wrapper speaker-volume-wrapper" style="background: transparent;">
 											<div class="range-value" style="margin-top: 0px; margin-bottom: 205px;">0</div>
 											<input
@@ -189,7 +162,7 @@ SPDX-License-Identifier: Apache-2.0 -->
 											/>
 										</div>
 									</div>
-									<div style="text-align: center; width: 64px;">
+									<div class="broadcast_volumeFormItemLine-container">
 										<div class="range-wrapper speaker-volume-wrapper" style="background: transparent;">
 											<div class="range-value" style="margin-top: 0px; margin-bottom: 205px;">0</div>
 											<input
@@ -202,7 +175,7 @@ SPDX-License-Identifier: Apache-2.0 -->
 											/>
 										</div>
 									</div>
-									<div style="text-align: center; width: 64px;">
+									<div class="broadcast_volumeFormItemLine-container">
 										<div class="range-wrapper speaker-volume-wrapper" style="background: transparent;">
 											<div class="range-value" style="margin-top: 0px; margin-bottom: 205px;">0</div>
 											<input
@@ -218,17 +191,10 @@ SPDX-License-Identifier: Apache-2.0 -->
 								</div>
 							</div>
 						</div>
-						<div 
-							style="
-								width: 450px;
-								display: flex; 
-								flex-direction: column; 
-								justify-content: space-between;
-							"
-						>
-							<div class="playlist" style="padding: 10px; background: whitesmoke; border-bottom-left-radius: 5px;">
-								<div style="display: flex; justify-content: space-between;">
-									<div style="line-height: 38px;">播放列表</div>
+						<div class="broadcast-page-right-panel">
+							<div class="broadcast-page-playlist">
+								<div class="broadcast-page-playlist-header">
+									<div class="broadcast-page-playlist-header-label">播放列表</div>
 									<div class="btn-group" role="group">
 										<button 
 											id="playlist-delete-all-btn" 
@@ -245,33 +211,11 @@ SPDX-License-Identifier: Apache-2.0 -->
 										</button>
 									</div>
 								</div>
-								<ul 
-									class="list-group list-group-flush" 
-									style="
-										margin-top: 10px;
-										height: calc(100vh - 480px);
-										overflow-y: auto;
-										background: whitesmoke;
-									"
-									id="playlist-container"
-								>
-								</ul>
+								<ul class="list-group list-group-flush broadcast-page-playlist-container" id="playlist-container"></ul>
 							</div>
-							<div
-								style="
-									margin-top: 10px; 
-									margin-bottom: 10px;
-									border-bottom-left-radius: 5px; 
-									border-top-left-radius: 5px;
-									height: 170px;
-									padding: 5px;
-									backdrop-filter: blur(5px);
-									-webkit-backdrop-filter: blur(5px);
-									background: rgba(0, 0, 0, 0.05);
-								"
-							>
-								<img src="/images/icon_music.png" style="width: 33px; height: 33px;" />
-								<div style="width: 100%; text-align: center; margin-top: 15px;">
+							<div class="broadcast-page-player-contol-container">
+								<img src="/images/icon_music.png" class="broadcast-page-player-contol-icon" />
+								<div class="broadcast-page-player-contol">
 									<input 
 										type="range" 
 										class="form-conrtol rangeInput" 
@@ -281,38 +225,24 @@ SPDX-License-Identifier: Apache-2.0 -->
 										value="0"
 										style="width: 300px;"
 									/>
-									<div style="display: flex; justify-content: space-between; padding: 10px;">
+									<div class="broadcast-page-player-contol-time-label">
 										<div>00:00</div>
 										<div>00:00</div>
 									</div>
-									<div style="display: flex; justify-content: space-evenly;">
-										<div style="line-height: 45px; cursor: pointer;" title="上一曲">
+									<div class="broadcast-page-player-contol-buttons">
+										<div id="playlist-play-prev-btn" title="上一曲">
 											<i class="fa-solid fa-backward-step"></i>
 										</div>
-										<div 
-											id="playlist-play-pause-btn" 
-											style="font-size: 30px; line-height: 45px; cursor: pointer;"
-											title="播放"
-										>
+										<div id="playlist-play-pause-btn" title="播放">
 											<i class="fa-solid fa-play"></i>
 										</div>
-										<div style="line-height: 45px; cursor: pointer;" title="下一曲">
+										<div id="playlist-play-next-btn" title="下一曲">
 											<i class="fa-solid fa-forward-step"></i>
 										</div>
 									</div>
 								</div>
-								
 							</div>
-							<div 
-								class="d-grid gap-2" 
-								style="
-									padding: 10px;
-									border-top-left-radius: 5px;
-									backdrop-filter: blur(5px);
-									-webkit-backdrop-filter: blur(5px);
-									background: rgba(0, 0, 0, 0.05);
-								"
-							>
+							<div class="d-grid gap-2 broadcast-page-broadcast-btn-container">
 								<button class="btn btn-primary" type="button" title="开始广播">
 									开始广播
 								</button>
@@ -328,13 +258,17 @@ SPDX-License-Identifier: Apache-2.0 -->
 			  hostname = window.location.hostname,
 			  filesModal = new bootstrap.Modal(document.getElementById("filesModal")), // 文件弹框
 			  $filesModalTable = $('#filesModalTable'), // 文件弹框表格
+			  playAreasModal = new bootstrap.Modal(document.getElementById("playAreasModal")), // 播放区域弹框
+			  $playAreasModalTable = $('#playAreasModalTable'), // 播放区域弹框表格
 			  domainID = sessionStorage.getItem("domainID"), // 当前机构ID
 			  minioBridgePort =  sessionStorage.getItem("minioBridgePort") || "9102"; // 获取minio桥接端口
 		let comID = "", // 当前通信ID
 			curPlaylist = [], //当前文件播放列表
 			breadCrumbFolderList = [], //当前选中文件夹列表-文件弹框
 			isPlaying = false, //当前是否正在播放
-			selectedPlayAreaList = []; //当前选中的播放区域
+			selectedPlayAreaList = [], //当前选中的播放区域
+			playAreaTreeData = [], // 播放区域树数据
+			allThingsList = [], // 所有设备列表
 			currentFolderKey = ""; //当前文件夹key-文件弹框
 		$(document).ready(function() {
 			initPage();
@@ -342,10 +276,44 @@ SPDX-License-Identifier: Apache-2.0 -->
 			createSceneSelectOptions();
 			createPlaylistDom();
 			updatePlayAreaSelectBtnStatus();
-			createPlayareaChannelsDom();
+			getPlayAreaTree();
 
 			$filesModalTable.bootstrapTable({});
 			$filesModalTable.removeClass('table-bordered');
+			$playAreasModalTable.bootstrapTable({
+				selectItemName: 'selectedRows',
+				onCheck: function(row, $element) {
+					selectedPlayAreaList.push(row);
+					selectedPlayAreaList = _.uniqBy(selectedPlayAreaList, 'id');
+				},
+				onUncheck: function(row, $element) {
+					selectedPlayAreaList = selectedPlayAreaList.filter(item => item.id !== row.id);
+				},
+				onCheckAll: function(e) {
+					selectedPlayAreaList = [
+						...selectedPlayAreaList,
+						...$playAreasModalTable.bootstrapTable('getData'),
+					];
+					selectedPlayAreaList = _.uniqBy(selectedPlayAreaList, 'id');
+				},
+				onUncheckAll: function(e) {
+					selectedPlayAreaList = selectedPlayAreaList.filter(itemA => 
+						!$playAreasModalTable.bootstrapTable('getData').some(itemB => itemB.id === itemA.id)
+					);
+				}
+			});
+			$playAreasModalTable.removeClass('table-bordered');
+
+			//点击全选按钮时，全选或取消全选
+			$('#play-area-select-unselect-all-btn').click(function() {
+				if (selectedPlayAreaList.length) {
+					selectedPlayAreaList = [];
+				} else {
+					selectedPlayAreaList = _.cloneDeep(allThingsList);
+				}
+				updatePlayAreaSelectBtnStatus();
+			});
+
 			// 点击添加文件按钮打开文件弹框
 			$('#addSourceModalFileBtn').click(function() {
 				filesModal.show();
@@ -378,18 +346,8 @@ SPDX-License-Identifier: Apache-2.0 -->
 				isPlaying = !isPlaying;
 			});
 
-			//点击全选按钮时，全选或取消全选
-			$('#play-area-select-unselect-all-btn').click(function() {
-				if (selectedPlayAreaList.length) {
-					selectedPlayAreaList = [];
-				} else {
-					selectedPlayAreaList = [1];
-				}
-				updatePlayAreaSelectBtnStatus();
-			});
-
 			//不同类型音量开关切换效果
-			$('.volumeFormItemLine').click(function() {
+			$('.broadcast_volumeFormItemLine').click(function() {
 				$(this).toggleClass('selected');
 			});
 
@@ -401,60 +359,144 @@ SPDX-License-Identifier: Apache-2.0 -->
 			});
 		});
 
+		// 获取组装播放区域设备树
+		function getPlayAreaTree() {
+			playAreaTreeData = [{
+				id: "root",
+				key: 'group_root',
+				text: "全部",
+				flagUrl: null,
+				children: [
+					{
+						id: "unassigned",
+						key: "group_unassigned",
+						text: "未分区",
+						flagUrl: "/images/icon_organization_area.svg",
+						metadata: {
+							"thing_ids": []
+						},
+						children: []
+					},
+				]
+			}];
+			allThingsList = [];
+			// 获取所有设备
+			fetch(`/ui/things/thingsInJSON?page=1&limit=1000&onlineStatus=2`, {
+				method: "GET",
+			})
+				.then(response => {
+					if (!response.ok) {
+						throw new Error('Network response was not ok');
+					}
+					return response.json(); // 直接将流转换为JSON对象
+				})
+				.then(json => {
+					const data = json.data;
+					const thingsData = JSON.parse(data).thingsData;
+					const things = thingsData.things;
+					if (things.length) {
+						allThingsList = things.map((thing) => thing);
+					}
+					// 获取所有分区
+					fetch(`/ui/channels/channelsInJSON?page=1&limit=1000`, {
+						method: "GET",
+					})
+						.then((response) => {
+							if (!response.ok) {
+								throw new Error("Network response was not ok");
+							}
+							return response.json(); // 直接将流转换为JSON对象
+						})
+						.then((json) => {
+							const data = json.data;
+							const channelsData = JSON.parse(data).channelsData;
+							const channels = channelsData.groups;
+							if (channels.length) {
+								channels.forEach((channel) => {
+									const channelNode = {
+										id: channel.id,
+										text: channel.name,
+										name: channel.name,
+										key: `group_${channel.id}`,
+										flagUrl: "/images/icon_organization_area.svg",
+										metadata: channel.metadata,
+										children: channel.metadata && 
+											channel.metadata.thing_ids && 
+											channel.metadata.thing_ids.length ? 
+												channel.metadata.thing_ids.map((thingId) => {
+													const targetThing = allThingsList.find((thing) => thingId === thing.id);
+													if (targetThing && targetThing.id) {
+														return {
+															id: targetThing.id,
+															text: targetThing.metadata.aliase,
+															name: targetThing.name,
+															key: `${targetThing.id}`,
+															flagUrl: "/images/icon_channel.png",
+															metadata: targetThing.metadata,
+														}
+													} else {
+														return {}
+													}
+												}).filter((thing)=>thing.id) : [],
+									};
+									playAreaTreeData[0].children.push(channelNode);
+								});
+								// 获取所有已连接分区的设备ID
+								const allConnectedThingsID = [...new Set(channels.flatMap(channel => {
+									// 检查 channel.metadata 是否存在以及 channel.metadata.thing_ids 是否存在
+									if (channel.metadata && Array.isArray(channel.metadata.thing_ids)) {
+										return channel.metadata.thing_ids;
+									} else {
+										// 如果不存在，返回一个空数组，不会影响 flatMap 的结果
+										return [];
+									}
+								}))];
+								// 获取所有未连接分区的设备
+								const allUnconnectedThings = allThingsList.filter((thing) => !allConnectedThingsID.includes(thing.id)); 
+								// 未分区
+								allUnconnectedThings.forEach((thing) => {
+									const thingNode = {
+										id: thing.id,
+										text: thing.metadata.aliase,
+										name: thing.name,
+										key: `${thing.id}`,
+										flagUrl: "/images/icon_channel.png",
+										metadata: thing.metadata,
+									};
+									playAreaTreeData[0].children[0].children.push(thingNode);
+								});
+							} else {
+								//没有分区时，所有设备都属于未分区
+								allThingsList.forEach((thing) => {
+									const thingNode = {
+										id: thing.id,
+										text: thing.metadata.aliase,
+										name: thing.name,
+										key: `${thing.id}`,
+										flagUrl: "/images/icon_channel.png",
+										metadata: thing.metadata,
+									};
+									playAreaTreeData[0].children[0].children.push(thingNode);
+								});
+							}
+							createPlayareaChannelsDom();
+						});
+				})
+				.catch(error => {});
+		}
+
 		//生成播放区域分区列表dom
 		function createPlayareaChannelsDom () {
-			const channelList = [
-				{
-					name: '主通道',
-					id: 1,
-				},
-				{
-					name: '副通道',
-					id: 2,
-				},
-				{
-					name: '副通道3',
-					id: 3,
-				},{
-					name: '副通道d',
-					id: 32,
-				},{
-					name: '副通道asdfafdafadfafdafdafdafa',
-					id: 42,
-				},{
-					name: '副adfa通道',
-					id: 26,
-				},{
-					name: '副adf通道',
-					id: 72,
-				},{
-					name: 'af副通道',
-					id: 82,
-				},{
-					name: 'adf副通道',
-					id: 22,
-				},{
-					name: 'adf副通道',
-					id: 12,
-				},{
-					name: 'asdf副通道',
-					id: 11122,
-				},{
-					name: '副adf通道',
-					id: 122,
-				},{
-					name: '副通adf道',
-					id: 1212,
-				},{
-					name: '副通道asdf',
-					id: 2222,
-				},
-			];
-			const $playareaChannelsContainer = $('#playarea_channels_container');
+			const $playareaChannelsContainer = $('#broadcast_playarea_channels_container');
 			$playareaChannelsContainer.empty();
-			channelList.forEach(channel => {
+			playAreaTreeData[0]?.children.forEach(channel => {
 				const $channel = $(`
-					<div class="hoverCard card" style="height: 100px;">
+					<div 
+						class="hoverCard card" 
+						style="height: 100px;" 
+						data-channel_id="${channel.id}"
+						id="channel-card-${channel.id}"
+					>
 						<div class="card-body">
 							<div class="row">
 								<div class="col">
@@ -465,23 +507,107 @@ SPDX-License-Identifier: Apache-2.0 -->
 										style="height: 24px;"
 									/>
 								</div>
-								<div class="col">
+								<div class="col" style="text-align: right;" onclick="event.stopPropagation()">
+									<input 
+										class="form-check-input" 
+										type="checkbox" 
+										value="" 
+										id="channel_checkbox_${channel.id}"
+									/>
 								</div>
 							</div>
 							<div class="row">
 								<h5 
 									class="card-title truncate-text" 
 									style="font-size: 15px; font-weight: normal;"
-									title="${channel.name}"
+									title="${channel.text}"
 								>
-									${channel.name}
+									${channel.text}
 								</h5>
 							</div>
 						</div>
 					</div>
 				`);
 				$playareaChannelsContainer.append($channel);
+				//点击分区
+				$(`#channel-card-${channel.id}`).click(function (event) {
+					openPlayareaSelectModal(channel);
+				});
+
+				//更新分区选中状态
+				const selectedThingsInChannel = selectedPlayAreaList.filter(item1 => 
+					channel.children?.some(item2 => item2.id === item1.id)
+				);
+				const channelCheckbox = $(`#channel_checkbox_${channel.id}`);
+				channelCheckbox.change(function () {
+					if (channel.children?.length) {
+						const checked = $(this).is(':checked');
+						if (checked) {
+							selectedPlayAreaList = [
+								...selectedPlayAreaList,
+								...channel.children,
+							];
+							selectedPlayAreaList = _.uniqBy(selectedPlayAreaList, 'id');
+						} else {
+							selectedPlayAreaList = selectedPlayAreaList.filter(itemA => 
+								!channel.children.some(itemB => itemB.id === itemA.id)
+							);
+						}
+						updatePlayAreaSelectBtnStatus();
+						createPlayareaChannelsDom();
+					}
+				});
+				channelCheckbox.prop("indeterminate", false);
+				channelCheckbox.prop("checked", false);
+				if (channel.children?.length) {
+					channelCheckbox.prop("disabled", false);
+					if (selectedThingsInChannel.length) {
+						if (selectedThingsInChannel.length === channel.children?.length) {
+							channelCheckbox.prop("indeterminate", false);
+							channelCheckbox.prop("checked", true);
+						} else {
+							channelCheckbox.prop("indeterminate", true);
+							channelCheckbox.prop("checked", false);
+						}
+					}
+				} else {
+					channelCheckbox.prop("disabled", true);
+				}
 			});
+		}
+
+		//打开播放区域选择弹窗
+		function openPlayareaSelectModal (channel) {
+			$playAreasModalTable.bootstrapTable('load', []);
+			if (channel.children?.length) {
+				playAreasModal.show();
+				$playAreasModalTable.bootstrapTable('load', channel.children);
+				//选中已选择的设备
+				const selectedThingsInChannel = selectedPlayAreaList.filter(item1 => 
+					channel.children?.some(item2 => item2.id === item1.id)
+				);
+				if (selectedThingsInChannel.length) {
+					if (selectedThingsInChannel.length === channel.children?.length) {
+						$playAreasModalTable.bootstrapTable('checkAll');
+					} else {
+						selectedThingsInChannel.forEach(thing => {
+							const index = channel.children.findIndex(item => item.id === thing.id);
+							$playAreasModalTable.bootstrapTable('check', index);
+						});
+					}
+				} else {
+					$playAreasModalTable.bootstrapTable('uncheckAll');
+				}
+			} else {
+				showAlert('warning', `此分区没有设备`);
+			}
+		}
+
+		//关闭播放区域选择弹窗
+		function closePlayareaSelectModal () {
+			playAreasModal.hide();
+			createPlayareaChannelsDom();
+			updatePlayAreaSelectBtnStatus();
 		}
 
 		//更新播放区域全选、反选按钮的状态
@@ -497,6 +623,19 @@ SPDX-License-Identifier: Apache-2.0 -->
 				const $selectIcon = $(`<i class="fa-solid fa-list-check"></i>`);
 				$btn.append($selectIcon);
 			}
+			createPlayareaChannelsDom();
+		}
+
+		// 通道名称-播放弹框
+		function channelNameTableFormatter (value, row, index) {
+			let imageSrc = '/images/icon_channel_offline.png';
+			if (row.metadata.is_online === "1") {
+				imageSrc = '/images/icon_channel.png';
+			}
+			return `<div>
+						<img loading="lazy" src="${imageSrc}" style="width: 16px; margin-bottom: 3px;" />
+						<span>${row.metadata.aliase}</span>
+					</div>`;
 		}
 
 		//生成场景下拉框
@@ -525,7 +664,6 @@ SPDX-License-Identifier: Apache-2.0 -->
 					const thingsData = JSON.parse(data).thingsData;
 					const onlineThingsList = thingsData.things && thingsData.things.length ? 
 						_.cloneDeep(thingsData.things) : [];
-					console.log("onlineThingsList: ", onlineThingsList)
 					onlineThingsList.forEach(thing => {
 						$option = $(`<option value="${thing.id}">${thing.name}</option>`);
 						$('#thingsSelect').append($option);
@@ -666,7 +804,7 @@ SPDX-License-Identifier: Apache-2.0 -->
 			}
 			return value;
 		}
-		
+
 		// 文件名称-文件弹框
 		function fileNameTableFormatter(value, row, index) {
 			if (row.isDir) {

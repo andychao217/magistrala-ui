@@ -1480,49 +1480,49 @@ SPDX-License-Identifier: Apache-2.0 -->
 														</div>
 														<div class="col">
 															<div class="dropdown" style="float: right;">
-															<button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-																<i class="fa-solid fa-ellipsis"></i>
-															</button>
-															<ul class="dropdown-menu">
-																<li style="display: none;">
-																	<a class="dropdown-item" onclick="viewThing('{{ $t.ID }}', '{{ $t.Credentials.Identity }}')">
-																		<i class="fa-solid fa-info" style="width: 16px;"></i> 查看
-																	</a>
-																</li>
-																<li
-																	id="{{ $t.ID }}-rebootBtn"
-																	{{ if $t.Metadata.is_online }}
-																		{{ if eq $t.Metadata.is_online "1" }}
-																		style="display: block;"
-																		{{ else }}
-																		style="display: none;"
+																<button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+																	<i class="fa-solid fa-ellipsis"></i>
+																</button>
+																<ul class="dropdown-menu">
+																	<li style="display: none;">
+																		<a class="dropdown-item" onclick="viewThing('{{ $t.ID }}', '{{ $t.Credentials.Identity }}')">
+																			<i class="fa-solid fa-info" style="width: 16px;"></i> 查看
+																		</a>
+																	</li>
+																	<li
+																		id="{{ $t.ID }}-rebootBtn"
+																		{{ if $t.Metadata.is_online }}
+																			{{ if eq $t.Metadata.is_online "1" }}
+																			style="display: block;"
+																			{{ else }}
+																			style="display: none;"
+																			{{ end }}
 																		{{ end }}
-																	{{ end }}
-																>
-																	<a class="dropdown-item" onclick="rebootThing('{{ $t.Credentials.Identity }}')">
-																		<i class="fa-solid fa-power-off" style="width: 16px;"></i> 设备重启
-																	</a>
-																</li>
-																<li 
-																	id="{{ $t.ID }}-editBtn"
-																	{{ if $t.Metadata.is_online }}
-																		{{ if eq $t.Metadata.is_online "1" }}
-																		style="display: block;"
-																		{{ else }}
-																		style="display: none;"
+																	>
+																		<a class="dropdown-item" onclick="rebootThing('{{ $t.Credentials.Identity }}')">
+																			<i class="fa-solid fa-power-off" style="width: 16px;"></i> 设备重启
+																		</a>
+																	</li>
+																	<li 
+																		id="{{ $t.ID }}-editBtn"
+																		{{ if $t.Metadata.is_online }}
+																			{{ if eq $t.Metadata.is_online "1" }}
+																			style="display: block;"
+																			{{ else }}
+																			style="display: none;"
+																			{{ end }}
 																		{{ end }}
-																	{{ end }}
-																>
-																	<a class="dropdown-item" onclick="editThing('{{ $t.ID }}')">
-																		<i class="fa-solid fa-gear" style="width: 16px;"></i> 设备设置
-																	</a>
-																</li>
-																<li id="{{ $t.ID }}-deleteBtn">
-																	<a class="dropdown-item" onclick="deleteThing('{{ $t.ID }}', true)" >
-																		<i class="fa-solid fa-trash-can" style="width: 16px;"></i> 设备删除
-																	</a>
-																</li>
-															</ul>
+																	>
+																		<a class="dropdown-item" onclick="editThing('{{ $t.ID }}')">
+																			<i class="fa-solid fa-gear" style="width: 16px;"></i> 设备设置
+																		</a>
+																	</li>
+																	<li id="{{ $t.ID }}-deleteBtn">
+																		<a class="dropdown-item" onclick="deleteThing('{{ $t.ID }}', true)" >
+																			<i class="fa-solid fa-trash-can" style="width: 16px;"></i> 设备删除
+																		</a>
+																	</li>
+																</ul>
 															</div>
 														</div>
 													</div>
