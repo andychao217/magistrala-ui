@@ -73,8 +73,14 @@ function connectWebSocket(host, port, defaultChannelId) {
                 url.indexOf("things") !== -1 || 
                 curPageUrl.includes("things")
             ) {
-                // console.log("allThingsListWebsocket: ", allThingsListWebsocket);
+                // 当前为设备页面
                 handleThingMessage(data, defaultChannelId);
+            } else if (
+                url.indexOf("broadcast") !== -1 || 
+                curPageUrl.includes("broadcast")
+            ) {
+                // 当前为实时广播页面
+                handleBroadcastMessage(data);
             }
         }
     };
@@ -217,6 +223,14 @@ function handleThingMessage(data, defaultChannelId) {
     }
 }
 
+// 处理实时广播相关message
+function handleBroadcastMessage(data) {
+    // 获取 iframe 元素
+    const iframe = document.getElementById('iframePage');
+    if (data.msgName === "TASK_START") {
+
+    }
+}
 
 //获取机构id、comID
 function httpGetDomainIdWebsocket() {
@@ -266,12 +280,20 @@ function setupMessageListener(defaultChannelId) {
                     url.indexOf("task") !== -1 || 
                     curPageUrl.includes("task")
                 ) {
+                    // 当前为日程页面
                     handleTaskMessage(data);
                 } else if (
                     url.indexOf("things") !== -1 || 
                     curPageUrl.includes("things")
                 ) {
+                    // 当前为设备页面
                     handleThingMessage(data, defaultChannelId);
+                } else if (
+                    url.indexOf("broadcast") !== -1 || 
+                    curPageUrl.includes("broadcast")
+                ) {
+                    // 当前为实时广播页面
+                    handleBroadcastMessage(data);
                 }
             }
         }

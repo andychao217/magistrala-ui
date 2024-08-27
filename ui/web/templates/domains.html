@@ -27,47 +27,45 @@ SPDX-License-Identifier: Apache-2.0 -->
                                     <div class="hoverCard card">
                                         <div class="domainTip" data-id="{{$d.ID}}">当前机构</div>
                                         <div class="card-body">
-                                            <div class="card-body">
-                                                <div class="row">
-                                                    <div class="col">
-                                                        <img src="/images/icon_mechanism_active.svg" class="hoverCardIcon" />
-                                                    </div>
-                                                    <div class="col">
-                                                        <div class="dropdown" style="float: right;">
-                                                            <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                                                <i class="fa-solid fa-ellipsis"></i>
-                                                            </button>
-                                                            <ul class="dropdown-menu">
-                                                                <li>
-                                                                    <a 
-                                                                        class="dropdown-item" 
-                                                                        onclick="selectDomain('{{ $d.ID }}', true)"
-                                                                        {{ if ne $d.Permission "administrator" }}
-                                                                            {{ if eq $d.Status "disabled" }}
-                                                                                disabled
-                                                                            {{ end }}
+                                            <div class="row">
+                                                <div class="col">
+                                                    <img src="/images/icon_mechanism_active.svg" class="hoverCardIcon" />
+                                                </div>
+                                                <div class="col">
+                                                    <div class="dropdown" style="float: right;">
+                                                        <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                                            <i class="fa-solid fa-ellipsis"></i>
+                                                        </button>
+                                                        <ul class="dropdown-menu">
+                                                            <li>
+                                                                <a 
+                                                                    class="dropdown-item" 
+                                                                    onclick="selectDomain('{{ $d.ID }}', true)"
+                                                                    {{ if ne $d.Permission "administrator" }}
+                                                                        {{ if eq $d.Status "disabled" }}
+                                                                            disabled
                                                                         {{ end }}
-                                                                    >
-                                                                        <i class="fa-solid fa-right-to-bracket"></i> 选择机构
-                                                                    </a>
-                                                                </li>
-                                                            </ul>
-                                                        </div>
+                                                                    {{ end }}
+                                                                >
+                                                                    <i class="fa-solid fa-right-to-bracket"></i> 选择机构
+                                                                </a>
+                                                            </li>
+                                                        </ul>
                                                     </div>
-                                                    <!-- <span class="badge bg-secondary">{{ $d.Permission }}</span> -->
                                                 </div>
-                                                <div class="row">
-                                                    <h5 
-                                                        class="card-title truncate-text domain-title" 
-                                                        data-domain_title="{{ $d.Name }}" 
-                                                        data-bs-toggle="tooltip" 
-                                                        data-bs-placement="bottom" 
-                                                        data-bs-title="{{ $d.Name }}" 
-                                                        title="{{ $d.Name }}"
-                                                    >
-                                                        {{ $d.Name }}
-                                                    </h5>
-                                                </div>
+                                                <!-- <span class="badge bg-secondary">{{ $d.Permission }}</span> -->
+                                            </div>
+                                            <div class="row">
+                                                <h5 
+                                                    class="card-title truncate-text domain-title" 
+                                                    data-domain_title="{{ $d.Name }}" 
+                                                    data-bs-toggle="tooltip" 
+                                                    data-bs-placement="bottom" 
+                                                    data-bs-title="{{ $d.Name }}" 
+                                                    title="{{ $d.Name }}"
+                                                >
+                                                    {{ $d.Name }}
+                                                </h5>
                                             </div>
                                         </div>
                                     </div>

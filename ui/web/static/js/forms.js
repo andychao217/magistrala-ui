@@ -103,8 +103,9 @@ export function submitUpdateForm(config) {
 export function showError(errorMessage, alertDiv) {
     const alert = document.getElementById(alertDiv);
     alert.innerHTML = `
-	<div class="alert alert-danger alert-dismissable fade show d-flex flex-row justify-content-between" role="alert">
-	  <div>${errorMessage}</div>
-	  <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="close"></button>
-	</div> `;
+        <div class="alert alert-danger alert-dismissable fade show d-flex flex-row justify-content-between" role="alert">
+            <div>${errorMessage}</div>
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="close"></button>
+        </div> 
+    `;
 }

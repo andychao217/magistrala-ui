@@ -14,215 +14,217 @@ SPDX-License-Identifier: Apache-2.0 -->
                 <div class="container-fluid">
                     <div class="row-mb-3 p-3">
                         <div class="col-12 mx-auto">
-                            <div>
-                                <div class="buttons">
-                                    <!-- add channel modal -->
-                                    <div 
-										class="modal fade" 
-										id="addChannelModal" 
-										tabindex="-1" 
-										role="dialog" 
-										aria-labelledby="addChannelModalLabel" 
-										aria-hidden="true"
-										data-bs-backdrop="static" 
-										data-bs-keyboard="false"  
-                                    >
-                                        <div class="modal-dialog" role="document">
-                                            <div class="modal-content">
-                                                <div class="modal-header">
-                                                    <h1 class="modal-title" id="addChannelModalLabel">添加分区</h1>
-                                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                                </div>
-                                                <form method="post" id="channelform">
-                                                    <div class="modal-body">
-                                                        <div id="alertMessage"></div>
-                                                        <div class="mb-3">
-                                                            <label for="name" class="form-label">名称</label>
-                                                            <input type="text" class="form-control name-field" name="name" id="name" placeholder="分区名称" maxlength="20" />
-                                                            <div id="nameError" class="text-danger"></div>
-                                                        </div>
-                                                        <div class="mb-3" style="display: none;">
-                                                            <label for="id" class="form-label">ID</label>
-                                                            <input type="text" class="form-control id-field" name="id" id="id" placeholder="分区ID" />
-                                                            <div id="idError" class="text-danger"></div>
-                                                        </div>
-                                                        <div class="mb-3" style="display: none;">
-                                                            <label for="description" class="form-label">描述</label>
-                                                            <input type="text" class="form-control" name="description" id="description" placeholder="分区描述" maxlength="50" />
-                                                        </div>
-                                                        <div class="mb-3" style="display: none;">
-                                                            <label for="metadata" class="form-label">附加属性</label>
-                                                            <div class="metadata-field">
-                                                                <textarea name="metadata" id="metadata"></textarea>
-                                                            </div>
-                                                            <div id="metadataHelp" class="form-text">以JSON形式输入附加属性.</div>
-                                                            <div id="metadataError" class="text-danger"></div>
-                                                        </div>
-                                                    </div>
-                                                    <div class="modal-footer">
-                                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
-															<i class="fa-solid fa-xmark"></i> 取消
-														</button>
-                                                        <button type="submit" class="btn body-button" id="create-channel-button">
-															<i class="fa-solid fa-floppy-disk"></i> 确定
-														</button>
-                                                    </div>
-                                                </form>
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    <!-- 隐藏按钮 -->
-                                    <!-- Button trigger modal -->
-                                    <button type="button" class="btn body-button" onclick="openModal('bulk')" style="display: none;">
-										<i class="fa-solid fa-plus"></i> 批量添加分区
-									</button>
-
-                                    <!-- add channels modal -->
-                                    <div 
-										class="modal fade" 
-										id="addChannelsModal" 
-										tabindex="-1" 
-										role="dialog" 
-										aria-labelledby="addChannelsModalLabel" 
-										aria-hidden="true"
-										data-bs-backdrop="static" 
-										data-bs-keyboard="false"  
-                                    >
-                                        <div class="modal-dialog" role="document">
-                                            <div class="modal-content">
-                                                <div class="modal-header">
-                                                    <h1 class="modal-title" id="addChannelsModalLabel">批量添加分区</h1>
-                                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                                </div>
-                                                <form method="post" enctype="multipart/form-data" id="bulkchannelsform">
-                                                    <div class="modal-body">
-                                                        <div id="alertBulkMessage"></div>
-                                                        <div class="form-group mb-3">
-                                                            <label for="channelsFile">
-                                                                添加包含分区名称以及附加属性的CSV文件(附加属性可以为空). 在
-                                                                <a href="/samples/channels.csv" download="channels.csv">这里</a>
-                                                                可以下载模版文件
-                                                            </label>
-                                                            <input type="file" class="form-control-file" id="channelsFile" name="channelsFile" required />
-                                                        </div>
-                                                    </div>
-                                                    <div class="modal-footer">
-                                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
-															<i class="fa-solid fa-xmark"></i> 取消
-														</button>
-                                                        <button type="submit" value="upload" class="btn body-button">
-															<i class="fa-solid fa-floppy-disk"></i> 确定
-														</button>
-                                                    </div>
-                                                </form>
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    <!-- edit channel modal -->
-                                    <div 
-										class="modal fade" 
-										id="editChannelModal" 
-										tabindex="-1" 
-										role="dialog" 
-										aria-labelledby="editChannelModalLabel" 
-										aria-hidden="true"
-										data-bs-backdrop="static" 
-										data-bs-keyboard="false"  
-                                    >
-                                    	<div class="modal-dialog" role="document">
-                                        	<div class="modal-content">
-												<div class="modal-header">
-													<h1 class="modal-title" id="editChannelModalLabel">修改分区</h1>
-													<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            <div class="buttons">
+								<!-- add channel modal -->
+								<div 
+									class="modal fade" 
+									id="addChannelModal" 
+									tabindex="-1" 
+									role="dialog" 
+									aria-labelledby="addChannelModalLabel" 
+									aria-hidden="true"
+									data-bs-backdrop="static" 
+									data-bs-keyboard="false"  
+								>
+									<div class="modal-dialog" role="document">
+										<div class="modal-content">
+											<div class="modal-header">
+												<h1 class="modal-title" id="addChannelModalLabel">添加分区</h1>
+												<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+											</div>
+											<form method="post" id="channelform">
+												<div class="modal-body">
+													<div id="alertMessage"></div>
+													<div class="mb-3">
+														<label for="name" class="form-label">名称</label>
+														<input type="text" class="form-control name-field" name="name" id="name" placeholder="分区名称" maxlength="20" />
+														<div id="nameError" class="text-danger"></div>
+													</div>
+													<div class="mb-3" style="display: none;">
+														<label for="id" class="form-label">ID</label>
+														<input type="text" class="form-control id-field" name="id" id="id" placeholder="分区ID" />
+														<div id="idError" class="text-danger"></div>
+													</div>
+													<div class="mb-3" style="display: none;">
+														<label for="description" class="form-label">描述</label>
+														<input type="text" class="form-control" name="description" id="description" placeholder="分区描述" maxlength="50" />
+													</div>
+													<div class="mb-3" style="display: none;">
+														<label for="metadata" class="form-label">附加属性</label>
+														<div class="metadata-field">
+															<textarea name="metadata" id="metadata"></textarea>
+														</div>
+														<div id="metadataHelp" class="form-text">以JSON形式输入附加属性.</div>
+														<div id="metadataError" class="text-danger"></div>
+													</div>
 												</div>
-												<form method="post" id="editChannelForm">
-													<div class="modal-body">
-														<div id="editAlertMessage"></div>
-														<div class="mb-3">
-															<label for="name" class="form-label">名称</label>
-															<input type="text" class="form-control name-field" name="name" id="editName" placeholder="分区名称" maxlength="20" />
-															<div id="editNameError" class="text-danger"></div>
-														</div>
-														<div class="mb-3" style="display: none;">
-															<label for="id" class="form-label">ID</label>
-															<input type="text" class="form-control id-field" name="id" id="editId" placeholder="分区ID" readonly />
-														</div>
-														<div class="mb-3" style="display: none;">
-															<label for="description" class="form-label">描述</label>
-															<input type="text" class="form-control" name="description" id="editDescription" placeholder="分区描述" maxlength="50" />
-														</div>
-													</div>
-													<div class="modal-footer">
-														<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
-															<i class="fa-solid fa-xmark"></i> 取消
-														</button>
-														<button type="submit" class="btn body-button" id="edit-channel-button">
-															<i class="fa-solid fa-floppy-disk"></i> 确定
-														</button>
-													</div>
-												</form>
-                                          	</div>
-                                      	</div>
-                                  	</div>
-                                </div>
-                                <div class="table-responsive table-container">
-                                    <div class="row buttons mb-3">
-										<div class="col-4" role="group">
-											<button type="button" class="btn body-button" onclick="openModal('single')">
-												<i class="fa-solid fa-plus"></i> 添加分区
-											</button>
+												<div class="modal-footer">
+													<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+														<i class="fa-solid fa-xmark"></i> 取消
+													</button>
+													<button type="submit" class="btn body-button" id="create-channel-button">
+														<i class="fa-solid fa-floppy-disk"></i> 确定
+													</button>
+												</div>
+											</form>
 										</div>
-                                    </div>
-                                    <div class="cards-grid">
-										{{ range $i, $c := .Channels }}
-										<div onclick="viewChannel('{{ $c.ID }}', event)">
-											<div class="hoverCard card">
-												<div class="card-body">
-													<div class="row">
-														<div class="col">
-															<img loading="lazy" src="/images/icon_organization_area.svg" class="hoverCardIcon" />
-														</div>
-														<div class="col">
-															<div class="dropdown" style="float: right;" onclick="event.stopPropagation()">
-																<button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-																	<i class="fa-solid fa-ellipsis"></i>
-																</button>
-																<ul class="dropdown-menu">
-																	<!-- <li><a class="dropdown-item" onclick="viewChannel('{{ $c.ID }}')"><i class="fa-solid fa-info" style="width: 16px;"></i> 查看</a></li> -->
-																	<li>
-																		<a class="dropdown-item" onclick="deleteChannel('{{ $c.ID }}')">
-																			<i class="fa-solid fa-trash-can" style="width: 16px;"></i> 删除
-																		</a>
-																	</li>
-																	<li>
-																		<a class="dropdown-item" onclick="editChannel('{{ $c.ID }}', '{{ $c.Name }}', '{{ $c.Description }}')">
-																			<i class="fa-solid fa-pencil-alt" style="width: 16px;"></i> 修改
-																		</a>
-																	</li>
-																</ul>
-															</div>
+									</div>
+								</div>
+
+								<!-- 隐藏按钮 -->
+								<!-- Button trigger modal -->
+								<button type="button" class="btn body-button" onclick="openModal('bulk')" style="display: none;">
+									<i class="fa-solid fa-plus"></i> 批量添加分区
+								</button>
+
+								<!-- add channels modal -->
+								<div 
+									class="modal fade" 
+									id="addChannelsModal" 
+									tabindex="-1" 
+									role="dialog" 
+									aria-labelledby="addChannelsModalLabel" 
+									aria-hidden="true"
+									data-bs-backdrop="static" 
+									data-bs-keyboard="false"  
+								>
+									<div class="modal-dialog" role="document">
+										<div class="modal-content">
+											<div class="modal-header">
+												<h1 class="modal-title" id="addChannelsModalLabel">批量添加分区</h1>
+												<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+											</div>
+											<form method="post" enctype="multipart/form-data" id="bulkchannelsform">
+												<div class="modal-body">
+													<div id="alertBulkMessage"></div>
+													<div class="form-group mb-3">
+														<label for="channelsFile">
+															添加包含分区名称以及附加属性的CSV文件(附加属性可以为空). 在
+															<a href="/samples/channels.csv" download="channels.csv">这里</a>
+															可以下载模版文件
+														</label>
+														<input type="file" class="form-control-file" id="channelsFile" name="channelsFile" required />
+													</div>
+												</div>
+												<div class="modal-footer">
+													<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+														<i class="fa-solid fa-xmark"></i> 取消
+													</button>
+													<button type="submit" value="upload" class="btn body-button">
+														<i class="fa-solid fa-floppy-disk"></i> 确定
+													</button>
+												</div>
+											</form>
+										</div>
+									</div>
+								</div>
+
+								<!-- edit channel modal -->
+								<div 
+									class="modal fade" 
+									id="editChannelModal" 
+									tabindex="-1" 
+									role="dialog" 
+									aria-labelledby="editChannelModalLabel" 
+									aria-hidden="true"
+									data-bs-backdrop="static" 
+									data-bs-keyboard="false"  
+								>
+									<div class="modal-dialog" role="document">
+										<div class="modal-content">
+											<div class="modal-header">
+												<h1 class="modal-title" id="editChannelModalLabel">修改分区</h1>
+												<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+											</div>
+											<form method="post" id="editChannelForm">
+												<div class="modal-body">
+													<div id="editAlertMessage"></div>
+													<div class="mb-3">
+														<label for="name" class="form-label">名称</label>
+														<input type="text" class="form-control name-field" name="name" id="editName" placeholder="分区名称" maxlength="20" />
+														<div id="editNameError" class="text-danger"></div>
+													</div>
+													<div class="mb-3" style="display: none;">
+														<label for="id" class="form-label">ID</label>
+														<input type="text" class="form-control id-field" name="id" id="editId" placeholder="分区ID" readonly />
+													</div>
+													<div class="mb-3" style="display: none;">
+														<label for="description" class="form-label">描述</label>
+														<input type="text" class="form-control" name="description" id="editDescription" placeholder="分区描述" maxlength="50" />
+													</div>
+												</div>
+												<div class="modal-footer">
+													<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+														<i class="fa-solid fa-xmark"></i> 取消
+													</button>
+													<button type="submit" class="btn body-button" id="edit-channel-button">
+														<i class="fa-solid fa-floppy-disk"></i> 确定
+													</button>
+												</div>
+											</form>
+										</div>
+									</div>
+								</div>
+							</div>
+							<div class="table-responsive table-container">
+								<div class="row buttons mb-3">
+									<div class="col-4" role="group">
+										<button type="button" class="btn body-button" onclick="openModal('single')">
+											<i class="fa-solid fa-plus"></i> 添加分区
+										</button>
+									</div>
+								</div>
+								<div class="cards-grid">
+									{{ range $i, $c := .Channels }}
+									<div onclick="viewChannel('{{ $c.ID }}', event)">
+										<div class="hoverCard card">
+											<div class="card-body">
+												<div class="row">
+													<div class="col">
+														<img loading="lazy" src="/images/icon_organization_area.svg" class="hoverCardIcon" />
+													</div>
+													<div class="col">
+														<div class="dropdown" style="float: right;" onclick="event.stopPropagation()">
+															<button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+																<i class="fa-solid fa-ellipsis"></i>
+															</button>
+															<ul class="dropdown-menu">
+																<!-- <li>
+																	<a class="dropdown-item" onclick="viewChannel('{{ $c.ID }}')">
+																		<i class="fa-solid fa-info" style="width: 16px;"></i> 查看
+																	</a>
+																</li> -->
+																<li>
+																	<a class="dropdown-item" onclick="deleteChannel('{{ $c.ID }}')">
+																		<i class="fa-solid fa-trash-can" style="width: 16px;"></i> 删除
+																	</a>
+																</li>
+																<li>
+																	<a class="dropdown-item" onclick="editChannel('{{ $c.ID }}', '{{ $c.Name }}', '{{ $c.Description }}')">
+																		<i class="fa-solid fa-pencil-alt" style="width: 16px;"></i> 修改
+																	</a>
+																</li>
+															</ul>
 														</div>
 													</div>
-													<div class="row">
-														<h5 
-															class="card-title truncate-text"
-															data-bs-toggle="tooltip" 
-															data-bs-placement="bottom" 
-															data-bs-title="{{ $c.Name }}" 
-															title="{{ $c.Name }}"
-														>
-															{{ $c.Name }}
-														</h5>
-													</div>
+												</div>
+												<div class="row">
+													<h5 
+														class="card-title truncate-text"
+														data-bs-toggle="tooltip" 
+														data-bs-placement="bottom" 
+														data-bs-title="{{ $c.Name }}" 
+														title="{{ $c.Name }}"
+													>
+														{{ $c.Name }}
+													</h5>
 												</div>
 											</div>
 										</div>
-										{{ end }}
 									</div>
-                                </div>
-                            </div>
+									{{ end }}
+								</div>
+							</div>
                         </div>
                     </div>
                 </div>

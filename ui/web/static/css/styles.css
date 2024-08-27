@@ -1657,9 +1657,8 @@ input[type='range']::-ms-thumb {
     display: flex;
     flex-direction: column;
     height: 330px;
-    margin: 10px 10px 0px 10px;
-    border-top-left-radius: 5px;
-    border-top-right-radius: 5px;
+    margin: 10px;
+    border-radius: 5px;
     backdrop-filter: blur(5px);
     -webkit-backdrop-filter: blur(5px);
     background: rgba(0, 0, 0, 0.05);

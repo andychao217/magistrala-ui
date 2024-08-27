@@ -248,27 +248,27 @@ SPDX-License-Identifier: Apache-2.0 -->
 							data-bs-backdrop="static" 
 							data-bs-keyboard="false"  
 						>
-						<div class="modal-dialog" role="document">
-							<div class="modal-content" style="width: 580px;">
-								<div class="modal-header">
-									<h1 class="modal-title" id="playAreasAddModal">播放区域</h1>
-									<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" onclick="closePlayAreasAddModal();"></button>
-								</div>
-								<div class="modal-body">
-									<div class="mb-3" style="max-height: 400px; overflow-y: auto;">
-										<div id="playAreaTree"></div>
+							<div class="modal-dialog" role="document">
+								<div class="modal-content" style="width: 580px;">
+									<div class="modal-header">
+										<h1 class="modal-title" id="playAreasAddModal">播放区域</h1>
+										<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" onclick="closePlayAreasAddModal();"></button>
 									</div>
-									<div class="modal-footer">
-										<button type="button" class="btn btn-secondary" data-bs-dismiss="modal" onclick="closePlayAreasAddModal();">
-											<i class="fa-solid fa-xmark"></i> 取消
-										</button>
-										<button type="button" class="btn body-button" id="confirmPlayAreasAddModalBtn">
-											<i class="fa-solid fa-floppy-disk"></i> 确定
-										</button>
+									<div class="modal-body">
+										<div class="mb-3" style="max-height: 400px; overflow-y: auto;">
+											<div id="playAreaTree"></div>
+										</div>
+										<div class="modal-footer">
+											<button type="button" class="btn btn-secondary" data-bs-dismiss="modal" onclick="closePlayAreasAddModal();">
+												<i class="fa-solid fa-xmark"></i> 取消
+											</button>
+											<button type="button" class="btn body-button" id="confirmPlayAreasAddModalBtn">
+												<i class="fa-solid fa-floppy-disk"></i> 确定
+											</button>
+										</div>
 									</div>
 								</div>
 							</div>
-						</div>
 						</div>
 
 						<!-- 播放区域详情弹框 -->
@@ -282,27 +282,27 @@ SPDX-License-Identifier: Apache-2.0 -->
 							data-bs-backdrop="static" 
 							data-bs-keyboard="false"  
 						>
-						<div class="modal-dialog" role="document">
-							<div class="modal-content" style="width: 580px;">
-								<div class="modal-header">
-									<h1 class="modal-title" id="playAreasDetailModal">播放区域</h1>
-									<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" onclick="taskModal.show();"></button>
-								</div>
-								<div class="modal-body">
-									<div class="mb-3" style="max-height: 400px; overflow-y: auto;">
-										<div class="row row-cols-4 g-3" id="playAreasDetailListContainer"></div>
+							<div class="modal-dialog" role="document">
+								<div class="modal-content" style="width: 580px;">
+									<div class="modal-header">
+										<h1 class="modal-title" id="playAreasDetailModal">播放区域</h1>
+										<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" onclick="taskModal.show();"></button>
 									</div>
-									<div class="modal-footer">
-										<button type="button" class="btn btn-secondary" data-bs-dismiss="modal" onclick="taskModal.show();">
-											<i class="fa-solid fa-xmark"></i> 取消
-										</button>
-										<button type="button" class="btn body-button" id="confirmPlayAreasDetailModalBtn">
-											<i class="fa-solid fa-floppy-disk"></i> 确定
-										</button>
+									<div class="modal-body">
+										<div class="mb-3" style="max-height: 400px; overflow-y: auto;">
+											<div class="row row-cols-4 g-3" id="playAreasDetailListContainer"></div>
+										</div>
+										<div class="modal-footer">
+											<button type="button" class="btn btn-secondary" data-bs-dismiss="modal" onclick="taskModal.show();">
+												<i class="fa-solid fa-xmark"></i> 取消
+											</button>
+											<button type="button" class="btn body-button" id="confirmPlayAreasDetailModalBtn">
+												<i class="fa-solid fa-floppy-disk"></i> 确定
+											</button>
+										</div>
 									</div>
 								</div>
 							</div>
-						</div>
 						</div>
 
 						<!-- 选择音源弹框 -->
@@ -316,47 +316,15 @@ SPDX-License-Identifier: Apache-2.0 -->
 							data-bs-backdrop="static" 
 							data-bs-keyboard="false"  
 						>
-						<div class="modal-dialog" role="document">
-							<div class="modal-content" style="width: 580px;">
-								<div class="modal-header">
-									<h1 class="modal-title" id="sourceModalLabel">音源列表</h1>
-									<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" onclick="taskModal.show();"></button>
-								</div>
-								<div class="modal-body">
-									<div class="mb-3" style="padding: 0px 16px;">
-										<div class="mb-3">
-											<div 
-												style="
-													border-radius: 5px;
-													display: flex; 
-													justify-content: space-between; 
-													background: whitesmoke;
-												"
-											>
-												<div style="line-height: 38px; margin-left: 10px;">文件列表</div>
-												<div>
-													<button 
-														type="button" 
-														class="btn btn-link" 
-														style="text-decoration: none; color: #20afbf;"
-														id="addSourceModalFileBtn"
-													>
-														<i class="fa-solid fa-plus"></i> 添加
-													</button>
-												</div>
-											</div>
-											<ul class="list-group list-group-flush sourceModalList" id="sourceModalFileListContainer">
-											</ul>
-										</div>
-										<div class="mb-3 row">
-											<div class="col-sm-12" style="text-align: center;">
-												<div id="moreSettingBtnSourceModal" class="moreSettingBtn">
-													<i class="fa-solid fa-chevron-down"></i>
-												</div>
-											</div>
-										</div>
-										<div class="mb-3" id="moreSettingContainerSourceModal" style="display: none;">
-											<div class="mb-3" style="display: none;">
+							<div class="modal-dialog" role="document">
+								<div class="modal-content" style="width: 580px;">
+									<div class="modal-header">
+										<h1 class="modal-title" id="sourceModalLabel">音源列表</h1>
+										<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" onclick="taskModal.show();"></button>
+									</div>
+									<div class="modal-body">
+										<div class="mb-3" style="padding: 0px 16px;">
+											<div class="mb-3">
 												<div 
 													style="
 														border-radius: 5px;
@@ -365,42 +333,73 @@ SPDX-License-Identifier: Apache-2.0 -->
 														background: whitesmoke;
 													"
 												>
-													<div style="line-height: 38px; margin-left: 10px;">采播通道列表</div>
+													<div style="line-height: 38px; margin-left: 10px;">文件列表</div>
 													<div>
 														<button 
 															type="button" 
 															class="btn btn-link" 
 															style="text-decoration: none; color: #20afbf;"
-															id="addSourceModalDeviceBtn"
+															id="addSourceModalFileBtn"
 														>
 															<i class="fa-solid fa-plus"></i> 添加
 														</button>
 													</div>
 												</div>
-												<ul class="list-group list-group-flush sourceModalList" id="sourceModalDeviceListContainer">
-												</ul>
+												<ul class="list-group list-group-flush sourceModalList" id="sourceModalFileListContainer"></ul>
 											</div>
 											<div class="mb-3 row">
-												<label for="backgroundSource" class="col-sm-2 col-form-label">背景音</label>
-												<div class="col-sm-10">
-													<select class="form-control form-select" placeholder="请选择背景音" name="backgroundSource" id="backgroundSource">
-														<option value="0">无</option>
-													</select>
+												<div class="col-sm-12" style="text-align: center;">
+													<div id="moreSettingBtnSourceModal" class="moreSettingBtn">
+														<i class="fa-solid fa-chevron-down"></i>
+													</div>
+												</div>
+											</div>
+											<div class="mb-3" id="moreSettingContainerSourceModal" style="display: none;">
+												<div class="mb-3" style="display: none;">
+													<div 
+														style="
+															border-radius: 5px;
+															display: flex; 
+															justify-content: space-between; 
+															background: whitesmoke;
+														"
+													>
+														<div style="line-height: 38px; margin-left: 10px;">采播通道列表</div>
+														<div>
+															<button 
+																type="button" 
+																class="btn btn-link" 
+																style="text-decoration: none; color: #20afbf;"
+																id="addSourceModalDeviceBtn"
+															>
+																<i class="fa-solid fa-plus"></i> 添加
+															</button>
+														</div>
+													</div>
+													<ul class="list-group list-group-flush sourceModalList" id="sourceModalDeviceListContainer">
+													</ul>
+												</div>
+												<div class="mb-3 row">
+													<label for="backgroundSource" class="col-sm-2 col-form-label">背景音</label>
+													<div class="col-sm-10">
+														<select class="form-control form-select" placeholder="请选择背景音" name="backgroundSource" id="backgroundSource">
+															<option value="0">无</option>
+														</select>
+													</div>
 												</div>
 											</div>
 										</div>
-									</div>
-									<div class="modal-footer">
-										<button type="button" class="btn btn-secondary" data-bs-dismiss="modal" onclick="taskModal.show();">
-											<i class="fa-solid fa-xmark"></i> 取消
-										</button>
-										<button type="button" class="btn body-button" id="sourceModalConfirmBtn">
-											<i class="fa-solid fa-floppy-disk"></i> 确定
-										</button>
+										<div class="modal-footer">
+											<button type="button" class="btn btn-secondary" data-bs-dismiss="modal" onclick="taskModal.show();">
+												<i class="fa-solid fa-xmark"></i> 取消
+											</button>
+											<button type="button" class="btn body-button" id="sourceModalConfirmBtn">
+												<i class="fa-solid fa-floppy-disk"></i> 确定
+											</button>
+										</div>
 									</div>
 								</div>
 							</div>
-						</div>
 						</div>
 
 						<!-- 选择文件弹框 -->
@@ -480,10 +479,10 @@ SPDX-License-Identifier: Apache-2.0 -->
 												data-click-to-select="true"
 											>
 												<thead>
-												<tr>
-													<th data-field="state" data-checkbox="true"></th>
-													<th data-field="deviceName" data-formatter="inputChannelNameTableFormatter">设备</th>
-												</tr>
+													<tr>
+														<th data-field="state" data-checkbox="true"></th>
+														<th data-field="deviceName" data-formatter="inputChannelNameTableFormatter">设备</th>
+													</tr>
 												</thead>
 											</table>
 										</div>
@@ -551,26 +550,26 @@ SPDX-License-Identifier: Apache-2.0 -->
 							<!-- 任务列表 -->
 							<div class="taskContent">
 								<div class="taskContentHeaderBar">
-								<div>
-									<h5 style="display: flex;">
 									<div>
-										<span id="taskDateTitle"></span>
+										<h5 style="display: flex;">
+											<div>
+												<span id="taskDateTitle"></span>
+											</div>
+											<div class="taskDateBadgeContainer">
+												<span class="badge bg-warning rounded-pill" id="taskDateBadge" style="font-size:10px; min-width: 30px">0</span>
+											</div>
+										</h5>
 									</div>
-									<div class="taskDateBadgeContainer">
-										<span class="badge bg-warning rounded-pill" id="taskDateBadge" style="font-size:10px; min-width: 30px">0</span>
+									<div>
+										<div class="btn-group">
+											<button type="button" class="btn body-button" style="width: 110px;" id="addTaskBtn">
+												<i class="fa-solid fa-plus"></i> 新建日程
+											</button>
+											<button type="button" class="btn body-button" style="width: 80px;" id="allTasksToggleBtn">
+												<i class="fa-solid fa-list"></i> 全部
+											</button>
+										</div>
 									</div>
-									</h5>
-								</div>
-								<div>
-									<div class="btn-group">
-										<button type="button" class="btn body-button" style="width: 110px;" id="addTaskBtn">
-											<i class="fa-solid fa-plus"></i> 新建日程
-										</button>
-										<button type="button" class="btn body-button" style="width: 80px;" id="allTasksToggleBtn">
-											<i class="fa-solid fa-list"></i> 全部
-										</button>
-									</div>
-								</div>
 								</div>
 								<div class="taskContentList" id="taskContentList"></div>
 							</div>

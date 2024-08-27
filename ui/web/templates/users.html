@@ -14,217 +14,215 @@ SPDX-License-Identifier: Apache-2.0 -->
                 <div class="container-fluid">
                     <div class="row-mb-3 p-3">
                         <div class="col-12 mx-auto">
-                            <div>
-                                <div class="buttons">
-                                    <!-- <button class="btn body-button" type="button" onclick="openModal('bulk')" style="display: none;">
-                                      批量添加用户
-                                    </button> -->
-                                    <!-- modals -->
-                                    <!-- add user modal -->
-                                    <div 
-                                        class="modal fade" 
-                                        id="addUserModal" 
-                                        tabindex="-1" 
-                                        role="dialog" 
-                                        aria-labelledby="addUserModalLabel" 
-                                        aria-hidden="true"
-                                        data-bs-backdrop="static" 
-                                        data-bs-keyboard="false"  
-                                    >
-                                        <div class="modal-dialog" role="document">
-                                            <div class="modal-content">
-                                                <div class="modal-header">
-                                                    <h1 class="modal-title" id="addUserModalLabel">添加用户</h1>
-                                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                                </div>
-                                                <form id="userform">
-                                                    <div class="modal-body">
-                                                        <div id="alertMessage"></div>
-                                                        <div class="mb-3">
-                                                            <label for="name" class="form-label">用户昵称</label>
-                                                            <input type="text" class="form-control name-field" name="name" id="name" placeholder="用户昵称" maxlength="20" />
-                                                            <div id="nameError" class="text-danger"></div>
-                                                        </div>
-                                                        <div class="mb-3">
-                                                            <label for="email" class="form-label">用户名</label>
-                                                            <input class="form-control email-field" name="identity" id="email" placeholder="电子邮箱或者手机号码" />
-                                                            <div id="emailError" class="text-danger"></div>
-                                                        </div>
-                                                        <div class="mb-3">
-                                                            <label for="secret" class="form-label">密码</label>
-                                                            <input type="text" class="form-control secret-field" name="secret" id="secret" placeholder="密码"  maxlength="20" />
-                                                            <div id="secretError" class="text-danger"></div>
-                                                        </div>
-                                                        <div class="mb-3" style="display: none;">
-                                                            <label for="userTags" class="form-label">标识</label>
-                                                            <div id="usersTagsList" onclick="deleteItem(event)"></div>
-                                                            <input
-                                                                type="text"
-                                                                class="form-control tags-field"
-                                                                name="tags"
-                                                                id="userTags"
-                                                                aria-describedby="tagHelp"
-                                                                onkeydown="addItem(event, 'userTags', 'usersTagsList')"
-                                                                placeholder="添加表示"
-                                                            />
-                                                            <div id="tagHelp" class="form-text">以字符串数组形式输入标识.</div>
-                                                            <div id="tagsError" class="text-danger"></div>
-                                                        </div>
-                                                        <div class="mb-3" style="display: none;">
-                                                            <label for="metadata" class="form-label">附加属性</label>
-                                                            <div class="metadata-field">
-                                                                <textarea name="metadata" id="metadata"></textarea>
-                                                            </div>
-
-                                                            <div id="metadataHelp" class="form-text">以JSON形式输入附加属性.</div>
-                                                            <div id="metadataError" class="text-danger"></div>
-                                                        </div>
-                                                    </div>
-                                                    <div class="modal-footer">
-                                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
-                                                            <i class="fa-solid fa-xmark"></i> 取消
-                                                        </button>
-                                                        <button 
-                                                            type="submit" 
-                                                            class="btn body-button" 
-                                                            id="create-user-button" 
-                                                            onclick="submitItemList('userTags', 'usersTagsList')"
-                                                        >
-                                                            <i class="fa-solid fa-floppy-disk"></i> 确定
-                                                        </button>
-                                                    </div>
-                                                </form>
+                            <div class="buttons">
+                                <!-- <button class="btn body-button" type="button" onclick="openModal('bulk')" style="display: none;">
+                                  批量添加用户
+                                </button> -->
+                                <!-- modals -->
+                                <!-- add user modal -->
+                                <div 
+                                    class="modal fade" 
+                                    id="addUserModal" 
+                                    tabindex="-1" 
+                                    role="dialog" 
+                                    aria-labelledby="addUserModalLabel" 
+                                    aria-hidden="true"
+                                    data-bs-backdrop="static" 
+                                    data-bs-keyboard="false"  
+                                >
+                                    <div class="modal-dialog" role="document">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h1 class="modal-title" id="addUserModalLabel">添加用户</h1>
+                                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                             </div>
-                                        </div>
-                                    </div>
+                                            <form id="userform">
+                                                <div class="modal-body">
+                                                    <div id="alertMessage"></div>
+                                                    <div class="mb-3">
+                                                        <label for="name" class="form-label">用户昵称</label>
+                                                        <input type="text" class="form-control name-field" name="name" id="name" placeholder="用户昵称" maxlength="20" />
+                                                        <div id="nameError" class="text-danger"></div>
+                                                    </div>
+                                                    <div class="mb-3">
+                                                        <label for="email" class="form-label">用户名</label>
+                                                        <input class="form-control email-field" name="identity" id="email" placeholder="电子邮箱或者手机号码" />
+                                                        <div id="emailError" class="text-danger"></div>
+                                                    </div>
+                                                    <div class="mb-3">
+                                                        <label for="secret" class="form-label">密码</label>
+                                                        <input type="text" class="form-control secret-field" name="secret" id="secret" placeholder="密码"  maxlength="20" />
+                                                        <div id="secretError" class="text-danger"></div>
+                                                    </div>
+                                                    <div class="mb-3" style="display: none;">
+                                                        <label for="userTags" class="form-label">标识</label>
+                                                        <div id="usersTagsList" onclick="deleteItem(event)"></div>
+                                                        <input
+                                                            type="text"
+                                                            class="form-control tags-field"
+                                                            name="tags"
+                                                            id="userTags"
+                                                            aria-describedby="tagHelp"
+                                                            onkeydown="addItem(event, 'userTags', 'usersTagsList')"
+                                                            placeholder="添加表示"
+                                                        />
+                                                        <div id="tagHelp" class="form-text">以字符串数组形式输入标识.</div>
+                                                        <div id="tagsError" class="text-danger"></div>
+                                                    </div>
+                                                    <div class="mb-3" style="display: none;">
+                                                        <label for="metadata" class="form-label">附加属性</label>
+                                                        <div class="metadata-field">
+                                                            <textarea name="metadata" id="metadata"></textarea>
+                                                        </div>
 
-                                    <!-- add users modal -->
-                                    <div class="modal fade" id="addUsersModal" tabindex="-1" role="dialog" aria-labelledby="addUsersModalLabel" aria-hidden="true">
-                                        <div class="modal-dialog" role="document">
-                                            <div class="modal-content">
-                                                <div class="modal-header">
-                                                    <h1 class="modal-title" id="addUsersModalLabel">批量添加用户</h1>
-                                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                                </div>
-                                                <form enctype="multipart/form-data" id="bulkusersform">
-                                                    <div class="modal-body">
-                                                        <div id="alertBulkMessage"></div>
-                                                        <div class="form-group mb-3">
-                                                            <label for="usersFile">
-                                                                添加包含用户名和密码的CSV文件. 在
-                                                                <a href="/samples/users.csv" download="users.csv">这里</a>
-                                                                可以下载模版文件
-                                                            </label>
-                                                            <input type="file" class="form-control-file" id="usersFile" name="usersFile" required />
-                                                        </div>
-                                                    </div>
-                                                    <div class="modal-footer">
-                                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
-                                                            <i class="fa-solid fa-xmark"></i> 取消
-                                                        </button>
-                                                        <button type="submit" value="upload" class="btn body-button">
-                                                            <i class="fa-solid fa-floppy-disk"></i> 确定
-                                                        </button>
-                                                    </div>
-                                                </form>
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                     <!-- edit user modal -->
-                                     <div 
-                                        class="modal fade" 
-                                        id="editUserModal" 
-                                        tabindex="-1" 
-                                        role="dialog" 
-                                        aria-labelledby="editUserModalLabel" 
-                                        aria-hidden="true"
-                                        data-bs-backdrop="static" 
-                                        data-bs-keyboard="false"  
-                                    >
-                                        <div class="modal-dialog" role="document">
-                                            <div class="modal-content">
-                                                <div class="modal-header">
-                                                    <h1 class="modal-title" id="editUserModalLabel">修改用户</h1>
-                                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                                </div>
-                                                <form id="editUserform">
-                                                    <div class="modal-body">
-                                                        <div id="editAlertMessage"></div>
-                                                        <div class="mb-3">
-                                                            <label for="name" class="form-label">用户昵称</label>
-                                                            <input type="text" class="form-control name-field" name="name" id="editName" placeholder="用户昵称" maxlength="20" />
-                                                            <div id="editNameError" class="text-danger"></div>
-                                                        </div>
-                                                        <div class="mb-3">
-                                                            <label for="id" class="form-label">用户ID</label>
-                                                            <input class="form-control id-field" name="id" id="editID" readonly />
-                                                        </div>
-                                                    </div>
-                                                    <div class="modal-footer">
-                                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
-                                                            <i class="fa-solid fa-xmark"></i> 取消
-                                                        </button>
-                                                        <button type="submit" class="btn body-button" id="edit-user-button">
-                                                            <i class="fa-solid fa-floppy-disk"></i> 确定
-                                                        </button>
-                                                    </div>
-                                                </form>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <!-- modals end -->
-                                </div>
-                                <div class="table-responsive table-container">
-                                    <div class="row buttons mb-3">
-                                        <div class="col-4" role="group">
-                                            <button class="btn body-button" type="button" onclick="openModal('single')">
-                                                <i class="fa-solid fa-plus"></i> 添加用户
-                                            </button>
-                                        </div>
-                                    </div>
-                                    <div class="cards-grid">
-                                        {{ range $i, $u := .Users }}
-                                        <div class="hoverCard card">
-                                            <div class="card-body">
-                                                <div class="row">
-                                                    <div class="col">
-                                                        <i class="fas fa-user"  style="width: 38px; height: 38px;"></i>
-                                                    </div>
-                                                    <div class="col">
-                                                        <div class="dropdown" style="float: right;">
-                                                            <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                                                <i class="fa-solid fa-ellipsis"></i>
-                                                            </button>
-                                                            <ul class="dropdown-menu">
-                                                                <!-- <li>
-                                                                    <a class="dropdown-item" onclick="viewUser('{{ $u.ID }}')">
-                                                                        <i class="fa-solid fa-info" style="width: 16px;"></i> 查看
-                                                                    </a>
-                                                                </li> -->
-                                                                <li>
-                                                                    <a class="dropdown-item" onclick="editUser('{{ $u.ID }}', '{{ $u.Name }}')">
-                                                                        <i class="fa-solid fa-pencil-alt" style="width: 16px;"></i> 修改
-                                                                    </a>
-                                                                </li>
-                                                            </ul>
-                                                        </div>
+                                                        <div id="metadataHelp" class="form-text">以JSON形式输入附加属性.</div>
+                                                        <div id="metadataError" class="text-danger"></div>
                                                     </div>
                                                 </div>
-                                                <div class="row">
-                                                    <h5 
-                                                        class="card-title truncate-text"
-                                                        data-bs-toggle="tooltip" 
-                                                        data-bs-placement="bottom" 
-                                                        data-bs-title="{{ $u.Name }}" 
+                                                <div class="modal-footer">
+                                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                                                        <i class="fa-solid fa-xmark"></i> 取消
+                                                    </button>
+                                                    <button 
+                                                        type="submit" 
+                                                        class="btn body-button" 
+                                                        id="create-user-button" 
+                                                        onclick="submitItemList('userTags', 'usersTagsList')"
                                                     >
-                                                        {{ $u.Name }}
-                                                    </h5>
+                                                        <i class="fa-solid fa-floppy-disk"></i> 确定
+                                                    </button>
+                                                </div>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- add users modal -->
+                                <div class="modal fade" id="addUsersModal" tabindex="-1" role="dialog" aria-labelledby="addUsersModalLabel" aria-hidden="true">
+                                    <div class="modal-dialog" role="document">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h1 class="modal-title" id="addUsersModalLabel">批量添加用户</h1>
+                                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                            </div>
+                                            <form enctype="multipart/form-data" id="bulkusersform">
+                                                <div class="modal-body">
+                                                    <div id="alertBulkMessage"></div>
+                                                    <div class="form-group mb-3">
+                                                        <label for="usersFile">
+                                                            添加包含用户名和密码的CSV文件. 在
+                                                            <a href="/samples/users.csv" download="users.csv">这里</a>
+                                                            可以下载模版文件
+                                                        </label>
+                                                        <input type="file" class="form-control-file" id="usersFile" name="usersFile" required />
+                                                    </div>
+                                                </div>
+                                                <div class="modal-footer">
+                                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                                                        <i class="fa-solid fa-xmark"></i> 取消
+                                                    </button>
+                                                    <button type="submit" value="upload" class="btn body-button">
+                                                        <i class="fa-solid fa-floppy-disk"></i> 确定
+                                                    </button>
+                                                </div>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                 <!-- edit user modal -->
+                                 <div 
+                                    class="modal fade" 
+                                    id="editUserModal" 
+                                    tabindex="-1" 
+                                    role="dialog" 
+                                    aria-labelledby="editUserModalLabel" 
+                                    aria-hidden="true"
+                                    data-bs-backdrop="static" 
+                                    data-bs-keyboard="false"  
+                                >
+                                    <div class="modal-dialog" role="document">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h1 class="modal-title" id="editUserModalLabel">修改用户</h1>
+                                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                            </div>
+                                            <form id="editUserform">
+                                                <div class="modal-body">
+                                                    <div id="editAlertMessage"></div>
+                                                    <div class="mb-3">
+                                                        <label for="name" class="form-label">用户昵称</label>
+                                                        <input type="text" class="form-control name-field" name="name" id="editName" placeholder="用户昵称" maxlength="20" />
+                                                        <div id="editNameError" class="text-danger"></div>
+                                                    </div>
+                                                    <div class="mb-3">
+                                                        <label for="id" class="form-label">用户ID</label>
+                                                        <input class="form-control id-field" name="id" id="editID" readonly />
+                                                    </div>
+                                                </div>
+                                                <div class="modal-footer">
+                                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                                                        <i class="fa-solid fa-xmark"></i> 取消
+                                                    </button>
+                                                    <button type="submit" class="btn body-button" id="edit-user-button">
+                                                        <i class="fa-solid fa-floppy-disk"></i> 确定
+                                                    </button>
+                                                </div>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- modals end -->
+                            </div>
+                            <div class="table-responsive table-container">
+                                <div class="row buttons mb-3">
+                                    <div class="col-4" role="group">
+                                        <button class="btn body-button" type="button" onclick="openModal('single')">
+                                            <i class="fa-solid fa-plus"></i> 添加用户
+                                        </button>
+                                    </div>
+                                </div>
+                                <div class="cards-grid">
+                                    {{ range $i, $u := .Users }}
+                                    <div class="hoverCard card">
+                                        <div class="card-body">
+                                            <div class="row">
+                                                <div class="col">
+                                                    <i class="fas fa-user"  style="width: 38px; height: 38px;"></i>
+                                                </div>
+                                                <div class="col">
+                                                    <div class="dropdown" style="float: right;">
+                                                        <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                                            <i class="fa-solid fa-ellipsis"></i>
+                                                        </button>
+                                                        <ul class="dropdown-menu">
+                                                            <!-- <li>
+                                                                <a class="dropdown-item" onclick="viewUser('{{ $u.ID }}')">
+                                                                    <i class="fa-solid fa-info" style="width: 16px;"></i> 查看
+                                                                </a>
+                                                            </li> -->
+                                                            <li>
+                                                                <a class="dropdown-item" onclick="editUser('{{ $u.ID }}', '{{ $u.Name }}')">
+                                                                    <i class="fa-solid fa-pencil-alt" style="width: 16px;"></i> 修改
+                                                                </a>
+                                                            </li>
+                                                        </ul>
+                                                    </div>
                                                 </div>
                                             </div>
+                                            <div class="row">
+                                                <h5 
+                                                    class="card-title truncate-text"
+                                                    data-bs-toggle="tooltip" 
+                                                    data-bs-placement="bottom" 
+                                                    data-bs-title="{{ $u.Name }}" 
+                                                >
+                                                    {{ $u.Name }}
+                                                </h5>
+                                            </div>
                                         </div>
-                                        {{ end }}
                                     </div>
+                                    {{ end }}
                                 </div>
                             </div>
                         </div>
