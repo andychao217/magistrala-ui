@@ -134,60 +134,15 @@ SPDX-License-Identifier: Apache-2.0 -->
 								<div id="broadcast_playarea_channels_container"></div>
 							</div>
 							<div class="broadcast-page-volume-control-container">
-								<div class="broadcast-page-volume-control-header">
-									<div class="broadcast_volumeFormItemLine-container">
-										<div class="broadcast_volumeFormItemLine"></div>
-										<div>线路输入</div>
-									</div>
-									<div class="broadcast_volumeFormItemLine-container">
-										<div class="broadcast_volumeFormItemLine selected"></div>
-										<div>麦克风</div>
-									</div>
-									<div class="broadcast_volumeFormItemLine-container">
-										<div class="broadcast_volumeFormItemLine selected"></div>
-										<div>文件</div>
-									</div>
+								<div 
+									id="broadcast-page-volume-control-header" 
+									class="broadcast-page-volume-control-header"
+								>
 								</div>
-								<div class="broadcast-page-volume-range-container">
-									<div class="broadcast_volumeFormItemLine-container">
-										<div class="range-wrapper speaker-volume-wrapper" style="background: transparent;">
-											<div class="range-value" style="margin-top: 0px; margin-bottom: 205px;">0</div>
-											<input
-												type="range"
-												min="0"
-												max="15"
-												class="vertical-range rangeInput"
-												value="0"
-												oninput="updateVerticalRangeValue(this)"
-											/>
-										</div>
-									</div>
-									<div class="broadcast_volumeFormItemLine-container">
-										<div class="range-wrapper speaker-volume-wrapper" style="background: transparent;">
-											<div class="range-value" style="margin-top: 0px; margin-bottom: 205px;">0</div>
-											<input
-												type="range"
-												min="0"
-												max="15"
-												class="vertical-range rangeInput"
-												value="0"
-												oninput="updateVerticalRangeValue(this)"
-											/>
-										</div>
-									</div>
-									<div class="broadcast_volumeFormItemLine-container">
-										<div class="range-wrapper speaker-volume-wrapper" style="background: transparent;">
-											<div class="range-value" style="margin-top: 0px; margin-bottom: 205px;">0</div>
-											<input
-												type="range"
-												min="0"
-												max="15"
-												class="vertical-range rangeInput"
-												value="0"
-												oninput="updateVerticalRangeValue(this)"
-											/>
-										</div>
-									</div>
+								<div 
+									id="broadcast-page-volume-range-container" 
+									class="broadcast-page-volume-range-container"
+								>	
 								</div>
 							</div>
 						</div>
@@ -243,7 +198,7 @@ SPDX-License-Identifier: Apache-2.0 -->
 								</div>
 							</div>
 							<div class="d-grid gap-2 broadcast-page-broadcast-btn-container">
-								<button class="btn btn-primary" type="button" title="开始广播">
+								<button class="btn btn-primary" type="button" title="开始广播" id="broadcast-start-stop-btn">
 									开始广播
 								</button>
 							</div>
@@ -261,22 +216,22 @@ SPDX-License-Identifier: Apache-2.0 -->
 			  playAreasModal = new bootstrap.Modal(document.getElementById("playAreasModal")), // 播放区域弹框
 			  $playAreasModalTable = $('#playAreasModalTable'), // 播放区域弹框表格
 			  domainID = sessionStorage.getItem("domainID"), // 当前机构ID
+			  userInfoStr = sessionStorage.getItem("userInfo"),
+			  userInfo = JSON.parse(userInfoStr),
+			  socketBridgePort =  sessionStorage.getItem("socketBridgePort") || "63001",
 			  minioBridgePort =  sessionStorage.getItem("minioBridgePort") || "9102"; // 获取minio桥接端口
 		let comID = "", // 当前通信ID
 			curPlaylist = [], //当前文件播放列表
 			breadCrumbFolderList = [], //当前选中文件夹列表-文件弹框
 			isPlaying = false, //当前是否正在播放
+			isBroadCasting = false, //当前是否正在广播
 			selectedPlayAreaList = [], //当前选中的播放区域
 			playAreaTreeData = [], // 播放区域树数据
 			allThingsList = [], // 所有设备列表
+			curSeceneData = {}, // 当前场景数据
 			currentFolderKey = ""; //当前文件夹key-文件弹框
 		$(document).ready(function() {
 			initPage();
-			createThingsSelectOptions();
-			createSceneSelectOptions();
-			createPlaylistDom();
-			updatePlayAreaSelectBtnStatus();
-			getPlayAreaTree();
 
 			$filesModalTable.bootstrapTable({});
 			$filesModalTable.removeClass('table-bordered');
@@ -346,18 +301,287 @@ SPDX-License-Identifier: Apache-2.0 -->
 				isPlaying = !isPlaying;
 			});
 
+			//开始广播
+			$('#broadcast-start-stop-btn').click(function() {
+				saveSeceneData();
+				if (isBroadCasting) {
+
+				} else {
+
+				}
+			});
+
+			//切换场景
+			$('#sceneSelect').change(function() {
+				const sceneID = $(this).val();
+				getSceneData(sceneID);
+			});
+
+			//切换调音设备
+			$('#thingsSelect').change(function() {
+				createRangeInput();
+			});
+		});
+
+		// 生成输入通道音量控制条
+		function createRangeInput() {
+			const thingID = $('#thingsSelect').val();
+			const thing = allThingsList.find(item => item.id === thingID);
+			$('#broadcast-page-volume-control-header').empty();
+			$('#broadcast-page-volume-range-container').empty();
+			if (thing) {
+				const deviceInfo = _.cloneDeep(thing.metadata?.info);
+				//输入通道
+				if (
+					deviceInfo.in_channel && 
+					deviceInfo.in_channel?.channel && 
+					deviceInfo.in_channel?.channel?.length
+				) {
+					deviceInfo.in_channel?.channel?.filter((channel) => !channel.ignore && channel.aliase !== '收音机').forEach((channel)=>{
+						const $channelHeaderItem = $(`
+							<div class="broadcast_volumeFormItemLine-container">
+								<div 
+									class="broadcast_volumeFormItemLine broadcast_volumeFormItemLine_in_channel"
+									data-channel="${channel.id}"
+								></div>
+								<div style="font-size: 14px;">${channel.aliase}</div>
+							</div>
+						`);
+						$('#broadcast-page-volume-control-header').append($channelHeaderItem);
+						const $channelRangeItem = $(`
+							<div class="broadcast_volumeFormItemLine-container">
+								<div class="range-wrapper speaker-volume-wrapper" style="background: transparent;">
+									<div id="in_channel_rangeInput_label_${channel.id}" class="range-value" style="margin-top: 0px; margin-bottom: 205px;">
+										7
+									</div>
+									<input
+										type="range"
+										min="0"
+										max="15"
+										class="vertical-range rangeInput"
+										value="7"
+										oninput="updateVerticalRangeValue(this)"
+										id="in_channel_rangeInput_${channel.id}"
+									/>
+								</div>
+							</div>
+						`);
+						$('#broadcast-page-volume-range-container').append($channelRangeItem);
+					});
+				}
+				const $channelHeaderFileItem = $(`
+					<div class="broadcast_volumeFormItemLine-container">
+						<div id="broadcast_volumeFormItemLine_file_checkbox" class="broadcast_volumeFormItemLine selected"></div>
+						<div style="font-size: 14px;">文件</div>
+					</div>
+				`);
+				$('#broadcast-page-volume-control-header').append($channelHeaderFileItem);
+				const $channelRangeFileItem = $(`
+					<div class="broadcast_volumeFormItemLine-container">
+						<div class="range-wrapper speaker-volume-wrapper" style="background: transparent;">
+							<div id="in_channel_rangeInput_label_song" class="range-value" style="margin-top: 0px; margin-bottom: 205px;">7</div>
+							<input
+								type="range"
+								min="0"
+								max="15"
+								class="vertical-range rangeInput"
+								value="7"
+								oninput="updateVerticalRangeValue(this)"
+								id="in_channel_rangeInput_song"
+							/>
+						</div>
+					</div>
+				`);
+				$('#broadcast-page-volume-range-container').append($channelRangeFileItem);
+			}
 			//不同类型音量开关切换效果
 			$('.broadcast_volumeFormItemLine').click(function() {
 				$(this).toggleClass('selected');
 			});
+			initialRangeInputs();
+		}
 
+		// 初始化rangeInput的背景色
+		function initialRangeInputs () {
 			//设置rangeInput的value值时，改变其背景色
 			const rangeInputs = document.querySelectorAll('.rangeInput');
 			rangeInputs.forEach(rangeInput => {
 				rangeInput.addEventListener('input', () => updateRangeBackground(rangeInput));
 				updateRangeBackground(rangeInput); // 初始化背景
 			});
-		});
+		}
+
+		// 获取场景数据
+		function getSceneData(sceneID) {
+			curSeceneData = {};
+			selectedPlayAreaList = [];
+			curPlaylist = [];
+			const queryData = {
+				comID,
+				username: userInfo.credentials.identity,
+				uuid: comID + userInfo.credentials.identity + '4' + sceneID,
+			};
+			fetch(`${protocol}//${hostname}:${socketBridgePort}/getBroadcastTask`, {
+				method: "POST",
+				headers: {
+					"Content-Type": "application/json",
+					"Authorization": getCookie('session'),
+				},
+				body: JSON.stringify(queryData),
+			})
+				.then(response => {
+					updatePlayAreaSelectBtnStatus();
+					createPlaylistDom();
+					createRangeInput();
+					if (!response.ok) {
+						throw new Error('Network response was not ok');
+					}
+					return response.json().catch(err => {
+						//throw new Error('Failed to parse JSON: ' + err);
+					});
+				})
+				.then(json => {
+					const task = _.cloneDeep(json.task);
+					if (task && task.uuid) {
+						const deviceIdentity = task.input_devicName;
+						// 调音设备
+						const thing = allThingsList.find(item => item.credentials.identity === deviceIdentity);
+						const thingID = thing.id;
+						$('#thingsSelect').val(thingID);
+						// 播放范围
+						const out_channel_array = task.out_channel ? task.out_channel.split(',').map((channel)=>{
+							if(channel.includes('_1')){
+								return channel.split('_')[0];
+							} else {
+								return channel;
+							}
+						}) : [];
+						selectedPlayAreaList = allThingsList.filter(thing => out_channel_array.includes(thing.credentials.identity));
+						// 文件列表
+						const ossArray = task.songs ? task.songs.split(',') : [];
+						// 处理每个元素，生成需要的对象格式
+						const resultArray = ossArray.map(item => {
+							// 去掉开头的 "oss://"
+							const key = item.replace("oss://", "");
+							// 提取文件名
+							const fileName = key.substring(key.lastIndexOf('/') + 1);
+							return { fileName, key: `${comID}/${key}` };
+						});
+						curPlaylist = resultArray.map(item => item);
+
+						updatePlayAreaSelectBtnStatus();
+						createPlaylistDom();
+						createRangeInput();
+
+						// 音量
+						for (let i = 1; i <= 4; i++) {
+							const $div = $(`#in_channel_rangeInput_${i}`),
+								  $label = $(`#in_channel_rangeInput_label_${i}`);
+							if ($div && $div.length > 0) {
+								$div.val(task.volume[`in_${i}_volume`]);
+								$label.text(task.volume[`in_${i}_volume`]);
+							}
+						}
+						const inChannelElements = $('.broadcast_volumeFormItemLine_in_channel');
+						inChannelElements.each(function() {
+							// 获取当前元素的 data-channel 属性值
+							const in_channel = $(this).data('channel');
+							if (task.in_channel.includes(in_channel)) {
+								$(this).addClass('selected');
+							} else {
+								$(this).removeClass('selected');
+							}
+						});
+						// 文件音量
+						$(`#in_channel_rangeInput_song`).val(task.volume[`song_volume`]);
+						$(`#in_channel_rangeInput_label_song`).text(task.volume[`song_volume`]);
+						if (task.song_enable) {
+							$('#broadcast_volumeFormItemLine_file_checkbox').addClass('selected');
+						} else {
+							$('#broadcast_volumeFormItemLine_file_checkbox').removeClass('selected');
+						}
+						initialRangeInputs();
+					}
+				});
+		}
+
+		// 保存场景数据
+		function saveSeceneData() {
+			const curSecene = $('#sceneSelect').val(),
+				  curThingID = $('#thingsSelect').val(),
+				  curThing = allThingsList.find(item => item.id === curThingID);
+
+            //输出通道
+			let in_channel_array = [];
+			const selectedInChannelElements = $('.broadcast_volumeFormItemLine_in_channel.selected');
+            selectedInChannelElements.each(function() {
+                // 获取当前元素的 data-channel 属性值
+                const in_channel = $(this).data('channel');
+                // 将属性值添加到数组中
+                in_channel_array.push(in_channel);
+            });
+			//输出通道
+			const out_channel_array = selectedPlayAreaList.map((area) => {
+				const identity = area.credentials.identity;
+				if (!identity.includes("_")) {
+					return `${identity}_1`;
+				} else {
+					return identity;
+				}
+			});
+			//文件列表
+			const songs_array = curPlaylist.map(file => {
+				return file.key.replace(`${comID}/`, 'oss://')
+			});
+			const soundConsoleScene = {
+				...curSeceneData,
+				// 场景唯一识别号
+				uuid: comID + userInfo.credentials.identity + '4' + curSecene,
+				// 场景所属用户
+				username: userInfo.credentials.identity,
+				// 场景名
+				name: "场景" + curSecene,
+				// 调音台音量
+				volume: {
+					...curSeceneData.volume,
+					song_volume: Number($(`#in_channel_rangeInput_song`).val()),
+				},
+				// 选择的输入通道
+				in_channel: in_channel_array.join(','),
+				// 选择的输出通道
+				out_channel: out_channel_array.join(','),
+				// 选择的歌曲列表
+				songs: songs_array.join(','),
+				// 歌曲通道是否开启
+				song_enable: $('#broadcast_volumeFormItemLine_file_checkbox').hasClass('selected'),
+				// 调音台输入设备名称
+				input_devicName: curThing.credentials.identity,
+			}
+			for (let i = 1; i <= 4; i++) {
+				const $div = $(`#in_channel_rangeInput_${i}`);
+				if ($div && $div.length > 0) {
+					soundConsoleScene.volume[`in_${i}_volume`] = Number($(`#in_channel_rangeInput_${i}`).val());
+				} 
+			}
+
+			const queryData = {
+				comID,
+				username: userInfo.credentials.identity,
+				uuid: comID + userInfo.credentials.identity + '4' + curSecene,
+				task: soundConsoleScene,
+			};
+			fetch(`${protocol}//${hostname}:${socketBridgePort}/updateBroadcastTask`, {
+				method: "POST",
+				headers: {
+					"Content-Type": "application/json",
+					"Authorization": getCookie('session'),
+				},
+				body: JSON.stringify(queryData),
+			})
+				.then(response => {
+					//
+				})
+		}
 
 		// 获取组装播放区域设备树
 		function getPlayAreaTree() {
@@ -433,6 +657,7 @@ SPDX-License-Identifier: Apache-2.0 -->
 															key: `${targetThing.id}`,
 															flagUrl: "/images/icon_channel.png",
 															metadata: targetThing.metadata,
+															credentials: targetThing.credentials,
 														}
 													} else {
 														return {}
@@ -462,6 +687,7 @@ SPDX-License-Identifier: Apache-2.0 -->
 										key: `${thing.id}`,
 										flagUrl: "/images/icon_channel.png",
 										metadata: thing.metadata,
+										credentials: thing.credentials,
 									};
 									playAreaTreeData[0].children[0].children.push(thingNode);
 								});
@@ -475,14 +701,18 @@ SPDX-License-Identifier: Apache-2.0 -->
 										key: `${thing.id}`,
 										flagUrl: "/images/icon_channel.png",
 										metadata: thing.metadata,
+										credentials: thing.credentials,
 									};
 									playAreaTreeData[0].children[0].children.push(thingNode);
 								});
 							}
 							createPlayareaChannelsDom();
+							createThingsSelectOptions();
+							createPlaylistDom();
+							updatePlayAreaSelectBtnStatus();
+							initialRangeInputs();
 						});
-				})
-				.catch(error => {});
+				});
 		}
 
 		//生成播放区域分区列表dom
@@ -642,15 +872,17 @@ SPDX-License-Identifier: Apache-2.0 -->
 		function createSceneSelectOptions () {
 			$('#sceneSelect').empty();
 			for (let i = 1; i <= 6; i++) {
-				const $option = $(`<option value="${i}">场景${i}</option>`);
+				const $option = $(`<option value="${i}">场景 ${i}</option>`);
 				$('#sceneSelect').append($option);
 			}
+			$('#sceneSelect').val(1);
+			getSceneData(1); //获取场景1的数据
 		}
 
 		//生成调音设备下拉框
 		function createThingsSelectOptions () {
 			$('#thingsSelect').empty();
-			fetch(`/ui/things/thingsInJSON?page=1&limit=1000&onlineStatus=1`, {
+			fetch(`/ui/things/thingsInJSON?page=1&limit=1000&onlineStatus=2`, {
 				method: "GET",
 			})
 				.then(response => {
@@ -662,12 +894,17 @@ SPDX-License-Identifier: Apache-2.0 -->
 				.then(json => {
 					const data = json.data;
 					const thingsData = JSON.parse(data).thingsData;
-					const onlineThingsList = thingsData.things && thingsData.things.length ? 
-						_.cloneDeep(thingsData.things) : [];
+					const onlineThingsList = thingsData && typeof thingsData === 'object' && 
+						thingsData.things && typeof thingsData.things === 'object' ?  
+							thingsData.things.filter((thing)=>{
+								//identity 中有下划线则表示为多通道，默认在设备页面隐藏
+								return thing.credentials.identity && !thing.credentials.identity.includes("_");
+							}) || [] : [];
 					onlineThingsList.forEach(thing => {
 						$option = $(`<option value="${thing.id}">${thing.name}</option>`);
 						$('#thingsSelect').append($option);
 					});
+					createSceneSelectOptions();
 				});
 		}
 
@@ -687,6 +924,7 @@ SPDX-License-Identifier: Apache-2.0 -->
 						const data = json.data;
 						const domainData = JSON.parse(data).domainData;
 						comID = domainData.metadata["comID"];
+						getPlayAreaTree();
 					});
 			} else {
 				redirectToLogin();

@@ -1638,6 +1638,8 @@ input[type='range']::-ms-thumb {
     margin: 0px 10px;
     border-radius: 5px;
     padding: 10px;
+    min-height: 300px;
+    overflow-y: auto;
 }
 /* 播放区域标题行 */
 .broadcast-page-playarea-header {
@@ -1651,6 +1653,7 @@ input[type='range']::-ms-thumb {
     grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
     grid-gap: 10px;
     overflow-y: auto;
+    overflow-x: hidden;
 }
 /* 音量控制区域 */
 .broadcast-page-volume-control-container{
@@ -1700,6 +1703,8 @@ input[type='range']::-ms-thumb {
     padding: 10px; 
     background: whitesmoke; 
     border-bottom-left-radius: 5px;
+    min-height: 455px;
+    overflow-y: auto;
 }
 .broadcast-page-playlist-header {
     display: flex; 
