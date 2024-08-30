@@ -1696,14 +1696,14 @@ input[type='range']::-ms-thumb {
 }
 /* 右面板 */
 .broadcast-page-right-panel {
-    width: 450px;
+    width: 320px;
 }
 /* 播放文件列表 */
 .broadcast-page-playlist {
     padding: 10px; 
     background: whitesmoke; 
     border-bottom-left-radius: 5px;
-    min-height: 455px;
+    min-height: 435px;
     overflow-y: auto;
 }
 .broadcast-page-playlist-header {
@@ -1715,7 +1715,7 @@ input[type='range']::-ms-thumb {
 }
 .broadcast-page-playlist-container {
     margin-top: 10px;
-    height: calc(100vh - 480px);
+    height: calc(100vh - 500px);
     overflow-y: auto;
     background: whitesmoke; 
 }
@@ -1724,14 +1724,16 @@ input[type='range']::-ms-thumb {
     margin-bottom: 10px;
     border-bottom-left-radius: 5px; 
     border-top-left-radius: 5px;
-    height: 170px;
+    height: 190px;
     padding: 5px;
     backdrop-filter: blur(5px);
     -webkit-backdrop-filter: blur(5px);
     background: rgba(0, 0, 0, 0.05);
+    text-align: center;
 }
 /* 播放器区域 */
 .broadcast-page-player-contol-icon {
+    float: left;
     width: 33px; 
     height: 33px;
 }

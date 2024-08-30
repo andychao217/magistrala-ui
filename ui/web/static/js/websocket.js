@@ -227,8 +227,46 @@ function handleThingMessage(data, defaultChannelId) {
 function handleBroadcastMessage(data) {
     // 获取 iframe 元素
     const iframe = document.getElementById('iframePage');
-    if (data.msgName === "TASK_START") {
-
+    if (data.msgName === "TASK_START_REPLY") {
+        // 实时广播任务开始
+        const targetUuid = data?.data?.uuid || "";
+        const status = data?.data?.status;
+        if (targetUuid && targetUuid.includes('_1')) {
+            if (status === 0 || status === -3) {
+                //设备会回TaskStartReply，判断status为0（成功），或者-3（TASK_RUNNING）就继续第5步
+                if (iframe) {
+                    iframe.contentWindow.startTaskThroughSocketBridge(targetUuid);
+                } else {
+                    startTaskThroughSocketBridge(targetUuid);
+                }
+            } else {
+                //其他就要发送停⽌命令
+                if (iframe) {
+                    iframe.contentWindow.stopTaskThroughSocketBridge(targetUuid);
+                } else {
+                    stopTaskThroughSocketBridge(targetUuid);
+                }
+            }
+        }
+    } else if (data.msgName === "TASK_START") {
+        // 实时广播任务正在运行
+        const targetUuid = data?.data?.task?.uuid || "";
+        if (targetUuid && targetUuid.includes('_1')) {
+            if (iframe) {
+                iframe.contentWindow.setTaskIsBroadcastingThroughSocketBridge(targetUuid);
+            } else {
+                setTaskIsBroadcastingThroughSocketBridge(targetUuid);
+            }
+        }
+    } else if (data.msgName === "SOUND_CONSOLE_TASK_FEEDBACK") {
+        const targetUuid = data?.data?.uuid || "";
+        if (targetUuid && targetUuid.includes('_1')) {
+            if (iframe) {
+                iframe.contentWindow.setBroadcastingSongPlayerThroughSocketBridge(data?.data);
+            } else {
+                setBroadcastingSongPlayerThroughSocketBridge(data?.data);
+            }
+        }
     }
 }
 

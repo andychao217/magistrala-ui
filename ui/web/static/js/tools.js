@@ -276,3 +276,20 @@ function updateRangeBackground(rangeInput) {
     const value = (rangeInput.value - rangeInput.min) / (rangeInput.max - rangeInput.min) * 100;
     rangeInput.style.setProperty('--value', `${value}%`);
 }
+
+//formatMilliseconds 函数并传入毫秒值，就可以得到 mm:ss 格式的字符串。
+function formatMilliseconds(ms) {
+    // 计算总秒数
+    const totalSeconds = Math.floor(ms / 1000);
+    
+    // 计算分钟和秒
+    const minutes = Math.floor(totalSeconds / 60);
+    const seconds = totalSeconds % 60;
+
+    // 确保分钟和秒都是两位数
+    const formattedMinutes = String(minutes).padStart(2, '0');
+    const formattedSeconds = String(seconds).padStart(2, '0');
+
+    // 返回格式化后的字符串
+    return `${formattedMinutes}:${formattedSeconds}`;
+}
