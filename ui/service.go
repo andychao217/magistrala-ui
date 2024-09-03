@@ -58,6 +58,7 @@ const (
 	invitationsActive       = "invitations"
 	fileActive              = "file"
 	broadcastActive         = "broadcast"
+	intelligentActive       = "intelligent"
 	blankActive             = "blank"
 	taskActive              = "task"
 	domainInvitationsActive = "domaininvitations"
@@ -385,6 +386,8 @@ type Service interface {
 	File(s Session) ([]byte, error)
 	// view broadcast page
 	Broadcast(s Session) ([]byte, error)
+	// view intelligent page
+	Intelligent(s Session) ([]byte, error)
 	// view blank page
 	Blank(s Session) ([]byte, error)
 	// view task page
@@ -452,6 +455,7 @@ func (us *uiService) Index(s Session) ([]byte, error) {
 	}
 
 	things, err := us.sdk.Things(pgm, s.Token)
+
 	if err != nil {
 		return []byte{}, errors.Wrap(ErrFailedRetreive, err)
 	}
@@ -2871,6 +2875,31 @@ func (us *uiService) File(s Session) ([]byte, error) {
 
 	var btpl bytes.Buffer
 	if err := us.tpls.ExecuteTemplate(&btpl, "file", data); err != nil {
+		return []byte{}, errors.Wrap(ErrExecTemplate, err)
+	}
+
+	return btpl.Bytes(), nil
+}
+
+func (us *uiService) Intelligent(s Session) ([]byte, error) {
+	crumbs := []breadcrumb{
+		{Name: intelligentActive},
+	}
+
+	data := struct {
+		NavbarActive   string
+		CollapseActive string
+		Breadcrumbs    []breadcrumb
+		Session        Session
+	}{
+		intelligentActive,
+		intelligentActive,
+		crumbs,
+		s,
+	}
+
+	var btpl bytes.Buffer
+	if err := us.tpls.ExecuteTemplate(&btpl, "intelligent", data); err != nil {
 		return []byte{}, errors.Wrap(ErrExecTemplate, err)
 	}
 

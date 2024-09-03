@@ -1896,6 +1896,18 @@ func (lm *loggingMiddleware) File(s ui.Session) (b []byte, err error) {
 	return lm.svc.File(s)
 }
 
+func (lm *loggingMiddleware) Intelligent(s ui.Session) (b []byte, err error) {
+	defer func(begin time.Time) {
+		if err != nil {
+			lm.logger.Warn("View Intelligent failed to complete successfully")
+			return
+		}
+		lm.logger.Info("View Intelligent completed successfully")
+	}(time.Now())
+
+	return lm.svc.Intelligent(s)
+}
+
 func (lm *loggingMiddleware) Broadcast(s ui.Session) (b []byte, err error) {
 	defer func(begin time.Time) {
 		if err != nil {

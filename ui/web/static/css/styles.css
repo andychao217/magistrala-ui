@@ -1739,8 +1739,7 @@ input[type='range']::-ms-thumb {
 }
 .broadcast-page-player-contol {
     width: 100%; 
-    text-align: center; 
-    margin-top: 15px;
+    text-align: center;
 }
 .broadcast-page-player-contol-time-label {
     display: flex; 
@@ -1751,6 +1750,7 @@ input[type='range']::-ms-thumb {
 .broadcast-page-player-contol-buttons {
     display: flex; 
     justify-content: space-evenly;
+    margin-top: -10px;
 }
 #playlist-play-pause-btn {
     font-size: 30px;

@@ -865,6 +865,7 @@ func MakeHandler(svc ui.Service, r *chi.Mux, instanceID, prefix string, secureCo
 					).ServeHTTP)
 				})
 
+				//资源
 				r.Route("/file", func(r chi.Router) {
 					r.Get("/", kithttp.NewServer(
 						listFileEndpoint(svc),
@@ -874,6 +875,17 @@ func MakeHandler(svc ui.Service, r *chi.Mux, instanceID, prefix string, secureCo
 					).ServeHTTP)
 				})
 
+				//智能
+				r.Route("/intelligent", func(r chi.Router) {
+					r.Get("/", kithttp.NewServer(
+						listIntelligentEndpoint(svc),
+						decodeIntelligentRequest,
+						encodeResponse,
+						opts...,
+					).ServeHTTP)
+				})
+
+				//实时
 				r.Route("/broadcast", func(r chi.Router) {
 					r.Get("/", kithttp.NewServer(
 						listBroadcastEndpoint(svc),
@@ -883,6 +895,7 @@ func MakeHandler(svc ui.Service, r *chi.Mux, instanceID, prefix string, secureCo
 					).ServeHTTP)
 				})
 
+				//空白
 				r.Route("/blank", func(r chi.Router) {
 					r.Get("/", kithttp.NewServer(
 						listBlankEndpoint(svc),
@@ -892,6 +905,7 @@ func MakeHandler(svc ui.Service, r *chi.Mux, instanceID, prefix string, secureCo
 					).ServeHTTP)
 				})
 
+				//日程
 				r.Route("/task", func(r chi.Router) {
 					r.Get("/", kithttp.NewServer(
 						listTaskEndpoint(svc),
@@ -2623,6 +2637,17 @@ func decodeFileRequest(_ context.Context, r *http.Request) (interface{}, error) 
 	}
 
 	return fileReq{
+		Session: session,
+	}, nil
+}
+
+func decodeIntelligentRequest(_ context.Context, r *http.Request) (interface{}, error) {
+	session, err := sessionFromHeader(r)
+	if err != nil {
+		return nil, err
+	}
+
+	return intelligentReq{
 		Session: session,
 	}, nil
 }
