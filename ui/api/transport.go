@@ -314,6 +314,13 @@ func MakeHandler(svc ui.Service, r *chi.Mux, instanceID, prefix string, secureCo
 						opts...,
 					).ServeHTTP)
 
+					r.Delete("/{id}", kithttp.NewServer(
+						deleteUserEndpoint(svc),
+						decodeUserDelete,
+						encodeJSONResponse,
+						opts...,
+					).ServeHTTP)
+
 					r.Get("/{id}", kithttp.NewServer(
 						viewUserEndpoint(svc),
 						decodeView,
@@ -1471,6 +1478,18 @@ func decodeUserStatusUpdate(_ context.Context, r *http.Request) (interface{}, er
 	return updateUserStatusReq{
 		token: session.Token,
 		id:    r.PostFormValue("entityID"),
+	}, nil
+}
+
+func decodeUserDelete(_ context.Context, r *http.Request) (interface{}, error) {
+	session, err := sessionFromHeader(r)
+	if err != nil {
+		return nil, err
+	}
+
+	return deleteUserReq{
+		id:    chi.URLParam(r, "id"),
+		token: session.Token,
 	}, nil
 }
 

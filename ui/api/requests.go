@@ -270,6 +270,22 @@ func (req updateUserStatusReq) validate() error {
 	return nil
 }
 
+type deleteUserReq struct {
+	token string
+	id    string
+}
+
+func (req deleteUserReq) validate() error {
+	if req.token == "" {
+		return errInvalidCredentials
+	}
+	if req.id == "" {
+		return errMissingUserID
+	}
+
+	return nil
+}
+
 type updateUserRoleReq struct {
 	token string
 	sdk.User

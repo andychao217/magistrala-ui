@@ -206,6 +206,11 @@ SPDX-License-Identifier: Apache-2.0 -->
                                                                     <i class="fa-solid fa-pencil-alt" style="width: 16px;"></i> 修改
                                                                 </a>
                                                             </li>
+                                                            <li>
+                                                                <a class="dropdown-item" onclick="deleteUser('{{ $u.ID }}')">
+                                                                    <i class="fa-solid fa-trash-can" style="width: 16px;"></i> 删除
+                                                                </a>
+                                                            </li>
                                                         </ul>
                                                     </div>
                                                 </div>
@@ -252,6 +257,19 @@ SPDX-License-Identifier: Apache-2.0 -->
                         usersModal.show();
                     }
                 }
+
+                //删除
+				function deleteUser(userID) {
+					// 显示确认对话框
+					showConfirmModal("确定要删除所选数据吗？", ()=>{
+						fetch(`/ui/users/${userID}`, {
+							method: "DELETE",
+						})
+						.then(response => {
+							window.location.reload();
+						})
+					});
+				}
 
                 // codeMirrorEditor({
                 //     textArea: "metadata",

@@ -388,6 +388,24 @@ func (lm *loggingMiddleware) DisableUser(token, id string) (err error) {
 	return lm.svc.DisableUser(token, id)
 }
 
+// DeleteUser adds logging middleware to delete user method.
+func (lm *loggingMiddleware) DeleteUser(token, id string) (err error) {
+	defer func(begin time.Time) {
+		args := []any{
+			slog.String("duration", time.Since(begin).String()),
+			slog.String("user_id", id),
+		}
+		if err != nil {
+			args = append(args, slog.Any("error", err))
+			lm.logger.Warn("Delete user failed to complete successfully", args...)
+			return
+		}
+		lm.logger.Info("Delete user completed successfully", args...)
+	}(time.Now())
+
+	return lm.svc.DeleteUser(token, id)
+}
+
 // CreateThing adds logging middleware to create thing method.
 func (lm *loggingMiddleware) CreateThing(thing sdk.Thing, token string) (err error) {
 	defer func(begin time.Time) {

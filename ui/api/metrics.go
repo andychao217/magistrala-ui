@@ -259,6 +259,16 @@ func (mm *metricsMiddleware) DisableUser(token, id string) error {
 	return mm.svc.DisableUser(token, id)
 }
 
+// DeleteUser adds metrics middleware to delete user method.
+func (mm *metricsMiddleware) DeleteUser(token, id string) error {
+	defer func(begin time.Time) {
+		mm.counter.With("method", "delete_user").Add(1)
+		mm.latency.With("method", "delete_user").Observe(time.Since(begin).Seconds())
+	}(time.Now())
+
+	return mm.svc.DeleteUser(token, id)
+}
+
 // CreateThing adds metrics middleware to create things method.
 func (mm *metricsMiddleware) CreateThing(thing sdk.Thing, token string) error {
 	defer func(begin time.Time) {

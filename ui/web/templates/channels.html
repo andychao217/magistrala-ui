@@ -195,13 +195,13 @@ SPDX-License-Identifier: Apache-2.0 -->
 																	</a>
 																</li> -->
 																<li>
-																	<a class="dropdown-item" onclick="deleteChannel('{{ $c.ID }}')">
-																		<i class="fa-solid fa-trash-can" style="width: 16px;"></i> 删除
+																	<a class="dropdown-item" onclick="editChannel('{{ $c.ID }}', '{{ $c.Name }}', '{{ $c.Description }}')">
+																		<i class="fa-solid fa-pencil-alt" style="width: 16px;"></i> 修改
 																	</a>
 																</li>
 																<li>
-																	<a class="dropdown-item" onclick="editChannel('{{ $c.ID }}', '{{ $c.Name }}', '{{ $c.Description }}')">
-																		<i class="fa-solid fa-pencil-alt" style="width: 16px;"></i> 修改
+																	<a class="dropdown-item" onclick="deleteChannel('{{ $c.ID }}')">
+																		<i class="fa-solid fa-trash-can" style="width: 16px;"></i> 删除
 																	</a>
 																</li>
 															</ul>

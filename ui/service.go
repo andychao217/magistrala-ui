@@ -222,6 +222,8 @@ type Service interface {
 	EnableUser(token, id string) error
 	// DisableUser updates the status of a user with the given ID to disabled.
 	DisableUser(token, id string) error
+	// DeleteUser deletes a user with the given ID.
+	DeleteUser(token, id string) error
 
 	// CreateThing creates a new thing.
 	CreateThing(thing sdk.Thing, token string) error
@@ -837,6 +839,14 @@ func (us *uiService) EnableUser(token, id string) error {
 
 func (us *uiService) DisableUser(token, id string) error {
 	if _, err := us.sdk.DisableUser(id, token); err != nil {
+		return errors.Wrap(ErrFailedDisable, err)
+	}
+
+	return nil
+}
+
+func (us *uiService) DeleteUser(token, id string) error {
+	if err := us.sdk.DeleteUser(id, token); err != nil {
 		return errors.Wrap(ErrFailedDisable, err)
 	}
 

@@ -645,6 +645,23 @@ func disableUserEndpoint(svc ui.Service, prefix string) endpoint.Endpoint {
 	}
 }
 
+func deleteUserEndpoint(svc ui.Service) endpoint.Endpoint {
+	return func(_ context.Context, request interface{}) (interface{}, error) {
+		req := request.(deleteUserReq)
+		if err := req.validate(); err != nil {
+			return nil, err
+		}
+
+		if err := svc.DeleteUser(req.token, req.id); err != nil {
+			return nil, err
+		}
+
+		return jsonResponse{
+			Data: "Delete Success",
+		}, nil
+	}
+}
+
 func AddMemberToChannelEndpoint(svc ui.Service, prefix string) endpoint.Endpoint {
 	return func(_ context.Context, request interface{}) (response interface{}, err error) {
 		req := request.(addUserToChannelReq)
@@ -828,7 +845,6 @@ func deleteClientEndpoint(svc ui.Service) endpoint.Endpoint {
 		}
 
 		if err := svc.DeleteClient(req.token, req.id); err != nil {
-			fmt.Println("deleteClientEndpoint 123: ", err)
 			return nil, err
 		}
 
