@@ -575,7 +575,7 @@ SPDX-License-Identifier: Apache-2.0 -->
 		}
 
 		//控制设备
-		function controlThingBroadcast(controlType, controlThingData) {
+		function controlThingBroadcast(controlType, controlThingData, callback) {
 			if (domainID) {
 				if (controlType === "taskStatGet") {
 					let queryData = {
