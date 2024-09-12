@@ -51,9 +51,9 @@ export function submitCreateForm(config) {
                 if (!response.ok) {
                     const errorMessage = response.headers.get("X-Error-Message");
                     if (errorMessage) {
-                        showError(errorMessage, config.alertDiv);
+                        showAlert("danger", errorMessage);
                     } else {
-                        showError(`Error: ${response.status}`, config.alertDiv);
+                        showAlert("danger", `Error: ${response.status}`);
                     }
                 } else {
                     form.reset();
@@ -63,7 +63,7 @@ export function submitCreateForm(config) {
             })
             .catch((error) => {
                 console.error("error submitting form: ", error);
-                showError(`错误: ${error}`, config.alertDiv);
+                showAlert("danger", `错误: ${error}`);
             });
     });
 }
@@ -83,12 +83,12 @@ export function submitUpdateForm(config) {
                 const errorMessage = response.headers.get("X-Error-Message");
                 if (errorMessage) {
                     if (config.field) {
-                        showError(errorMessage + ": " + config.field, config.alertDiv);
+                        showAlert("danger", errorMessage + ": " + config.field);
                     } else {
-                        showError(errorMessage, config.alertDiv);
+                        showAlert("danger", errorMessage);
                     }
                 } else {
-                    showError(`Error: ${response.status}`, config.alertDiv);
+                    showAlert("danger", `Error: ${response.status}`);
                 }
             } else {
                 window.location.reload();
@@ -96,16 +96,6 @@ export function submitUpdateForm(config) {
         })
         .catch((error) => {
             console.error("error submitting form: ", error);
-            showError(`错误: ${error}`, config.alertDiv);
+            showAlert("danger", `Error: ${error}`);
         });
-}
-
-export function showError(errorMessage, alertDiv) {
-    const alert = document.getElementById(alertDiv);
-    alert.innerHTML = `
-        <div class="alert alert-danger alert-dismissable fade show d-flex flex-row justify-content-between" role="alert">
-            <div>${errorMessage}</div>
-            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="close"></button>
-        </div> 
-    `;
 }

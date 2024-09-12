@@ -1156,12 +1156,15 @@ SPDX-License-Identifier: Apache-2.0 -->
 			// 页面初始化时，获取任务列表
 			function initPage () {
 				if (domainID) {
+					initTaskCalender([]);
+					createTaskList(selectedDate);
+
 					fetch(`/ui/domains/${domainID}/domainInJSON`, {
 						method: "GET",
 					})
 						.then(response => {
 							if (!response.ok) {
-							throw new Error('Network response was not ok');
+								throw new Error('Network response was not ok');
 							}
 							return response.json(); // 直接将流转换为JSON对象
 						})
@@ -1255,8 +1258,6 @@ SPDX-License-Identifier: Apache-2.0 -->
 						}
 					}).catch(error => {
 						console.error('Error:', error);
-						initTaskCalender(schedules);
-						createTaskList(selectedDate);
 					});
 			}
 

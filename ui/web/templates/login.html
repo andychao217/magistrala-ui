@@ -180,7 +180,7 @@ SPDX-License-Identifier: Apache-2.0 -->
                                     passwordField.classList.add("border-red");
                                     emailField.classList.add("border-red");
                                     errorMessage = "无效的用户名或密码. 请重试!";
-                                    showError(errorMessage);
+                                    showAlert("danger", errorMessage);
                                     break;
                                 default:
                                     window.location.href = `${pathPrefix}/tokens/secure`;
@@ -191,11 +191,6 @@ SPDX-License-Identifier: Apache-2.0 -->
                         console.error("error submitting login form: ", error);
                         });
                     }
-
-                function showError(errorMessage) {
-                    const loginError = document.getElementById("loginError");
-                    loginError.innerHTML = errorMessage;
-                }
             </script>
             <script type="module">
                 import { 

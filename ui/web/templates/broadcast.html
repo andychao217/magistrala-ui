@@ -113,7 +113,7 @@ SPDX-License-Identifier: Apache-2.0 -->
 						<div class="broadcast-page-left-panel">
 							<div class="broadcast-page-left-panel-header">
 								<div style="display: flex;">
-									<div style="width: 110px; line-height: 38px;">调音设备: </div>
+									<div style="width: 140px; line-height: 38px;">调音设备: </div>
 									<select class="form-control form-select" id="thingsSelect" placeholder="请选择调音设备"></select>
 								</div>
 								<div>
@@ -798,7 +798,7 @@ SPDX-License-Identifier: Apache-2.0 -->
 					});
 				})
 				.then(json => {
-					const task = _.cloneDeep(json.task);
+					const task = _.cloneDeep(json?.task || {});
 					if (task && task.uuid) {
 						const deviceIdentity = task.input_devicName;
 						// 调音设备

@@ -132,7 +132,7 @@ SPDX-License-Identifier: Apache-2.0 -->
                             case 409:
                                 emailField.classList.add("border-red");
                                 errorMessage = "用户已存在";
-                                showError(errorMessage);
+                                showAlert("danger", errorMessage);
                             break;
                             default:
                                 window.location.href = `${pathPrefix}/tokens/secure`;
@@ -142,10 +142,6 @@ SPDX-License-Identifier: Apache-2.0 -->
                         .catch((error) => {
                             console.error("error submitting login form: ", error);
                         });
-                }
-
-                function showError(errorMessage) {
-                    registrationError.innerHTML = errorMessage;
                 }
             </script>
             <script type="module">
