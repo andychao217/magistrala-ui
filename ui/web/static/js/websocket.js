@@ -230,8 +230,9 @@ function handleBroadcastMessage(data) {
     if (data.msgName === "TASK_START_REPLY") {
         // 实时广播任务开始
         const targetUuid = data?.data?.uuid || "";
-        const status = data?.data?.status;
+        const status = data?.data?.status || 0;
         if (targetUuid && targetUuid.includes('_1')) {
+            //设备会回TaskStartReply，判断status为0（成功），或者-3（TASK_RUNNING）就继续第5步
             if (status === 0 || status === -3) {
                 //设备会回TaskStartReply，判断status为0（成功），或者-3（TASK_RUNNING）就继续第5步
                 if (iframe) {

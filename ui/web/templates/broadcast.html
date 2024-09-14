@@ -232,7 +232,9 @@ SPDX-License-Identifier: Apache-2.0 -->
 			allThingsList = [], // 所有设备列表
 			curSeceneData = {}, // 当前场景数据
 			curBroadcastingData = {}, // 当前广播数据
-			currentFolderKey = ""; //当前文件夹key-文件弹框
+			currentFolderKey = "", //当前文件夹key-文件弹框
+			playerElapsed = 0, //当前播放进度
+			playerProgressInterval = null; // 播放进度定时器
 		$(document).ready(function() {
 			initPage();
 
@@ -307,6 +309,16 @@ SPDX-License-Identifier: Apache-2.0 -->
 					};
 					controlThingBroadcast("soundConsleTaskControl", data);
 
+					if (isPlaying) {
+						//定时器设置播放进度
+						playerProgressInterval = setInterval(() => {
+							playerElapsed += 1000;
+							$('#broadcast-page-player-range').val(playerElapsed);
+						}, 1000);
+					} else {
+						clearInterval(playerProgressInterval);
+						playerProgressInterval = null;
+					}
 					isPlaying = !isPlaying;
 					updatePlayerPlayPauseBtnStatus();
 				}
@@ -442,7 +454,9 @@ SPDX-License-Identifier: Apache-2.0 -->
 							}
 						};
 						curBroadcastingData = _.cloneDeep(data);
-						controlThingBroadcast("taskStart", data);
+						const query = {...data}; 
+						delete query.task.out_channel; //发送端不需要out_channel
+						controlThingBroadcast("taskStart", query);
 					}
 				}).catch(error => {
 					console.error('Error saving scene data:', error);
@@ -463,13 +477,22 @@ SPDX-License-Identifier: Apache-2.0 -->
 
 		//通过websocket设置歌曲播放器按钮的状态
 		function setBroadcastingSongPlayerThroughSocketBridge(data) {
+			isBroadCasting = true;
+			updateBroadcastBtnStatus();
 			isPlaying = true;
 			updatePlayerPlayPauseBtnStatus();
+			$('#broadcast-page-player-range').val(0);
 			$('#broadcast-page-player-songLabel').text(data.song)
 			$('#broadcast-page-player-range').attr('max', data.duration);
-			$('#broadcast-page-player-range').val(data.elapsed);
+			$('#broadcast-page-player-range').val(data.elapsed || 0);
+			playerElapsed = data.elapsed || 0;
 			const songLength = formatMilliseconds(data.duration);
 			$('#broadcast-page-player-endTime').text(songLength);
+			//定时器设置播放进度
+			playerProgressInterval = setInterval(() => {
+				playerElapsed += 1000;
+				$('#broadcast-page-player-range').val(playerElapsed);
+			}, 1000);
 		}
 
 		//通过websocket设置任务按钮的播放状态
@@ -495,10 +518,17 @@ SPDX-License-Identifier: Apache-2.0 -->
 						uuid,
 						task: {
 							uuid: uuid.replace('_1', '_2'),
+							username: curBroadcastingData.task.username,
+							name: curBroadcastingData.task.name,
 							priority: 4, //固定设置为4
-							task_type: 11, //调⾳台发送端设置为：SOUND_CONSOLE_REALTIME_SEND_TASK = 11;
-							out_channel: curBroadcastingData.task?.out_channel,
-							stream_push_url: curBroadcastingData.task?.stream_push_url,
+							task_type: 10,
+							pa_stream_type: 0,
+							out_channel: curBroadcastingData.task.out_channel.
+								split(",").
+								filter(ch => ch.includes(channelID)).
+								map(item => item.split('_')[1]).
+								join(','),
+							stream_pull_url: curBroadcastingData.task?.stream_push_url,
 							startDate: moment(new Date()).format('YYYY-MM-DD HH:mm:ss'),
 						}
 					};
@@ -540,6 +570,9 @@ SPDX-License-Identifier: Apache-2.0 -->
 
 		// 更新开始、停止广播按钮状态
 		function updateBroadcastBtnStatus() {
+			clearInterval(playerProgressInterval);
+			playerProgressInterval = null;
+			playerElapsed = 0;
 			const $btn = $('#broadcast-start-stop-btn');
 			$('#broadcast-page-player-range').attr('disabled', true);
 			$('#broadcast-page-player-range').attr('max', 15);
