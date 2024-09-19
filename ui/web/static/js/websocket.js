@@ -173,7 +173,7 @@ function handleThingMessage(data, defaultChannelId) {
         const deviceInfo = data.data?.info;
         const deviceName = deviceInfo?.device_name;
         if (deviceName && deviceInfo) {
-            handleDeviceInfoUpdate(deviceName, deviceInfo);
+            // handleDeviceInfoUpdate(deviceName, deviceInfo);
         }
     } else if (
         [

@@ -49,7 +49,6 @@ html {
     outline: 0;
     left: 0;
     background: var(--main-color);
-    box-shadow: 0px 0 10px -5px rgba(0, 0, 0, 1);
 }
 
 .sidebar a {
@@ -134,8 +133,6 @@ html {
 
 .topbar {
     background: #e1f2f6;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    transition: box-shadow 0.3s ease;
 }
 
 .user-item {
@@ -156,10 +153,8 @@ html {
 .main-content {
     min-width: 1200px;
     margin-left: 12rem;
-    margin-top: 4.5rem;
-    padding: 1rem;
+    margin-top: 3rem;
 }
-
 /* .navbar #sidebarToggleTop {
     height: 2.5rem;
     width: 2.5rem;
@@ -294,13 +289,12 @@ body .body-button:hover {
 }
 
 .table-container {
-    height: calc(100vh - 160px);
+    height: calc(100vh - 49px);
     overflow-y: auto;
     overflow-x: hidden;
-    margin-top: 20px;
-    padding: 10px;
+    margin-top: 0px;
+    padding: 20px;
     background: #fff;
-    border-radius: var(--border-radius);
 }
 
 .table-container tbody tr td a {
@@ -942,8 +936,8 @@ nav[aria-label="breadcrumb"] {
 
 .sidebar-logo{
     font-size: 24px;
-    -webkit-animation: rotateY 10s infinite;
-    animation: rotateY 10s infinite
+    /* -webkit-animation: rotateY 10s infinite;
+    animation: rotateY 10s infinite */
 }
 
 .SumoSelect .select-all{
@@ -981,7 +975,7 @@ table > thead > tr > th {
     backdrop-filter: blur(7px);
     -webkit-backdrop-filter: blur(7px);
     background: rgba(255, 255, 255, 0.2);
-    height: calc(100vh - 270px);
+    height: calc(100vh - 160px);
     overflow-y: auto;
     margin-left: 5px;
     margin-right: 5px;
@@ -1091,12 +1085,14 @@ table > thead > tr > th {
     color: dimgray;
 }
 .taskCalendar {
+    margin-top: 8px;
     width: 450px;    
     /* -webkit-box-shadow: 0 3px 8px rgba(0, 0, 0, .25);
     box-shadow: 0 3px 8px rgba(0, 0, 0, .25); */
     background-color: #edf8fb;
 }
 .taskContent {
+    margin-top: 8px;
     width: 100%;
 }
 .taskContentHeaderBar {
@@ -1105,8 +1101,8 @@ table > thead > tr > th {
     width: 100%;
     height: 38px;
     margin-top: 15px;
-    padding-left: 15px;
-    padding-right: 15px;
+    padding-left: 20px;
+    padding-right: 20px;
 }
 #taskDateTitle {
     color: #20afbf;
@@ -1127,9 +1123,9 @@ table > thead > tr > th {
 /*taskList-task page*/
 .taskContentList {
     width: 100%;
-    height: calc(100vh - 250px);
+    height: calc(100vh - 110px);
     overflow-y: auto;
-    padding: 15px;
+    padding: 20px;
 }
 .taskContentList .taskItem:not(:last-child) {
     margin-bottom: 15px;
@@ -1375,8 +1371,6 @@ ul.gj-list img[src="/images/icon_channel.png"] {
 
 .dashboardCard,
 .table-responsive.table-container {
-    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
-    transition: box-shadow 0.3s ease;
     background-image: url(/images/wave.svg);
     background-repeat: no-repeat;
     background-position-x: left;
@@ -1619,6 +1613,8 @@ input[type='range']::-ms-thumb {
     justify-content: space-between;
 }
 .broadcast-page-left-panel {
+    padding-left: 10px;
+    padding-top: 10px;
     width: 100%;
 }
 /* 左布局最上部的设备、场景选择框 */
@@ -1634,7 +1630,7 @@ input[type='range']::-ms-thumb {
     backdrop-filter: blur(5px);
     -webkit-backdrop-filter: blur(5px);
     background: rgba(0, 0, 0, 0.05);
-    height: calc(100vh - 560px);
+    height: calc(100vh - 400px);
     margin: 0px 10px;
     border-radius: 5px;
     padding: 10px;
@@ -1705,6 +1701,7 @@ input[type='range']::-ms-thumb {
     border-bottom-left-radius: 5px;
     min-height: 435px;
     overflow-y: auto;
+    padding-top: 20px;
 }
 .broadcast-page-playlist-header {
     display: flex; 
@@ -1715,7 +1712,7 @@ input[type='range']::-ms-thumb {
 }
 .broadcast-page-playlist-container {
     margin-top: 10px;
-    height: calc(100vh - 500px);
+    height: calc(100vh - 390px);
     overflow-y: auto;
     background: whitesmoke; 
 }

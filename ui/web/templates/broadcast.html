@@ -10,9 +10,9 @@ SPDX-License-Identifier: Apache-2.0 -->
 </head>
 <body>
 	{{ template "navbar" . }}
-	<div class="main-content pt-3">
-		<div class="container-fluid">
-			<div class="row-mb-3 p-3">
+	<div class="main-content">
+		<div class="container-fluid-1">
+			<div class="row-mb-3">
 				<div class="col-12 mx-auto">
 					<!-- 选择文件弹框 -->
 					<div 
@@ -678,6 +678,7 @@ SPDX-License-Identifier: Apache-2.0 -->
 				const deviceInfo = _.cloneDeep(thing.metadata?.info);
 				//输入通道
 				if (
+					deviceInfo &&
 					deviceInfo.in_channel && 
 					deviceInfo.in_channel?.channel && 
 					deviceInfo.in_channel?.channel?.length
