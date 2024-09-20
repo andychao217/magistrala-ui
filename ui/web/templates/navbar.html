@@ -7,7 +7,7 @@ SPDX-License-Identifier: Apache-2.0 -->
         <!-- Sidebar Brand -->
         <a class="sidebar-brand d-flex">
             <h2 class="mx-3 sidebar-logo">
-                <img loading="lazy" src="/images/icon_logo.png" style="height: 24px; margin-top: -6px;" /> 世邦思拓
+                <img loading="lazy" src="/images/login_logo.png" style="height: 45px;margin-top: -6px;">
             </h2>
         </a>
 
@@ -31,7 +31,7 @@ SPDX-License-Identifier: Apache-2.0 -->
         </div>
 
         <!-- Heading -->
-        <div class="sidebar-heading mb-3">当前机构</div>
+        <div class="sidebar-heading mb-3" id="domain-nav-item-label">当前机构</div>
 
         <li class="nav-item mb-2 mx-2" id="domains-sidebar-link">
             {{ $navbarActive := "domains" }}
@@ -130,7 +130,7 @@ SPDX-License-Identifier: Apache-2.0 -->
 
         <div id="things-nav-items">
             <!-- Divider -->
-            <hr class="sidebar-divider my-0 text-light mb-3" />
+            <hr class="sidebar-divider my-0 text-light mb-3" id="things-sidebar-divider"  />
 
             <!-- Heading -->
             <div class="sidebar-heading mb-3">管理</div>
@@ -303,7 +303,7 @@ SPDX-License-Identifier: Apache-2.0 -->
                         <ul class="dropdown-menu mt-5 position-absolute end-0 p-3" style="padding: 1rem;">
                             <li class="d-flex justify-content-start mb-2">
                                 <div class="align-self-center">
-                                    <i class="fa-regular fa-user fs-2"></i>
+                                    <i class="fa-regular fa-user fs-2" style="color: #424142;"></i>
                                 </div>
                                 <div>
                                     <span class="dropdown-item" id="username">{{ .Session.User.Name }}</span>
@@ -419,6 +419,9 @@ SPDX-License-Identifier: Apache-2.0 -->
             if (role !== "admin") {
                 document.getElementById("users-nav-items").style.display = "none";
                 document.getElementById("domain-collapse").style.display = "none";
+                document.getElementById("domain-nav-item-label").style.display = "none";
+                document.getElementById("domain-nav-item").style.display = "none";
+                document.getElementById("things-sidebar-divider").style.display = "none";
             } else {
                 document.getElementById("domain-collapse-toggle").setAttribute('data-bs-toggle', 'collapse');
                 document.getElementById("domain-collapse-toggle").classList.add('dropdown-toggle');

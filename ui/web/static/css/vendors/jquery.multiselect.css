@@ -44,6 +44,10 @@
     margin-top: -3px;
 }
 
+.ms-options-wrap > .ms-options > .ms-selectall.global {
+    color: #8C7F74;
+}
+
 .ms-options-wrap.ms-has-selections > button {
     color: #333;
 }

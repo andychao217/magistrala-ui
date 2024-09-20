@@ -132,7 +132,7 @@ SPDX-License-Identifier: Apache-2.0 -->
 													<div class="playAreaBox">
 														<div class="row g-1" style="margin-bottom: 5px;">
 															<div class="d-grid col-sm-6">
-																<button type="button" class="btn btn-light" style="color: dodgerblue;" id="playAreasAddBtn">
+																<button type="button" class="btn btn-light" style="color: #D5B897;" id="playAreasAddBtn">
 																	<i class="fa-solid fa-plus"></i> 添加
 																</button>
 															</div>
@@ -1459,7 +1459,7 @@ SPDX-License-Identifier: Apache-2.0 -->
 					`;
 				const playBtnBox = task.running ? 
 					`<i class="fa-solid fa-circle-stop" style="color: #f56c6c;" data-uuid="${task.uuid}" onclick="stopTask(this)"></i>` : 
-					`<i class="fa-solid fa-circle-play" style="color: #2ec6cc;" data-uuid="${task.uuid}" onclick="playTask(this)"></i>`;
+					`<i class="fa-solid fa-circle-play" style="color: #D5B898;" data-uuid="${task.uuid}" onclick="playTask(this)"></i>`;
 				const btnGroup = task.running ? 
 					`
 						<div class="runningTaskIndicatorContainer">

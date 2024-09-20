@@ -7,7 +7,7 @@ html {
 }
 
 :root {
-    --main-color: #20afbf;
+    --main-color: #D4B897;
     --color-dark: #1d2231;
     --text-grey: #8390a2;
     --sidebar-max: 15rem;
@@ -86,7 +86,7 @@ html {
 .sidebar a.sidebar-link.active {
     color: #fff;
     opacity: 1;
-    background: var(--bs-teal);
+    background: #8C7F74;
     border-radius: 5px;
 }
 
@@ -95,11 +95,11 @@ html {
     padding: 0 1rem;
     font-weight: 800;
     font-size: 0.65rem;
-    color: #b7b9cc;
+    color: #8C7F74;
 }
 
 body {
-    background-color: #c3e4ed;
+    background-color: #E4D9D0;
     -webkit-user-select: none; /* Safari */
     -moz-user-select: none;    /* Firefox */
     -ms-user-select: none;     /* Internet Explorer/Edge */
@@ -125,14 +125,14 @@ html {
 }
 .sidebar .nav-item:hover {
     border-radius: 5px;
-    background: var(--bs-teal);
+    background: #8C7F74;
 }
 .sidebar .nav-item.sub-link:hover a {
     color: #fff;
 }
 
 .topbar {
-    background: #e1f2f6;
+    background: #FEFAFD;
 }
 
 .user-item {
@@ -213,7 +213,7 @@ html {
 }
 
 .sidebar #sidebarToggle::after {
-    color: #b7b9cc;
+    color: #8C7F74;
 }
 
 .sidebar #sidebarToggle:hover {
@@ -362,15 +362,15 @@ body .body-button:hover {
 
 .login-body {
     /* background-color: #a799b7; */
-    background: url("../images/login_bg.png") no-repeat center center fixed;
+    /* background: url("../images/bar_bg_null.png") no-repeat center center fixed;
     -webkit-background-size: cover;
     -moz-background-size: cover;
     -o-background-size: cover;
-    background-size: cover;
+    background-size: cover; */
 }
 
 .login-card {
-    background-color: #ffffff;
+    background-color: rgba(255, 255, 255, 0.5);
     border-radius: 1rem;
 }
 
@@ -398,14 +398,15 @@ body .body-button:hover {
 }
 
 .logo-background {
-    background-image: url("../images/login_logo_tablet@2x_min.png");
+    background-image: url("../images/bar_bg_null.png");
     height: 502px;
+    width: 270px;
     margin-left: -15px;
     border-top-left-radius: 15px;
     border-bottom-left-radius: 15px;
     background-size: cover;
     background-repeat: no-repeat;
-    background-color: #1c808f;
+    background-color: rgba(255, 255, 255, 0.8);
 }
 
 .login-field {
@@ -427,9 +428,9 @@ body .body-button:hover {
 }
 
 .login-btn {
-    border: 1px solid #09d7d3;
+    border: 1px solid #D4B695;
     border-radius: 0.5rem;
-    background-color: #09d7d3;
+    background-color: #D4B695;
     font-weight: 700;
     color: #ffffff;
 }
@@ -470,7 +471,7 @@ body .body-button:hover {
 .selected h1,
 .selected div:first-child span,
 .selected div:last-child span {
-    color: #fff;
+    color: #000000;
 }
 
 .chart_div {
@@ -857,6 +858,16 @@ button.edit-btn {
     bottom: 5px;
 }
 
+.h1, .h2, .h3, .h4, .h5, .h6, h1, h2, h3, h4, h5, h6,
+.navbar-nav .nav-link.active, .navbar-nav .nav-link.show,
+.dropdown-menu,
+.user-item,
+.btn,
+.card-single,
+.card-title{
+    color: #424142;
+}
+
 .newThingItemList:hover {
     background-color: #f5f5f5;
     cursor: pointer;
@@ -895,6 +906,10 @@ button.edit-btn {
     --bs-btn-disabled-bg: transparent;
     --bs-btn-disabled-border-color: var(--main-color);
     --bs-gradient: none;
+}
+.btn-secondary {
+    background: lightgray;
+    border: none;
 }
 
 /* 隐藏breadcrumbs */
@@ -967,7 +982,7 @@ table > thead > tr > th {
 }
 
 .bootstrap-table .fixed-table-container .table tbody tr.selected td {
-    background-color: lightblue;
+    background-color: #EBE3DB;
 }
 
 /* file page */
@@ -1047,12 +1062,12 @@ table > thead > tr > th {
     border: none;
     box-shadow: none;
     -webkit-box-shadow: none;
-    background-color: #edf8fb;
+    background-color: #E4D8D1;
 }
 .pignose-calendar .pignose-calendar-top {
     box-shadow: none;
     -webkit-box-shadow: none;
-    background-color: #edf8fb;
+    background-color: #E4D8D1;
     padding: 1.6em 0;
 }
 .pignose-calendar .pignose-calendar-top .pignose-calendar-top-date {
@@ -1084,12 +1099,19 @@ table > thead > tr > th {
 .pignose-calendar-week .pignose-calendar-week-fri {
     color: dimgray;
 }
+.pignose-calendar .pignose-calendar-unit a {
+    color: #5E4F44;
+}
+.pignose-calendar .pignose-calendar-unit.pignose-calendar-unit-active a {
+    background-color: #C7BCB4;
+}
+
 .taskCalendar {
     margin-top: 8px;
     width: 450px;    
     /* -webkit-box-shadow: 0 3px 8px rgba(0, 0, 0, .25);
     box-shadow: 0 3px 8px rgba(0, 0, 0, .25); */
-    background-color: #edf8fb;
+    background-color: #E4D8D1;
 }
 .taskContent {
     margin-top: 8px;
@@ -1105,9 +1127,9 @@ table > thead > tr > th {
     padding-right: 20px;
 }
 #taskDateTitle {
-    color: #20afbf;
+    color: #8C7F74;
     line-height: 38px;
-    font-weight: 300;
+    font-weight: 600;
 }
 #taskPageContainer {
     display: flex; 
@@ -1134,8 +1156,8 @@ table > thead > tr > th {
     border-top: thin solid white;
     border-bottom: thin solid white;
     border-right: thin solid white;
-    border-left: var(--border-radius) solid #00c6ff;
-    background-color: #e8f3fc;
+    border-left: var(--border-radius) solid #D5B897;
+    background-color: #F9F8F8;
     border-radius: var(--border-radius);
     padding: 5px 50px;
     position: relative;
@@ -1164,7 +1186,7 @@ table > thead > tr > th {
     left: 0;
     width: 100%;
     height: 2px;
-    background: linear-gradient(to right, transparent, #00c6ff, transparent);
+    background: linear-gradient(to right, transparent, #D5B898, transparent);
     transform: scaleX(0);
     transform-origin: left;
     transition: transform 0.5s ease;
@@ -1270,7 +1292,7 @@ table > thead > tr > th {
 }
 
 .switchCheckbox:checked + .switchSlider {
-    background-color: #2ec6cc;
+    background-color: #D5B898;
 }
 
 .switchCheckbox:checked + .switchSlider:before {
@@ -1339,15 +1361,15 @@ ul.gj-list img[src="/images/icon_channel.png"] {
 }
 
 .list-group-item>[data-role="wrapper"]:hover {
-    background: lightblue;
+    background: #EBE3DB;
 }
 .gj-tree-bootstrap-5 ul.gj-list-bootstrap li.active {
     color: #000;
-    background-color: lightblue;
+    background-color: #EBE3DB;
 }
 .gj-checkbox-material-icons input[type=checkbox]:indeterminate+span:after,
 .gj-checkbox-material-icons input[type=checkbox]:checked+span:after {
-    background: #007aff;
+    background: #D5B898;
     color: white;
 }
 
@@ -1358,8 +1380,8 @@ ul.gj-list img[src="/images/icon_channel.png"] {
 }
 .nav-pills .nav-link:hover,
 .nav-pills .nav-link.active, .nav-pills .show>.nav-link {
-    color: #0064de;
-    background-color: #d1e8fe;
+    color: #8C7F74;
+    background-color: #EBE3DB;
 }
 .nav-pills .nav-link:last-child {
     border-bottom-left-radius: 5px;
@@ -1473,6 +1495,11 @@ ul.gj-list img[src="/images/icon_channel.png"] {
     margin: 0 auto;
 }
 
+.form-check-input:checked {
+    background-color: #D5B898;
+    border-color: #D5B898;
+}
+
 .inputError { 
     margin-top: 10px; 
     color: orangered;
@@ -1494,8 +1521,8 @@ input[type='range']::-webkit-slider-runnable-track {
     cursor: pointer;
     background: linear-gradient(
         to right,
-        #4caf50 0%,
-        #4caf50 var(--value),
+        #D5B898 0%,
+        #D5B898 var(--value),
         #ddd var(--value),
         #ddd 100%
     );
@@ -1508,8 +1535,8 @@ input[type='range']::-moz-range-track {
     cursor: pointer;
     background: linear-gradient(
         to right,
-        #4caf50 0%,
-        #4caf50 var(--value),
+        #D5B898 0%,
+        #D5B898 var(--value),
         #ddd var(--value),
         #ddd 100%
     );
@@ -1521,7 +1548,7 @@ input[type='range']::-webkit-slider-thumb {
     appearance: none;
     width: 15px;
     height: 15px;
-    background: #4caf50;
+    background: #D5B898;
     cursor: pointer;
     border-radius: 50%; /* 成为圆形 */
     margin-top: -5px; /* 确保滑块在轨道上方 */
@@ -1531,7 +1558,7 @@ input[type='range']::-webkit-slider-thumb {
 input[type='range']::-moz-range-thumb {
     width: 15px;
     height: 15px;
-    background: #4caf50;
+    background: #D5B898;
     cursor: pointer;
     border-radius: 50%; /* 成为圆形 */
     margin-top: -5px; /* 确保滑块在轨道上方 */
@@ -1541,7 +1568,7 @@ input[type='range']::-moz-range-thumb {
 input[type='range']::-ms-thumb {
     width: 15px;
     height: 15px;
-    background: #4caf50;
+    background: #D5B898;
     cursor: pointer;
     border-radius: 50%; /* 成为圆形 */
     margin-top: 0px; /* IE不支持margin-top,可以尝试这种方式来居中 */
@@ -1579,7 +1606,7 @@ input[type='range']::-ms-thumb {
     width: 60px;
 }
 .range-wrapper:hover {
-    background-color: #c3e4ed;
+    background-color: #E4D9D0;
 }
 .range-label {
     margin-bottom: 5px;
