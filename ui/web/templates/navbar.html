@@ -206,6 +206,14 @@ SPDX-License-Identifier: Apache-2.0 -->
                 </a>
             </li>
         </div>
+
+        <div class="clock">
+            <div class="flip-clock">
+                <div class="digit" id="clock-hours">00</div>
+                <div class="digit" id="clock-minutes">00</div>
+                <div class="digit" id="clock-seconds">00</div>
+            </div>
+        </div>
     </ul>
 
     <!-- End of sidebar -->
@@ -409,6 +417,29 @@ SPDX-License-Identifier: Apache-2.0 -->
     </div>
     <script src="/js/listUtils.js"></script>
     <script src="/js/cookie.js"></script>
+    <script>
+        let clockInterval = null;
+        function updateClock() {
+            const now = new Date();
+            const hours = String(now.getHours()).padStart(2, '0');
+            const minutes = String(now.getMinutes()).padStart(2, '0');
+            const seconds = String(now.getSeconds()).padStart(2, '0');
+        
+            // 更新显示的时间
+            document.getElementById('clock-hours').innerText = hours;
+            document.getElementById('clock-minutes').innerText = minutes;
+            document.getElementById('clock-seconds').innerText = seconds;
+        }
+        
+        // 初始化时钟
+        updateClock();
+        // 每秒更新时间
+        clockInterval = setInterval(updateClock, 1000);
+        window.addEventListener('unload', function () {
+            clearInterval(clockInterval);
+            clockInterval = null;
+        });
+    </script>
     <script defer>
         try {
             const userID = '{{.Session.User.ID}}',
