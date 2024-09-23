@@ -439,7 +439,7 @@ func (lm *loggingMiddleware) CreateThings(token string, things ...sdk.Thing) (er
 }
 
 // ListThings adds logging middleware to list things method.
-func (lm *loggingMiddleware) ListThings(s ui.Session, status string, page, limit, onlineStatus uint64) (b []byte, err error) {
+func (lm *loggingMiddleware) ListThings(s ui.Session, status string, page, limit, onlineStatus uint64, showFullData string) (b []byte, err error) {
 	defer func(begin time.Time) {
 		args := []any{
 			slog.String("duration", time.Since(begin).String()),
@@ -456,10 +456,10 @@ func (lm *loggingMiddleware) ListThings(s ui.Session, status string, page, limit
 		lm.logger.Info("List things completed successfully", args...)
 	}(time.Now())
 
-	return lm.svc.ListThings(s, status, page, limit, onlineStatus)
+	return lm.svc.ListThings(s, status, page, limit, onlineStatus, showFullData)
 }
 
-func (lm *loggingMiddleware) ListThingsInJSON(s ui.Session, status string, page, limit, onlineStatus uint64) (b sdk.ThingsPage, err error) {
+func (lm *loggingMiddleware) ListThingsInJSON(s ui.Session, status string, page, limit, onlineStatus uint64, showFullData string) (b sdk.ThingsPage, err error) {
 	defer func(begin time.Time) {
 		args := []any{
 			slog.String("duration", time.Since(begin).String()),
@@ -476,7 +476,7 @@ func (lm *loggingMiddleware) ListThingsInJSON(s ui.Session, status string, page,
 		lm.logger.Info("List things completed successfully", args...)
 	}(time.Now())
 
-	return lm.svc.ListThingsInJSON(s, status, page, limit, onlineStatus)
+	return lm.svc.ListThingsInJSON(s, status, page, limit, onlineStatus, showFullData)
 }
 
 // ViewThing adds logging middleware to view thing method.

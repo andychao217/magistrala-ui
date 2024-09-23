@@ -61,6 +61,10 @@ github.com/andychao217/agent v1.0.0 h1:mC+vEUurFpDj9hGNyGXhYc5Eo9n/wSKtAyF06jxBr
 github.com/andychao217/agent v1.0.0/go.mod h1:9wV1p1D3VTuf+MZRKrawMX/VoHgk0ngpPPFLmPyEqu8=
 github.com/andychao217/magistrala v1.0.1 h1:NjyC1KF8rdGag397ANG97E9T06RNTXKIjGPtSwI5/CI=
 github.com/andychao217/magistrala v1.0.1/go.mod h1:McO7FfsCZO9I9fy5g1KlhGL+qHE5y9mL86PqxwBiONE=
+github.com/andychao217/magistrala v1.0.2-0.20240923095129-016c0ada6342 h1:8WF/Sp7aZMXOf88Kg9GjamAabxifJEyLFQfVo70nCWs=
+github.com/andychao217/magistrala v1.0.2-0.20240923095129-016c0ada6342/go.mod h1:FkKhYWID5PB3qAQT7BAUPlU0boq36yKobJsrVuQoRRU=
+github.com/andychao217/magistrala v1.0.2 h1:qerNVR61WLRt8AUFFfU8rwJ3KfA7J6HsjMRT0VBmeAE=
+github.com/andychao217/magistrala v1.0.2/go.mod h1:FkKhYWID5PB3qAQT7BAUPlU0boq36yKobJsrVuQoRRU=
 github.com/apache/arrow/go/arrow v0.0.0-20191024131854-af6fa24be0db/go.mod h1:VTxUBvSJ3s3eHAg65PNgrsn5BtqCRPdmyXh6rAfdxN0=
 github.com/apache/thrift v0.12.0/go.mod h1:cp2SuWMxlEZw2r+iP2GNCdIi4C1qmUzdZFSVb+bacwQ=
 github.com/apache/thrift v0.13.0/go.mod h1:cp2SuWMxlEZw2r+iP2GNCdIi4C1qmUzdZFSVb+bacwQ=

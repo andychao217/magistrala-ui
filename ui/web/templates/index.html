@@ -164,7 +164,7 @@ SPDX-License-Identifier: Apache-2.0 -->
 
 				//  更新最新的设备数量信息
 				function refreshThingsPieChart () {
-					fetch(`/ui/things/thingsInJSON?page=1&limit=1000&onlineStatus=2`, {
+					fetch(`/ui/things/thingsInJSON?page=1&limit=1000&onlineStatus=2&showFullData=true`, {
 						method: "GET",
 					})
 					.then(response => {

@@ -775,7 +775,7 @@ func listThingsEndpoint(svc ui.Service) endpoint.Endpoint {
 			return nil, err
 		}
 
-		res, err := svc.ListThings(req.Session, req.status, req.page, req.limit, req.onlineStatus)
+		res, err := svc.ListThings(req.Session, req.status, req.page, req.limit, req.onlineStatus, req.showFullData)
 		if err != nil {
 			return nil, err
 		}
@@ -795,7 +795,7 @@ func listThingsDataEndpoint(svc ui.Service) endpoint.Endpoint {
 			return nil, err
 		}
 
-		res, err := svc.ListThingsInJSON(req.Session, req.status, req.page, req.limit, req.onlineStatus)
+		res, err := svc.ListThingsInJSON(req.Session, req.status, req.page, req.limit, req.onlineStatus, req.showFullData)
 		if err != nil {
 			fmt.Println("get things data 123: ", err)
 			return nil, err

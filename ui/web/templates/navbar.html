@@ -140,7 +140,7 @@ SPDX-License-Identifier: Apache-2.0 -->
                     class="nav-link sidebar-link {{ if (serviceUnavailable "things") }}
                         disabled-item
                     {{ end }} {{ if eq .NavbarActive $navbarActive }}active{{ end }}"
-                     onclick="changePage('/ui/things?limit=1000&onlineStatus=1', 'things')"
+                     onclick="changePage('/ui/things?limit=1000&onlineStatus=1&showFullData=true', 'things')"
                     id="thingsPage"
                 >
                     <img loading="lazy" src="/images/icon_equipment.svg" class="channel-icon" style="height: 18px;" />

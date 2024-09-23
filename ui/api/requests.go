@@ -135,6 +135,7 @@ type listEntityReq struct {
 	page         uint64
 	limit        uint64
 	onlineStatus uint64
+	showFullData string
 }
 
 func (req listEntityReq) validate() error {

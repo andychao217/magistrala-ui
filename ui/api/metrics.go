@@ -290,22 +290,22 @@ func (mm *metricsMiddleware) CreateThings(token string, things ...sdk.Thing) err
 }
 
 // ListThings adds metrics middleware to list things method.
-func (mm *metricsMiddleware) ListThings(s ui.Session, status string, page, limit, onlineStatus uint64) ([]byte, error) {
+func (mm *metricsMiddleware) ListThings(s ui.Session, status string, page, limit, onlineStatus uint64, showFullData string) ([]byte, error) {
 	defer func(begin time.Time) {
 		mm.counter.With("method", "list_things").Add(1)
 		mm.latency.With("method", "list_things").Observe(time.Since(begin).Seconds())
 	}(time.Now())
 
-	return mm.svc.ListThings(s, status, page, limit, onlineStatus)
+	return mm.svc.ListThings(s, status, page, limit, onlineStatus, showFullData)
 }
 
-func (mm *metricsMiddleware) ListThingsInJSON(s ui.Session, status string, page, limit, onlineStatus uint64) (sdk.ThingsPage, error) {
+func (mm *metricsMiddleware) ListThingsInJSON(s ui.Session, status string, page, limit, onlineStatus uint64, showFullData string) (sdk.ThingsPage, error) {
 	defer func(begin time.Time) {
 		mm.counter.With("method", "list_things").Add(1)
 		mm.latency.With("method", "list_things").Observe(time.Since(begin).Seconds())
 	}(time.Now())
 
-	return mm.svc.ListThingsInJSON(s, status, page, limit, onlineStatus)
+	return mm.svc.ListThingsInJSON(s, status, page, limit, onlineStatus, showFullData)
 }
 
 // viewThing adds metrics middleware to view thing method.

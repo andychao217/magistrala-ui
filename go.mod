@@ -8,7 +8,7 @@ require (
 	github.com/0x6flab/namegenerator v1.3.1
 	github.com/absmach/senml v1.0.5
 	github.com/andychao217/agent v1.0.0
-	github.com/andychao217/magistrala v1.0.1
+	github.com/andychao217/magistrala v1.0.2
 	github.com/caarlos0/env/v10 v10.0.0
 	github.com/eclipse/paho.mqtt.golang v1.4.3
 	github.com/go-chi/chi/v5 v5.0.12

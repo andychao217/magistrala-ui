@@ -230,8 +230,8 @@ type Service interface {
 	// CreateThings creates new things.
 	CreateThings(token string, things ...sdk.Thing) error
 	// ListThings retrieves things owned/shared by a user.
-	ListThings(s Session, status string, page, limit uint64, onlineStatus uint64) ([]byte, error)
-	ListThingsInJSON(s Session, status string, page, limit uint64, onlineStatus uint64) (sdk.ThingsPage, error)
+	ListThings(s Session, status string, page, limit uint64, onlineStatus uint64, showFullData string) ([]byte, error)
+	ListThingsInJSON(s Session, status string, page, limit uint64, onlineStatus uint64, showFullData string) (sdk.ThingsPage, error)
 	// ViewThing retrieves information about the thing with the given ID.
 	ViewThing(s Session, id string) ([]byte, error)
 	// UpdateThing updates the thing with the given ID.
@@ -888,13 +888,14 @@ func splitArrays(input []sdk.Thing) ([]sdk.Thing, []sdk.Thing) {
 	return hasUnderscore, noUnderscore
 }
 
-func (us *uiService) ListThings(s Session, status string, page, limit uint64, onlineStatus uint64) ([]byte, error) {
+func (us *uiService) ListThings(s Session, status string, page, limit uint64, onlineStatus uint64, showFullData string) ([]byte, error) {
 	offset := (page - 1) * limit
 
 	pgm := sdk.PageMetadata{
-		Offset: offset,
-		Limit:  limit,
-		Status: status,
+		Offset:       offset,
+		Limit:        limit,
+		Status:       status,
+		ShowFullData: showFullData,
 	}
 
 	things, err := us.sdk.Things(pgm, s.Token)
@@ -984,13 +985,14 @@ func (us *uiService) ListThings(s Session, status string, page, limit uint64, on
 	return btpl.Bytes(), nil
 }
 
-func (us *uiService) ListThingsInJSON(s Session, status string, page, limit uint64, onlineStatus uint64) (sdk.ThingsPage, error) {
+func (us *uiService) ListThingsInJSON(s Session, status string, page, limit uint64, onlineStatus uint64, showFullData string) (sdk.ThingsPage, error) {
 	offset := (page - 1) * limit
 
 	pgm := sdk.PageMetadata{
-		Offset: offset,
-		Limit:  limit,
-		Status: status,
+		Offset:       offset,
+		Limit:        limit,
+		Status:       status,
+		ShowFullData: showFullData,
 	}
 
 	things, err := us.sdk.Things(pgm, s.Token)

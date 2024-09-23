@@ -341,7 +341,7 @@ function setupMessageListener(defaultChannelId) {
 
 // 获取所有设备列表
 function httpGetAllThingsListWebsocket(host, comID, notifyDevice) {
-    fetch(`/ui/things/thingsInJSON?page=1&limit=1000&onlineStatus=2`, {
+    fetch(`/ui/things/thingsInJSON?page=1&limit=1000&onlineStatus=2&showFullData=true`, {
         method: "GET",
     })
         .then(response => {

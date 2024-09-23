@@ -1007,7 +1007,7 @@ SPDX-License-Identifier: Apache-2.0 -->
 			}];
 			allThingsList = [];
 			// 获取所有设备
-			fetch(`/ui/things/thingsInJSON?page=1&limit=1000&onlineStatus=2`, {
+			fetch(`/ui/things/thingsInJSON?page=1&limit=1000&onlineStatus=2&showFullData=true`, {
 				method: "GET",
 			})
 				.then(response => {
@@ -1285,7 +1285,7 @@ SPDX-License-Identifier: Apache-2.0 -->
 		//生成调音设备下拉框
 		function createThingsSelectOptions () {
 			$('#thingsSelect').empty();
-			fetch(`/ui/things/thingsInJSON?page=1&limit=1000&onlineStatus=2`, {
+			fetch(`/ui/things/thingsInJSON?page=1&limit=1000&onlineStatus=2&showFullData=true`, {
 				method: "GET",
 			})
 				.then(response => {

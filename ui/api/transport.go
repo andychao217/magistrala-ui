@@ -85,6 +85,8 @@ const (
 	channelKey              = "channel"
 	thingKey                = "thing"
 	loggedInKey             = "logged_in"
+	showFullDataKey         = "showFullData"
+	defShowFullData         = "true"
 )
 
 var (
@@ -2329,12 +2331,18 @@ func decodeListEntityRequest(_ context.Context, r *http.Request) (interface{}, e
 		return nil, err
 	}
 
+	showFullData, err := readStringQuery(r, showFullDataKey, defShowFullData)
+	if err != nil {
+		return nil, err
+	}
+
 	return listEntityReq{
 		status:       status,
 		page:         page,
 		limit:        limit,
 		Session:      session,
 		onlineStatus: onlineStatus,
+		showFullData: showFullData,
 	}, nil
 }
 

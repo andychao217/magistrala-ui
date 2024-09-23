@@ -1616,7 +1616,7 @@ SPDX-License-Identifier: Apache-2.0 -->
 							reqOnlineStatus = '0'; //offline
 						}
 						sessionStorage.setItem("onlineStatus", reqOnlineStatus);
-						window.location.href = `/ui/things?limit=1000&onlineStatus=${reqOnlineStatus}`;
+						window.location.href = `/ui/things?limit=1000&onlineStatus=${reqOnlineStatus}&showFullData=true`;
 						stopPollingThings();
 						getThingsList(reqOnlineStatus);
 					});
@@ -1994,7 +1994,7 @@ SPDX-License-Identifier: Apache-2.0 -->
 					}];
 					allThingsList = [];
 					// 获取所有设备
-					fetch(`/ui/things/thingsInJSON?page=1&limit=1000&onlineStatus=2`, {
+					fetch(`/ui/things/thingsInJSON?page=1&limit=1000&onlineStatus=2&showFullData=true`, {
 						method: "GET",
 					})
 						.then(response => {
@@ -3363,7 +3363,7 @@ SPDX-License-Identifier: Apache-2.0 -->
 									callback();
 								}
 								const reqOnlineStatus = sessionStorage.getItem("onlineStatus");
-								window.location.href = `/ui/things?limit=1000&onlineStatus=${reqOnlineStatus}`;
+								window.location.href = `/ui/things?limit=1000&onlineStatus=${reqOnlineStatus}&showFullData=true`;
 							}
 						})
 						.catch((error) => {
@@ -3371,7 +3371,7 @@ SPDX-License-Identifier: Apache-2.0 -->
 								callback();
 							}
 							const reqOnlineStatus = sessionStorage.getItem("onlineStatus");
-							window.location.href = `/ui/things?limit=1000&onlineStatus=${reqOnlineStatus}`;
+							window.location.href = `/ui/things?limit=1000&onlineStatus=${reqOnlineStatus}&showFullData=true`;
 						});
 				}
 
@@ -3455,7 +3455,7 @@ SPDX-License-Identifier: Apache-2.0 -->
 					const page = searchParams.get('page') || 1;
 					const limit = searchParams.get('limit') || 1000;
 					const reqOnlineStatus = sessionStorage.getItem("onlineStatus") || 1;
-					fetch(`/ui/things/thingsInJSON?page=${page}&limit=${limit}&onlineStatus=${reqOnlineStatus}`, {
+					fetch(`/ui/things/thingsInJSON?page=${page}&limit=${limit}&onlineStatus=${reqOnlineStatus}&showFullData=true`, {
 						method: "GET",
 					})
 						.then(response => {
@@ -3629,7 +3629,7 @@ SPDX-License-Identifier: Apache-2.0 -->
 				//根据在线类型获取设备列表
 				function getThingsList(onlineStatus, isRender) {
 					currentDevices = {}, newDevices = {};
-					fetch(`/ui/things/thingsInJSON?limit=1000&onlineStatus=${onlineStatus}`, {
+					fetch(`/ui/things/thingsInJSON?limit=1000&onlineStatus=${onlineStatus}&showFullData=true`, {
 						method: "GET",
 					})
 						.then(response => {
@@ -3670,7 +3670,7 @@ SPDX-License-Identifier: Apache-2.0 -->
 				// 获取所有设备列表
 				function getAllThingsList(callback) {
 					allThingsList = [];
-					fetch(`/ui/things/thingsInJSON?limit=1000&onlineStatus=2`, {
+					fetch(`/ui/things/thingsInJSON?limit=1000&onlineStatus=2&showFullData=true`, {
 						method: "GET",
 					})
 						.then(response => {

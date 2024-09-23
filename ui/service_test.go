@@ -1143,7 +1143,7 @@ func TestListThings(t *testing.T) {
 	for _, tc := range cases {
 		t.Run(tc.desc, func(t *testing.T) {
 			sdkCall := sdkmock.On("Things", sdk.PageMetadata{Offset: 0, Limit: 10, Status: "enabled"}, validSession.Token).Return(validThingsPage, tc.sdkerr)
-			_, err := svc.ListThings(validSession, "enabled", 1, 10, 2)
+			_, err := svc.ListThings(validSession, "enabled", 1, 10, 2, "")
 			assert.True(t, errors.Contains(err, tc.err), fmt.Sprintf("expected error: %s, got: %s", tc.err, err))
 			if err == nil {
 				sdkCall.Parent.AssertCalled(t, "Things", sdk.PageMetadata{Offset: 0, Limit: 10, Status: "enabled"}, validSession.Token)
