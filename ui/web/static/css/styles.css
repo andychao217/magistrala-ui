@@ -682,6 +682,10 @@ button.edit-btn {
     font-size: 1.25rem;
 }
 
+.modal-content {
+    width: 650px;
+}
+
 .string,
 .cm-s-default .cm-string {
     color: var(--main-color);
@@ -1002,7 +1006,7 @@ table > thead > tr > th {
     padding-right: 0px;
 }
 .dropzone {
-    width: 450px;
+    width: 530px;
     height: 200px;
     border: 2px dashed #cccccc;
     border-radius: 10px;
@@ -1818,4 +1822,23 @@ input[type='range']::-ms-thumb {
     align-items: center;
     border-radius: 5px;
     font-size: 24px;
+}
+
+.clock-separator {
+    line-height: 45px;
+    font-size: 24px;
+    opacity: 1;
+}
+.clock-separator.blink {
+    opacity: 0;
+}
+
+#v-pills-tabContent {
+    width: 530px;
+    border-left: thin solid lightgray;
+    padding: 40px;
+}
+.deviceSettingLink {
+    padding-left: 25px;
+    padding-right: 25px;
 }

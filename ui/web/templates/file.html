@@ -20,12 +20,12 @@ SPDX-License-Identifier: Apache-2.0 -->
 			aria-hidden="true"
 		>
 			<div class="modal-dialog" role="document">
-				<div class="modal-content" style="width: 530px;">
+				<div class="modal-content">
 					<div class="modal-header">
 						<h1 class="modal-title truncate-text" id="filePreviewModalTitle"></h1>
 						<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 					</div>
-					<div class="modal-body" id="filePreviewModalContent"></div>
+					<div class="modal-body" id="filePreviewModalContent" style="padding:30px 50px;"></div>
 				</div>
 			</div>
 		</div>
@@ -41,13 +41,13 @@ SPDX-License-Identifier: Apache-2.0 -->
 			aria-hidden="true"
 		>
 			<div class="modal-dialog" role="document">
-				<div class="modal-content" style="width: 530px;">
+				<div class="modal-content">
 					<div class="modal-header">
 						<h1 class="modal-title truncate-text" id="createFolderModal">新建文件夹</h1>
 						<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 					</div>
 					<form id="createFolderForm">
-						<div class="modal-body">
+						<div class="modal-body" style="padding: 30px 50px;">
 							<div class="mb-3">
 								<label for="createFolderName" class="form-label">文件夹名称: </label>
 								<input 
@@ -85,7 +85,7 @@ SPDX-License-Identifier: Apache-2.0 -->
 			aria-hidden="true"
 		>
 			<div class="modal-dialog" role="document">
-				<div class="modal-content" style="width: 530px;">
+				<div class="modal-content">
 					<div class="modal-header">
 						<h1 class="modal-title truncate-text" id="uploadModalModalTitle">上传文件</h1>
 						<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
@@ -371,7 +371,7 @@ SPDX-License-Identifier: Apache-2.0 -->
 					sourceType = "audio/wav";
 				}
 				$audio = $(`
-					<audio controls autoplay style="width: 500px;" id="audioPreview">
+					<audio controls autoplay style="width: 100%;" id="audioPreview">
 						<source src="${protocol}//${hostname}:${minioBridgePort}/previewFile?key=${key}" type="${sourceType}">
 						您的浏览器不支持 audio 元素。
 					</audio>

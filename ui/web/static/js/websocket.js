@@ -17,9 +17,6 @@ function debounce(func, wait) {
     };
 }
 
-// 包装后的 httpUpdateThingWebsocket 函数
-const debouncedHttpUpdateThingWebsocket = debounce(httpUpdateThingWebsocket, 100);
-
 // 获取当前网页的域名
 function getHostnameWebsocket(url) {
     const parsedUrl = new URL(url);
@@ -130,31 +127,6 @@ function handleTaskMessage(data) {
 // 处理设备相关message
 function handleThingMessage(data, defaultChannelId) {
     const iframe = document.getElementById('iframePage');
-
-    // 更新设备信息
-    const handleDeviceInfoUpdate = (deviceName, newDeviceInfo) => {
-        const targetDevice = allThingsListWebsocket.find(device => device.credentials.identity === deviceName);
-        if (targetDevice && targetDevice.id) {
-            const originalDeviceInfo = targetDevice.metadata?.info || {};
-            const originalDeviceName = targetDevice.name;
-
-            if (!_.isEqual(originalDeviceInfo, newDeviceInfo) || originalDeviceName !== newDeviceInfo.device_aliase) {
-                const queryData = {
-                    ...targetDevice,
-                    metadata: {
-                        ...targetDevice.metadata,
-                        info: _.cloneDeep(newDeviceInfo),
-                        aliase: `${newDeviceInfo.device_aliase}_${newDeviceInfo.out_channel.channel[0].aliase}`,
-                        out_channel_array: _.cloneDeep(newDeviceInfo.out_channel.channel),
-                        out_channel: `${newDeviceInfo.out_channel.channel.length}` || "0",                      in_channel: newDeviceInfo.in_channel,
-                    },
-                    name: newDeviceInfo.device_aliase,
-                };
-                debouncedHttpUpdateThingWebsocket(queryData, defaultChannelId);
-            }
-        }
-    };
-
     // 处理日志
     const handleLogReply = (logs, logContainer) => {
         logContainer.innerHTML = "";
@@ -169,13 +141,7 @@ function handleThingMessage(data, defaultChannelId) {
         });
     };
 
-    if (["DEVICE_INFO_UPDATE", "DEVICE_INFO_GET_REPLY"].includes(data.msgName)) {
-        const deviceInfo = data.data?.info;
-        const deviceName = deviceInfo?.device_name;
-        if (deviceName && deviceInfo) {
-            // handleDeviceInfoUpdate(deviceName, deviceInfo);
-        }
-    } else if (
+   if (
         [
             "DEVICE_ALIASE_SET_REPLY", 
             "OUT_CHANNEL_EDIT_REPLY", 
@@ -341,7 +307,7 @@ function setupMessageListener(defaultChannelId) {
 
 // 获取所有设备列表
 function httpGetAllThingsListWebsocket(host, comID, notifyDevice) {
-    fetch(`/ui/things/thingsInJSON?page=1&limit=1000&onlineStatus=2&showFullData=true`, {
+    fetch(`/ui/things/thingsInJSON?page=1&limit=1000&onlineStatus=2&showFullData=false`, {
         method: "GET",
     })
         .then(response => {
@@ -417,7 +383,6 @@ function controlDeviceWebsocketToAll(host, comID, controlType) {
 
 // 给单个设备发送消息
 function controlDeviceWebsocketSingle(host, comID, controlType, thingIdentity) {
-    const out_channel_unique_array = [...new Set(allThingsListWebsocket.map((item) => item.credentials.identity.split('_')[0]))];
     let data = {
         channelID: comID,
         host,
@@ -434,19 +399,6 @@ function controlDeviceWebsocketSingle(host, comID, controlType, thingIdentity) {
             "Authorization": getCookie('session'),
         },
         body: JSON.stringify(queryData),
-    });
-}
-
-// 更新设备信息
-function httpUpdateThingWebsocket(queryData, comID) {
-    fetch(`/ui/things/${queryData.id}`, {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json",
-        },
-        body: JSON.stringify(queryData),
-    }).then(response => {
-        httpGetAllThingsListWebsocket(hostNameWebsocket, comID, false);
     });
 }
 

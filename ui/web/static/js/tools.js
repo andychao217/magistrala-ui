@@ -187,10 +187,10 @@ function getDeviceIcon (deviceInfo) {
 	let src = 'icon_device0.svg',
 		product_name = deviceInfo.product_name || deviceInfo.metadata.product_name;
 	if (product_name.indexOf('2204') > -1 || product_name.indexOf('2200') > -1 || product_name.indexOf('2201') > -1) {
-		src = 'icon_device1.svg';
+		src = 'logo_2204.png';
 	}
 	if (product_name.indexOf('2102') > -1 || product_name.indexOf('2110') > -1 || product_name.indexOf('2112') > -1) {
-		src = 'icon_device2.svg';
+		src = 'logo_2102.png';
 	}
 	if (product_name.indexOf('3302') > -1) {
 		src = 'icon_device3.svg';
@@ -202,7 +202,7 @@ function getDeviceIcon (deviceInfo) {
 		src = 'icon_device5.svg';
 	}
 	if (product_name.indexOf('3602') > -1) {
-		src = 'icon_device8.svg';
+		src = 'logo_3602.png';
 	}
 	return src;
 };

@@ -24,7 +24,7 @@ SPDX-License-Identifier: Apache-2.0 -->
                                                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                             </div>
                                             <form action="{{ printf "%s/domains/%s/assign" pathPrefix .Session.Domain.ID }}" method="post">
-                                                <div class="modal-body">
+                                                <div class="modal-body" style="padding:30px 50px;">
                                                     <div class="mb-3">
                                                         <label for="users-scroll" class="form-label">用户</label>
                                                         <input type="text" name="userFilter" id="userFilter" placeholder="请输入名称" maxlength="20" />

@@ -201,8 +201,9 @@ SPDX-License-Identifier: Apache-2.0 -->
                     onclick="changePage('/ui/broadcast', 'broadcast')"
                     id="broadcastPage"
                 >
-                    <img loading="lazy" src="/images/icon_assess.svg" class="channel-icon" style="height: 18px;" />
-                    <span>实时</span>
+                    <!-- <img loading="lazy" src="/images/icon_assess.svg" class="channel-icon" style="height: 18px;" /> -->
+                    <i class="fa-regular fa-clock"></i>
+                    <span style="margin-left: 5px;">实时</span>
                 </a>
             </li>
         </div>
@@ -210,7 +211,9 @@ SPDX-License-Identifier: Apache-2.0 -->
         <div class="clock">
             <div class="flip-clock">
                 <div class="digit" id="clock-hours">00</div>
+                <span class="clock-separator">:</span>
                 <div class="digit" id="clock-minutes">00</div>
+                <span class="clock-separator">:</span>
                 <div class="digit" id="clock-seconds">00</div>
             </div>
         </div>
@@ -418,17 +421,24 @@ SPDX-License-Identifier: Apache-2.0 -->
     <script src="/js/listUtils.js"></script>
     <script src="/js/cookie.js"></script>
     <script>
-        let clockInterval = null;
+        let clockInterval = null, 
+            blink = false;
+
         function updateClock() {
             const now = new Date();
             const hours = String(now.getHours()).padStart(2, '0');
             const minutes = String(now.getMinutes()).padStart(2, '0');
             const seconds = String(now.getSeconds()).padStart(2, '0');
-        
-            // 更新显示的时间
+
             document.getElementById('clock-hours').innerText = hours;
             document.getElementById('clock-minutes').innerText = minutes;
             document.getElementById('clock-seconds').innerText = seconds;
+
+            blink = !blink; // 切换闪烁状态
+            const blinkClass = blink ? 'blink' : '';
+            document.querySelectorAll('.clock-separator').forEach(separator => {
+                separator.className = `clock-separator ${blinkClass}`;
+            });
         }
         
         // 初始化时钟
