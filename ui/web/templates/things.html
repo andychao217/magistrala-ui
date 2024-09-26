@@ -1618,7 +1618,12 @@ SPDX-License-Identifier: Apache-2.0 -->
 					});
 
 					//搜索添加设备确认添加按钮事件
-					$('#scan-add-thing-button').on('click', addScanNewThings);
+					$('#scan-add-thing-button').on('click', () => {
+						const callback = () => {
+							addScanNewThings();
+						};
+						getAllThingsList(callback)
+					});
 
 					//搜索添加设备-网络配置-手动、自动下拉选项
 					$('#dhcp_enable-deviceNetCfg').change(function() {
@@ -4000,7 +4005,6 @@ SPDX-License-Identifier: Apache-2.0 -->
 
 				//添加扫描设备
 				function addScanNewThings() {
-					
 					//获取当前domain的comID号
 					const domainID = sessionStorage.getItem("domainID");
 					fetch(`/ui/domains/${domainID}/domainInJSON`, {
@@ -4017,7 +4021,15 @@ SPDX-License-Identifier: Apache-2.0 -->
 							const domainData = JSON.parse(data).domainData;
 							const comID = domainData.metadata["comID"];
 							const selectedNewThings = scanNewThingsList.filter(item => selectedNewThingNames.includes(item.device_name));
-							const queryData = selectedNewThings.map((thing)=>{
+							const queryData = selectedNewThings.filter((item)=>{
+								//判断该设备是否已经存在，已存在自动忽略，不能重复添加
+								const targetThing = allThingsList.find((thing) => item.device_name === thing.credentials.identity);
+								if (targetThing && targetThing.id) {
+									return false;
+								} else {
+									return true;
+								}
+							}).map((thing)=>{
 								return {
 									name: thing.device_aliase,
 									credentials: {
@@ -4036,42 +4048,46 @@ SPDX-License-Identifier: Apache-2.0 -->
 									}
 								}
 							});
-							fetch(`/ui/things/batch`, {
-								method: "POST",
-								headers: {
-									"Content-Type": "application/json",
-								},
-								body: JSON.stringify(queryData),
-							})
-								.then(response => {
-									const url = window.location.href; // 获取当前页面的URL
-									const address = new URL(url);
-									const port =  sessionStorage.getItem("socketBridgePort") || "63001";
-									const newQueryData = selectedNewThings.map((item)=>{
-										item.tenant_id = comID;
-										item.netcfg.mqtt_server =  address.hostname || "nxt-gateway.local";
-										return item;
-									});
-									// 添加成功后需要向UDP发送回执
-									fetch(`http://${address.hostname}:${port}/addDeviceReply`, {
-										method: "POST",
-										headers: {
-											"Content-Type": "application/json",
-											"Authorization": getCookie('session'),
-										},
-										body: JSON.stringify(newQueryData),
-									})
-										.then(response => {
-											// 获取当前 URL
-											const currentUrl = new URL(window.location.href);
-											const reqOnlineStatus = sessionStorage.getItem("onlineStatus");
-											// 修改查询参数
-											currentUrl.searchParams.set('onlineStatus', reqOnlineStatus);
-											// 跳转到新的 URL
-											window.location.href = currentUrl.toString();
+							if (queryData && queryData.length) {
+								fetch(`/ui/things/batch`, {
+									method: "POST",
+									headers: {
+										"Content-Type": "application/json",
+									},
+									body: JSON.stringify(queryData),
+								})
+									.then(response => {
+										const url = window.location.href; // 获取当前页面的URL
+										const address = new URL(url);
+										const port =  sessionStorage.getItem("socketBridgePort") || "63001";
+										const newQueryData = selectedNewThings.map((item)=>{
+											item.tenant_id = comID;
+											item.netcfg.mqtt_server =  address.hostname || "nxt-gateway.local";
+											return item;
 										});
-								});
-						})
+										// 添加成功后需要向UDP发送回执
+										fetch(`http://${address.hostname}:${port}/addDeviceReply`, {
+											method: "POST",
+											headers: {
+												"Content-Type": "application/json",
+												"Authorization": getCookie('session'),
+											},
+											body: JSON.stringify(newQueryData),
+										})
+											.then(response => {
+												// 获取当前 URL
+												const currentUrl = new URL(window.location.href);
+												const reqOnlineStatus = sessionStorage.getItem("onlineStatus");
+												// 修改查询参数
+												currentUrl.searchParams.set('onlineStatus', reqOnlineStatus);
+												// 跳转到新的 URL
+												window.location.href = currentUrl.toString();
+											});
+									});
+							} else {
+								scanThingsModal.hide();
+							}
+						});
 				}	
 		   	</script>
         </body>
