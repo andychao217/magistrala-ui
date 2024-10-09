@@ -1,0 +1,461 @@
+<!-- Copyright (c) Abstract Machines
+SPDX-License-Identifier: Apache-2.0 -->
+
+{{ define "firmware" }}
+    <!doctype html>
+    <html lang="en">
+        <head>
+            <title></title>
+            {{ template "header" }}
+        </head>
+        <body>
+            {{ template "navbar" }}
+            <div class="main-content">
+                <div class="container-fluid-1">
+                    <div class="row-mb-3">
+                        <div class="col-12 mx-auto">
+                            <!-- 上传固件弹框 -->
+                            <div 
+                                class="modal fade" 
+                                id="uploadModal" 
+                                tabindex="-1" 
+                                role="dialog" 
+                                aria-labelledby="uploadModalLabel"
+                                data-bs-backdrop="static" 
+                                data-bs-keyboard="false"  
+                                aria-hidden="true"
+                            >
+                                <div class="modal-dialog" role="document">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h1 class="modal-title truncate-text" id="uploadModalModalTitle">上传固件</h1>
+                                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                        </div>
+                                        <div class="modal-body">
+                                            <div class="dropzone" id="dropzone">
+                                                拖拽固件到此处或点击选择固件
+                                            </div>
+                                            <input type="file" id="fileInput" style="display: none;" accept=".img">
+                                            <ul id="fileList"></ul>
+                                            <progress id="progressBar" value="0" max="100" style="width: 100%; display: none;"></progress>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                                                <i class="fa-solid fa-xmark"></i> 取消
+                                            </button>
+                                            <button type="submit" class="btn body-button" id="uploadButton">
+                                                <i class="fa-solid fa-upload"></i> 上传
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- 固件列表弹框 -->
+                            <div 
+                                class="modal fade" 
+                                id="firmwareListModal" 
+                                tabindex="-1" 
+                                role="dialog" 
+                                aria-labelledby="firmwareListModalLabel"
+                                data-bs-backdrop="static" 
+                                data-bs-keyboard="false"  
+                                aria-hidden="true"
+                            >
+                                <div class="modal-dialog" role="document">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h1 class="modal-title truncate-text">
+                                                <span>固件列表</span>(<span id="firmwareListModalTitle"></span>)
+                                            </h1>
+                                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                        </div>
+                                        <div class="modal-body">
+                                            <div class="row" id="firmwareListTableContainer">
+                                                <table 
+                                                    id="firmwareListTable"
+                                                    class="table table-hover"
+                                                    data-checkbox-header="true"
+                                                    data-click-to-select="false"
+                                                >
+                                                    <thead>
+                                                        <tr>
+                                                            <th data-field="version" data-halign="center" data-align="center">固件版本</th>
+                                                            <th data-field="upload_user" data-halign="center" data-align="center">上传者</th>
+                                                            <th data-field="upload_time" data-halign="center" data-align="center">上传日期</th>
+                                                            <th 
+                                                                data-field="action" 
+                                                                data-halign="center" 
+                                                                data-align="center" 
+                                                                data-formatter="actionFirmwareTableFormatter"
+                                                            >
+                                                                操作
+                                                            </th>
+                                                        </tr>
+                                                    </thead>
+                                                </table>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="table-responsive table-container">
+                                <div class="row" id="firmwareTableContainer">
+                                    <table 
+                                        id="fileTable"
+                                        class="table table-hover"
+                                        data-checkbox-header="true"
+                                        data-click-to-select="false"
+                                    >
+                                        <thead>
+                                            <tr>
+                                                <th data-field="product_icon" data-halign="center" data-align="center" data-formatter="productIconTableFormatter"></th>
+                                                <th data-field="product_name" data-halign="center" data-align="center">产品名称</th>
+                                                <th data-field="newest_version" data-halign="center" data-align="center">最新固件版本</th>
+                                                <th data-field="action" data-halign="center" data-align="center" data-formatter="actionTableFormatter">操作</th>
+                                            </tr>
+                                        </thead>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <script>
+                const protocol = window.location.protocol,
+				      hostname = window.location.hostname,
+				      minioBridgePort =  sessionStorage.getItem("minioBridgePort") || "9102",
+                      userInfoStr = sessionStorage.getItem("userInfo"),
+				      userInfo = JSON.parse(userInfoStr),
+                      firmwareListModal = new bootstrap.Modal(document.getElementById("firmwareListModal")),
+                      $firmwareListTable = $('#firmwareListTable');
+                const initFirmwareList = [
+                    {
+                        id: 1,
+                        product_name: 'NXT2102',
+                        newest_version: '',
+                    },
+                    {
+                        id: 2,
+                        product_name: 'NXT2204',
+                        newest_version: '',
+                    },
+                    {
+                        id: 3,
+                        product_name: 'NXT3602',
+                        newest_version: '',
+                    },
+                ];
+
+                const $fileTable = $('#fileTable');
+                $fileTable.bootstrapTable({});
+                $fileTable.removeClass('table-bordered');
+                
+                $firmwareListTable.bootstrapTable({});
+                $firmwareListTable.removeClass('table-bordered');
+
+                let curProductName = '';
+
+                loadFirmwareTable();
+
+                function loadFirmwareTable() {
+                    $fileTable.bootstrapTable('load', initFirmwareList);
+                    const queryData = {
+                        product_name_list: initFirmwareList.map(item => item.product_name),
+                    }
+                    fetch(`${protocol}//${hostname}:${minioBridgePort}/getLatestFirmwares`, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            "Authorization": getCookie('session'),
+                        },
+                        body: JSON.stringify(queryData)
+                    })
+                        .then(response => {
+                            if (!response.ok) {
+                                throw new Error("Network response was not ok");
+                            }
+                            return response.json(); // 直接将流转换为JSON对象
+                        }).then(data => {
+                            if (data && data.latest_firmwares && data.latest_firmwares.length) {
+                                const firmwareList = [...initFirmwareList];
+                                for (const item of data.latest_firmwares) {
+                                    for (let i = 0; i < firmwareList.length; i++) {
+                                        if (firmwareList[i].product_name === item.product_name) {
+                                            firmwareList[i].newest_version = item.newest_version;
+                                            break;
+                                        }
+                                    }
+                                }
+                                $fileTable.bootstrapTable('load', firmwareList);
+                            }
+                        }).catch(error => {
+                            console.error('Error:', error);
+                        });
+                }
+
+                //表格产品图标列
+                function productIconTableFormatter(value, row, index) {
+                    let src = '';
+                    if (row.product_name.includes('2204')) {
+                        src = '/images/logo_2204.png';
+                    } else if (row.product_name.includes('2102')) {
+                        src = '/images/logo_2102.png';
+                    } else if (row.product_name.includes('3602')) {
+                        src = '/images/logo_3602.png';
+                    }
+                    return `<img loading="lazy" src=${src} style="height:40px;" />`;
+                }
+
+                function actionTableFormatter(value, row, index) {
+                    const isDisabled = !row.newest_version;
+                    return `
+                        <div class="btn-group">
+                            <button 
+                                class="btn btn-link" 
+                                title="固件列表" 
+                                ${isDisabled ? 'disabled' : ''}
+                                onclick="getFirmwareList('${row.product_name}')"
+                                style="height:24px; margin-top: -15px;"
+                            >
+                                <i class="fa-solid fa-list"></i>
+                            </button>
+                            <button 
+                                class="btn btn-link"
+                                title="上传固件" 
+                                onclick="openUploadModal('${row.product_name}')"
+                                style="height:24px; margin-top: -15px;"
+                            >
+                                <i class="fa-solid fa-upload"></i>
+                            </button>
+                        </div>
+                    `;
+                }
+
+
+                function getFirmwareList(product_name) {
+                    $('#firmwareListModalTitle').html('');
+                    $('#firmwareListModalTitle').html(product_name);
+                    
+                    firmwareListModal.show();
+                    $firmwareListTable.bootstrapTable('load', []);
+
+                    const queryData = { product_name };
+                    fetch(`${protocol}//${hostname}:${minioBridgePort}/getFirmwareList`, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            "Authorization": getCookie('session'),
+                        },
+                        body: JSON.stringify(queryData)
+                    })
+                        .then(response => response.json())
+                        .then(data => {
+                            if (data && data.length) {
+                                $firmwareListTable.bootstrapTable('load', data);
+                            }
+                        })
+                }
+
+                function actionFirmwareTableFormatter(value, row, index) {
+                    return `
+                        <div class="btn-group">
+                            <button 
+                                class="btn btn-link"
+                                title="删除固件" 
+                                onclick="deleteFirmware('${row.id}', '${row.product_name}')"
+                                style="height:24px; margin-top: -15px; color: orangered;"
+                            >
+                                <i class="fa-solid fa-trash-can"></i>
+                            </button>
+                        </div>
+                    `;
+                }
+
+                function deleteFirmware(id, product_name) {
+                    firmwareListModal.hide();
+                    const cancelCallback = function () {
+                        firmwareListModal.show();
+                    };
+                    const callback = function () {
+                        firmwareListModal.show();
+                        getFirmwareList(product_name);
+                        loadFirmwareTable();
+                    }
+                    showConfirmModal("确定要删除所选固件吗？", () => {
+                        const queryData = { id, product_name };
+                        fetch(`${protocol}//${hostname}:${minioBridgePort}/deleteFirmware`, {
+							method: 'DELETE',
+							headers: {
+								'Content-Type': 'application/json',
+								"Authorization": getCookie('session'),
+							},
+							body: JSON.stringify(queryData)
+						})
+							.then(response => response.json())
+							.then(data => {
+                                callback();
+							})
+							.catch(error => {
+                                callback();
+								console.error('Error:', error);
+							});
+                    }, cancelCallback);
+                }
+
+                const uploadModal = new bootstrap.Modal(document.getElementById("uploadModal")),
+                      dropzone = document.getElementById('dropzone'),
+                      fileInput = document.getElementById('fileInput'),
+                      uploadButton = document.getElementById('uploadButton'),
+                      progressBar = document.getElementById('progressBar'),
+                      fileList = document.getElementById('fileList');
+                let selectedFiles = new DataTransfer();
+            
+                //打开弹窗
+                function openUploadModal(product_name = '') {
+                    curProductName = product_name;
+                    uploadModal.show();
+                    fileInput.value = ''; // Clear the file input
+                    fileList.innerHTML = ''; // Clear the file list
+                    selectedFiles = new DataTransfer();
+                }
+
+                dropzone.addEventListener('click', () => fileInput.click());
+                dropzone.addEventListener('dragover', (e) => {
+                    e.preventDefault();
+                    dropzone.style.borderColor = '#20afbf';
+                });
+                dropzone.addEventListener('dragleave', () => {
+                    dropzone.style.borderColor = '#cccccc';
+                });
+                dropzone.addEventListener('drop', (e) => {
+                    e.preventDefault();
+                    dropzone.style.borderColor = '#cccccc';
+                    handleFiles(e.dataTransfer.files);
+                    if (e.dataTransfer.files.length > 1) {
+                        // showAlert('warning', '只能选择一个文件。');
+                        fileInput.value = ''; // 清空输入
+                        fileList.innerHTML = ''; // 清空文件列表
+                        selectedFiles = new DataTransfer(); // 重置选择
+                    } else {
+                        const files = Array.from(fileInput.files);
+                        const dataTransfer = new DataTransfer();
+                        files.push(...e.dataTransfer.files);
+                        files.forEach(file => dataTransfer.items.add(file));
+                        fileInput.files = dataTransfer.files;
+                        selectedFiles = dataTransfer;
+                    }
+                });
+                fileInput.addEventListener('change', (e) => {
+                    handleFiles(e.target.files);
+                    if (fileInput.files.length > 1) {
+                        // showAlert('warning', '只能选择一个文件。');
+                        fileInput.value = ''; // 清空输入
+                        fileList.innerHTML = ''; // 清空文件列表
+                        selectedFiles = new DataTransfer(); // 重置选择
+                    } else {
+                        const files = Array.from(fileInput.files);
+                        files.forEach(file => selectedFiles.items.add(file));
+                    }
+                });
+                uploadButton.addEventListener('click', () => {
+                    if (fileInput.files.length) {
+                        const file = fileInput.files[0];
+                        const file_name = file.name;
+                        if (!file_name.includes(curProductName)) {
+                            showAlert('warning', `固件不是该设备所用固件`);
+                            return;
+                        } else {
+                            handleUpload(fileInput.files);
+                        }
+                    } else {
+                        showAlert('info', '请选择文件');
+                    }
+                });
+
+                function handleFiles(files) {
+                    // 如果选择的文件数量超过1，给出警告并返回
+                    if (files.length > 1) {
+                        // showAlert('warning', '只能选择一个文件。');
+                        return; // 退出函数，不处理任何文件
+                    }
+
+                    const allowedExtension = '.img'; // 允许的扩展名
+                    for (const file of files) {
+                        if (file.name.endsWith(allowedExtension)) {
+                            const li = document.createElement('li');
+                            li.className = 'fileItem';
+                            li.textContent = file.name;
+
+                            const deleteButton = document.createElement('button');
+                            deleteButton.innerHTML = '<i class="fa-solid fa-xmark"></i>';
+                            deleteButton.addEventListener('click', () => {
+                            li.remove();
+                                updateFileInput();
+                            });
+
+                            li.appendChild(deleteButton);
+                            fileList.appendChild(li);
+                        } else {
+                            showAlert('warning', `上传文件格式不正确`);
+                        }
+                    }
+                }
+
+                function updateFileInput() {
+                    const fileItems = fileList.querySelectorAll('.fileItem');
+                    const files = Array.from(fileInput.files);
+                    const newFiles = files.filter(file => {
+                        return Array.from(fileItems).some(item => item.textContent.includes(file.name));
+                    });
+                    const dataTransfer = new DataTransfer();
+                    newFiles.forEach(file => dataTransfer.items.add(file));
+                    fileInput.files = dataTransfer.files;
+                    selectedFiles = dataTransfer;
+                }
+
+                function handleUpload(files) {
+                    const formData = new FormData();
+                    for (const file of files) {
+                        const file_name = file.name;
+                        // 去掉文件扩展名
+                        const baseFileName = file_name.split('.').slice(0, -1).join('.');
+                       
+                        // 使用正则表达式分组
+                        const match = baseFileName.match(/^(.*?)\_([\s\S]*)$/);
+                        if (match) {
+                            const product_name = match[1];
+                            const version = match[2];
+                            formData.append('files', file);
+                            formData.append('upload_user', userInfo.credentials.identity);
+                            formData.append('product_name', product_name);
+                            formData.append('version', version);
+                        }
+                    }
+                    progressBar.style.display = 'block';
+                    const xhr = new XMLHttpRequest();
+                    xhr.open('POST', `${protocol}//${hostname}:${minioBridgePort}/uploadFirmware`, true);
+                    xhr.upload.onprogress = (event) => {
+                        if (event.lengthComputable) {
+                            const percentComplete = (event.loaded / event.total) * 100;
+                            progressBar.value = percentComplete;
+                        }
+                    };
+                    xhr.onload = () => {
+                        if (xhr.status === 200) {
+                            uploadModal.hide();
+                            loadFirmwareTable();
+                        } else {
+                            showAlert('danger', '上传失败');
+                        }
+                        progressBar.style.display = 'none';
+                        progressBar.value = 0;
+                    };
+                    xhr.send(formData);
+                }
+            </script>
+        </body>
+    </html>
+{{ end }}

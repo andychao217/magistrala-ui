@@ -58,7 +58,7 @@ const (
 	invitationsActive       = "invitations"
 	fileActive              = "file"
 	broadcastActive         = "broadcast"
-	intelligentActive       = "intelligent"
+	firmwareActive          = "firmware"
 	blankActive             = "blank"
 	taskActive              = "task"
 	domainInvitationsActive = "domaininvitations"
@@ -388,8 +388,8 @@ type Service interface {
 	File(s Session) ([]byte, error)
 	// view broadcast page
 	Broadcast(s Session) ([]byte, error)
-	// view intelligent page
-	Intelligent(s Session) ([]byte, error)
+	// view firmware page
+	Firmware(s Session) ([]byte, error)
 	// view blank page
 	Blank(s Session) ([]byte, error)
 	// view task page
@@ -2893,9 +2893,9 @@ func (us *uiService) File(s Session) ([]byte, error) {
 	return btpl.Bytes(), nil
 }
 
-func (us *uiService) Intelligent(s Session) ([]byte, error) {
+func (us *uiService) Firmware(s Session) ([]byte, error) {
 	crumbs := []breadcrumb{
-		{Name: intelligentActive},
+		{Name: firmwareActive},
 	}
 
 	data := struct {
@@ -2904,14 +2904,14 @@ func (us *uiService) Intelligent(s Session) ([]byte, error) {
 		Breadcrumbs    []breadcrumb
 		Session        Session
 	}{
-		intelligentActive,
-		intelligentActive,
+		firmwareActive,
+		firmwareActive,
 		crumbs,
 		s,
 	}
 
 	var btpl bytes.Buffer
-	if err := us.tpls.ExecuteTemplate(&btpl, "intelligent", data); err != nil {
+	if err := us.tpls.ExecuteTemplate(&btpl, "firmware", data); err != nil {
 		return []byte{}, errors.Wrap(ErrExecTemplate, err)
 	}
 

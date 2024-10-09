@@ -990,17 +990,29 @@ table > thead > tr > th {
 }
 
 /* file page */
+#firmwareListTableContainer {
+    height: 500px;
+}
+#firmwareTableContainer {
+    height: calc(100vh - 80px);
+}
+#fileTableContainer {
+    height: calc(100vh - 160px);
+}
+#firmwareListTableContainer,
+#firmwareTableContainer,
 #fileTableContainer {
     backdrop-filter: blur(7px);
     -webkit-backdrop-filter: blur(7px);
     background: rgba(255, 255, 255, 0.2);
-    height: calc(100vh - 160px);
     overflow-y: auto;
     margin-left: 5px;
     margin-right: 5px;
     border: thin solid lightgray;
     border-radius: 5px;
 }
+#firmwareListTableContainer > .bootstrap-table,
+#firmwareTableContainer > .bootstrap-table,
 #fileTableContainer > .bootstrap-table {
     padding-left: 0px;
     padding-right: 0px;
@@ -1022,7 +1034,7 @@ table > thead > tr > th {
     border-color: var(--main-color);
 }
 #fileList {
-    width: 450px;
+    width: 530px;
     margin: 20px auto;
     padding: 0;
     list-style: none;

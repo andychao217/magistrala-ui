@@ -1280,11 +1280,11 @@ func (req fileReq) validate() error {
 	return nil
 }
 
-type intelligentReq struct {
+type firmwareReq struct {
 	ui.Session
 }
 
-func (req intelligentReq) validate() error {
+func (req firmwareReq) validate() error {
 	if req.Token == "" {
 		return errInvalidCredentials
 	}

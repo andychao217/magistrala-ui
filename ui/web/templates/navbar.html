@@ -183,18 +183,6 @@ SPDX-License-Identifier: Apache-2.0 -->
                 </a>
             </li>
             <li class="nav-item mb-2 mx-2">
-                {{ $navbarActive = "intelligent" }}
-                <a
-                    class="nav-link sidebar-link {{ if eq .NavbarActive $navbarActive }}active{{ end }}"
-                    onclick="changePage('/ui/intelligent', 'intelligent')"
-                    id="intelligentPage"
-                    style="display: none;"
-                >
-                    <img loading="lazy" src="/images/icon_intelligent.svg" class="channel-icon" style="height: 18px;" />
-                    <span>智能</span>
-                </a>
-            </li>
-            <li class="nav-item mb-2 mx-2">
                 {{ $navbarActive = "broadcast" }}
                 <a
                     class="nav-link sidebar-link {{ if eq .NavbarActive $navbarActive }}active{{ end }}"
@@ -202,8 +190,19 @@ SPDX-License-Identifier: Apache-2.0 -->
                     id="broadcastPage"
                 >
                     <!-- <img loading="lazy" src="/images/icon_assess.svg" class="channel-icon" style="height: 18px;" /> -->
-                    <i class="fa-regular fa-clock"></i>
-                    <span style="margin-left: 5px;">实时</span>
+                    <i class="fa-regular fa-clock" style="margin-right: 5px;"></i>
+                    <span>实时</span>
+                </a>
+            </li>
+            <li class="nav-item mb-2 mx-2">
+                {{ $navbarActive = "firmware" }}
+                <a
+                    class="nav-link sidebar-link {{ if eq .NavbarActive $navbarActive }}active{{ end }}"
+                    onclick="changePage('/ui/firmware', 'firmware')"
+                    id="firmwarePage"
+                >
+                    <i class="fa-solid fa-microchip" style="margin-right: 5px;"></i>
+                    <span>固件</span>
                 </a>
             </li>
         </div>

@@ -883,11 +883,11 @@ func MakeHandler(svc ui.Service, r *chi.Mux, instanceID, prefix string, secureCo
 					).ServeHTTP)
 				})
 
-				//智能
-				r.Route("/intelligent", func(r chi.Router) {
+				//固件管理
+				r.Route("/firmware", func(r chi.Router) {
 					r.Get("/", kithttp.NewServer(
-						listIntelligentEndpoint(svc),
-						decodeIntelligentRequest,
+						listFirmwareEndpoint(svc),
+						decodeFirmwareRequest,
 						encodeResponse,
 						opts...,
 					).ServeHTTP)
@@ -2657,13 +2657,13 @@ func decodeFileRequest(_ context.Context, r *http.Request) (interface{}, error) 
 	}, nil
 }
 
-func decodeIntelligentRequest(_ context.Context, r *http.Request) (interface{}, error) {
+func decodeFirmwareRequest(_ context.Context, r *http.Request) (interface{}, error) {
 	session, err := sessionFromHeader(r)
 	if err != nil {
 		return nil, err
 	}
 
-	return intelligentReq{
+	return firmwareReq{
 		Session: session,
 	}, nil
 }

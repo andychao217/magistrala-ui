@@ -2377,14 +2377,14 @@ func listFileEndpoint(svc ui.Service) endpoint.Endpoint {
 	}
 }
 
-func listIntelligentEndpoint(svc ui.Service) endpoint.Endpoint {
+func listFirmwareEndpoint(svc ui.Service) endpoint.Endpoint {
 	return func(_ context.Context, request interface{}) (interface{}, error) {
-		req := request.(intelligentReq)
+		req := request.(firmwareReq)
 		if err := req.validate(); err != nil {
 			return nil, err
 		}
 
-		res, err := svc.Intelligent(req.Session)
+		res, err := svc.Firmware(req.Session)
 		if err != nil {
 			return nil, err
 		}

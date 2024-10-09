@@ -1914,16 +1914,16 @@ func (lm *loggingMiddleware) File(s ui.Session) (b []byte, err error) {
 	return lm.svc.File(s)
 }
 
-func (lm *loggingMiddleware) Intelligent(s ui.Session) (b []byte, err error) {
+func (lm *loggingMiddleware) Firmware(s ui.Session) (b []byte, err error) {
 	defer func(begin time.Time) {
 		if err != nil {
-			lm.logger.Warn("View Intelligent failed to complete successfully")
+			lm.logger.Warn("View Firmware failed to complete successfully")
 			return
 		}
-		lm.logger.Info("View Intelligent completed successfully")
+		lm.logger.Info("View Firmware completed successfully")
 	}(time.Now())
 
-	return lm.svc.Intelligent(s)
+	return lm.svc.Firmware(s)
 }
 
 func (lm *loggingMiddleware) Broadcast(s ui.Session) (b []byte, err error) {
