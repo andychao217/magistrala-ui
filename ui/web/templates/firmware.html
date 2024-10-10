@@ -32,11 +32,15 @@ SPDX-License-Identifier: Apache-2.0 -->
                                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                         </div>
                                         <div class="modal-body">
-                                            <div class="dropzone" id="dropzone">
-                                                拖拽固件到此处或点击选择固件
-                                            </div>
-                                            <input type="file" id="fileInput" style="display: none;" accept=".img">
-                                            <ul id="fileList"></ul>
+                                            <input 
+                                                type="text" 
+                                                class="form-control"
+                                                id="fileInputLabel" 
+                                                placeholder="请点击选择固件" 
+                                                readonly
+                                                style="cursor: pointer;"
+                                            />
+                                            <input type="file" id="fileInput" accept=".img" style="display: none;">
                                             <progress id="progressBar" value="0" max="100" style="width: 100%; display: none;"></progress>
                                         </div>
                                         <div class="modal-footer">
@@ -156,7 +160,7 @@ SPDX-License-Identifier: Apache-2.0 -->
                 $firmwareListTable.bootstrapTable({});
                 $firmwareListTable.removeClass('table-bordered');
 
-                let curProductName = '';
+                let curProductName = '', curProductFirmwareList = [];
 
                 loadFirmwareTable();
 
@@ -180,7 +184,7 @@ SPDX-License-Identifier: Apache-2.0 -->
                             return response.json(); // 直接将流转换为JSON对象
                         }).then(data => {
                             if (data && data.latest_firmwares && data.latest_firmwares.length) {
-                                const firmwareList = [...initFirmwareList];
+                                const firmwareList = _.cloneDeep(initFirmwareList);
                                 for (const item of data.latest_firmwares) {
                                     for (let i = 0; i < firmwareList.length; i++) {
                                         if (firmwareList[i].product_name === item.product_name) {
@@ -233,7 +237,6 @@ SPDX-License-Identifier: Apache-2.0 -->
                         </div>
                     `;
                 }
-
 
                 function getFirmwareList(product_name) {
                     $('#firmwareListModalTitle').html('');
@@ -294,7 +297,10 @@ SPDX-License-Identifier: Apache-2.0 -->
 							},
 							body: JSON.stringify(queryData)
 						})
-							.then(response => response.json())
+							.then(response => {
+                                callback();
+                                return response.json();
+                            })
 							.then(data => {
                                 callback();
 							})
@@ -306,115 +312,74 @@ SPDX-License-Identifier: Apache-2.0 -->
                 }
 
                 const uploadModal = new bootstrap.Modal(document.getElementById("uploadModal")),
-                      dropzone = document.getElementById('dropzone'),
                       fileInput = document.getElementById('fileInput'),
                       uploadButton = document.getElementById('uploadButton'),
-                      progressBar = document.getElementById('progressBar'),
-                      fileList = document.getElementById('fileList');
-                let selectedFiles = new DataTransfer();
+                      fileInputLabel = document.getElementById('fileInputLabel'),
+                      progressBar = document.getElementById('progressBar');
             
                 //打开弹窗
                 function openUploadModal(product_name = '') {
                     curProductName = product_name;
                     uploadModal.show();
-                    fileInput.value = ''; // Clear the file input
-                    fileList.innerHTML = ''; // Clear the file list
-                    selectedFiles = new DataTransfer();
+                    fileInput.value = '';
+                    $('#fileInputLabel').val('');
+                    const queryData = { product_name };
+                    curProductFirmwareList = [];
+                    fetch(`${protocol}//${hostname}:${minioBridgePort}/getFirmwareList`, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            "Authorization": getCookie('session'),
+                        },
+                        body: JSON.stringify(queryData)
+                    })
+                        .then(response => response.json())
+                        .then(data => {
+                            if (data && data.length) {
+                                curProductFirmwareList = _.cloneDeep(data);
+                            }
+                        })
                 }
-
-                dropzone.addEventListener('click', () => fileInput.click());
-                dropzone.addEventListener('dragover', (e) => {
-                    e.preventDefault();
-                    dropzone.style.borderColor = '#20afbf';
-                });
-                dropzone.addEventListener('dragleave', () => {
-                    dropzone.style.borderColor = '#cccccc';
-                });
-                dropzone.addEventListener('drop', (e) => {
-                    e.preventDefault();
-                    dropzone.style.borderColor = '#cccccc';
-                    handleFiles(e.dataTransfer.files);
-                    if (e.dataTransfer.files.length > 1) {
-                        // showAlert('warning', '只能选择一个文件。');
-                        fileInput.value = ''; // 清空输入
-                        fileList.innerHTML = ''; // 清空文件列表
-                        selectedFiles = new DataTransfer(); // 重置选择
-                    } else {
-                        const files = Array.from(fileInput.files);
-                        const dataTransfer = new DataTransfer();
-                        files.push(...e.dataTransfer.files);
-                        files.forEach(file => dataTransfer.items.add(file));
-                        fileInput.files = dataTransfer.files;
-                        selectedFiles = dataTransfer;
-                    }
-                });
+                fileInputLabel.addEventListener('click', () => fileInput.click());
                 fileInput.addEventListener('change', (e) => {
-                    handleFiles(e.target.files);
-                    if (fileInput.files.length > 1) {
-                        // showAlert('warning', '只能选择一个文件。');
-                        fileInput.value = ''; // 清空输入
-                        fileList.innerHTML = ''; // 清空文件列表
-                        selectedFiles = new DataTransfer(); // 重置选择
-                    } else {
-                        const files = Array.from(fileInput.files);
-                        files.forEach(file => selectedFiles.items.add(file));
+                    const allowedExtension = '.img'; // 允许的扩展名
+                    const targetFile = e.target.files[0];
+                    if (!targetFile?.name?.endsWith(allowedExtension)) {
+                        showAlert('warning', `上传文件格式不正确, 请选择img格式`);
+                        fileInput.value = '';
+                        $('#fileInputLabel').val('');
+                        return;
                     }
+                    const file_name = targetFile.name;
+                    if (!file_name.includes(curProductName)) {
+                        showAlert('warning', `该固件不适用对应设备, 请重新选择`);
+                        fileInput.value = '';
+                        $('#fileInputLabel').val('');
+                        return;
+                    }
+                    const curProductFirmwareListVersions = curProductFirmwareList.map(item => item.version);
+                    // 去掉文件扩展名
+                    const baseFileName = file_name.split('.').slice(0, -1).join('.');
+                    // 使用正则表达式匹配想要的部分
+                    const match = baseFileName.match(/_(.*)$/);
+                    if (match) {
+                        const result = match[1];
+                        if (curProductFirmwareListVersions.includes(result)) {
+                            showAlert('warning', `该固件版本已存在, 请重新选择`);
+                            fileInput.value = '';
+                            $('#fileInputLabel').val('');
+                            return;
+                        }
+                    }
+                    $('#fileInputLabel').val(targetFile?.name);
                 });
                 uploadButton.addEventListener('click', () => {
-                    if (fileInput.files.length) {
-                        const file = fileInput.files[0];
-                        const file_name = file.name;
-                        if (!file_name.includes(curProductName)) {
-                            showAlert('warning', `固件不是该设备所用固件`);
-                            return;
-                        } else {
-                            handleUpload(fileInput.files);
-                        }
+                    if (fileInput.files?.length) {
+                        handleUpload(fileInput.files);
                     } else {
                         showAlert('info', '请选择文件');
                     }
                 });
-
-                function handleFiles(files) {
-                    // 如果选择的文件数量超过1，给出警告并返回
-                    if (files.length > 1) {
-                        // showAlert('warning', '只能选择一个文件。');
-                        return; // 退出函数，不处理任何文件
-                    }
-
-                    const allowedExtension = '.img'; // 允许的扩展名
-                    for (const file of files) {
-                        if (file.name.endsWith(allowedExtension)) {
-                            const li = document.createElement('li');
-                            li.className = 'fileItem';
-                            li.textContent = file.name;
-
-                            const deleteButton = document.createElement('button');
-                            deleteButton.innerHTML = '<i class="fa-solid fa-xmark"></i>';
-                            deleteButton.addEventListener('click', () => {
-                            li.remove();
-                                updateFileInput();
-                            });
-
-                            li.appendChild(deleteButton);
-                            fileList.appendChild(li);
-                        } else {
-                            showAlert('warning', `上传文件格式不正确`);
-                        }
-                    }
-                }
-
-                function updateFileInput() {
-                    const fileItems = fileList.querySelectorAll('.fileItem');
-                    const files = Array.from(fileInput.files);
-                    const newFiles = files.filter(file => {
-                        return Array.from(fileItems).some(item => item.textContent.includes(file.name));
-                    });
-                    const dataTransfer = new DataTransfer();
-                    newFiles.forEach(file => dataTransfer.items.add(file));
-                    fileInput.files = dataTransfer.files;
-                    selectedFiles = dataTransfer;
-                }
 
                 function handleUpload(files) {
                     const formData = new FormData();
