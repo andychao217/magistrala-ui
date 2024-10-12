@@ -1089,6 +1089,15 @@ func (mm *metricsMiddleware) Firmware(s ui.Session) ([]byte, error) {
 	return mm.svc.Firmware(s)
 }
 
+func (mm *metricsMiddleware) DeviceUpgrade(s ui.Session) ([]byte, error) {
+	defer func(begin time.Time) {
+		mm.counter.With("method", "view_deviceUpgrade").Add(1)
+		mm.latency.With("method", "view_deviceUpgrade").Observe(time.Since(begin).Seconds())
+	}(time.Now())
+
+	return mm.svc.DeviceUpgrade(s)
+}
+
 func (mm *metricsMiddleware) Broadcast(s ui.Session) ([]byte, error) {
 	defer func(begin time.Time) {
 		mm.counter.With("method", "view_broadcast").Add(1)

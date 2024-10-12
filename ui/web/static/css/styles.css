@@ -990,6 +990,7 @@ table > thead > tr > th {
 }
 
 /* file page */
+#updateDeviceTableContainer,
 #firmwareListTableContainer {
     height: 500px;
 }
@@ -999,6 +1000,7 @@ table > thead > tr > th {
 #fileTableContainer {
     height: calc(100vh - 160px);
 }
+#updateDeviceTableContainer,
 #firmwareListTableContainer,
 #firmwareTableContainer,
 #fileTableContainer {
@@ -1011,6 +1013,7 @@ table > thead > tr > th {
     border: thin solid lightgray;
     border-radius: 5px;
 }
+#updateDeviceTableContainer > .bootstrap-table,
 #firmwareListTableContainer > .bootstrap-table,
 #firmwareTableContainer > .bootstrap-table,
 #fileTableContainer > .bootstrap-table {

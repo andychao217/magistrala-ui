@@ -78,6 +78,12 @@ function connectWebSocket(host, port, defaultChannelId) {
             ) {
                 // 当前为实时广播页面
                 handleBroadcastMessage(data);
+            } else if (
+                url.indexOf("deviceUpgrade") !== -1 || 
+                curPageUrl.includes("deviceUpgrade")
+            ) {
+                // 当前为设备升级页面
+                handleDeviceUpdgradeMessage(data);
             }
         }
     };
@@ -237,6 +243,19 @@ function handleBroadcastMessage(data) {
     }
 }
 
+// 处理设备升级相关message
+function handleDeviceUpdgradeMessage(data) {
+     // 获取 iframe 元素
+     const iframe = document.getElementById('iframePage');
+     if (data.msgName === "DEVICE_UPGRADE_REPLY") {
+         if (iframe) {
+            iframe.contentWindow.getThingsList();
+        } else {
+            getThingsList();
+        }
+    }
+}
+
 //获取机构id、comID
 function httpGetDomainIdWebsocket() {
     const domainID = sessionStorage.getItem("domainID");
@@ -299,6 +318,12 @@ function setupMessageListener(defaultChannelId) {
                 ) {
                     // 当前为实时广播页面
                     handleBroadcastMessage(data);
+                } else if (
+                    url.indexOf("deviceUpgrade") !== -1 || 
+                    curPageUrl.includes("deviceUpgrade")
+                ) {
+                    // 当前为设备升级页面
+                    handleDeviceUpdgradeMessage(data);
                 }
             }
         }

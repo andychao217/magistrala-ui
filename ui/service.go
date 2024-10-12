@@ -59,6 +59,7 @@ const (
 	fileActive              = "file"
 	broadcastActive         = "broadcast"
 	firmwareActive          = "firmware"
+	deviceUpgradeActive     = "deviceupgrade"
 	blankActive             = "blank"
 	taskActive              = "task"
 	domainInvitationsActive = "domaininvitations"
@@ -390,6 +391,8 @@ type Service interface {
 	Broadcast(s Session) ([]byte, error)
 	// view firmware page
 	Firmware(s Session) ([]byte, error)
+	// view deviceUpgrade page
+	DeviceUpgrade(s Session) ([]byte, error)
 	// view blank page
 	Blank(s Session) ([]byte, error)
 	// view task page
@@ -2912,6 +2915,31 @@ func (us *uiService) Firmware(s Session) ([]byte, error) {
 
 	var btpl bytes.Buffer
 	if err := us.tpls.ExecuteTemplate(&btpl, "firmware", data); err != nil {
+		return []byte{}, errors.Wrap(ErrExecTemplate, err)
+	}
+
+	return btpl.Bytes(), nil
+}
+
+func (us *uiService) DeviceUpgrade(s Session) ([]byte, error) {
+	crumbs := []breadcrumb{
+		{Name: deviceUpgradeActive},
+	}
+
+	data := struct {
+		NavbarActive   string
+		CollapseActive string
+		Breadcrumbs    []breadcrumb
+		Session        Session
+	}{
+		deviceUpgradeActive,
+		deviceUpgradeActive,
+		crumbs,
+		s,
+	}
+
+	var btpl bytes.Buffer
+	if err := us.tpls.ExecuteTemplate(&btpl, "deviceupgrade", data); err != nil {
 		return []byte{}, errors.Wrap(ErrExecTemplate, err)
 	}
 

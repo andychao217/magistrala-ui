@@ -1926,6 +1926,18 @@ func (lm *loggingMiddleware) Firmware(s ui.Session) (b []byte, err error) {
 	return lm.svc.Firmware(s)
 }
 
+func (lm *loggingMiddleware) DeviceUpgrade(s ui.Session) (b []byte, err error) {
+	defer func(begin time.Time) {
+		if err != nil {
+			lm.logger.Warn("View DeviceUpgrade failed to complete successfully")
+			return
+		}
+		lm.logger.Info("View DeviceUpgrade completed successfully")
+	}(time.Now())
+
+	return lm.svc.DeviceUpgrade(s)
+}
+
 func (lm *loggingMiddleware) Broadcast(s ui.Session) (b []byte, err error) {
 	defer func(begin time.Time) {
 		if err != nil {

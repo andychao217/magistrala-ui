@@ -1291,6 +1291,17 @@ func (req firmwareReq) validate() error {
 	return nil
 }
 
+type deviceUpgradeReq struct {
+	ui.Session
+}
+
+func (req deviceUpgradeReq) validate() error {
+	if req.Token == "" {
+		return errInvalidCredentials
+	}
+	return nil
+}
+
 type broadcastReq struct {
 	ui.Session
 }

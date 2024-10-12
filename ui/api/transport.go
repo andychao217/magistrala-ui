@@ -893,6 +893,16 @@ func MakeHandler(svc ui.Service, r *chi.Mux, instanceID, prefix string, secureCo
 					).ServeHTTP)
 				})
 
+				//设备升级
+				r.Route("/deviceUpgrade", func(r chi.Router) {
+					r.Get("/", kithttp.NewServer(
+						listDeviceUpgradeEndpoint(svc),
+						decodeDeviceUpgradeRequest,
+						encodeResponse,
+						opts...,
+					).ServeHTTP)
+				})
+
 				//实时
 				r.Route("/broadcast", func(r chi.Router) {
 					r.Get("/", kithttp.NewServer(
@@ -2664,6 +2674,17 @@ func decodeFirmwareRequest(_ context.Context, r *http.Request) (interface{}, err
 	}
 
 	return firmwareReq{
+		Session: session,
+	}, nil
+}
+
+func decodeDeviceUpgradeRequest(_ context.Context, r *http.Request) (interface{}, error) {
+	session, err := sessionFromHeader(r)
+	if err != nil {
+		return nil, err
+	}
+
+	return deviceUpgradeReq{
 		Session: session,
 	}, nil
 }

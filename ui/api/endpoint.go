@@ -2396,6 +2396,25 @@ func listFirmwareEndpoint(svc ui.Service) endpoint.Endpoint {
 	}
 }
 
+func listDeviceUpgradeEndpoint(svc ui.Service) endpoint.Endpoint {
+	return func(_ context.Context, request interface{}) (interface{}, error) {
+		req := request.(deviceUpgradeReq)
+		if err := req.validate(); err != nil {
+			return nil, err
+		}
+
+		res, err := svc.DeviceUpgrade(req.Session)
+		if err != nil {
+			return nil, err
+		}
+
+		return uiRes{
+			code: http.StatusOK,
+			html: res,
+		}, nil
+	}
+}
+
 func listBroadcastEndpoint(svc ui.Service) endpoint.Endpoint {
 	return func(_ context.Context, request interface{}) (interface{}, error) {
 		req := request.(broadcastReq)

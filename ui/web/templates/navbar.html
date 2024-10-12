@@ -205,6 +205,17 @@ SPDX-License-Identifier: Apache-2.0 -->
                     <span>固件</span>
                 </a>
             </li>
+            <li class="nav-item mb-2 mx-2">
+                {{ $navbarActive = "deviceupgrade" }}
+                <a
+                    class="nav-link sidebar-link {{ if eq .NavbarActive $navbarActive }}active{{ end }}"
+                    onclick="changePage('/ui/deviceUpgrade', 'deviceUpgrade')"
+                    id="deviceUpgradePage"
+                >
+                    <i class="fa-solid fa-square-caret-up" style="margin-right: 5px;"></i>
+                    <span>设备更新</span>
+                </a>
+            </li>
         </div>
 
         <div class="clock">
