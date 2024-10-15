@@ -1323,7 +1323,8 @@ SPDX-License-Identifier: Apache-2.0 -->
 			// 生成符合任务的dateArray
 			function handleTaskDatesArray(task) {
 				const startDate = new Date(task.taskStartDate);
-				const endDate = new Date(task.taskEndDate);
+				const endDate = new Date("2099-12-31");
+				// const endDate = new Date(task.taskEndDate);
 				const datesArray = [];
 
 				if (task.repeat === 0) {
@@ -1336,7 +1337,12 @@ SPDX-License-Identifier: Apache-2.0 -->
 				} else if (task.repeat === 2) {
 					// 周重复
 					for (let d = new Date(startDate); d <= endDate; d.setDate(d.getDate() + 1)) {
-						if (task.wday.split(',').includes(String(d.getDay()))) {
+						// 获取当前日期的星期
+    					let dayOfWeek = d.getDay(); // 0是星期日，1是星期一，依此类推
+						if (dayOfWeek === 0) {
+							dayOfWeek = 7;
+						}
+						if (task.wday.split(',').includes(String(dayOfWeek))) {
 							datesArray.push(d.toISOString().split('T')[0]);
 						}
 					}

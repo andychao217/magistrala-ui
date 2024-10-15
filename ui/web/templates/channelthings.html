@@ -73,9 +73,9 @@ SPDX-License-Identifier: Apache-2.0 -->
 											id="{{ $t.ID }}-thingCardContent"
 											{{ if $t.Metadata.is_online }}
 												{{ if eq $t.Metadata.is_online "1" }}
-												style="background: white;"
+												style="background: rgba(255, 255, 255, 0.8);"
 												{{ else }}
-												style="background: lightgray;"
+												style="background: rgba(0, 0, 0, 0.1);"
 												{{ end }}
 											{{ end }}
 										>
@@ -337,7 +337,7 @@ SPDX-License-Identifier: Apache-2.0 -->
 
 					connectThingsModalList = [], selectedThingsIds = [];
 
-					fetch(`/ui/entities?item=things`,{ method: "GET" })
+					fetch(`/ui/entities?item=things&limit=${1000}&page=1`,{ method: "GET" })
 						.then((response) => response.json())
 						.then((data) => {
 							connectThingsModalList = data.data;
@@ -437,10 +437,10 @@ SPDX-License-Identifier: Apache-2.0 -->
 				function changeOnlineStatus(thing){
 					const onlineStatus = thing.metadata && thing.metadata.is_online === "1";
 					if (onlineStatus) {
-						$(`#${thing.id}-thingCardContent`).css('background', 'white');
+						$(`#${thing.id}-thingCardContent`).css('background', 'rgba(255, 255, 255, 0.8)');
 						// $(`#${thing.id}-rebootBtn`).css('display', 'block');
 					} else {
-						$(`#${thing.id}-thingCardContent`).css('background', 'lightgray');
+						$(`#${thing.id}-thingCardContent`).css('background', 'rgba(0, 0, 0, 0.1)');
 						// $(`#${thing.id}-rebootBtn`).css('display', 'none');
 					}
 				}

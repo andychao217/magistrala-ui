@@ -1440,9 +1440,9 @@ SPDX-License-Identifier: Apache-2.0 -->
 											id="{{ $t.ID }}-thingCardContent"
 											{{ if $t.Metadata.is_online }}
 												{{ if eq $t.Metadata.is_online "1" }}
-												style="background: white;"
+												style="background: rgba(255, 255, 255, 0.8);"
 												{{ else }}
-												style="background: lightgray;"
+												style="background: rgba(0, 0, 0, 0.1);"
 												{{ end }}
 											{{ end }}
 										>
@@ -3432,11 +3432,11 @@ SPDX-License-Identifier: Apache-2.0 -->
 				function changeOnlineStatus(thing){
 					const onlineStatus = thing.metadata && thing.metadata.is_online === "1";
 					if (onlineStatus) {
-						$(`#${thing.id}-thingCardContent`).css('background', 'white');
+						$(`#${thing.id}-thingCardContent`).css('background', 'rgba(255, 255, 255, 0.8)');
 						$(`#${thing.id}-rebootBtn`).css('display', 'block');
 						$(`#${thing.id}-editBtn`).css('display', 'block');
 					} else {
-						$(`#${thing.id}-thingCardContent`).css('background', 'lightgray');
+						$(`#${thing.id}-thingCardContent`).css('background', 'rgba(0,0,0,0.1)');
 						$(`#${thing.id}-rebootBtn`).css('display', 'none');
 						$(`#${thing.id}-editBtn`).css('display', 'none');
 					}
