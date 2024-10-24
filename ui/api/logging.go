@@ -1926,6 +1926,18 @@ func (lm *loggingMiddleware) Firmware(s ui.Session) (b []byte, err error) {
 	return lm.svc.Firmware(s)
 }
 
+func (lm *loggingMiddleware) NxtDashboard(s ui.Session) (b []byte, err error) {
+	defer func(begin time.Time) {
+		if err != nil {
+			lm.logger.Warn("View NxtDashboard failed to complete successfully")
+			return
+		}
+		lm.logger.Info("View NxtDashboard completed successfully")
+	}(time.Now())
+
+	return lm.svc.NxtDashboard(s)
+}
+
 func (lm *loggingMiddleware) DeviceUpgrade(s ui.Session) (b []byte, err error) {
 	defer func(begin time.Time) {
 		if err != nil {

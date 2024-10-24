@@ -61,6 +61,7 @@ const (
 	firmwareActive          = "firmware"
 	deviceUpgradeActive     = "deviceupgrade"
 	blankActive             = "blank"
+	nxtDashboardActive      = "nxtDashboard"
 	taskActive              = "task"
 	domainInvitationsActive = "domaininvitations"
 )
@@ -395,6 +396,8 @@ type Service interface {
 	DeviceUpgrade(s Session) ([]byte, error)
 	// view blank page
 	Blank(s Session) ([]byte, error)
+	// view nxtDashboard page
+	NxtDashboard(s Session) ([]byte, error)
 	// view task page
 	Task(s Session) ([]byte, error)
 
@@ -2844,6 +2847,61 @@ func (us *uiService) DeleteInvitation(token, userID, domainID string) error {
 	}
 
 	return nil
+}
+
+func (us *uiService) NxtDashboard(s Session) ([]byte, error) {
+	pgm := sdk.PageMetadata{
+		Offset: uint64(0),
+		Status: statusAll,
+		Limit:  1000,
+	}
+
+	members, err := us.sdk.ListDomainUsers(s.Domain.ID, pgm, s.Token)
+	if err != nil {
+		return []byte{}, errors.Wrap(ErrFailedRetreive, err)
+	}
+
+	things, err := us.sdk.Things(pgm, s.Token)
+
+	if err != nil {
+		return []byte{}, errors.Wrap(ErrFailedRetreive, err)
+	}
+
+	channels, err := us.sdk.Channels(pgm, s.Token)
+	if err != nil {
+		return []byte{}, errors.Wrap(ErrFailedRetreive, err)
+	}
+
+	summary := dataSummary{
+		TotalUsers:    int(members.Total),
+		TotalThings:   int(things.Total),
+		TotalChannels: int(channels.Total),
+	}
+
+	crumbs := []breadcrumb{
+		{Name: nxtDashboardActive},
+	}
+
+	data := struct {
+		NavbarActive   string
+		CollapseActive string
+		Breadcrumbs    []breadcrumb
+		Summary        dataSummary
+		Session        Session
+	}{
+		nxtDashboardActive,
+		nxtDashboardActive,
+		crumbs,
+		summary,
+		s,
+	}
+
+	var btpl bytes.Buffer
+	if err := us.tpls.ExecuteTemplate(&btpl, "nxtDashboard", data); err != nil {
+		return []byte{}, errors.Wrap(ErrExecTemplate, err)
+	}
+
+	return btpl.Bytes(), nil
 }
 
 func (us *uiService) Blank(s Session) ([]byte, error) {

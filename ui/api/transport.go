@@ -883,6 +883,16 @@ func MakeHandler(svc ui.Service, r *chi.Mux, instanceID, prefix string, secureCo
 					).ServeHTTP)
 				})
 
+				//首页
+				r.Route("/nxtDashboard", func(r chi.Router) {
+					r.Get("/", kithttp.NewServer(
+						listNxtDashboardEndpoint(svc),
+						decodeNxtDashboardRequest,
+						encodeResponse,
+						opts...,
+					).ServeHTTP)
+				})
+
 				//固件管理
 				r.Route("/firmware", func(r chi.Router) {
 					r.Get("/", kithttp.NewServer(
@@ -2685,6 +2695,17 @@ func decodeDeviceUpgradeRequest(_ context.Context, r *http.Request) (interface{}
 	}
 
 	return deviceUpgradeReq{
+		Session: session,
+	}, nil
+}
+
+func decodeNxtDashboardRequest(_ context.Context, r *http.Request) (interface{}, error) {
+	session, err := sessionFromHeader(r)
+	if err != nil {
+		return nil, err
+	}
+
+	return nxtDashboardReq{
 		Session: session,
 	}, nil
 }

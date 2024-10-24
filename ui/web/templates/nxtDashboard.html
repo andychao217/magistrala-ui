@@ -1,0 +1,201 @@
+<!-- Copyright (c) Abstract Machines
+SPDX-License-Identifier: Apache-2.0 -->
+
+{{ define "nxtDashboard" }}
+    <!doctype html>
+    <html lang="en">
+        <head>
+            <title>世邦思拓</title>
+            {{ template "header" }}
+            <script src="/js/vendors/echarts@5.5.0.min.js"></script>
+        </head>
+        <body>
+            {{ template "navbar" . }}
+            <div class="main-content mt-5 pt-5" style="padding: 2rem;">
+				<div class="row">
+					<div class="col-12 mx-auto">
+						<div class="row">
+							<div class="col-4 mb-4">
+								<div class="card text-bg-light mb-3 dashboardCard">
+									<div class="card-single card-body d-flex justify-content-between p-5" data-card="users">
+										<div>
+											<h1>{{ .Summary.TotalUsers }}</h1>
+											<span>用户</span>
+										</div>
+										<div>
+											<span class="fas fa-users" style="font-size: 38px; margin-top: 8px;"></span>
+										</div>
+									</div>
+								</div>
+							</div>
+							<div class="col-4 mb-4">
+								<div class="card text-bg-light mb-3 dashboardCard">
+									<div class="card-single card-body d-flex justify-content-between p-5" data-card="things">
+										<div>
+											<h1 id="totalThingsCardTitle">{{ .Summary.TotalThings }}</h1>
+											<span>设备</span>
+										</div>
+										<div>
+											<img loading="lazy" src="/images/icon_equipment_black.svg" style="margin-top: 8px; height: 38px; width: 38px;" />
+										</div>
+									</div>
+								</div>
+							</div>
+							<div class="col-4 mb-4">
+								<div class="card text-bg-light mb-3 dashboardCard">
+									<div class="card-single card-body d-flex justify-content-between p-5" data-card="channels">
+										<div>
+											<h1>{{ .Summary.TotalChannels }}</h1>
+											<span>分区</span>
+										</div>
+										<div>
+											<img loading="lazy" src="/images/icon_organization_area.svg" style="margin-top: 8px; height: 38px; width: 38px;" />
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="row" style="padding: 0 11px;">
+							<div class="card selected-grid dashboardCard" style="height: calc(100vh - 400px);">
+								<div id="myChart" style="width: 600px; height:calc(100vh - 450px); margin: auto;"></div>
+							</div>
+						</div>
+					</div>
+				</div>
+            </div>
+            <script type="text/javascript">
+				const myChart = echarts.init(document.getElementById('myChart'));
+					  
+				// 指定图表的配置项和数据
+				let option = {
+					tooltip: {
+						trigger: 'item'
+					},
+					legend: {
+						top: '5%',
+						left: 'center'
+					},
+					series: [
+						{
+							name: '设备',
+							type: 'pie',
+							radius: ['40%', '70%'],
+							avoidLabelOverlap: false,
+							padAngle: 5,
+							itemStyle: {
+								borderRadius: 10
+							},
+							label: {
+								show: false,
+								position: 'center'
+							},
+							emphasis: {
+								label: {
+									show: true,
+									fontSize: 40,
+									fontWeight: 'bold'
+								}
+							},
+							labelLine: {
+								show: false
+							},
+							data: [
+								{ value: 0, name: '在线', itemStyle: {color:'#D4B897'} },
+								{ value: 0, name: '离线', itemStyle: {color:'#bbbcbc'} },
+							]
+						}
+					]
+				};
+				
+				myChart.setOption(option);
+				
+				refreshThingsPieChart();
+
+				//  更新最新的设备数量信息
+				function refreshThingsPieChart () {
+					fetch(`/ui/things/thingsInJSON?page=1&limit=1000&onlineStatus=2&showFullData=false`, {
+						method: "GET",
+					})
+					.then(response => {
+						if (!response.ok) {
+							throw new Error('Network response was not ok');
+						}
+						return response.json(); // 直接将流转换为JSON对象
+					})
+					.then(json => {
+						const data = json.data;
+						const thingsData = JSON.parse(data).thingsData;
+						const things = thingsData.things.filter((thing)=>{
+							//identity 中有下划线则表示为多通道，默认在设备页面隐藏
+							return !thing.credentials.identity.includes("_");
+						}) || [];
+						let onlineThingsQuantity = 0, offlineThingsQuantity = 0, totalThingsQuantity = 0;
+						if (things.length) {
+							const onlineThings = things.filter((thing)=>{
+								if (thing.metadata && thing.metadata.is_online && thing.metadata.is_online === "1") {
+									return true;
+								} else {
+									return false;
+								}
+							});
+							const offlineThings = things.filter((thing)=>{
+								if (!thing.metadata || !thing.metadata.is_online || thing.metadata.is_online !== "1") {
+									return true;
+								} else {
+									return false;
+								}
+							});
+							onlineThingsQuantity = onlineThings.length;
+							offlineThingsQuantity = offlineThings.length;
+							totalThingsQuantity = things.length;
+						}
+						option.series[0].data[0].value = onlineThingsQuantity;
+						option.series[0].data[1].value = offlineThingsQuantity;
+						myChart.setOption(option);
+						$(`#totalThingsCardTitle`).html(totalThingsQuantity);
+					})
+					.catch(error => {
+						option.series[0].data[0].value = 0;
+						option.series[0].data[1].value = 0;
+						myChart.setOption(option);
+						$(`#totalThingsCardTitle`).html(0);
+					});
+				}
+
+				// 启动轮询
+				function startPollingIndex() {
+					return setInterval(refreshThingsPieChart, 2000); // 每5秒轮询一次
+				}
+
+				// 清理并重启轮询
+				function resetPollingIndex(intervalId) {
+					clearInterval(intervalId);
+					return startPollingIndex();
+				}
+
+				// 停止轮询
+				function stopPollingIndex() {
+					if (pollingIntervalIdIndex) {
+						clearInterval(pollingIntervalIdIndex);
+						pollingIntervalIdIndex = null;
+					}
+				}
+
+				// 初始启动轮询
+				let pollingIntervalIdIndex = startPollingIndex();
+
+				// 每10分钟清理并重启轮询
+				let resetPollingIndexInterval = setInterval(function() {
+					pollingIntervalIdIndex = resetPollingIndex(pollingIntervalIdIndex);
+				}, 10 * 60 * 1000); // 10分钟
+
+				// 在组件卸载时停止调用
+				window.addEventListener('beforeunload', ()=>{
+					stopPollingIndex();
+					clearInterval(resetPollingIndexInterval);
+					resetPollingIndexInterval = null;
+				});
+            </script>
+        </body>
+    </html>
+{{ end }}

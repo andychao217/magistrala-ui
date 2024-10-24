@@ -18,8 +18,8 @@ SPDX-License-Identifier: Apache-2.0 -->
             <li class="nav-item mb-2 mx-2">
                 {{ $navbarActive := "homepage" }}
                 <a
-                    onclick="changePage(`/ui`, 'index')"
-                    id="indexPage"
+                    onclick="changePage(`/ui/nxtDashboard`, 'nxtDashboard')"
+                    id="nxtDashboardPage"
                     class="nav-link sidebar-link {{ if eq .NavbarActive $navbarActive }}active{{ end }}"
                 >
                     <img loading="lazy" src="/images/icon_organization_home_white.svg" class="channel-icon" style="height: 18px;" />
@@ -558,31 +558,27 @@ SPDX-License-Identifier: Apache-2.0 -->
             } else {
                 const element = $(`#${pageKey}Page`);
                 // 检查是否具有class "disabled-item"
-                if (element.hasClass("disabled-item")) {
-                    // console.log("The element has the 'disabled-item' class.");
-                } else {
+                if (!element.hasClass("disabled-item")) {
                     $(".nav-link.sidebar-link").removeClass("active");
                     $(".nav-link.sidebar-sub-link").removeClass("active");
                     element.addClass("active");
                     sessionStorage.setItem("curPageUrl", curPageUrl);
-                    const $indexPageContainer = $('#indexPageContainer'),
-                        $iframePageContainer = $('#iframePageContainer'),
-                        iframe = document.getElementById('iframePage');
-                    if ($indexPageContainer && $iframePageContainer && iframe) {
-                        if (curPageUrl.includes(pageKey) && pageKey !== 'index') {
-                            $indexPageContainer.fadeOut();
-                            $iframePageContainer.fadeIn();
-                            iframe.src = curPageUrl;
+                    const iframe = document.getElementById('iframePage');
+                    if (iframe) {
+                        if (pageKey === 'nxtDashboard' || pageKey === 'index') {
+                            iframe.src = '/ui/nxtDashboard';
+                            pollingIntervalIdIndex = setInterval(refreshThingsPieChart, 2000);
+                        } else {
+                            if (curPageUrl.includes(pageKey) && pageKey !== 'index'){
+                                iframe.src = curPageUrl;
+                            } else {
+                                iframe.src = '/ui/blank';
+                            }
                             if (stopPollingIndex && typeof stopPollingIndex === 'function') {
                                 stopPollingIndex();
                                 clearInterval(resetPollingIndexInterval);
 					            resetPollingIndexInterval = null;
                             }
-                        } else {
-                            $iframePageContainer.fadeOut();
-                            iframe.src = '/ui/blank';
-                            $indexPageContainer.fadeIn();
-                            pollingIntervalIdIndex = setInterval(refreshThingsPieChart, 2000);
                         }
                     } else {
                         window.location.href = curPageUrl;

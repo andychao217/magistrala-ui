@@ -2339,6 +2339,25 @@ func deleteInvitationEndpoint(svc ui.Service, prefix string) endpoint.Endpoint {
 	}
 }
 
+func listNxtDashboardEndpoint(svc ui.Service) endpoint.Endpoint {
+	return func(_ context.Context, request interface{}) (interface{}, error) {
+		req := request.(nxtDashboardReq)
+		if err := req.validate(); err != nil {
+			return nil, err
+		}
+
+		res, err := svc.NxtDashboard(req.Session)
+		if err != nil {
+			return nil, err
+		}
+
+		return uiRes{
+			code: http.StatusOK,
+			html: res,
+		}, nil
+	}
+}
+
 func listBlankEndpoint(svc ui.Service) endpoint.Endpoint {
 	return func(_ context.Context, request interface{}) (interface{}, error) {
 		req := request.(blankReq)

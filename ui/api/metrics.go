@@ -1089,6 +1089,15 @@ func (mm *metricsMiddleware) Firmware(s ui.Session) ([]byte, error) {
 	return mm.svc.Firmware(s)
 }
 
+func (mm *metricsMiddleware) NxtDashboard(s ui.Session) ([]byte, error) {
+	defer func(begin time.Time) {
+		mm.counter.With("method", "view_nxtdashboard").Add(1)
+		mm.latency.With("method", "view_nxtdashboard").Observe(time.Since(begin).Seconds())
+	}(time.Now())
+
+	return mm.svc.NxtDashboard(s)
+}
+
 func (mm *metricsMiddleware) DeviceUpgrade(s ui.Session) ([]byte, error) {
 	defer func(begin time.Time) {
 		mm.counter.With("method", "view_deviceUpgrade").Add(1)
