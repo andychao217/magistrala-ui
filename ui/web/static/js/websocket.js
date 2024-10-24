@@ -362,7 +362,12 @@ function httpGetAllThingsListWebsocket(host, comID, notifyDevice) {
 
 // 给所有设备发送消息
 function controlDeviceWebsocketToAll(host, comID, controlType) {
-    const out_channel_unique_array = [...new Set(allThingsListWebsocket.map((item) => item.credentials.identity.split('_')[0]))];
+    const out_channel_unique_array = [
+        ...new Set(allThingsListWebsocket.
+            filter((item) => item.metadata?.is_online === "1").
+            map((item) => item.credentials.identity.split('_')[0])
+        )
+    ];
     let data = {
         channelID: comID,
         host: host,
@@ -402,8 +407,10 @@ function controlDeviceWebsocketToAll(host, comID, controlType) {
         }
     }
 
-    // 调用异步函数
-    processRequests();
+    if (out_channel_unique_array && out_channel_unique_array.length) {
+        // 调用异步函数
+        processRequests();
+    }
 }
 
 // 给单个设备发送消息

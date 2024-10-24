@@ -567,17 +567,20 @@ SPDX-License-Identifier: Apache-2.0 -->
                     if (iframe) {
                         if (pageKey === 'nxtDashboard' || pageKey === 'index') {
                             iframe.src = '/ui/nxtDashboard';
-                            pollingIntervalIdIndex = setInterval(refreshThingsPieChart, 2000);
+                            iframe.contentWindow.pollingIntervalIdIndex = setInterval(iframe.contentWindow.refreshThingsPieChart, 2000);
                         } else {
-                            if (curPageUrl.includes(pageKey) && pageKey !== 'index'){
+                            if (curPageUrl.includes(pageKey)){
                                 iframe.src = curPageUrl;
                             } else {
                                 iframe.src = '/ui/blank';
                             }
-                            if (stopPollingIndex && typeof stopPollingIndex === 'function') {
-                                stopPollingIndex();
-                                clearInterval(resetPollingIndexInterval);
-					            resetPollingIndexInterval = null;
+                            if (
+                                iframe.contentWindow.stopPollingIndex && 
+                                typeof iframe.contentWindow.stopPollingIndex === 'function'
+                            ) {
+                                iframe.contentWindow.stopPollingIndex();
+                                clearInterval(iframe.contentWindow.resetPollingIndexInterval);
+					            iframe.contentWindow.resetPollingIndexInterval = null;
                             }
                         }
                     } else {
