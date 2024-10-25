@@ -2,1411 +2,1176 @@
 SPDX-License-Identifier: Apache-2.0 -->
 
 {{ define "things" }}
-    <!doctype html>
-    <html lang="en">
-        <head>
-            <title>设备</title>
-            {{ template "header" }}
-        </head>
+<!doctype html>
+<html lang="en">
+	<head>
+		<title>设备</title>
+		{{ template "header" }}
+	</head>
 
-        <body>
-            {{ template "navbar" . }}
-            <div class="main-content">
-                <div class="container-fluid-1">
-                    <div class="row-mb-3">
-                        <div class="col-12 mx-auto">
-                            <div class="buttons">
-								<!-- edit thing modal -->
-								<div 
-									class="modal fade" 
-									id="editThingModal" 
-									tabindex="-1" 
-									role="dialog" 
-									aria-labelledby="editThingModalLabel" 
-									data-bs-backdrop="static" 
-									data-bs-keyboard="false" 
-									aria-hidden="true"
-								>
-									<div class="modal-dialog" role="document">
-										<div class="modal-content">
-											<div class="modal-header">
-												<h1 class="modal-title" id="editThingModalLabel">设备设置</h1>
-												<button 
-													type="button" 
-													class="btn-close" 
-													data-bs-dismiss="modal" 
-													aria-label="Close" 
-													onclick="
-														$('#deviceNameEditThingModal').attr('data-device_id', '');
-														$('#deviceNameEditThingModal').attr('data-name', '');
-													"
-												></button>
-											</div>
-											<form id="editThingform">
-												<div class="modal-body" style="padding: 35px;">
-													<div class="mb-3 row">
-														<label for="name" class="col-sm-3 col-form-label">名称</label>
-														<div class="col-sm-9">
-															<input 
-																type="text" 
-																class="form-control name-field" 
-																name="name" 
-																id="deviceNameEditThingModal" 
-																placeholder="设备名称" 
-																maxlength="20" 
-															/>
-															<div id="deviceNameErrorEditThingModal" class="text-danger inputError"></div>
-														</div>
-													</div>
-													<div id="out_channels_container_EditThingModal"></div>
-													<div class="mb-3 row" style="margin-bottom: 0px !important;">
-														<div class="col-sm-12" style="text-align: center;">
-															<div id="moreSettingEditThingModal" class="moreSettingBtn">
-																<i class="fa-solid fa-chevron-down"></i>
-															</div>
-														</div>
-													</div>
-												</div>
-											</form>
+	<body>
+		{{ template "navbar" . }}
+		<div class="main-content">
+			<div class="container-fluid-1">
+				<div class="row-mb-3">
+					<div class="col-12 mx-auto">
+						<div class="buttons">
+							<!-- edit thing modal -->
+							<div 
+								class="modal fade" 
+								id="editThingModal" 
+								tabindex="-1" 
+								role="dialog" 
+								aria-labelledby="editThingModalLabel" 
+								data-bs-backdrop="static" 
+								data-bs-keyboard="false" 
+								aria-hidden="true"
+							>
+								<div class="modal-dialog" role="document">
+									<div class="modal-content">
+										<div class="modal-header">
+											<h1 class="modal-title" id="editThingModalLabel">设备设置</h1>
+											<button 
+												type="button" 
+												class="btn-close" 
+												data-bs-dismiss="modal" 
+												aria-label="Close" 
+												onclick="
+													$('#deviceNameEditThingModal').attr('data-device_id', '');
+													$('#deviceNameEditThingModal').attr('data-name', '');
+												"
+											></button>
 										</div>
-									</div>
-								</div>
-
-								<!-- 设备配置弹框 -->
-								<div 
-									class="modal fade" 
-									id="moreEditThingModal" 
-									tabindex="-1" 
-									role="dialog" 
-									aria-labelledby="moreEditThingModalLabel" 
-									data-bs-backdrop="static" 
-									data-bs-keyboard="false" 
-									aria-hidden="true"
-								>
-									<div class="modal-dialog" role="document">
-										<div class="modal-content">
-											<div class="modal-header">
-												<h1 class="modal-title" id="moreEditThingModalLabel">
-													<span>设备配置</span>
-													<span id="deviceNameTitleMoreEditThingModal"></span>
-												</h1>
-												<button 
-													type="button" 
-													class="btn-close" 
-													data-bs-dismiss="modal" 
-													aria-label="Close"
-													onclick="editThingModal.show()"
-												></button>
-											</div>
-											<div class="modal-body" style="padding: 0px;">
-												<div class="d-flex align-items-start">
-													<div 
-														class="nav flex-column nav-pills" 
-														id="v-pills-tab" 
-														role="tablist" 
-														aria-orientation="vertical"
-													>
-														<button 
-															class="nav-link active deviceSettingLink" 
-															id="moreEditThingModal-netConfig-tab" 
-															data-bs-toggle="pill" 
-															data-bs-target="#moreEditThingModal-netConfig" 
-															type="button" 
-															role="tab" 
-															aria-controls="moreEditThingModal-netConfig" 
-															aria-selected="false"
-														>
-															网络配置
-														</button>
-														<button 
-															class="nav-link deviceSettingLink" 
-															id="moreEditThingModal-inChannels-tab" 
-															data-bs-toggle="pill" 
-															data-bs-target="#moreEditThingModal-inChannels" 
-															type="button" 
-															role="tab" 
-															aria-controls="moreEditThingModal-inChannels" 
-															aria-selected="false"
-														>
-															输入通道
-														</button>
-														<button 
-															class="nav-link deviceSettingLink" 
-															id="moreEditThingModal-powerCfg-tab" 
-															data-bs-toggle="pill" 
-															data-bs-target="#moreEditThingModal-powerCfg" 
-															type="button" 
-															role="tab" 
-															aria-controls="moreEditThingModal-powerCfg" 
-															aria-selected="false"
-														>
-															功率设置
-														</button>
-														<button 
-															class="nav-link deviceSettingLink" 
-															id="moreEditThingModal-audioMatrix-tab" 
-															data-bs-toggle="pill" 
-															data-bs-target="#moreEditThingModal-audioMatrix" 
-															type="button" 
-															role="tab" 
-															aria-controls="moreEditThingModal-audioMatrix" 
-															aria-selected="false"
-														>
-															音频矩阵
-														</button>
-														<button 
-															class="nav-link deviceSettingLink" 
-															id="moreEditThingModal-localSpeech-tab" 
-															data-bs-toggle="pill" 
-															data-bs-target="#moreEditThingModal-localSpeech" 
-															type="button" 
-															role="tab" 
-															aria-controls="moreEditThingModal-localSpeech" 
-															aria-selected="false"
-														>
-															扩声
-														</button>
-														<button 
-															class="nav-link deviceSettingLink" 
-															id="moreEditThingModal-radio-tab" 
-															data-bs-toggle="pill" 
-															data-bs-target="#moreEditThingModal-radio" 
-															type="button" 
-															role="tab" 
-															aria-controls="moreEditThingModal-radio" 
-															aria-selected="false"
-														>
-															收音机
-														</button>
-														<button 
-															class="nav-link deviceSettingLink" 
-															id="moreEditThingModal-bluetooth-tab" 
-															data-bs-toggle="pill" 
-															data-bs-target="#moreEditThingModal-bluetooth" 
-															type="button" 
-															role="tab" 
-															aria-controls="moreEditThingModal-bluetooth" 
-															aria-selected="false"
-														>
-															蓝牙配置
-														</button>
-														<button 
-															class="nav-link deviceSettingLink" 
-															id="moreEditThingModal-speaker-volume-tab" 
-															data-bs-toggle="pill" 
-															data-bs-target="#moreEditThingModal-speaker-volume" 
-															type="button" 
-															role="tab" 
-															aria-controls="moreEditThingModal-speaker-volume" 
-															aria-selected="false"
-														>
-															音量配置
-														</button>
-														<button 
-															class="nav-link deviceSettingLink" 
-															id="moreEditThingModal-eqCfg-tab" 
-															data-bs-toggle="pill" 
-															data-bs-target="#moreEditThingModal-eqCfg" 
-															type="button" 
-															role="tab" 
-															aria-controls="moreEditThingModal-eqCfg" 
-															aria-selected="false"
-														>
-															话筒EQ
-														</button>
-														<button 
-															class="nav-link deviceSettingLink" 
-															id="moreEditThingModal-u-channel-tab" 
-															data-bs-toggle="pill" 
-															data-bs-target="#moreEditThingModal-u-channel" 
-															type="button" 
-															role="tab" 
-															aria-controls="moreEditThingModal-u-channel" 
-															aria-selected="false"
-														>
-															U段配置
-														</button>
-														<button 
-															class="nav-link deviceSettingLink" 
-															id="moreEditThingModal-deviceLog-tab" 
-															data-bs-toggle="pill" 
-															data-bs-target="#moreEditThingModal-deviceLog" 
-															type="button" 
-															role="tab" 
-															aria-controls="moreEditThingModal-deviceLog" 
-															aria-selected="false"
-														>
-															设备日志
-														</button>
-														<button 
-															class="nav-link deviceSettingLink" 
-															id="moreEditThingModal-sysInfo-tab" 
-															data-bs-toggle="pill" 
-															data-bs-target="#moreEditThingModal-sysInfo" 
-															type="button" 
-															role="tab" 
-															aria-controls="moreEditThingModal-sysInfo" 
-															aria-selected="true"
-														>
-															系统信息
-														</button>
-														<button 
-															class="nav-link deviceSettingLink" 
-															id="moreEditThingModal-otherOperation-tab" 
-															data-bs-toggle="pill" 
-															data-bs-target="#moreEditThingModal-otherOperation" 
-															type="button" 
-															role="tab" 
-															aria-controls="moreEditThingModal-otherOperation" 
-															aria-selected="true"
-														>
-															其他设置
-														</button>
-														<button 
-															class="nav-link deviceSettingLink" 
-															id="moreEditThingModal-deviceOperation-tab" 
-															data-bs-toggle="pill" 
-															data-bs-target="#moreEditThingModal-deviceOperation" 
-															type="button" 
-															role="tab" 
-															aria-controls="moreEditThingModal-deviceOperation" 
-															aria-selected="true"
-														>
-															设备操作
-														</button>
-													</div>
-													<div class="tab-content" id="v-pills-tabContent">
-														<div 
-															class="tab-pane fade show active device_more_setting_tab" 
-															id="moreEditThingModal-netConfig" 
-															role="tabpanel" 
-															aria-labelledby="moreEditThingModal-netConfig-tab" 
-															tabindex="0"
-															style="min-height:  450px;"
-														>
-															<!-- 网络配置 -->
-															<div class="mb-3 row">
-																<label for="dhcp_enable-moreEditThingModal" class="col-sm-3 col-form-label">设置IP</label>
-																<div class="col-sm-9">
-																	<div class="btn-group form-conrtol" role="group">
-																		<input 
-																			type="radio" 
-																			class="btn-check" 
-																			name="dhcp_enable-moreEditThingModal" 
-																			id="dhcp_enable-deviceNetCfg-moreEditThingModal-manual" 
-																			autocomplete="off" 
-																			value="0" 
-																			onchange="handleChangeDHCPEnable(this)"
-																		/>
-																		<label class="btn btn-outline-primary" for="dhcp_enable-deviceNetCfg-moreEditThingModal-manual">手动</label>
-																		<input 
-																			type="radio" 
-																			class="btn-check" 
-																			name="dhcp_enable-moreEditThingModal" 
-																			id="dhcp_enable-deviceNetCfg-moreEditThingModal-auto" 
-																			autocomplete="off" 
-																			value="1"
-																			onchange="handleChangeDHCPEnable(this)"
-																		/>
-																		<label class="btn btn-outline-primary" for="dhcp_enable-deviceNetCfg-moreEditThingModal-auto">自动</label>
-																	</div>
-																</div>
-															</div>
-															<div class="mb-3 row">
-																<label for="ip-moreEditThingModal" class="col-sm-3 col-form-label">IP地址</label>
-																<div class="col-sm-9">
-																	<input 
-																		type="text" 
-																		class="form-control" 
-																		name="ip-moreEditThingModal" 
-																		id="ip-deviceNetCfg-moreEditThingModal" 
-																		placeholder="IP地址"
-																	/>
-																	<div id="ipError-moreEditThingModal" class="text-danger inputError"></div>
-																</div>
-															</div>
-															<div class="mb-3 row">
-																<label for="gateway-moreEditThingModal" class="col-sm-3 col-form-label">网关</label>
-																<div class="col-sm-9">
-																	<input 
-																		type="text" 
-																		class="form-control" 
-																		name="gateway-moreEditThingModal" 
-																		id="gateway-deviceNetCfg-moreEditThingModal" 
-																		placeholder="网关"
-																	/>
-																	<div id="gatewayError-moreEditThingModal" class="text-danger inputError"></div>
-																</div>
-															</div>
-															<div class="mb-3 row">
-																<label for="netmask-moreEditThingModal" class="col-sm-3 col-form-label">子网掩码</label>
-																<div class="col-sm-9">
-																	<input 
-																		type="text" 
-																		class="form-control" 
-																		name="netmask-moreEditThingModal" 
-																		id="netmask-deviceNetCfg-moreEditThingModal" 
-																		placeholder="子网掩码" 
-																	/>
-																	<div id="netmaskError-moreEditThingModal" class="text-danger inputError"></div>
-																</div>
-															</div>
-															<div class="mb-3 row">
-																<label for="dns1-moreEditThingModal" class="col-sm-3 col-form-label">主DNS</label>
-																<div class="col-sm-9">
-																	<input 
-																		type="text" 
-																		class="form-control" 
-																		name="dns1-moreEditThingModal" 
-																		id="dns1-deviceNetCfg-moreEditThingModal" 
-																		placeholder="主DNS"
-																	/>
-																	<div id="dns1Error-moreEditThingModal" class="text-danger inputError"></div>
-																</div>
-															</div>
-															<div class="mb-3 row">
-																<label for="dns2-moreEditThingModal" class="col-sm-3 col-form-label">从DNS</label>
-																<div class="col-sm-9">
-																	<input 
-																		type="text" 
-																		class="form-control" 
-																		name="dns2-moreEditThingModal" 
-																		id="dns2-deviceNetCfg-moreEditThingModal" 
-																		placeholder="从DNS" 
-																	/>
-																	<div id="dns2Error-moreEditThingModal" class="text-danger inputError"></div>
-																</div>
-															</div>
-															<div class="mb-3 row" style="text-align: center;">
-																<div>
-																	<button type="button" class="btn body-button" id="deviceNetCfgModal-confirm-button-moreEditThingModal">
-																		<i class="fa-solid fa-floppy-disk"></i> 保存
-																	</button>
-																</div>
-															</div>
-														</div>
-														<div 
-															class="tab-pane fade device_more_setting_tab" 
-															id="moreEditThingModal-inChannels" 
-															role="tabpanel" 
-															aria-labelledby="moreEditThingModal-inChannels-tab" 
-															tabindex="1"
-															style="min-height: 450px;"
-														>
-															<!-- 输入通道 -->
-															<div id="in_channels_container_EditThingModal"></div>
-														</div>
-														<div 
-															class="tab-pane fade device_more_setting_tab" 
-															id="moreEditThingModal-powerCfg" 
-															role="tabpanel" 
-															aria-labelledby="moreEditThingModal-powerCfg-tab" 
-															tabindex="2"
-															style="min-height: 450px;"
-														>
-															<!-- 功率设置 -->
-															<table 
-																id="powerCfgTable"
-																class="table table-hover"
-																data-click-to-select="false"
-															>
-																<thead>
-																	<tr>
-																		<th data-radio="true"></th>
-																		<th data-field="out_1_power">通道1</th>
-																		<th data-field="out_2_power">通道2</th>
-																		<th data-field="out_3_power">通道3</th>
-																		<th data-field="out_4_power">通道4</th>
-																	</tr>
-																</thead>
-															</table>
-														</div>
-														<div 
-															class="tab-pane fade device_more_setting_tab" 
-															id="moreEditThingModal-audioMatrix" 
-															role="tabpanel" 
-															aria-labelledby="moreEditThingModal-audioMatrix-tab" 
-															tabindex="3"
-															style="min-height: 450px;"
-														>
-															<!-- 音频矩阵 -->
-															<div class="mb-3 row">
-																<label for="audio_matrix-enable-moreEditThingModal" class="col-sm-3 col-form-label">开启状态</label>
-																<div class="col-sm-9">
-																	<div class="form-control form-check form-switch" style="border: none;">
-																		<input 
-																			class="form-check-input" 
-																			type="checkbox" 
-																			role="switch" 
-																			name="audio_matrix-enable-moreEditThingModal" 
-																			id="audio_matrix-enable-moreEditThingModal" 
-																		/>
-																	</div>
-																</div>
-															</div>
-															<div id="audio_matrix-audio_route-container"></div>
-															<div class="mb-3 row" style="text-align: center;">
-																<div>
-																	<button type="button" class="btn body-button" id="audio_matrix-confirm-button-moreEditThingModal">
-																		<i class="fa-solid fa-floppy-disk"></i> 保存
-																	</button>
-																</div>
-															</div>
-														</div>
-														<div 
-															class="tab-pane fade device_more_setting_tab" 
-															id="moreEditThingModal-localSpeech" 
-															role="tabpanel" 
-															aria-labelledby="moreEditThingModal-localSpeech-tab" 
-															tabindex="4"
-															style="min-height: 450px;"
-														>
-															<!-- 扩声 -->
-															<div class="mb-3 row">
-																<label for="localSpeech-moreEditThingModal" class="col-sm-3 col-form-label">扩声开关</label>
-																<div class="col-sm-9">
-																	<div class="form-control form-check form-switch" style="border: none;">
-																		<input 
-																			class="form-check-input" 
-																			type="checkbox" 
-																			role="switch" 
-																			name="localSpeech-moreEditThingModal" 
-																			id="localSpeech-moreEditThingModal" 
-																		/>
-																	</div>
-																</div>
-															</div>
-															<div class="mb-3 row">
-																<label for="localSpeech-local_speech_area-moreEditThingModal[]" class="col-sm-3 col-form-label">本地扩声</label>
-																<div class="col-sm-9">
-																	<select 
-																		name="localSpeech-local_speech_area-moreEditThingModal[]" 
-																		id="localSpeech-local_speech_area-moreEditThingModal"  
-																		multiple="multiple" 
-																		class="localSpeech-local_speech_area-moreEditThingModal"
-																	>
-																	</select>
-																</div>
-															</div>
-															<div class="mb-3 row" id="localSpeech-network_speech-moreEditThingModal-container" style="display: none;">
-																<label for="localSpeech-network_speech-moreEditThingModal" class="col-sm-3 col-form-label">网络扩声</label>
-																<div class="col-sm-9">
-																	<div class="form-control form-check form-switch" style="border: none;">
-																		<input 
-																			class="form-check-input" 
-																			type="checkbox" 
-																			role="switch" 
-																			name="localSpeech-network_speech-moreEditThingModal" 
-																			id="localSpeech-network_speech-moreEditThingModal" 
-																		/>
-																	</div>
-																</div>
-															</div>
-															<div class="mb-3 row" id="localSpeech-network_speech_area-moreEditThingModal-container" style="display: none;">
-																<label for="localSpeech-network_speech_area-moreEditThingModal" class="col-sm-3 col-form-label">广播区域</label>
-																<div class="col-sm-9">
-																	<div class="localSpeech-network_speech_area_Box">
-																		<div class="row g-1" style="margin-bottom: 5px;">
-																			<div class="d-grid col-sm-6">
-																				<button 
-																					type="button" 
-																					class="btn btn-light" 
-																					style="color: #D5B897;" 
-																					id="network_speech_areas_add_btn"
-																				>
-																					<i class="fa-solid fa-plus"></i> 添加
-																				</button>
-																			</div>
-																			<div class="d-grid col-sm-6">
-																				<button 
-																					type="button" 
-																					class="btn btn-light" 
-																					style="color: dimgray;" 
-																					id="network_speech_areas_detail_btn"
-																				>
-																					<i class="fa-solid fa-ellipsis"></i> 详情
-																				</button>
-																			</div>
-																		</div>
-																		<div class="row row-cols-6 g-1" id="network_speech_area_list_container"></div>
-																	</div>
-																	<div id="localSpeech-network_speech_area_Error" class="text-danger" style="margin-top: 10px;"></div>
-																</div>
-															</div>
-															<div class="mb-3 row">
-																<label 
-																	for="localSpeech-volume-moreEditThingModal" 
-																	class="col-sm-3 col-form-label" 
-																	style="margin-top: -6px;"
-																>
-																	音量
-																</label>
-																<div class="col-sm-9">
-																	<div style="display: flex;">
-																		<input 
-																			type="range" 
-																			class="form-conrtol rangeInput" 
-																			min="0" 
-																			max="15" 
-																			step="1" 
-																			value="0" 
-																			id="localSpeech-volume-moreEditThingModal"
-																			style="width: 100%; margin-top: 8px;"
-																		/>
-																		<div 
-																			id="localSpeech-volume-label-moreEditThingModal" 
-																			style="text-align: right; width: 30px; line-height: 25px;"
-																		>
-																		</div>
-																	</div>
-																</div>
-															</div>
-															<div class="mb-3 row">
-																<label 
-																	for="localSpeech-trigger_threshold-moreEditThingModal" 
-																	class="col-sm-3 col-form-label"
-																	style="margin-top: -6px;"
-																>
-																	触发灵敏度
-																</label>
-																<div class="col-sm-9">
-																	<div style="display: flex;">
-																		<input 
-																			type="range" 
-																			class="form-conrtol rangeInput" 
-																			min="0" 
-																			max="15" 
-																			step="1" 
-																			value="0" 
-																			id="localSpeech-trigger_threshold-moreEditThingModal"
-																			style="width: 100%; margin-top: 8px;"
-																		/>
-																		<div 
-																			id="localSpeech-trigger_threshold-label-moreEditThingModal" 
-																			style="text-align: right; width: 30px; line-height: 25px;"
-																		>
-																		</div>
-																	</div>
-																</div>
-															</div>
-															<div class="mb-3 row" style="text-align: center;">
-																<div>
-																	<button type="button" class="btn body-button" id="localSpeech-confirm-button-moreEditThingModal">
-																		<i class="fa-solid fa-floppy-disk"></i> 保存
-																	</button>
-																</div>
-															</div>
-														</div>
-														<div 
-															class="tab-pane fade device_more_setting_tab" 
-															id="moreEditThingModal-radio" 
-															role="tabpanel" 
-															aria-labelledby="moreEditThingModal-radio-tab" 
-															tabindex="5"
-															style="min-height: 450px;"
-														>
-															<!-- 收音机 -->
-															<div id="moreEditThingModal-radioFreq-container"></div>
-														</div>
-														<div 
-															class="tab-pane fade device_more_setting_tab" 
-															id="moreEditThingModal-bluetooth" 
-															role="tabpanel" 
-															aria-labelledby="moreEditThingModal-bluetooth-tab" 
-															tabindex="6"
-															style="min-height: 450px;"
-														>
-															<!-- 蓝牙配置 -->
-															<div class="mb-3 row">
-																<label for="bluetooth-player-moreEditThingModal" class="col-sm-4 col-form-label">蓝牙播放器</label>
-																<div class="col-sm-8">
-																	<div class="form-control form-check form-switch" style="border: none;">
-																		<input 
-																			class="form-check-input" 
-																			type="checkbox" 
-																			role="switch" 
-																			name="bluetooth-player-moreEditThingModal" 
-																			id="bluetooth-player-moreEditThingModal" 
-																		/>
-																	</div>
-																</div>
-															</div>
-															<div class="mb-3 row">
-																<label for="bluetooth-password-moreEditThingModal" class="col-sm-4 col-form-label">密码</label>
-																<div class="col-sm-8">
-																	<input 
-																		type="text" 
-																		class="form-control name-field" 
-																		name="bluetooth-password-moreEditThingModal"
-																		id="bluetooth-password-moreEditThingModal"
-																		placeholder="请输入6位蓝牙密码"
-																		maxlength="6" 
-																	/>
-																	<div id="bluetooth-password-moreEditThingModalError" class="text-danger inputError"></div>
-																</div>
-															</div>
-															<div class="mb-3 row">
-																<label for="bluetooth_delay-moreEditThingModal" class="col-sm-4 col-form-label">播放延迟(ms)</label>
-																<div class="col-sm-8">
-																	<input 
-																		type="number" 
-																		class="form-control name-field" 
-																		name="bluetooth_delay-moreEditThingModal"
-																		id="bluetooth_delay-moreEditThingModal"
-																		placeholder="请输入0-1000ms的延迟"
-																		min="0" 
-																		max="1000"
-																		maxlength="4"
-																	/>
-																	<div class="inputError">配置完成后，下次播放生效</div>
-																</div>
-															</div>
-															<div class="mb-3 row">
-																<label for="bluetooth-play-area-moreEditThingModal[]" class="col-sm-4 col-form-label">播放区域</label>
-																<div class="col-sm-8">
-																	<select 
-																		name="bluetooth-play-area-moreEditThingModal[]" 
-																		id="bluetooth-play-area-moreEditThingModal"  
-																		multiple="multiple" 
-																		class="bluetooth-play-area-moreEditThingModal"
-																	>
-																	</select>
-																</div>
-															</div>
-														</div>
-														<div 
-															class="tab-pane fade device_more_setting_tab" 
-															id="moreEditThingModal-speaker-volume" 
-															role="tabpanel" 
-															aria-labelledby="moreEditThingModal-speaker-volume-tab" 
-															tabindex="6"
-															style="min-height: 450px;"
-														>
-															<!-- 音量配置 -->
-															<div class="mb-3" style="text-align: center;">
-																<img src="/images/volume_0.png" id="moreEditThingModal-speaker-volume-pic" class="volume-pic">
-															</div>
-															<div class="range-container">
-																<div class="range-wrapper speaker-volume-wrapper" id="speaker-volume-range-wrapper-1">
-																	<div class="range-label">低音1</div>
-																	<div class="range-gap speaker-volume-gap"></div>
-																	  <div class="range-value" id="speaker-volume-indicator-1">0</div>
-																	<input
-																		type="range"
-																		min="0"
-																		max="15"
-																		class="vertical-range rangeInput"
-																		value="0"
-																		id="speaker-volume-1"
-																		oninput="updateVerticalRangeValue(this)"
-																	/>
-																</div>
-																<div class="range-wrapper speaker-volume-wrapper" id="speaker-volume-range-wrapper-2">
-																	<div class="range-label">低音2</div>
-																	<div class="range-gap speaker-volume-gap"></div>
-																	<div class="range-value" id="speaker-volume-indicator-2">0</div>
-																	<input
-																		type="range"
-																		min="0"
-																		max="15"
-																		class="vertical-range rangeInput"
-																		value="0"
-																		id="speaker-volume-2"
-																		oninput="updateVerticalRangeValue(this)"
-																	/>
-																</div>
-																<div class="range-wrapper speaker-volume-wrapper" id="speaker-volume-range-wrapper-3">
-																	<div class="range-label">低音3</div>
-																	<div class="range-gap speaker-volume-gap"></div>
-																	<div class="range-value" id="speaker-volume-indicator-3">0</div>
-																	<input
-																		type="range"
-																		min="0"
-																		max="15"
-																		class="vertical-range rangeInput"
-																		value="0"
-																		id="speaker-volume-3"
-																		oninput="updateVerticalRangeValue(this)"
-																	/>
-																</div>
-																<div class="range-wrapper speaker-volume-wrapper" id="speaker-volume-range-wrapper-4">
-																	<div class="range-label">低音4</div>
-																	<div class="range-gap speaker-volume-gap"></div>
-																	<div class="range-value" id="speaker-volume-indicator-4">0</div>
-																	<input
-																		type="range"
-																		min="0"
-																		max="15"
-																		class="vertical-range rangeInput"
-																		value="0"
-																		id="speaker-volume-4"
-																		oninput="updateVerticalRangeValue(this)"
-																	/>
-																</div>
-																<div class="range-wrapper speaker-volume-wrapper" id="speaker-volume-range-wrapper-5">
-																	<div class="range-label">高音1</div>
-																	<div class="range-gap speaker-volume-gap"></div>
-																	<div class="range-value" id="speaker-volume-indicator-5">0</div>
-																	<input
-																		type="range"
-																		min="0"
-																		max="15"
-																		class="vertical-range rangeInput"
-																		value="0"
-																		id="speaker-volume-5"
-																		oninput="updateVerticalRangeValue(this)"
-																	/>
-																</div>
-																<div class="range-wrapper speaker-volume-wrapper" id="speaker-volume-range-wrapper-6">
-																	<div class="range-label">高音2</div>
-																	<div class="range-gap speaker-volume-gap"></div>
-																	<div class="range-value" id="speaker-volume-indicator-6">0</div>
-																	<input
-																		type="range"
-																		min="0"
-																		max="15"
-																		class="vertical-range rangeInput"
-																		value="0"
-																		id="speaker-volume-6"
-																		oninput="updateVerticalRangeValue(this)"
-																	/>
-																</div>
-															</div>
-														</div>
-														<div 
-															class="tab-pane fade device_more_setting_tab" 
-															id="moreEditThingModal-eqCfg" 
-															role="tabpanel" 
-															aria-labelledby="moreEditThingModal-eqCfg-tab" 
-															tabindex="7"
-															style="min-height: 450px;"
-														>
-															<!-- 话筒EQ -->
-															<div class="mb-3" style="text-align: center;">
-																<img src="/images/volume_0.png" alt="speaker-volume" class="volume-pic">
-															</div>
-															<div class="range-container">
-																<div class="range-wrapper">
-																	<div class="range-label">75</div>
-																	<div class="range-gap"></div>
-																	  <div class="range-value" id="eqCfg-indicator-75">0</div>
-																	<input
-																		type="range"
-																		min="-10"
-																		max="10"
-																		class="vertical-range rangeInput"
-																		value="0"
-																		id="eqCfg-range-75"
-																		oninput="updateVerticalRangeValue(this)"
-																	/>
-																</div>
-																<div class="range-wrapper">
-																	<div class="range-label">125</div>
-																	<div class="range-gap"></div>
-																	<div class="range-value" id="eqCfg-indicator-125">0</div>
-																	<input
-																		type="range"
-																		min="-10"
-																		max="10"
-																		class="vertical-range rangeInput"
-																		value="0"
-																		id="eqCfg-range-125"
-																		oninput="updateVerticalRangeValue(this)"
-																	/>
-																</div>
-																<div class="range-wrapper">
-																	<div class="range-label">250</div>
-																	<div class="range-gap"></div>
-																	<div class="range-value" id="eqCfg-indicator-250">0</div>
-																	<input
-																		type="range"
-																		min="-10"
-																		max="10"
-																		class="vertical-range rangeInput"
-																		value="0"
-																		id="eqCfg-range-250"
-																		oninput="updateVerticalRangeValue(this)"
-																	/>
-																</div>
-																<div class="range-wrapper">
-																	<div class="range-label">500</div>
-																	<div class="range-gap"></div>
-																	<div class="range-value" id="eqCfg-indicator-500">0</div>
-																	<input
-																		type="range"
-																		min="-10"
-																		max="10"
-																		class="vertical-range rangeInput"
-																		value="0"
-																		id="eqCfg-range-500"
-																		oninput="updateVerticalRangeValue(this)"
-																	/>
-																</div>
-																<div class="range-wrapper">
-																	<div class="range-label">1k</div>
-																	<div class="range-gap"></div>
-																	<div class="range-value" id="eqCfg-indicator-1000">0</div>
-																	<input
-																		type="range"
-																		min="-10"
-																		max="10"
-																		class="vertical-range rangeInput"
-																		value="0"
-																		id="eqCfg-range-1000"
-																		oninput="updateVerticalRangeValue(this)"
-																	/>
-																</div>
-																<div class="range-wrapper">
-																	<div class="range-label">2k</div>
-																	<div class="range-gap"></div>
-																	<div class="range-value" id="eqCfg-indicator-2000">0</div>
-																	<input
-																		type="range"
-																		min="-10"
-																		max="10"
-																		class="vertical-range rangeInput"
-																		value="0"
-																		id="eqCfg-range-2000"
-																		oninput="updateVerticalRangeValue(this)"
-																	/>
-																</div>
-																<div class="range-wrapper">
-																	<div class="range-label">4k</div>
-																	<div class="range-gap"></div>
-																	<div class="range-value" id="eqCfg-indicator-4000">0</div>
-																	<input
-																		type="range"
-																		min="-10"
-																		max="10"
-																		class="vertical-range rangeInput"
-																		value="0"
-																		id="eqCfg-range-4000"
-																		oninput="updateVerticalRangeValue(this)"
-																	/>
-																</div>
-																<div class="range-wrapper">
-																	<div class="range-label">8k</div>
-																	<div class="range-gap"></div>
-																	<div class="range-value" id="eqCfg-indicator-8000">0</div>
-																	<input
-																		type="range"
-																		min="-10"
-																		max="10"
-																		class="vertical-range rangeInput"
-																		value="0"
-																		id="eqCfg-range-8000"
-																		oninput="updateVerticalRangeValue(this)"
-																	/>
-																</div>
-															</div>
-														</div>
-														<div 
-															class="tab-pane fade device_more_setting_tab" 
-															id="moreEditThingModal-u-channel" 
-															role="tabpanel" 
-															aria-labelledby="moreEditThingModal-u-channel-tab" 
-															tabindex="8"
-															style="min-height: 450px;"
-														>
-															<!-- U段配置 -->
-															<div class="mb-3 row">
-																<label 
-																	for="u-channel-moreEditThingModal" 
-																	class="col-sm-3 col-form-label"
-																>
-																	U段值
-																</label>
-																<div class="col-sm-9">
-																	<select 
-																		class="form-control form-select"
-																		id="u-channel-moreEditThingModal" 
-																		name="u-channel-moreEditThingModal" 
-																		placeholder="请选择U段值" 
-																		required
-																	></select>
-																</div>
-															</div>
-														</div>
-														<div 
-															class="tab-pane fade device_more_setting_tab" 
-															id="moreEditThingModal-deviceLog" 
-															role="tabpanel" 
-															aria-labelledby="moreEditThingModal-deviceLog-tab" 
-															tabindex="9"
-														>
-															<!-- 设备日志 -->
-														</div>
-														<div 
-															class="tab-pane fade device_more_setting_tab" 
-															id="moreEditThingModal-sysInfo" 
-															role="tabpanel" 
-															aria-labelledby="moreEditThingModal-sysInfo-tab" 
-															tabindex="10"
-															style="font-size: 14px; height:  450px;"
-														>
-															<!-- 系统信息 -->
-															<div class="row mb-2">
-																<div class="col align-self-start moreEditThingModal-sysInfo-label">
-																	固件版本
-																</div>
-																<div 
-																	class="col align-self-end moreEditThingModal-sysInfo-content"
-																	id="moreEditThingModal-sysInfo-firmware"
-																></div>
-															  </div>
-															<div class="row mb-2">
-																<div class="col align-self-start moreEditThingModal-sysInfo-label">
-																	制造商
-																</div>
-																<div 
-																	class="col align-self-end moreEditThingModal-sysInfo-content"
-																	id="moreEditThingModal-sysInfo-manufacturer"
-																></div>
-															  </div>
-															<div class="row mb-2">
-																<div class="col align-self-start moreEditThingModal-sysInfo-label">
-																	产品名称
-																</div>
-																<div 
-																	class="col align-self-end moreEditThingModal-sysInfo-content"
-																	id="moreEditThingModal-sysInfo-productName"
-																></div>
-															  </div>
-															<div class="row mb-2">
-																<div class="col align-self-start moreEditThingModal-sysInfo-label">
-																	产品SN
-																</div>
-																<div 
-																	class="col align-self-end moreEditThingModal-sysInfo-content"
-																	id="moreEditThingModal-sysInfo-productSN"
-																></div>
-															  </div>
-															<div class="row mb-2" style="display: none;">
-																<div class="col align-self-start moreEditThingModal-sysInfo-label">
-																	功放类型
-																</div>
-																<div 
-																	class="col align-self-end moreEditThingModal-sysInfo-content"
-																	id="moreEditThingModal-sysInfo-amplifierType"
-																></div>
-															  </div>
-															<div class="row mb-2">
-																<div class="col align-self-start moreEditThingModal-sysInfo-label">
-																	总容量
-																</div>
-																<div 
-																	class="col align-self-end moreEditThingModal-sysInfo-content"
-																	id="moreEditThingModal-sysInfo-totalVolumn"
-																></div>
-															  </div>
-															<div class="row mb-2">
-																<div class="col align-self-start moreEditThingModal-sysInfo-label">
-																	可用容量
-																</div>
-																<div 
-																	class="col align-self-end moreEditThingModal-sysInfo-content"
-																	id="moreEditThingModal-sysInfo-availableVolumn"
-																></div>
-															  </div>
-															<div class="row mb-2">
-																<div class="col align-self-start moreEditThingModal-sysInfo-label">
-																	Wifi MAC地址
-																</div>
-																<div 
-																	class="col align-self-end moreEditThingModal-sysInfo-content"
-																	id="moreEditThingModal-sysInfo-wifiMAC"
-																></div>
-															  </div>
-															<div class="row mb-2">
-																<div class="col align-self-start moreEditThingModal-sysInfo-label">
-																	以太网 MAC地址
-																</div>
-																<div 
-																	class="col align-self-end moreEditThingModal-sysInfo-content"
-																	id="moreEditThingModal-sysInfo-lanMAC"
-																></div>
-															  </div>
-														</div>
-														<div 
-															class="tab-pane fade device_more_setting_tab" 
-															id="moreEditThingModal-otherOperation" 
-															role="tabpanel" 
-															aria-labelledby="moreEditThingModal-otherOperation-tab" 
-															tabindex="11"
-															style="height:  450px;"
-														>
-															<!-- 其他设置 -->
-															<div id="moreEditThingModal-otherOperation-container">
-																<div
-																	class="hoverCard card deviceOperation-btn primaryBtn"
-																	id="moreEditThingModal-otherOperation-ampCheckBtn"
-																>
-																	<div class="card-body deviceOperation-btn-container">
-																		<div class="deviceOperation-btn-icon">
-																			<i class="fa-brands fa-nfc-directional"></i>
-																		</div>
-																		<div class="row">
-																			功放检测
-																		</div>
-																	</div>
-																</div>
-																<div
-																	class="hoverCard card deviceOperation-btn primaryBtn"
-																	id="moreEditThingModal-otherOperation-ledBtn"
-																>
-																	<div class="card-body deviceOperation-btn-container">
-																		<div class="deviceOperation-btn-icon">
-																			<i class="fa-solid fa-lightbulb"></i>
-																		</div>
-																		<div class="row">
-																			状态灯
-																		</div>
-																	</div>
-																</div>
-																<div
-																	class="hoverCard card deviceOperation-btn primaryBtn"
-																	id="moreEditThingModal-otherOperation-stereoBtn"
-																>
-																	<div class="card-body deviceOperation-btn-container">
-																		<div class="deviceOperation-btn-icon">
-																			<i class="fa-solid fa-volume-high"></i>
-																		</div>
-																		<div class="row">
-																			立体声
-																		</div>
-																	</div>
-																</div>
-															</div>
-														</div>
-														<div 
-															class="tab-pane fade device_more_setting_tab" 
-															id="moreEditThingModal-deviceOperation" 
-															role="tabpanel" 
-															aria-labelledby="moreEditThingModal-deviceOperation-tab" 
-															tabindex="12"
-															style="height:  450px;"
-														>
-															<!-- 设备操作 -->
-															<div class="row">
-																<div
-																	class="hoverCard card deviceOperation-btn dangerBtn"
-																	id="moreEditThingModal-deviceOperation-rebootBtn"
-																>
-																	<div class="card-body deviceOperation-btn-container">
-																		<div class="deviceOperation-btn-icon">
-																			<i class="fa-solid fa-power-off"></i>
-																		</div>
-																		<div class="row">
-																			设备重启
-																		</div>
-																	</div>
-																</div>
-																<div
-																	class="hoverCard card deviceOperation-btn dangerBtn"
-																	id="moreEditThingModal-deviceOperation-deleteBtn"
-																>
-																	<div class="card-body deviceOperation-btn-container">
-																		<div class="deviceOperation-btn-icon">
-																			<i class="fa-solid fa-trash-can"></i>
-																		</div>
-																		<div class="row">
-																			设备删除
-																		</div>
-																	</div>
-																</div>
-																<div
-																	class="hoverCard card deviceOperation-btn dangerBtn"
-																	id="moreEditThingModal-deviceOperation-resetBtn"
-																>
-																	<div class="card-body deviceOperation-btn-container">
-																		<div class="deviceOperation-btn-icon">
-																			<i class="fa-solid fa-arrows-rotate"></i>
-																		</div>
-																		<div class="row">
-																			恢复出厂
-																		</div>
-																	</div>
-																</div>
-															</div>
-														</div>
-													</div>
-												  </div>
-											</div>
-										</div>
-									</div>
-								</div>
-
-								<!-- 广播区域添加弹框 -->
-								<div 
-									class="modal fade" 
-									id="networkSpeechAreasAddModal" 
-									tabindex="-1" 
-									role="dialog" 
-									aria-labelledby="network_speech_areas_AddModalLabel" 
-									aria-hidden="true"
-									data-bs-backdrop="static" 
-									data-bs-keyboard="false"  
-								>
-									<div class="modal-dialog" role="document">
-										<div class="modal-content">
-											<div class="modal-header">
-												<h1 class="modal-title" id="networkSpeechAreasAddModal">广播区域</h1>
-												<button type="button" 
-													class="btn-close" 
-													data-bs-dismiss="modal" 
-													aria-label="Close" 
-													onclick="closeNetworkSpeechAreasAddModal();"
-												></button>
-											</div>
-											<div class="modal-body">
-												<div class="mb-3" style="max-height:  450px; overflow-y: auto;">
-													<div id="network_speech_area_tree"></div>
-												</div>
-												<div class="modal-footer">
-													<button 
-														type="button" 
-														class="btn btn-secondary" 
-														data-bs-dismiss="modal" 
-														onclick="closeNetworkSpeechAreasAddModal();"
-													>
-														<i class="fa-solid fa-xmark"></i> 取消
-													</button>
-													<button type="button" class="btn body-button" id="confirm_network_speech_areas_AddModalBtn">
-														<i class="fa-solid fa-floppy-disk"></i> 确定
-													</button>
-												</div>
-											</div>
-										</div>
-									</div>
-								</div>
-
-								<!-- 广播区域详情弹框 -->
-								<div 
-									class="modal fade" 
-									id="networkSpeechAreasDetailModal" 
-									tabindex="-1" 
-									role="dialog" 
-									aria-labelledby="network_speech_areas_detail_modal_label" 
-									aria-hidden="true"
-									data-bs-backdrop="static" 
-									data-bs-keyboard="false"  
-								>
-									<div class="modal-dialog" role="document">
-										<div class="modal-content">
-											<div class="modal-header">
-												<h1 class="modal-title" id="networkSpeechAreasDetailModal">广播区域</h1>
-												<button 
-													type="button" 
-													class="btn-close" 
-													data-bs-dismiss="modal" 
-													aria-label="Close" 
-													onclick="moreEditThingModal.show();"
-												></button>
-											</div>
-											<div class="modal-body">
-												<div class="mb-3" style="max-height:  450px; overflow-y: auto;">
-													<div class="row row-cols-4 g-3" id="network_speech_areas_detail_list_container"></div>
-												</div>
-											</div>
-										</div>
-									</div>
-								</div>
-
-								<!-- 收音机添加弹框 -->
-								<div 
-									class="modal fade" 
-									id="addRadioFreqModal" 
-									tabindex="-1" 
-									role="dialog" 
-									aria-labelledby="addRadioFreqModalLabel" 
-									data-bs-backdrop="static" 
-									data-bs-keyboard="false" 
-									aria-hidden="true"
-								>
-									<div class="modal-dialog" role="document">
-										<div class="modal-content">
-											<div class="modal-header">
-												<h1 class="modal-title">添加频道</h1>
-												<button 
-													type="button" 
-													class="btn-close" 
-													data-bs-dismiss="modal" 
-													aria-label="Close" 
-													onclick="moreEditThingModal.show();"
-												></button>
-											</div>
-											<form id="form-addRadioFreqModal">
-												<div class="modal-body" style="padding: 35px;">
-													<div class="mb-3 row">
-														<label for="name" class="col-sm-3 col-form-label">频道名称</label>
-														<div class="col-sm-9">
-															<input 
-																type="text" 
-																class="form-control name-field" 
-																name="name" 
-																id="name-addRadioFreqModal" 
-																placeholder="频道名称" 
-																maxlength="20" 
-															/>
-															<div id="name-error-addRadioFreqModal" class="text-danger inputError"></div>
-														</div>
-													</div>
-													<div class="mb-3 row">
-														<label for="freq" class="col-sm-3 col-form-label">频道号</label>
-														<div class="col-sm-9">
-															<input 
-																type="text" 
-																class="form-control name-field" 
-																name="freq" 
-																id="freq-addRadioFreqModal" 
-																placeholder="频道号" 
-																maxlength="20" 
-															/>
-															<div id="freq-error-addRadioFreqModal" class="text-danger inputError"></div>
-														</div>
-													</div>
-												</div>
-												<div class="modal-footer">
-													<button 
-														type="button" 
-														class="btn btn-secondary" 
-														data-bs-dismiss="modal" 
-														onclick="moreEditThingModal.show();"
-													>
-														<i class="fa-solid fa-xmark"></i> 取消
-													</button>
-													<button type="button" class="btn body-button" id="confirm-btn-addRadioFreqModal">
-														<i class="fa-solid fa-floppy-disk"></i> 确定
-													</button>
-												</div>
-											</form>
-										</div>
-									</div>
-								</div>
-
-								<!-- 扫描添加设备弹框 -->
-								<div 
-									class="modal fade" 
-									id="scanThingsModal" 
-									tabindex="-1" 
-									role="dialog" 
-									aria-labelledby="scanThingsModalLabel" 
-									data-bs-backdrop="static" 
-									data-bs-keyboard="false" 
-									aria-hidden="true"
-								>
-									<div class="modal-dialog" role="document">
-										<div class="modal-content">
-											<div class="modal-header">
-												<h1 class="modal-title" id="scanThingsModalLabel">添加设备</h1>
-												<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-											</div>
-											<div class="modal-body" style="padding: 30px;">
-												<div class="row">
-												<ul class="list-group" id="scanThingsGrid" style="padding-left: 10px; max-height:  450px; overflow-y: auto;">
-												</ul>
-												</div>
-											</div>
-											<div class="modal-footer">
-												<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
-													<i class="fa-solid fa-xmark"></i> 取消
-												</button>
-												<button type="button" class="btn body-button" id="scan-add-thing-button" disabled>
-													<i class="fa-solid fa-plus"></i> 添加设备
-												</button>
-											</div>
-										</div>
-									</div>
-								</div>
-
-								<!-- 扫描添加-网络配置弹框 -->
-								<div 
-									class="modal fade" 
-									id="deviceNetCfgModal" 
-									tabindex="-1" 
-									role="dialog" 
-									aria-labelledby="deviceNetCfgModalLabel" 
-									data-bs-backdrop="static" 
-									data-bs-keyboard="false" 
-									aria-hidden="true"
-								>
-									<div class="modal-dialog" role="document">
-										<div class="modal-content">
-											<div class="modal-header">
-												<h1 class="modal-title" id="scanThingsModalLabel">设备网络设置</h1>
-												<button 
-													type="button" 
-													class="btn-close" 
-													data-bs-dismiss="modal" 
-													aria-label="Close" 
-													onclick="scanThingsModal.show();"
-												></button>
-											</div>
-											<div class="modal-body" style="padding: 30px 50px;">
+										<form id="editThingform">
+											<div class="modal-body" style="padding: 35px;">
 												<div class="mb-3 row">
-													<label for="alias" class="col-sm-3 col-form-label">设备名称</label>
+													<label for="name" class="col-sm-3 col-form-label">名称</label>
 													<div class="col-sm-9">
 														<input 
 															type="text" 
-															class="form-control" 
-															name="alias" 
-															id="alias-deviceNetCfg" 
+															class="form-control name-field" 
+															name="name" 
+															id="deviceNameEditThingModal" 
 															placeholder="设备名称" 
 															maxlength="20" 
 														/>
-														<div id="aliasError" class="text-danger inputError"></div>
+														<div id="deviceNameErrorEditThingModal" class="text-danger inputError"></div>
 													</div>
 												</div>
-												<div class="mb-3 row">
-													<label for="dhcp_enable" class="col-sm-3 col-form-label">设置IP</label>
-													<div class="col-sm-9">
-														<select class="form-control" name="dhcp_enable" id="dhcp_enable-deviceNetCfg">
-															<option value="0">手动</option>
-															<option value="1">自动</option>
-														</select>
-													</div>
-												</div>
-												<div class="mb-3 row">
-													<label for="ip" class="col-sm-3 col-form-label">IP地址</label>
-													<div class="col-sm-9">
-														<input type="text" class="form-control" name="ip" id="ip-deviceNetCfg" placeholder="IP地址" />
-														<div id="ipError" class="text-danger inputError"></div>
-													</div>
-												</div>
-												<div class="mb-3 row">
-													<label for="gateway" class="col-sm-3 col-form-label">网关</label>
-													<div class="col-sm-9">
-														<input type="text" class="form-control" name="gateway" id="gateway-deviceNetCfg" placeholder="网关" />
-														<div id="gatewayError" class="text-danger inputError"></div>
-													</div>
-												</div>
-												<div class="mb-3 row">
-													<label for="netmask" class="col-sm-3 col-form-label">子网掩码</label>
-													<div class="col-sm-9">
-														<input type="text" class="form-control" name="netmask" id="netmask-deviceNetCfg" placeholder="子网掩码" />
-														<div id="netmaskError" class="text-danger inputError"></div>
-													</div>
-												</div>
-												<div class="mb-3 row">
-													<label for="dns1" class="col-sm-3 col-form-label">主DNS</label>
-													<div class="col-sm-9">
-														<input type="text" class="form-control" name="dns1" id="dns1-deviceNetCfg" placeholder="主DNS" />
-														<div id="dns1Error" class="text-danger inputError"></div>
-													</div>
-												</div>
-												<div class="mb-3 row">
-													<label for="dns2" class="col-sm-3 col-form-label">从DNS</label>
-													<div class="col-sm-9">
-														<input type="text" class="form-control" name="dns2" id="dns2-deviceNetCfg" placeholder="从DNS" />
-														<div id="dns2Error" class="text-danger inputError"></div>
+												<div id="out_channels_container_EditThingModal"></div>
+												<div class="mb-3 row" style="margin-bottom: 0px !important;">
+													<div class="col-sm-12" style="text-align: center;">
+														<div id="moreSettingEditThingModal" class="moreSettingBtn">
+															<i class="fa-solid fa-chevron-down"></i>
+														</div>
 													</div>
 												</div>
 											</div>
+										</form>
+									</div>
+								</div>
+							</div>
+
+							<!-- 设备配置弹框 -->
+							<div 
+								class="modal fade" 
+								id="moreEditThingModal" 
+								tabindex="-1" 
+								role="dialog" 
+								aria-labelledby="moreEditThingModalLabel" 
+								data-bs-backdrop="static" 
+								data-bs-keyboard="false" 
+								aria-hidden="true"
+							>
+								<div class="modal-dialog" role="document">
+									<div class="modal-content">
+										<div class="modal-header">
+											<h1 class="modal-title" id="moreEditThingModalLabel">
+												<span>设备配置</span>
+												<span id="deviceNameTitleMoreEditThingModal"></span>
+											</h1>
+											<button 
+												type="button" 
+												class="btn-close" 
+												data-bs-dismiss="modal" 
+												aria-label="Close"
+												onclick="editThingModal.show()"
+											></button>
+										</div>
+										<div class="modal-body" style="padding: 0px;">
+											<div class="d-flex align-items-start">
+												<div 
+													class="nav flex-column nav-pills" 
+													id="v-pills-tab" 
+													role="tablist" 
+													aria-orientation="vertical"
+												>
+													<button 
+														class="nav-link active deviceSettingLink" 
+														id="moreEditThingModal-netConfig-tab" 
+														data-bs-toggle="pill" 
+														data-bs-target="#moreEditThingModal-netConfig" 
+														type="button" 
+														role="tab" 
+														aria-controls="moreEditThingModal-netConfig" 
+														aria-selected="false"
+													>
+														网络配置
+													</button>
+													<button 
+														class="nav-link deviceSettingLink" 
+														id="moreEditThingModal-inChannels-tab" 
+														data-bs-toggle="pill" 
+														data-bs-target="#moreEditThingModal-inChannels" 
+														type="button" 
+														role="tab" 
+														aria-controls="moreEditThingModal-inChannels" 
+														aria-selected="false"
+													>
+														输入通道
+													</button>
+													<button 
+														class="nav-link deviceSettingLink" 
+														id="moreEditThingModal-powerCfg-tab" 
+														data-bs-toggle="pill" 
+														data-bs-target="#moreEditThingModal-powerCfg" 
+														type="button" 
+														role="tab" 
+														aria-controls="moreEditThingModal-powerCfg" 
+														aria-selected="false"
+													>
+														功率设置
+													</button>
+													<button 
+														class="nav-link deviceSettingLink" 
+														id="moreEditThingModal-audioMatrix-tab" 
+														data-bs-toggle="pill" 
+														data-bs-target="#moreEditThingModal-audioMatrix" 
+														type="button" 
+														role="tab" 
+														aria-controls="moreEditThingModal-audioMatrix" 
+														aria-selected="false"
+													>
+														音频矩阵
+													</button>
+													<button 
+														class="nav-link deviceSettingLink" 
+														id="moreEditThingModal-localSpeech-tab" 
+														data-bs-toggle="pill" 
+														data-bs-target="#moreEditThingModal-localSpeech" 
+														type="button" 
+														role="tab" 
+														aria-controls="moreEditThingModal-localSpeech" 
+														aria-selected="false"
+													>
+														扩声
+													</button>
+													<button 
+														class="nav-link deviceSettingLink" 
+														id="moreEditThingModal-radio-tab" 
+														data-bs-toggle="pill" 
+														data-bs-target="#moreEditThingModal-radio" 
+														type="button" 
+														role="tab" 
+														aria-controls="moreEditThingModal-radio" 
+														aria-selected="false"
+													>
+														收音机
+													</button>
+													<button 
+														class="nav-link deviceSettingLink" 
+														id="moreEditThingModal-bluetooth-tab" 
+														data-bs-toggle="pill" 
+														data-bs-target="#moreEditThingModal-bluetooth" 
+														type="button" 
+														role="tab" 
+														aria-controls="moreEditThingModal-bluetooth" 
+														aria-selected="false"
+													>
+														蓝牙配置
+													</button>
+													<button 
+														class="nav-link deviceSettingLink" 
+														id="moreEditThingModal-speaker-volume-tab" 
+														data-bs-toggle="pill" 
+														data-bs-target="#moreEditThingModal-speaker-volume" 
+														type="button" 
+														role="tab" 
+														aria-controls="moreEditThingModal-speaker-volume" 
+														aria-selected="false"
+													>
+														音量配置
+													</button>
+													<button 
+														class="nav-link deviceSettingLink" 
+														id="moreEditThingModal-eqCfg-tab" 
+														data-bs-toggle="pill" 
+														data-bs-target="#moreEditThingModal-eqCfg" 
+														type="button" 
+														role="tab" 
+														aria-controls="moreEditThingModal-eqCfg" 
+														aria-selected="false"
+													>
+														话筒EQ
+													</button>
+													<button 
+														class="nav-link deviceSettingLink" 
+														id="moreEditThingModal-u-channel-tab" 
+														data-bs-toggle="pill" 
+														data-bs-target="#moreEditThingModal-u-channel" 
+														type="button" 
+														role="tab" 
+														aria-controls="moreEditThingModal-u-channel" 
+														aria-selected="false"
+													>
+														U段配置
+													</button>
+													<button 
+														class="nav-link deviceSettingLink" 
+														id="moreEditThingModal-deviceLog-tab" 
+														data-bs-toggle="pill" 
+														data-bs-target="#moreEditThingModal-deviceLog" 
+														type="button" 
+														role="tab" 
+														aria-controls="moreEditThingModal-deviceLog" 
+														aria-selected="false"
+													>
+														设备日志
+													</button>
+													<button 
+														class="nav-link deviceSettingLink" 
+														id="moreEditThingModal-sysInfo-tab" 
+														data-bs-toggle="pill" 
+														data-bs-target="#moreEditThingModal-sysInfo" 
+														type="button" 
+														role="tab" 
+														aria-controls="moreEditThingModal-sysInfo" 
+														aria-selected="true"
+													>
+														系统信息
+													</button>
+													<button 
+														class="nav-link deviceSettingLink" 
+														id="moreEditThingModal-otherOperation-tab" 
+														data-bs-toggle="pill" 
+														data-bs-target="#moreEditThingModal-otherOperation" 
+														type="button" 
+														role="tab" 
+														aria-controls="moreEditThingModal-otherOperation" 
+														aria-selected="true"
+													>
+														其他设置
+													</button>
+													<button 
+														class="nav-link deviceSettingLink" 
+														id="moreEditThingModal-deviceOperation-tab" 
+														data-bs-toggle="pill" 
+														data-bs-target="#moreEditThingModal-deviceOperation" 
+														type="button" 
+														role="tab" 
+														aria-controls="moreEditThingModal-deviceOperation" 
+														aria-selected="true"
+													>
+														设备操作
+													</button>
+												</div>
+												<div class="tab-content" id="v-pills-tabContent">
+													<div 
+														class="tab-pane fade show active device_more_setting_tab" 
+														id="moreEditThingModal-netConfig" 
+														role="tabpanel" 
+														aria-labelledby="moreEditThingModal-netConfig-tab" 
+														tabindex="0"
+														style="min-height:  450px;"
+													>
+														<!-- 网络配置 -->
+														<div class="mb-3 row">
+															<label for="dhcp_enable-moreEditThingModal" class="col-sm-3 col-form-label">设置IP</label>
+															<div class="col-sm-9">
+																<div class="btn-group form-conrtol" role="group">
+																	<input 
+																		type="radio" 
+																		class="btn-check" 
+																		name="dhcp_enable-moreEditThingModal" 
+																		id="dhcp_enable-deviceNetCfg-moreEditThingModal-manual" 
+																		autocomplete="off" 
+																		value="0" 
+																		onchange="handleChangeDHCPEnable(this)"
+																	/>
+																	<label class="btn btn-outline-primary" for="dhcp_enable-deviceNetCfg-moreEditThingModal-manual">手动</label>
+																	<input 
+																		type="radio" 
+																		class="btn-check" 
+																		name="dhcp_enable-moreEditThingModal" 
+																		id="dhcp_enable-deviceNetCfg-moreEditThingModal-auto" 
+																		autocomplete="off" 
+																		value="1"
+																		onchange="handleChangeDHCPEnable(this)"
+																	/>
+																	<label class="btn btn-outline-primary" for="dhcp_enable-deviceNetCfg-moreEditThingModal-auto">自动</label>
+																</div>
+															</div>
+														</div>
+														<div class="mb-3 row">
+															<label for="ip-moreEditThingModal" class="col-sm-3 col-form-label">IP地址</label>
+															<div class="col-sm-9">
+																<input 
+																	type="text" 
+																	class="form-control" 
+																	name="ip-moreEditThingModal" 
+																	id="ip-deviceNetCfg-moreEditThingModal" 
+																	placeholder="IP地址"
+																/>
+																<div id="ipError-moreEditThingModal" class="text-danger inputError"></div>
+															</div>
+														</div>
+														<div class="mb-3 row">
+															<label for="gateway-moreEditThingModal" class="col-sm-3 col-form-label">网关</label>
+															<div class="col-sm-9">
+																<input 
+																	type="text" 
+																	class="form-control" 
+																	name="gateway-moreEditThingModal" 
+																	id="gateway-deviceNetCfg-moreEditThingModal" 
+																	placeholder="网关"
+																/>
+																<div id="gatewayError-moreEditThingModal" class="text-danger inputError"></div>
+															</div>
+														</div>
+														<div class="mb-3 row">
+															<label for="netmask-moreEditThingModal" class="col-sm-3 col-form-label">子网掩码</label>
+															<div class="col-sm-9">
+																<input 
+																	type="text" 
+																	class="form-control" 
+																	name="netmask-moreEditThingModal" 
+																	id="netmask-deviceNetCfg-moreEditThingModal" 
+																	placeholder="子网掩码" 
+																/>
+																<div id="netmaskError-moreEditThingModal" class="text-danger inputError"></div>
+															</div>
+														</div>
+														<div class="mb-3 row">
+															<label for="dns1-moreEditThingModal" class="col-sm-3 col-form-label">主DNS</label>
+															<div class="col-sm-9">
+																<input 
+																	type="text" 
+																	class="form-control" 
+																	name="dns1-moreEditThingModal" 
+																	id="dns1-deviceNetCfg-moreEditThingModal" 
+																	placeholder="主DNS"
+																/>
+																<div id="dns1Error-moreEditThingModal" class="text-danger inputError"></div>
+															</div>
+														</div>
+														<div class="mb-3 row">
+															<label for="dns2-moreEditThingModal" class="col-sm-3 col-form-label">从DNS</label>
+															<div class="col-sm-9">
+																<input 
+																	type="text" 
+																	class="form-control" 
+																	name="dns2-moreEditThingModal" 
+																	id="dns2-deviceNetCfg-moreEditThingModal" 
+																	placeholder="从DNS" 
+																/>
+																<div id="dns2Error-moreEditThingModal" class="text-danger inputError"></div>
+															</div>
+														</div>
+														<div class="mb-3 row" style="text-align: center;">
+															<div>
+																<button type="button" class="btn body-button" id="deviceNetCfgModal-confirm-button-moreEditThingModal">
+																	<i class="fa-solid fa-floppy-disk"></i> 保存
+																</button>
+															</div>
+														</div>
+													</div>
+													<div 
+														class="tab-pane fade device_more_setting_tab" 
+														id="moreEditThingModal-inChannels" 
+														role="tabpanel" 
+														aria-labelledby="moreEditThingModal-inChannels-tab" 
+														tabindex="1"
+														style="min-height: 450px;"
+													>
+														<!-- 输入通道 -->
+														<div id="in_channels_container_EditThingModal"></div>
+													</div>
+													<div 
+														class="tab-pane fade device_more_setting_tab" 
+														id="moreEditThingModal-powerCfg" 
+														role="tabpanel" 
+														aria-labelledby="moreEditThingModal-powerCfg-tab" 
+														tabindex="2"
+														style="min-height: 450px;"
+													>
+														<!-- 功率设置 -->
+														<table 
+															id="powerCfgTable"
+															class="table table-hover"
+															data-click-to-select="false"
+														>
+															<thead>
+																<tr>
+																	<th data-radio="true"></th>
+																	<th data-field="out_1_power">通道1</th>
+																	<th data-field="out_2_power">通道2</th>
+																	<th data-field="out_3_power">通道3</th>
+																	<th data-field="out_4_power">通道4</th>
+																</tr>
+															</thead>
+														</table>
+													</div>
+													<div 
+														class="tab-pane fade device_more_setting_tab" 
+														id="moreEditThingModal-audioMatrix" 
+														role="tabpanel" 
+														aria-labelledby="moreEditThingModal-audioMatrix-tab" 
+														tabindex="3"
+														style="min-height: 450px;"
+													>
+														<!-- 音频矩阵 -->
+														<div class="mb-3 row">
+															<label for="audio_matrix-enable-moreEditThingModal" class="col-sm-3 col-form-label">开启状态</label>
+															<div class="col-sm-9">
+																<div class="form-control form-check form-switch" style="border: none;">
+																	<input 
+																		class="form-check-input" 
+																		type="checkbox" 
+																		role="switch" 
+																		name="audio_matrix-enable-moreEditThingModal" 
+																		id="audio_matrix-enable-moreEditThingModal" 
+																	/>
+																</div>
+															</div>
+														</div>
+														<div id="audio_matrix-audio_route-container"></div>
+														<div class="mb-3 row" style="text-align: center;">
+															<div>
+																<button type="button" class="btn body-button" id="audio_matrix-confirm-button-moreEditThingModal">
+																	<i class="fa-solid fa-floppy-disk"></i> 保存
+																</button>
+															</div>
+														</div>
+													</div>
+													<div 
+														class="tab-pane fade device_more_setting_tab" 
+														id="moreEditThingModal-localSpeech" 
+														role="tabpanel" 
+														aria-labelledby="moreEditThingModal-localSpeech-tab" 
+														tabindex="4"
+														style="min-height: 450px;"
+													>
+														<!-- 扩声 -->
+														<div class="mb-3 row">
+															<label for="localSpeech-moreEditThingModal" class="col-sm-3 col-form-label">扩声开关</label>
+															<div class="col-sm-9">
+																<div class="form-control form-check form-switch" style="border: none;">
+																	<input 
+																		class="form-check-input" 
+																		type="checkbox" 
+																		role="switch" 
+																		name="localSpeech-moreEditThingModal" 
+																		id="localSpeech-moreEditThingModal" 
+																	/>
+																</div>
+															</div>
+														</div>
+														<div class="mb-3 row">
+															<label for="localSpeech-local_speech_area-moreEditThingModal[]" class="col-sm-3 col-form-label">本地扩声</label>
+															<div class="col-sm-9">
+																<select 
+																	name="localSpeech-local_speech_area-moreEditThingModal[]" 
+																	id="localSpeech-local_speech_area-moreEditThingModal"  
+																	multiple="multiple" 
+																	class="localSpeech-local_speech_area-moreEditThingModal"
+																>
+																</select>
+															</div>
+														</div>
+														<div class="mb-3 row" id="localSpeech-network_speech-moreEditThingModal-container" style="display: none;">
+															<label for="localSpeech-network_speech-moreEditThingModal" class="col-sm-3 col-form-label">网络扩声</label>
+															<div class="col-sm-9">
+																<div class="form-control form-check form-switch" style="border: none;">
+																	<input 
+																		class="form-check-input" 
+																		type="checkbox" 
+																		role="switch" 
+																		name="localSpeech-network_speech-moreEditThingModal" 
+																		id="localSpeech-network_speech-moreEditThingModal" 
+																	/>
+																</div>
+															</div>
+														</div>
+														<div class="mb-3 row" id="localSpeech-network_speech_area-moreEditThingModal-container" style="display: none;">
+															<label for="localSpeech-network_speech_area-moreEditThingModal" class="col-sm-3 col-form-label">广播区域</label>
+															<div class="col-sm-9">
+																<div class="localSpeech-network_speech_area_Box">
+																	<div class="row g-1" style="margin-bottom: 5px;">
+																		<div class="d-grid col-sm-6">
+																			<button 
+																				type="button" 
+																				class="btn btn-light" 
+																				style="color: #D5B897;" 
+																				id="network_speech_areas_add_btn"
+																			>
+																				<i class="fa-solid fa-plus"></i> 添加
+																			</button>
+																		</div>
+																		<div class="d-grid col-sm-6">
+																			<button 
+																				type="button" 
+																				class="btn btn-light" 
+																				style="color: dimgray;" 
+																				id="network_speech_areas_detail_btn"
+																			>
+																				<i class="fa-solid fa-ellipsis"></i> 详情
+																			</button>
+																		</div>
+																	</div>
+																	<div class="row row-cols-6 g-1" id="network_speech_area_list_container"></div>
+																</div>
+																<div id="localSpeech-network_speech_area_Error" class="text-danger" style="margin-top: 10px;"></div>
+															</div>
+														</div>
+														<div class="mb-3 row">
+															<label 
+																for="localSpeech-volume-moreEditThingModal" 
+																class="col-sm-3 col-form-label" 
+																style="margin-top: -6px;"
+															>
+																音量
+															</label>
+															<div class="col-sm-9">
+																<div style="display: flex;">
+																	<input 
+																		type="range" 
+																		class="form-conrtol rangeInput" 
+																		min="0" 
+																		max="15" 
+																		step="1" 
+																		value="0" 
+																		id="localSpeech-volume-moreEditThingModal"
+																		style="width: 100%; margin-top: 8px;"
+																	/>
+																	<div 
+																		id="localSpeech-volume-label-moreEditThingModal" 
+																		style="text-align: right; width: 30px; line-height: 25px;"
+																	>
+																	</div>
+																</div>
+															</div>
+														</div>
+														<div class="mb-3 row">
+															<label 
+																for="localSpeech-trigger_threshold-moreEditThingModal" 
+																class="col-sm-3 col-form-label"
+																style="margin-top: -6px;"
+															>
+																触发灵敏度
+															</label>
+															<div class="col-sm-9">
+																<div style="display: flex;">
+																	<input 
+																		type="range" 
+																		class="form-conrtol rangeInput" 
+																		min="0" 
+																		max="15" 
+																		step="1" 
+																		value="0" 
+																		id="localSpeech-trigger_threshold-moreEditThingModal"
+																		style="width: 100%; margin-top: 8px;"
+																	/>
+																	<div 
+																		id="localSpeech-trigger_threshold-label-moreEditThingModal" 
+																		style="text-align: right; width: 30px; line-height: 25px;"
+																	>
+																	</div>
+																</div>
+															</div>
+														</div>
+														<div class="mb-3 row" style="text-align: center;">
+															<div>
+																<button type="button" class="btn body-button" id="localSpeech-confirm-button-moreEditThingModal">
+																	<i class="fa-solid fa-floppy-disk"></i> 保存
+																</button>
+															</div>
+														</div>
+													</div>
+													<div 
+														class="tab-pane fade device_more_setting_tab" 
+														id="moreEditThingModal-radio" 
+														role="tabpanel" 
+														aria-labelledby="moreEditThingModal-radio-tab" 
+														tabindex="5"
+														style="min-height: 450px;"
+													>
+														<!-- 收音机 -->
+														<div id="moreEditThingModal-radioFreq-container"></div>
+													</div>
+													<div 
+														class="tab-pane fade device_more_setting_tab" 
+														id="moreEditThingModal-bluetooth" 
+														role="tabpanel" 
+														aria-labelledby="moreEditThingModal-bluetooth-tab" 
+														tabindex="6"
+														style="min-height: 450px;"
+													>
+														<!-- 蓝牙配置 -->
+														<div class="mb-3 row">
+															<label for="bluetooth-player-moreEditThingModal" class="col-sm-4 col-form-label">蓝牙播放器</label>
+															<div class="col-sm-8">
+																<div class="form-control form-check form-switch" style="border: none;">
+																	<input 
+																		class="form-check-input" 
+																		type="checkbox" 
+																		role="switch" 
+																		name="bluetooth-player-moreEditThingModal" 
+																		id="bluetooth-player-moreEditThingModal" 
+																	/>
+																</div>
+															</div>
+														</div>
+														<div class="mb-3 row">
+															<label for="bluetooth-password-moreEditThingModal" class="col-sm-4 col-form-label">密码</label>
+															<div class="col-sm-8">
+																<input 
+																	type="text" 
+																	class="form-control name-field" 
+																	name="bluetooth-password-moreEditThingModal"
+																	id="bluetooth-password-moreEditThingModal"
+																	placeholder="请输入6位蓝牙密码"
+																	maxlength="6" 
+																/>
+																<div id="bluetooth-password-moreEditThingModalError" class="text-danger inputError"></div>
+															</div>
+														</div>
+														<div class="mb-3 row">
+															<label for="bluetooth_delay-moreEditThingModal" class="col-sm-4 col-form-label">播放延迟(ms)</label>
+															<div class="col-sm-8">
+																<input 
+																	type="number" 
+																	class="form-control name-field" 
+																	name="bluetooth_delay-moreEditThingModal"
+																	id="bluetooth_delay-moreEditThingModal"
+																	placeholder="请输入0-1000ms的延迟"
+																	min="0" 
+																	max="1000"
+																	maxlength="4"
+																/>
+																<div class="inputError">配置完成后，下次播放生效</div>
+															</div>
+														</div>
+														<div class="mb-3 row">
+															<label for="bluetooth-play-area-moreEditThingModal[]" class="col-sm-4 col-form-label">播放区域</label>
+															<div class="col-sm-8">
+																<select 
+																	name="bluetooth-play-area-moreEditThingModal[]" 
+																	id="bluetooth-play-area-moreEditThingModal"  
+																	multiple="multiple" 
+																	class="bluetooth-play-area-moreEditThingModal"
+																>
+																</select>
+															</div>
+														</div>
+													</div>
+													<div 
+														class="tab-pane fade device_more_setting_tab" 
+														id="moreEditThingModal-speaker-volume" 
+														role="tabpanel" 
+														aria-labelledby="moreEditThingModal-speaker-volume-tab" 
+														tabindex="6"
+														style="min-height: 450px;"
+													>
+														<!-- 音量配置 -->
+														<div class="mb-3" style="text-align: center;">
+															<img src="/images/volume_0.png" id="moreEditThingModal-speaker-volume-pic" class="volume-pic">
+														</div>
+														<div class="range-container">
+															<div class="range-wrapper speaker-volume-wrapper" id="speaker-volume-range-wrapper-1">
+																<div class="range-label">低音1</div>
+																<div class="range-gap speaker-volume-gap"></div>
+																	<div class="range-value" id="speaker-volume-indicator-1">0</div>
+																<input
+																	type="range"
+																	min="0"
+																	max="15"
+																	class="vertical-range rangeInput"
+																	value="0"
+																	id="speaker-volume-1"
+																	oninput="updateVerticalRangeValue(this)"
+																/>
+															</div>
+															<div class="range-wrapper speaker-volume-wrapper" id="speaker-volume-range-wrapper-2">
+																<div class="range-label">低音2</div>
+																<div class="range-gap speaker-volume-gap"></div>
+																<div class="range-value" id="speaker-volume-indicator-2">0</div>
+																<input
+																	type="range"
+																	min="0"
+																	max="15"
+																	class="vertical-range rangeInput"
+																	value="0"
+																	id="speaker-volume-2"
+																	oninput="updateVerticalRangeValue(this)"
+																/>
+															</div>
+															<div class="range-wrapper speaker-volume-wrapper" id="speaker-volume-range-wrapper-3">
+																<div class="range-label">低音3</div>
+																<div class="range-gap speaker-volume-gap"></div>
+																<div class="range-value" id="speaker-volume-indicator-3">0</div>
+																<input
+																	type="range"
+																	min="0"
+																	max="15"
+																	class="vertical-range rangeInput"
+																	value="0"
+																	id="speaker-volume-3"
+																	oninput="updateVerticalRangeValue(this)"
+																/>
+															</div>
+															<div class="range-wrapper speaker-volume-wrapper" id="speaker-volume-range-wrapper-4">
+																<div class="range-label">低音4</div>
+																<div class="range-gap speaker-volume-gap"></div>
+																<div class="range-value" id="speaker-volume-indicator-4">0</div>
+																<input
+																	type="range"
+																	min="0"
+																	max="15"
+																	class="vertical-range rangeInput"
+																	value="0"
+																	id="speaker-volume-4"
+																	oninput="updateVerticalRangeValue(this)"
+																/>
+															</div>
+															<div class="range-wrapper speaker-volume-wrapper" id="speaker-volume-range-wrapper-5">
+																<div class="range-label">高音1</div>
+																<div class="range-gap speaker-volume-gap"></div>
+																<div class="range-value" id="speaker-volume-indicator-5">0</div>
+																<input
+																	type="range"
+																	min="0"
+																	max="15"
+																	class="vertical-range rangeInput"
+																	value="0"
+																	id="speaker-volume-5"
+																	oninput="updateVerticalRangeValue(this)"
+																/>
+															</div>
+															<div class="range-wrapper speaker-volume-wrapper" id="speaker-volume-range-wrapper-6">
+																<div class="range-label">高音2</div>
+																<div class="range-gap speaker-volume-gap"></div>
+																<div class="range-value" id="speaker-volume-indicator-6">0</div>
+																<input
+																	type="range"
+																	min="0"
+																	max="15"
+																	class="vertical-range rangeInput"
+																	value="0"
+																	id="speaker-volume-6"
+																	oninput="updateVerticalRangeValue(this)"
+																/>
+															</div>
+														</div>
+													</div>
+													<div 
+														class="tab-pane fade device_more_setting_tab" 
+														id="moreEditThingModal-eqCfg" 
+														role="tabpanel" 
+														aria-labelledby="moreEditThingModal-eqCfg-tab" 
+														tabindex="7"
+														style="min-height: 450px;"
+													>
+														<!-- 话筒EQ -->
+														<div class="mb-3" style="text-align: center;">
+															<img src="/images/volume_0.png" alt="speaker-volume" class="volume-pic">
+														</div>
+														<div class="range-container">
+															<div class="range-wrapper">
+																<div class="range-label">75</div>
+																<div class="range-gap"></div>
+																	<div class="range-value" id="eqCfg-indicator-75">0</div>
+																<input
+																	type="range"
+																	min="-10"
+																	max="10"
+																	class="vertical-range rangeInput"
+																	value="0"
+																	id="eqCfg-range-75"
+																	oninput="updateVerticalRangeValue(this)"
+																/>
+															</div>
+															<div class="range-wrapper">
+																<div class="range-label">125</div>
+																<div class="range-gap"></div>
+																<div class="range-value" id="eqCfg-indicator-125">0</div>
+																<input
+																	type="range"
+																	min="-10"
+																	max="10"
+																	class="vertical-range rangeInput"
+																	value="0"
+																	id="eqCfg-range-125"
+																	oninput="updateVerticalRangeValue(this)"
+																/>
+															</div>
+															<div class="range-wrapper">
+																<div class="range-label">250</div>
+																<div class="range-gap"></div>
+																<div class="range-value" id="eqCfg-indicator-250">0</div>
+																<input
+																	type="range"
+																	min="-10"
+																	max="10"
+																	class="vertical-range rangeInput"
+																	value="0"
+																	id="eqCfg-range-250"
+																	oninput="updateVerticalRangeValue(this)"
+																/>
+															</div>
+															<div class="range-wrapper">
+																<div class="range-label">500</div>
+																<div class="range-gap"></div>
+																<div class="range-value" id="eqCfg-indicator-500">0</div>
+																<input
+																	type="range"
+																	min="-10"
+																	max="10"
+																	class="vertical-range rangeInput"
+																	value="0"
+																	id="eqCfg-range-500"
+																	oninput="updateVerticalRangeValue(this)"
+																/>
+															</div>
+															<div class="range-wrapper">
+																<div class="range-label">1k</div>
+																<div class="range-gap"></div>
+																<div class="range-value" id="eqCfg-indicator-1000">0</div>
+																<input
+																	type="range"
+																	min="-10"
+																	max="10"
+																	class="vertical-range rangeInput"
+																	value="0"
+																	id="eqCfg-range-1000"
+																	oninput="updateVerticalRangeValue(this)"
+																/>
+															</div>
+															<div class="range-wrapper">
+																<div class="range-label">2k</div>
+																<div class="range-gap"></div>
+																<div class="range-value" id="eqCfg-indicator-2000">0</div>
+																<input
+																	type="range"
+																	min="-10"
+																	max="10"
+																	class="vertical-range rangeInput"
+																	value="0"
+																	id="eqCfg-range-2000"
+																	oninput="updateVerticalRangeValue(this)"
+																/>
+															</div>
+															<div class="range-wrapper">
+																<div class="range-label">4k</div>
+																<div class="range-gap"></div>
+																<div class="range-value" id="eqCfg-indicator-4000">0</div>
+																<input
+																	type="range"
+																	min="-10"
+																	max="10"
+																	class="vertical-range rangeInput"
+																	value="0"
+																	id="eqCfg-range-4000"
+																	oninput="updateVerticalRangeValue(this)"
+																/>
+															</div>
+															<div class="range-wrapper">
+																<div class="range-label">8k</div>
+																<div class="range-gap"></div>
+																<div class="range-value" id="eqCfg-indicator-8000">0</div>
+																<input
+																	type="range"
+																	min="-10"
+																	max="10"
+																	class="vertical-range rangeInput"
+																	value="0"
+																	id="eqCfg-range-8000"
+																	oninput="updateVerticalRangeValue(this)"
+																/>
+															</div>
+														</div>
+													</div>
+													<div 
+														class="tab-pane fade device_more_setting_tab" 
+														id="moreEditThingModal-u-channel" 
+														role="tabpanel" 
+														aria-labelledby="moreEditThingModal-u-channel-tab" 
+														tabindex="8"
+														style="min-height: 450px;"
+													>
+														<!-- U段配置 -->
+														<div class="mb-3 row">
+															<label 
+																for="u-channel-moreEditThingModal" 
+																class="col-sm-3 col-form-label"
+															>
+																U段值
+															</label>
+															<div class="col-sm-9">
+																<select 
+																	class="form-control form-select"
+																	id="u-channel-moreEditThingModal" 
+																	name="u-channel-moreEditThingModal" 
+																	placeholder="请选择U段值" 
+																	required
+																></select>
+															</div>
+														</div>
+													</div>
+													<div 
+														class="tab-pane fade device_more_setting_tab" 
+														id="moreEditThingModal-deviceLog" 
+														role="tabpanel" 
+														aria-labelledby="moreEditThingModal-deviceLog-tab" 
+														tabindex="9"
+													>
+														<!-- 设备日志 -->
+													</div>
+													<div 
+														class="tab-pane fade device_more_setting_tab" 
+														id="moreEditThingModal-sysInfo" 
+														role="tabpanel" 
+														aria-labelledby="moreEditThingModal-sysInfo-tab" 
+														tabindex="10"
+														style="font-size: 14px; height:  450px;"
+													>
+														<!-- 系统信息 -->
+														<div class="row mb-2">
+															<div class="col align-self-start moreEditThingModal-sysInfo-label">
+																固件版本
+															</div>
+															<div 
+																class="col align-self-end moreEditThingModal-sysInfo-content"
+																id="moreEditThingModal-sysInfo-firmware"
+															></div>
+															</div>
+														<div class="row mb-2">
+															<div class="col align-self-start moreEditThingModal-sysInfo-label">
+																制造商
+															</div>
+															<div 
+																class="col align-self-end moreEditThingModal-sysInfo-content"
+																id="moreEditThingModal-sysInfo-manufacturer"
+															></div>
+															</div>
+														<div class="row mb-2">
+															<div class="col align-self-start moreEditThingModal-sysInfo-label">
+																产品名称
+															</div>
+															<div 
+																class="col align-self-end moreEditThingModal-sysInfo-content"
+																id="moreEditThingModal-sysInfo-productName"
+															></div>
+															</div>
+														<div class="row mb-2">
+															<div class="col align-self-start moreEditThingModal-sysInfo-label">
+																产品SN
+															</div>
+															<div 
+																class="col align-self-end moreEditThingModal-sysInfo-content"
+																id="moreEditThingModal-sysInfo-productSN"
+															></div>
+															</div>
+														<div class="row mb-2" style="display: none;">
+															<div class="col align-self-start moreEditThingModal-sysInfo-label">
+																功放类型
+															</div>
+															<div 
+																class="col align-self-end moreEditThingModal-sysInfo-content"
+																id="moreEditThingModal-sysInfo-amplifierType"
+															></div>
+															</div>
+														<div class="row mb-2">
+															<div class="col align-self-start moreEditThingModal-sysInfo-label">
+																总容量
+															</div>
+															<div 
+																class="col align-self-end moreEditThingModal-sysInfo-content"
+																id="moreEditThingModal-sysInfo-totalVolumn"
+															></div>
+															</div>
+														<div class="row mb-2">
+															<div class="col align-self-start moreEditThingModal-sysInfo-label">
+																可用容量
+															</div>
+															<div 
+																class="col align-self-end moreEditThingModal-sysInfo-content"
+																id="moreEditThingModal-sysInfo-availableVolumn"
+															></div>
+															</div>
+														<div class="row mb-2">
+															<div class="col align-self-start moreEditThingModal-sysInfo-label">
+																Wifi MAC地址
+															</div>
+															<div 
+																class="col align-self-end moreEditThingModal-sysInfo-content"
+																id="moreEditThingModal-sysInfo-wifiMAC"
+															></div>
+															</div>
+														<div class="row mb-2">
+															<div class="col align-self-start moreEditThingModal-sysInfo-label">
+																以太网 MAC地址
+															</div>
+															<div 
+																class="col align-self-end moreEditThingModal-sysInfo-content"
+																id="moreEditThingModal-sysInfo-lanMAC"
+															></div>
+															</div>
+													</div>
+													<div 
+														class="tab-pane fade device_more_setting_tab" 
+														id="moreEditThingModal-otherOperation" 
+														role="tabpanel" 
+														aria-labelledby="moreEditThingModal-otherOperation-tab" 
+														tabindex="11"
+														style="height:  450px;"
+													>
+														<!-- 其他设置 -->
+														<div id="moreEditThingModal-otherOperation-container">
+															<div
+																class="hoverCard card deviceOperation-btn primaryBtn"
+																id="moreEditThingModal-otherOperation-ampCheckBtn"
+															>
+																<div class="card-body deviceOperation-btn-container">
+																	<div class="deviceOperation-btn-icon">
+																		<i class="fa-brands fa-nfc-directional"></i>
+																	</div>
+																	<div class="row">
+																		功放检测
+																	</div>
+																</div>
+															</div>
+															<div
+																class="hoverCard card deviceOperation-btn primaryBtn"
+																id="moreEditThingModal-otherOperation-ledBtn"
+															>
+																<div class="card-body deviceOperation-btn-container">
+																	<div class="deviceOperation-btn-icon">
+																		<i class="fa-solid fa-lightbulb"></i>
+																	</div>
+																	<div class="row">
+																		状态灯
+																	</div>
+																</div>
+															</div>
+															<div
+																class="hoverCard card deviceOperation-btn primaryBtn"
+																id="moreEditThingModal-otherOperation-stereoBtn"
+															>
+																<div class="card-body deviceOperation-btn-container">
+																	<div class="deviceOperation-btn-icon">
+																		<i class="fa-solid fa-volume-high"></i>
+																	</div>
+																	<div class="row">
+																		立体声
+																	</div>
+																</div>
+															</div>
+														</div>
+													</div>
+													<div 
+														class="tab-pane fade device_more_setting_tab" 
+														id="moreEditThingModal-deviceOperation" 
+														role="tabpanel" 
+														aria-labelledby="moreEditThingModal-deviceOperation-tab" 
+														tabindex="12"
+														style="height:  450px;"
+													>
+														<!-- 设备操作 -->
+														<div class="row">
+															<div
+																class="hoverCard card deviceOperation-btn dangerBtn"
+																id="moreEditThingModal-deviceOperation-rebootBtn"
+															>
+																<div class="card-body deviceOperation-btn-container">
+																	<div class="deviceOperation-btn-icon">
+																		<i class="fa-solid fa-power-off"></i>
+																	</div>
+																	<div class="row">
+																		设备重启
+																	</div>
+																</div>
+															</div>
+															<div
+																class="hoverCard card deviceOperation-btn dangerBtn"
+																id="moreEditThingModal-deviceOperation-deleteBtn"
+															>
+																<div class="card-body deviceOperation-btn-container">
+																	<div class="deviceOperation-btn-icon">
+																		<i class="fa-solid fa-trash-can"></i>
+																	</div>
+																	<div class="row">
+																		设备删除
+																	</div>
+																</div>
+															</div>
+															<div
+																class="hoverCard card deviceOperation-btn dangerBtn"
+																id="moreEditThingModal-deviceOperation-resetBtn"
+															>
+																<div class="card-body deviceOperation-btn-container">
+																	<div class="deviceOperation-btn-icon">
+																		<i class="fa-solid fa-arrows-rotate"></i>
+																	</div>
+																	<div class="row">
+																		恢复出厂
+																	</div>
+																</div>
+															</div>
+														</div>
+													</div>
+												</div>
+												</div>
+										</div>
+									</div>
+								</div>
+							</div>
+
+							<!-- 广播区域添加弹框 -->
+							<div 
+								class="modal fade" 
+								id="networkSpeechAreasAddModal" 
+								tabindex="-1" 
+								role="dialog" 
+								aria-labelledby="network_speech_areas_AddModalLabel" 
+								aria-hidden="true"
+								data-bs-backdrop="static" 
+								data-bs-keyboard="false"  
+							>
+								<div class="modal-dialog" role="document">
+									<div class="modal-content">
+										<div class="modal-header">
+											<h1 class="modal-title" id="networkSpeechAreasAddModal">广播区域</h1>
+											<button type="button" 
+												class="btn-close" 
+												data-bs-dismiss="modal" 
+												aria-label="Close" 
+												onclick="closeNetworkSpeechAreasAddModal();"
+											></button>
+										</div>
+										<div class="modal-body">
+											<div class="mb-3" style="max-height:  450px; overflow-y: auto;">
+												<div id="network_speech_area_tree"></div>
+											</div>
 											<div class="modal-footer">
-												<button type="button" class="btn btn-secondary" data-bs-dismiss="modal" onclick="scanThingsModal.show();">
+												<button 
+													type="button" 
+													class="btn btn-secondary" 
+													data-bs-dismiss="modal" 
+													onclick="closeNetworkSpeechAreasAddModal();"
+												>
 													<i class="fa-solid fa-xmark"></i> 取消
 												</button>
-												<button type="button" class="btn body-button" id="deviceNetCfgModal-confirm-button">
+												<button type="button" class="btn body-button" id="confirm_network_speech_areas_AddModalBtn">
 													<i class="fa-solid fa-floppy-disk"></i> 确定
 												</button>
 											</div>
@@ -1414,152 +1179,387 @@ SPDX-License-Identifier: Apache-2.0 -->
 									</div>
 								</div>
 							</div>
-							<div class="table-responsive table-container">
-								<div class="row buttons mb-3">
-									<div class="col-4" role="group">
-										<button type="button" class="btn body-button" onclick="openModal('scan')">
-											<i class="fa-solid fa-plus"></i> 添加设备
-										</button>
-									</div>
-									<div class="btn-group col-4" role="group">
-										<input type="radio" class="btn-check" name="btnOnlineStatus" id="btnAll" autocomplete="off" />
-										<label class="btn btn-outline-primary" for="btnAll">全部</label>
-										
-										<input type="radio" class="btn-check" name="btnOnlineStatus" id="btnOnline" autocomplete="off" />
-										<label class="btn btn-outline-primary" for="btnOnline">在线</label>
-										
-										<input type="radio" class="btn-check" name="btnOnlineStatus" id="btnOffline" autocomplete="off" />
-										<label class="btn btn-outline-primary" for="btnOffline">离线</label>
-									</div>
-								</div>
-								<div class="cards-grid" id="thingsGrid">
-									{{ range $i, $t := .Things }}
-									<div id="{{ $t.ID }}-thingCard">
-										<div 
-											class="hoverCard card"  
-											id="{{ $t.ID }}-thingCardContent"
-											{{ if $t.Metadata.is_online }}
-												{{ if eq $t.Metadata.is_online "1" }}
-												style="background: rgba(255, 255, 255, 0.8);"
-												{{ else }}
-												style="background: rgba(0, 0, 0, 0.1);"
-												{{ end }}
-											{{ end }}
-										>
-											<div class="card-body">
-												<div class="row">
-													<div class="col">
-														{{ if $t.Metadata.product_name }}
-															{{ if or (stringContains $t.Metadata.product_name "2204") 
-																(stringContains $t.Metadata.product_name "2200") 
-																(stringContains $t.Metadata.product_name "2201") }}
-																<img loading="lazy" id="{{ $t.ID }}-thingIcon" src="/images/logo_2204.png" class="hoverCardIcon" />
-															{{ else if or (stringContains $t.Metadata.product_name "2102") 
-																(stringContains $t.Metadata.product_name "2110")
-																(stringContains $t.Metadata.product_name "2112") }}
-																<img loading="lazy" id="{{ $t.ID }}-thingIcon" src="/images/logo_2102.png" class="hoverCardIcon" />
-															{{ else if stringContains $t.Metadata.product_name "3302" }}
-																<img loading="lazy" id="{{ $t.ID }}-thingIcon" src="/images/icon_device3.svg" class="hoverCardIcon" />
-															{{ else if or (stringContains $t.Metadata.product_name "2001")
-																(stringContains $t.Metadata.product_name "2011") }}
-																<img loading="lazy" id="{{ $t.ID }}-thingIcon" src="/images/icon_device4.svg" class="hoverCardIcon" />
-															{{ else if or (stringContains $t.Metadata.product_name "3401")
-																(stringContains $t.Metadata.product_name "2401") }}
-																<img loading="lazy" id="{{ $t.ID }}-thingIcon" src="/images/icon_device5.svg" class="hoverCardIcon" />
-															{{ else if stringContains $t.Metadata.product_name "3602" }}
-																<img loading="lazy" id="{{ $t.ID }}-thingIcon" src="/images/logo_3602.png" class="hoverCardIcon" />
-															{{ else }}
-																<img loading="lazy" id="{{ $t.ID }}-thingIcon" src="/images/icon_device0.svg" class="hoverCardIcon" />
-															{{ end }}
-														{{ end }}
-													</div>
-													<div class="col">
-														<div class="dropdown" style="float: right;">
-															<button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-																<i class="fa-solid fa-ellipsis"></i>
-															</button>
-															<ul class="dropdown-menu">
-																<li style="display: none;">
-																	<a class="dropdown-item" onclick="viewThing('{{ $t.ID }}', '{{ $t.Credentials.Identity }}')">
-																		<i class="fa-solid fa-info" style="width: 16px;"></i> 查看
-																	</a>
-																</li>
-																<li
-																	id="{{ $t.ID }}-rebootBtn"
-																	{{ if $t.Metadata.is_online }}
-																		{{ if eq $t.Metadata.is_online "1" }}
-																		style="display: block;"
-																		{{ else }}
-																		style="display: none;"
-																		{{ end }}
-																	{{ end }}
-																>
-																	<a class="dropdown-item" onclick="rebootThing('{{ $t.Credentials.Identity }}')">
-																		<i class="fa-solid fa-power-off" style="width: 16px;"></i> 设备重启
-																	</a>
-																</li>
-																<li 
-																	id="{{ $t.ID }}-editBtn"
-																	{{ if $t.Metadata.is_online }}
-																		{{ if eq $t.Metadata.is_online "1" }}
-																		style="display: block;"
-																		{{ else }}
-																		style="display: none;"
-																		{{ end }}
-																	{{ end }}
-																>
-																	<a class="dropdown-item" onclick="editThing('{{ $t.ID }}')">
-																		<i class="fa-solid fa-gear" style="width: 16px;"></i> 设备设置
-																	</a>
-																</li>
-																<li id="{{ $t.ID }}-deleteBtn">
-																	<a class="dropdown-item" onclick="deleteThing('{{ $t.ID }}', true)" >
-																		<i class="fa-solid fa-trash-can" style="width: 16px;"></i> 设备删除
-																	</a>
-																</li>
-															</ul>
-														</div>
-													</div>
-												</div>
-												<div class="row">
-													{{ if $t.Metadata.out_channel_array }}
-														{{ $length := len $t.Metadata.out_channel_array }}
-														{{if bigger $length 1}}
-														<div class="row" style="position: absolute; bottom: 40px; padding-left: 24px;">
-															{{ range $i, $o := $t.Metadata.out_channel_array }}
-															<i 
-																class="fa-solid fa-{{ add $i 1 }} deviceChannelIcon" 
-																data-bs-toggle="tooltip" 
-																data-bs-placement="bottom" 
-																data-bs-title="{{ $o.aliase }}" 
-																title="{{ $o.aliase }}"
-															></i>
-															{{ end }}
-														</div>
-														{{ end }}
-													{{ end }}
-													<h5 
-														id="{{ $t.ID }}-deviceName"
-														class="card-title truncate-text" 
-														data-bs-toggle="tooltip" 
-														data-bs-placement="bottom" 
-														data-bs-title="{{ $t.Name }}" 
-														title="{{ $t.Name }}"
-													>
-														{{ $t.Name }}
-													</h5>
-												</div>
+
+							<!-- 广播区域详情弹框 -->
+							<div 
+								class="modal fade" 
+								id="networkSpeechAreasDetailModal" 
+								tabindex="-1" 
+								role="dialog" 
+								aria-labelledby="network_speech_areas_detail_modal_label" 
+								aria-hidden="true"
+								data-bs-backdrop="static" 
+								data-bs-keyboard="false"  
+							>
+								<div class="modal-dialog" role="document">
+									<div class="modal-content">
+										<div class="modal-header">
+											<h1 class="modal-title" id="networkSpeechAreasDetailModal">广播区域</h1>
+											<button 
+												type="button" 
+												class="btn-close" 
+												data-bs-dismiss="modal" 
+												aria-label="Close" 
+												onclick="moreEditThingModal.show();"
+											></button>
+										</div>
+										<div class="modal-body">
+											<div class="mb-3" style="max-height:  450px; overflow-y: auto;">
+												<div class="row row-cols-4 g-3" id="network_speech_areas_detail_list_container"></div>
 											</div>
 										</div>
 									</div>
-									{{ end }}
 								</div>
 							</div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-			<script src="/js/pages/things.js" type="text/javascript"></script>
-        </body>
-    </html>
+
+							<!-- 收音机添加弹框 -->
+							<div 
+								class="modal fade" 
+								id="addRadioFreqModal" 
+								tabindex="-1" 
+								role="dialog" 
+								aria-labelledby="addRadioFreqModalLabel" 
+								data-bs-backdrop="static" 
+								data-bs-keyboard="false" 
+								aria-hidden="true"
+							>
+								<div class="modal-dialog" role="document">
+									<div class="modal-content">
+										<div class="modal-header">
+											<h1 class="modal-title">添加频道</h1>
+											<button 
+												type="button" 
+												class="btn-close" 
+												data-bs-dismiss="modal" 
+												aria-label="Close" 
+												onclick="moreEditThingModal.show();"
+											></button>
+										</div>
+										<form id="form-addRadioFreqModal">
+											<div class="modal-body" style="padding: 35px;">
+												<div class="mb-3 row">
+													<label for="name" class="col-sm-3 col-form-label">频道名称</label>
+													<div class="col-sm-9">
+														<input 
+															type="text" 
+															class="form-control name-field" 
+															name="name" 
+															id="name-addRadioFreqModal" 
+															placeholder="频道名称" 
+															maxlength="20" 
+														/>
+														<div id="name-error-addRadioFreqModal" class="text-danger inputError"></div>
+													</div>
+												</div>
+												<div class="mb-3 row">
+													<label for="freq" class="col-sm-3 col-form-label">频道号</label>
+													<div class="col-sm-9">
+														<input 
+															type="text" 
+															class="form-control name-field" 
+															name="freq" 
+															id="freq-addRadioFreqModal" 
+															placeholder="频道号" 
+															maxlength="20" 
+														/>
+														<div id="freq-error-addRadioFreqModal" class="text-danger inputError"></div>
+													</div>
+												</div>
+											</div>
+											<div class="modal-footer">
+												<button 
+													type="button" 
+													class="btn btn-secondary" 
+													data-bs-dismiss="modal" 
+													onclick="moreEditThingModal.show();"
+												>
+													<i class="fa-solid fa-xmark"></i> 取消
+												</button>
+												<button type="button" class="btn body-button" id="confirm-btn-addRadioFreqModal">
+													<i class="fa-solid fa-floppy-disk"></i> 确定
+												</button>
+											</div>
+										</form>
+									</div>
+								</div>
+							</div>
+
+							<!-- 扫描添加设备弹框 -->
+							<div 
+								class="modal fade" 
+								id="scanThingsModal" 
+								tabindex="-1" 
+								role="dialog" 
+								aria-labelledby="scanThingsModalLabel" 
+								data-bs-backdrop="static" 
+								data-bs-keyboard="false" 
+								aria-hidden="true"
+							>
+								<div class="modal-dialog" role="document">
+									<div class="modal-content">
+										<div class="modal-header">
+											<h1 class="modal-title" id="scanThingsModalLabel">添加设备</h1>
+											<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+										</div>
+										<div class="modal-body" style="padding: 30px;">
+											<div class="row">
+											<ul class="list-group" id="scanThingsGrid" style="padding-left: 10px; max-height:  450px; overflow-y: auto;">
+											</ul>
+											</div>
+										</div>
+										<div class="modal-footer">
+											<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+												<i class="fa-solid fa-xmark"></i> 取消
+											</button>
+											<button type="button" class="btn body-button" id="scan-add-thing-button" disabled>
+												<i class="fa-solid fa-plus"></i> 添加设备
+											</button>
+										</div>
+									</div>
+								</div>
+							</div>
+
+							<!-- 扫描添加-网络配置弹框 -->
+							<div 
+								class="modal fade" 
+								id="deviceNetCfgModal" 
+								tabindex="-1" 
+								role="dialog" 
+								aria-labelledby="deviceNetCfgModalLabel" 
+								data-bs-backdrop="static" 
+								data-bs-keyboard="false" 
+								aria-hidden="true"
+							>
+								<div class="modal-dialog" role="document">
+									<div class="modal-content">
+										<div class="modal-header">
+											<h1 class="modal-title" id="scanThingsModalLabel">设备网络设置</h1>
+											<button 
+												type="button" 
+												class="btn-close" 
+												data-bs-dismiss="modal" 
+												aria-label="Close" 
+												onclick="scanThingsModal.show();"
+											></button>
+										</div>
+										<div class="modal-body" style="padding: 30px 50px;">
+											<div class="mb-3 row">
+												<label for="alias" class="col-sm-3 col-form-label">设备名称</label>
+												<div class="col-sm-9">
+													<input 
+														type="text" 
+														class="form-control" 
+														name="alias" 
+														id="alias-deviceNetCfg" 
+														placeholder="设备名称" 
+														maxlength="20" 
+													/>
+													<div id="aliasError" class="text-danger inputError"></div>
+												</div>
+											</div>
+											<div class="mb-3 row">
+												<label for="dhcp_enable" class="col-sm-3 col-form-label">设置IP</label>
+												<div class="col-sm-9">
+													<select class="form-control" name="dhcp_enable" id="dhcp_enable-deviceNetCfg">
+														<option value="0">手动</option>
+														<option value="1">自动</option>
+													</select>
+												</div>
+											</div>
+											<div class="mb-3 row">
+												<label for="ip" class="col-sm-3 col-form-label">IP地址</label>
+												<div class="col-sm-9">
+													<input type="text" class="form-control" name="ip" id="ip-deviceNetCfg" placeholder="IP地址" />
+													<div id="ipError" class="text-danger inputError"></div>
+												</div>
+											</div>
+											<div class="mb-3 row">
+												<label for="gateway" class="col-sm-3 col-form-label">网关</label>
+												<div class="col-sm-9">
+													<input type="text" class="form-control" name="gateway" id="gateway-deviceNetCfg" placeholder="网关" />
+													<div id="gatewayError" class="text-danger inputError"></div>
+												</div>
+											</div>
+											<div class="mb-3 row">
+												<label for="netmask" class="col-sm-3 col-form-label">子网掩码</label>
+												<div class="col-sm-9">
+													<input type="text" class="form-control" name="netmask" id="netmask-deviceNetCfg" placeholder="子网掩码" />
+													<div id="netmaskError" class="text-danger inputError"></div>
+												</div>
+											</div>
+											<div class="mb-3 row">
+												<label for="dns1" class="col-sm-3 col-form-label">主DNS</label>
+												<div class="col-sm-9">
+													<input type="text" class="form-control" name="dns1" id="dns1-deviceNetCfg" placeholder="主DNS" />
+													<div id="dns1Error" class="text-danger inputError"></div>
+												</div>
+											</div>
+											<div class="mb-3 row">
+												<label for="dns2" class="col-sm-3 col-form-label">从DNS</label>
+												<div class="col-sm-9">
+													<input type="text" class="form-control" name="dns2" id="dns2-deviceNetCfg" placeholder="从DNS" />
+													<div id="dns2Error" class="text-danger inputError"></div>
+												</div>
+											</div>
+										</div>
+										<div class="modal-footer">
+											<button type="button" class="btn btn-secondary" data-bs-dismiss="modal" onclick="scanThingsModal.show();">
+												<i class="fa-solid fa-xmark"></i> 取消
+											</button>
+											<button type="button" class="btn body-button" id="deviceNetCfgModal-confirm-button">
+												<i class="fa-solid fa-floppy-disk"></i> 确定
+											</button>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="table-responsive table-container">
+							<div class="row buttons mb-3">
+								<div class="col-4" role="group">
+									<button type="button" class="btn body-button" onclick="openModal('scan')">
+										<i class="fa-solid fa-plus"></i> 添加设备
+									</button>
+								</div>
+								<div class="btn-group col-4" role="group">
+									<input type="radio" class="btn-check" name="btnOnlineStatus" id="btnAll" autocomplete="off" />
+									<label class="btn btn-outline-primary" for="btnAll">全部</label>
+									
+									<input type="radio" class="btn-check" name="btnOnlineStatus" id="btnOnline" autocomplete="off" />
+									<label class="btn btn-outline-primary" for="btnOnline">在线</label>
+									
+									<input type="radio" class="btn-check" name="btnOnlineStatus" id="btnOffline" autocomplete="off" />
+									<label class="btn btn-outline-primary" for="btnOffline">离线</label>
+								</div>
+							</div>
+							<div class="cards-grid" id="thingsGrid">
+								{{ range $i, $t := .Things }}
+								<div id="{{ $t.ID }}-thingCard">
+									<div 
+										class="hoverCard card"  
+										id="{{ $t.ID }}-thingCardContent"
+										{{ if $t.Metadata.is_online }}
+											{{ if eq $t.Metadata.is_online "1" }}
+											style="background: rgba(255, 255, 255, 0.8);"
+											{{ else }}
+											style="background: rgba(0, 0, 0, 0.1);"
+											{{ end }}
+										{{ end }}
+									>
+										<div class="card-body">
+											<div class="row">
+												<div class="col">
+													{{ if $t.Metadata.product_name }}
+														{{ if or (stringContains $t.Metadata.product_name "2204") 
+															(stringContains $t.Metadata.product_name "2200") 
+															(stringContains $t.Metadata.product_name "2201") }}
+															<img loading="lazy" id="{{ $t.ID }}-thingIcon" src="/images/logo_2204.png" class="hoverCardIcon" />
+														{{ else if or (stringContains $t.Metadata.product_name "2102") 
+															(stringContains $t.Metadata.product_name "2110")
+															(stringContains $t.Metadata.product_name "2112") }}
+															<img loading="lazy" id="{{ $t.ID }}-thingIcon" src="/images/logo_2102.png" class="hoverCardIcon" />
+														{{ else if stringContains $t.Metadata.product_name "3302" }}
+															<img loading="lazy" id="{{ $t.ID }}-thingIcon" src="/images/icon_device3.svg" class="hoverCardIcon" />
+														{{ else if or (stringContains $t.Metadata.product_name "2001")
+															(stringContains $t.Metadata.product_name "2011") }}
+															<img loading="lazy" id="{{ $t.ID }}-thingIcon" src="/images/icon_device4.svg" class="hoverCardIcon" />
+														{{ else if or (stringContains $t.Metadata.product_name "3401")
+															(stringContains $t.Metadata.product_name "2401") }}
+															<img loading="lazy" id="{{ $t.ID }}-thingIcon" src="/images/icon_device5.svg" class="hoverCardIcon" />
+														{{ else if stringContains $t.Metadata.product_name "3602" }}
+															<img loading="lazy" id="{{ $t.ID }}-thingIcon" src="/images/logo_3602.png" class="hoverCardIcon" />
+														{{ else }}
+															<img loading="lazy" id="{{ $t.ID }}-thingIcon" src="/images/icon_device0.svg" class="hoverCardIcon" />
+														{{ end }}
+													{{ end }}
+												</div>
+												<div class="col">
+													<div class="dropdown" style="float: right;">
+														<button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+															<i class="fa-solid fa-ellipsis"></i>
+														</button>
+														<ul class="dropdown-menu">
+															<li style="display: none;">
+																<a class="dropdown-item" onclick="viewThing('{{ $t.ID }}', '{{ $t.Credentials.Identity }}')">
+																	<i class="fa-solid fa-info" style="width: 16px;"></i> 查看
+																</a>
+															</li>
+															<li
+																id="{{ $t.ID }}-rebootBtn"
+																{{ if $t.Metadata.is_online }}
+																	{{ if eq $t.Metadata.is_online "1" }}
+																	style="display: block;"
+																	{{ else }}
+																	style="display: none;"
+																	{{ end }}
+																{{ end }}
+															>
+																<a class="dropdown-item" onclick="rebootThing('{{ $t.Credentials.Identity }}')">
+																	<i class="fa-solid fa-power-off" style="width: 16px;"></i> 设备重启
+																</a>
+															</li>
+															<li 
+																id="{{ $t.ID }}-editBtn"
+																{{ if $t.Metadata.is_online }}
+																	{{ if eq $t.Metadata.is_online "1" }}
+																	style="display: block;"
+																	{{ else }}
+																	style="display: none;"
+																	{{ end }}
+																{{ end }}
+															>
+																<a class="dropdown-item" onclick="editThing('{{ $t.ID }}')">
+																	<i class="fa-solid fa-gear" style="width: 16px;"></i> 设备设置
+																</a>
+															</li>
+															<li id="{{ $t.ID }}-deleteBtn">
+																<a class="dropdown-item" onclick="deleteThing('{{ $t.ID }}', true)" >
+																	<i class="fa-solid fa-trash-can" style="width: 16px;"></i> 设备删除
+																</a>
+															</li>
+														</ul>
+													</div>
+												</div>
+											</div>
+											<div class="row">
+												{{ if $t.Metadata.out_channel_array }}
+													{{ $length := len $t.Metadata.out_channel_array }}
+													{{if bigger $length 1}}
+													<div class="row" style="position: absolute; bottom: 40px; padding-left: 24px;">
+														{{ range $i, $o := $t.Metadata.out_channel_array }}
+														<i 
+															class="fa-solid fa-{{ add $i 1 }} deviceChannelIcon" 
+															data-bs-toggle="tooltip" 
+															data-bs-placement="bottom" 
+															data-bs-title="{{ $o.aliase }}" 
+															title="{{ $o.aliase }}"
+														></i>
+														{{ end }}
+													</div>
+													{{ end }}
+												{{ end }}
+												<h5 
+													id="{{ $t.ID }}-deviceName"
+													class="card-title truncate-text" 
+													data-bs-toggle="tooltip" 
+													data-bs-placement="bottom" 
+													data-bs-title="{{ $t.Name }}" 
+													title="{{ $t.Name }}"
+												>
+													{{ $t.Name }}
+												</h5>
+											</div>
+										</div>
+									</div>
+								</div>
+								{{ end }}
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<script src="/js/pages/things.js" type="text/javascript"></script>
+	</body>
+</html>
 {{ end }}

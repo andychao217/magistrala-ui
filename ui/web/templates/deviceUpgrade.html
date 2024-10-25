@@ -2,117 +2,117 @@
 SPDX-License-Identifier: Apache-2.0 -->
 
 {{ define "deviceupgrade" }}
-    <!doctype html>
-    <html lang="en">
-        <head>
-            <title></title>
-            {{ template "header" }}
-        </head>
-        <body>
-            {{ template "navbar" }}
-            <div class="main-content">
-                <div class="container-fluid-1">
-                    <div class="row-mb-3">
-                        <div class="col-12 mx-auto">
-                             <!-- 固件升级弹框 -->
-                             <div 
-                                class="modal fade" 
-                                id="updateDeviceModal" 
-                                tabindex="-1" 
-                                role="dialog" 
-                                aria-labelledby="updateDeviceModalLabel"
-                                data-bs-backdrop="static" 
-                                data-bs-keyboard="false"  
-                                aria-hidden="true"
-                            >
-                                <div class="modal-dialog" role="document">
-                                    <div class="modal-content" style="width: 750px;">
-                                        <div class="modal-header">
-                                            <h1 class="modal-title truncate-text">
-                                                <span>升级</span>(<span id="updateDeviceModalTitle"></span>)
-                                            </h1>
-                                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+<!doctype html>
+<html lang="en">
+    <head>
+        <title>设备更新</title>
+        {{ template "header" }}
+    </head>
+    <body>
+        {{ template "navbar" }}
+        <div class="main-content">
+            <div class="container-fluid-1">
+                <div class="row-mb-3">
+                    <div class="col-12 mx-auto">
+                            <!-- 固件升级弹框 -->
+                            <div 
+                            class="modal fade" 
+                            id="updateDeviceModal" 
+                            tabindex="-1" 
+                            role="dialog" 
+                            aria-labelledby="updateDeviceModalLabel"
+                            data-bs-backdrop="static" 
+                            data-bs-keyboard="false"  
+                            aria-hidden="true"
+                        >
+                            <div class="modal-dialog" role="document">
+                                <div class="modal-content" style="width: 750px;">
+                                    <div class="modal-header">
+                                        <h1 class="modal-title truncate-text">
+                                            <span>升级</span>(<span id="updateDeviceModalTitle"></span>)
+                                        </h1>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <div class="row" id="updateDeviceTableContainer">
+                                            <table 
+                                                id="updateDeviceTable"
+                                                class="table table-hover"
+                                                data-checkbox-header="true"
+                                                data-click-to-select="false"
+                                            >
+                                                <thead>
+                                                    <tr>
+                                                        <th 
+                                                            data-field="product_icon" 
+                                                            data-halign="center" 
+                                                            data-align="center" 
+                                                            data-formatter="productIconUpdateDeviceTableFormatter"
+                                                        ></th>
+                                                        <th 
+                                                            data-field="product_name" 
+                                                            data-halign="left" 
+                                                            data-align="left" 
+                                                            data-formatter="productNameUpdateDeviceTableFormatter"
+                                                        >
+                                                            设备名称
+                                                        </th>
+                                                        <th 
+                                                            data-field="version" 
+                                                            data-halign="left" 
+                                                            data-align="left" 
+                                                            data-formatter="versionUpdateDeviceTableFormatter"
+                                                        >
+                                                            当前版本
+                                                        </th>
+                                                        <th 
+                                                            data-field="newest_version" 
+                                                            data-halign="left" 
+                                                            data-align="left" 
+                                                            data-formatter="newVerUpdateDeviceTableFormatter"
+                                                        >
+                                                            最新版本
+                                                        </th>
+                                                        <th 
+                                                            data-field="action" 
+                                                            data-halign="center" 
+                                                            data-align="center" 
+                                                            data-formatter="actionFirmwareTableFormatter"
+                                                        >
+                                                            操作
+                                                        </th>
+                                                    </tr>
+                                                </thead>
+                                            </table>
                                         </div>
-                                        <div class="modal-body">
-                                            <div class="row" id="updateDeviceTableContainer">
-                                                <table 
-                                                    id="updateDeviceTable"
-                                                    class="table table-hover"
-                                                    data-checkbox-header="true"
-                                                    data-click-to-select="false"
-                                                >
-                                                    <thead>
-                                                        <tr>
-                                                            <th 
-                                                                data-field="product_icon" 
-                                                                data-halign="center" 
-                                                                data-align="center" 
-                                                                data-formatter="productIconUpdateDeviceTableFormatter"
-                                                            ></th>
-                                                            <th 
-                                                                data-field="product_name" 
-                                                                data-halign="left" 
-                                                                data-align="left" 
-                                                                data-formatter="productNameUpdateDeviceTableFormatter"
-                                                            >
-                                                                设备名称
-                                                            </th>
-                                                            <th 
-                                                                data-field="version" 
-                                                                data-halign="left" 
-                                                                data-align="left" 
-                                                                data-formatter="versionUpdateDeviceTableFormatter"
-                                                            >
-                                                                当前版本
-                                                            </th>
-                                                            <th 
-                                                                data-field="newest_version" 
-                                                                data-halign="left" 
-                                                                data-align="left" 
-                                                                data-formatter="newVerUpdateDeviceTableFormatter"
-                                                            >
-                                                                最新版本
-                                                            </th>
-                                                            <th 
-                                                                data-field="action" 
-                                                                data-halign="center" 
-                                                                data-align="center" 
-                                                                data-formatter="actionFirmwareTableFormatter"
-                                                            >
-                                                                操作
-                                                            </th>
-                                                        </tr>
-                                                    </thead>
-                                                </table>
-                                            </div>
-                                        </div>
-                                        <div class="modal-footer">
-                                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
-                                                <i class="fa-solid fa-xmark"></i> 取消
-                                            </button>
-                                            <button type="submit" class="btn body-button" id="updateAllBtn">
-                                                <i class="fa-solid fa-upload"></i> 全部升级
-                                            </button>
-                                        </div>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                                            <i class="fa-solid fa-xmark"></i> 取消
+                                        </button>
+                                        <button type="submit" class="btn body-button" id="updateAllBtn">
+                                            <i class="fa-solid fa-upload"></i> 全部升级
+                                        </button>
                                     </div>
                                 </div>
                             </div>
+                        </div>
 
-                            <div class="table-responsive table-container">
-                                <div class="row buttons mb-3">
-									<div class="col-4" role="group">
-										<button type="button" class="btn body-button" id="refreshBtn">
-											<i class="fa-solid fa-arrows-rotate"></i> 刷新
-										</button>
-									</div>
-								</div>
-                                <div class="cards-grid" id="productsGrid"></div>
+                        <div class="table-responsive table-container">
+                            <div class="row buttons mb-3">
+                                <div class="col-4" role="group">
+                                    <button type="button" class="btn body-button" id="refreshBtn">
+                                        <i class="fa-solid fa-arrows-rotate"></i> 刷新
+                                    </button>
+                                </div>
                             </div>
+                            <div class="cards-grid" id="productsGrid"></div>
                         </div>
                     </div>
                 </div>
             </div>
-            <script src="/js/pages/deviceUpgrade.js" type="text/javascript"></script>
-        </body>
-    </html>
+        </div>
+        <script src="/js/pages/deviceUpgrade.js" type="text/javascript"></script>
+    </body>
+</html>
 {{ end }}

@@ -2,132 +2,132 @@
 SPDX-License-Identifier: Apache-2.0 -->
 
 {{ define "firmware" }}
-    <!doctype html>
-    <html lang="en">
-        <head>
-            <title></title>
-            {{ template "header" }}
-        </head>
-        <body>
-            {{ template "navbar" }}
-            <div class="main-content">
-                <div class="container-fluid-1">
-                    <div class="row-mb-3">
-                        <div class="col-12 mx-auto">
-                            <!-- 上传固件弹框 -->
-                            <div 
-                                class="modal fade" 
-                                id="uploadModal" 
-                                tabindex="-1" 
-                                role="dialog" 
-                                aria-labelledby="uploadModalLabel"
-                                data-bs-backdrop="static" 
-                                data-bs-keyboard="false"  
-                                aria-hidden="true"
-                            >
-                                <div class="modal-dialog" role="document">
-                                    <div class="modal-content">
-                                        <div class="modal-header">
-                                            <h1 class="modal-title truncate-text" id="uploadModalModalTitle">上传固件</h1>
-                                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                        </div>
-                                        <div class="modal-body">
-                                            <input 
-                                                type="text" 
-                                                class="form-control"
-                                                id="fileInputLabel" 
-                                                placeholder="请点击选择固件" 
-                                                readonly
-                                                style="cursor: pointer;"
-                                            />
-                                            <input type="file" id="fileInput" accept=".img" style="display: none;">
-                                            <progress id="progressBar" value="0" max="100" style="width: 100%; display: none;"></progress>
-                                        </div>
-                                        <div class="modal-footer">
-                                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
-                                                <i class="fa-solid fa-xmark"></i> 取消
-                                            </button>
-                                            <button type="submit" class="btn body-button" id="uploadButton">
-                                                <i class="fa-solid fa-upload"></i> 上传
-                                            </button>
+<!doctype html>
+<html lang="en">
+    <head>
+        <title>固件</title>
+        {{ template "header" }}
+    </head>
+    <body>
+        {{ template "navbar" }}
+        <div class="main-content">
+            <div class="container-fluid-1">
+                <div class="row-mb-3">
+                    <div class="col-12 mx-auto">
+                        <!-- 上传固件弹框 -->
+                        <div 
+                            class="modal fade" 
+                            id="uploadModal" 
+                            tabindex="-1" 
+                            role="dialog" 
+                            aria-labelledby="uploadModalLabel"
+                            data-bs-backdrop="static" 
+                            data-bs-keyboard="false"  
+                            aria-hidden="true"
+                        >
+                            <div class="modal-dialog" role="document">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h1 class="modal-title truncate-text" id="uploadModalModalTitle">上传固件</h1>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <input 
+                                            type="text" 
+                                            class="form-control"
+                                            id="fileInputLabel" 
+                                            placeholder="请点击选择固件" 
+                                            readonly
+                                            style="cursor: pointer;"
+                                        />
+                                        <input type="file" id="fileInput" accept=".img" style="display: none;">
+                                        <progress id="progressBar" value="0" max="100" style="width: 100%; display: none;"></progress>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                                            <i class="fa-solid fa-xmark"></i> 取消
+                                        </button>
+                                        <button type="submit" class="btn body-button" id="uploadButton">
+                                            <i class="fa-solid fa-upload"></i> 上传
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- 固件列表弹框 -->
+                        <div 
+                            class="modal fade" 
+                            id="firmwareListModal" 
+                            tabindex="-1" 
+                            role="dialog" 
+                            aria-labelledby="firmwareListModalLabel"
+                            data-bs-backdrop="static" 
+                            data-bs-keyboard="false"  
+                            aria-hidden="true"
+                        >
+                            <div class="modal-dialog" role="document">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h1 class="modal-title truncate-text">
+                                            <span>固件列表</span>(<span id="firmwareListModalTitle"></span>)
+                                        </h1>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <div class="row" id="firmwareListTableContainer">
+                                            <table 
+                                                id="firmwareListTable"
+                                                class="table table-hover"
+                                                data-checkbox-header="true"
+                                                data-click-to-select="false"
+                                            >
+                                                <thead>
+                                                    <tr>
+                                                        <th data-field="version" data-halign="center" data-align="center">固件版本</th>
+                                                        <th data-field="upload_user" data-halign="center" data-align="center">上传者</th>
+                                                        <th data-field="upload_time" data-halign="center" data-align="center">上传日期</th>
+                                                        <th 
+                                                            data-field="action" 
+                                                            data-halign="center" 
+                                                            data-align="center" 
+                                                            data-formatter="actionFirmwareTableFormatter"
+                                                        >
+                                                            操作
+                                                        </th>
+                                                    </tr>
+                                                </thead>
+                                            </table>
                                         </div>
                                     </div>
                                 </div>
                             </div>
+                        </div>
 
-                            <!-- 固件列表弹框 -->
-                            <div 
-                                class="modal fade" 
-                                id="firmwareListModal" 
-                                tabindex="-1" 
-                                role="dialog" 
-                                aria-labelledby="firmwareListModalLabel"
-                                data-bs-backdrop="static" 
-                                data-bs-keyboard="false"  
-                                aria-hidden="true"
-                            >
-                                <div class="modal-dialog" role="document">
-                                    <div class="modal-content">
-                                        <div class="modal-header">
-                                            <h1 class="modal-title truncate-text">
-                                                <span>固件列表</span>(<span id="firmwareListModalTitle"></span>)
-                                            </h1>
-                                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                        </div>
-                                        <div class="modal-body">
-                                            <div class="row" id="firmwareListTableContainer">
-                                                <table 
-                                                    id="firmwareListTable"
-                                                    class="table table-hover"
-                                                    data-checkbox-header="true"
-                                                    data-click-to-select="false"
-                                                >
-                                                    <thead>
-                                                        <tr>
-                                                            <th data-field="version" data-halign="center" data-align="center">固件版本</th>
-                                                            <th data-field="upload_user" data-halign="center" data-align="center">上传者</th>
-                                                            <th data-field="upload_time" data-halign="center" data-align="center">上传日期</th>
-                                                            <th 
-                                                                data-field="action" 
-                                                                data-halign="center" 
-                                                                data-align="center" 
-                                                                data-formatter="actionFirmwareTableFormatter"
-                                                            >
-                                                                操作
-                                                            </th>
-                                                        </tr>
-                                                    </thead>
-                                                </table>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="table-responsive table-container">
-                                <div class="row" id="firmwareTableContainer">
-                                    <table 
-                                        id="fileTable"
-                                        class="table table-hover"
-                                        data-checkbox-header="true"
-                                        data-click-to-select="false"
-                                    >
-                                        <thead>
-                                            <tr>
-                                                <th data-field="product_icon" data-halign="center" data-align="center" data-formatter="productIconTableFormatter"></th>
-                                                <th data-field="product_name" data-halign="center" data-align="center">产品名称</th>
-                                                <th data-field="newest_version" data-halign="center" data-align="center">最新固件版本</th>
-                                                <th data-field="action" data-halign="center" data-align="center" data-formatter="actionTableFormatter">操作</th>
-                                            </tr>
-                                        </thead>
-                                    </table>
-                                </div>
+                        <div class="table-responsive table-container">
+                            <div class="row" id="firmwareTableContainer">
+                                <table 
+                                    id="fileTable"
+                                    class="table table-hover"
+                                    data-checkbox-header="true"
+                                    data-click-to-select="false"
+                                >
+                                    <thead>
+                                        <tr>
+                                            <th data-field="product_icon" data-halign="center" data-align="center" data-formatter="productIconTableFormatter"></th>
+                                            <th data-field="product_name" data-halign="center" data-align="center">产品名称</th>
+                                            <th data-field="newest_version" data-halign="center" data-align="center">最新固件版本</th>
+                                            <th data-field="action" data-halign="center" data-align="center" data-formatter="actionTableFormatter">操作</th>
+                                        </tr>
+                                    </thead>
+                                </table>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-            <script src="/js/pages/firmware.js" type="text/javascript"></script>
-        </body>
-    </html>
+        </div>
+        <script src="/js/pages/firmware.js" type="text/javascript"></script>
+    </body>
+</html>
 {{ end }}

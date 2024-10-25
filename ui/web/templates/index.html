@@ -2,41 +2,41 @@
 SPDX-License-Identifier: Apache-2.0 -->
 
 {{ define "index" }}
-    <!doctype html>
-    <html lang="en">
-        <head>
-            <title>世邦思拓</title>
-            {{ template "header" }}
-			<style>
-				.responsive-iframe {
-					width: 100%;
-					height: 100%;
-					border: none;
-				}
-			</style>
-        </head>
-        <body>
-            {{ template "navbar" . }}
-			<iframe 
-				src="/ui/nxtDashboard" 
-				class="responsive-iframe"
-				name="iframePage" 
-				id="iframePage" 
-				frameborder="0" 
-				allowfullscreen 
-				sandbox="
-					allow-scripts 
-					allow-same-origin 
-					allow-popups
-					allow-forms 
-					allow-modals
-					allow-downloads
-					allow-top-navigation
-					allow-top-navigation-by-user-activation
-				"
-				loading="lazy"
-			>
-			</iframe>
-        </body>
-    </html>
+<!doctype html>
+<html lang="en">
+	<head>
+		<title>世邦思拓</title>
+		{{ template "header" }}
+		<style>
+			.responsive-iframe {
+				width: 100%;
+				height: 100%;
+				border: none;
+			}
+		</style>
+	</head>
+	<body>
+		{{ template "navbar" . }}
+		<iframe 
+			src="/ui/nxtDashboard" 
+			class="responsive-iframe"
+			name="iframePage" 
+			id="iframePage" 
+			frameborder="0" 
+			allowfullscreen 
+			sandbox="
+				allow-scripts 
+				allow-same-origin 
+				allow-popups
+				allow-forms 
+				allow-modals
+				allow-downloads
+				allow-top-navigation
+				allow-top-navigation-by-user-activation
+			"
+			loading="lazy"
+		>
+		</iframe>
+	</body>
+</html>
 {{ end }}
