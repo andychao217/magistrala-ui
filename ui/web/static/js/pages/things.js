@@ -1836,6 +1836,32 @@ function rebootThing(thingIdentity, callback, cancelCallback) {
     }, cancelCallback);
 }
 
+//测试mqtt
+function testMqtt () {
+    const queryData = {
+        channelID: "d1dc3422-584b-4ff0-bbc8-e57344b646d2",
+        comID: "d1dc3422-584b-4ff0-bbc8-e57344b646d2",
+        controlType: "deviceReboot",
+        host: "192.168.13.235",
+        thingIdentity: "rust_client",
+        username: "test1@test.com"
+    }
+    fetch(`http://192.168.13.235:63001/testMqtt`, {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+            "Authorization": getCookie('session'),
+        },
+        body: JSON.stringify(queryData),
+    })
+        .then(response => {
+            console.error("testMqtt sent");
+        })
+        .catch((error) => {
+            console.error("error testMqtt", error);
+        });
+}
+
 //控制设备
 function controlThing(controlThingData, callback = ()=>{}) {
     const domainID = sessionStorage.getItem("domainID");

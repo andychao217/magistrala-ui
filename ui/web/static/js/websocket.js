@@ -33,19 +33,7 @@ function connectWebSocket(host, port, defaultChannelId) {
 
     // 监听WebSocket的open事件，连接成功时给后台发一些参数，后台去建立mqtt连接
     ws.onopen = function (event) {
-        // console.log("WebSocket is open now.");
-        const topics = [
-            `channels/${defaultChannelId}/messages/common/app`,
-            `channels/${defaultChannelId}/messages/common/device`,
-            `channels/${defaultChannelId}/messages/web_${defaultChannelId}`
-        ];
-        const message = { 
-            topics: topics, 
-            host: hostNameWebsocket, 
-            thingSecret: "platform" + defaultChannelId, 
-            message: "connect" 
-        };
-        ws.send(JSON.stringify(message));
+        console.log("WebSocket is open now.");
     };
 
     // 监听WebSocket的message事件，后台发来消息时触发
