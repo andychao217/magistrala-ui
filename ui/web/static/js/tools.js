@@ -201,7 +201,7 @@ function getDeviceIcon (deviceInfo) {
 	if (product_name.indexOf('3401') > -1 || product_name.indexOf('2401') > -1) {
 		src = 'icon_device5.svg';
 	}
-	if (product_name.indexOf('3602') > -1) {
+	if (product_name.indexOf('3602') > -1 || product_name.indexOf('9823') > -1) {
 		src = 'logo_3602.png';
 	}
 	return src;

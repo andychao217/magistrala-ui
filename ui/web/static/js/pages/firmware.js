@@ -21,6 +21,11 @@ const initFirmwareList = [
         product_name: 'NXT3602',
         newest_version: '',
     },
+    {
+        id: 3,
+        product_name: 'XC9823A',
+        newest_version: '',
+    },
 ];
 
 const $fileTable = $('#fileTable');
@@ -77,7 +82,7 @@ function productIconTableFormatter(value, row, index) {
         src = '/images/logo_2204.png';
     } else if (row.product_name.includes('2102')) {
         src = '/images/logo_2102.png';
-    } else if (row.product_name.includes('3602')) {
+    } else if (row.product_name.includes('3602') || row.product_name.includes('9823')) {
         src = '/images/logo_3602.png';
     }
     return `<img loading="lazy" src=${src} style="height:40px;" />`;
