@@ -22,7 +22,12 @@ const initFirmwareList = [
         newest_version: '',
     },
     {
-        id: 3,
+        id: 4,
+        product_name: 'NXT3603',
+        newest_version: '',
+    },
+    {
+        id: 5,
         product_name: 'XC9823A',
         newest_version: '',
     },
@@ -82,7 +87,7 @@ function productIconTableFormatter(value, row, index) {
         src = '/images/logo_2204.png';
     } else if (row.product_name.includes('2102')) {
         src = '/images/logo_2102.png';
-    } else if (row.product_name.includes('3602') || row.product_name.includes('9823')) {
+    } else if (row.product_name.includes('3602') || row.product_name.includes('3603') || row.product_name.includes('9823')) {
         src = '/images/logo_3602.png';
     }
     return `<img loading="lazy" src=${src} style="height:40px;" />`;

@@ -165,7 +165,7 @@ function productIconUpdateDeviceTableFormatter(value, row, index) {
         if (onlineStatus === "1") {
             src = '/images/icon_device2.svg';
         }
-    } else if (product_name.includes('3602')|| product_name.includes('9823')) {
+    } else if (product_name.includes('3602')|| product_name.includes('3603')|| product_name.includes('9823')) {
         src = '/images/icon_device8_dis.svg';
         if (onlineStatus === "1") {
             src = '/images/icon_device8.svg';
@@ -245,7 +245,7 @@ function updateDevice(deviceId) {
 function getLatestFirmwares() {
     latestFirmwares = [];
     const queryData = {
-        product_name_list: ['NXT2102', 'NXT2204', 'NXT3602', 'XC9823A'],
+        product_name_list: ['NXT2102', 'NXT2204', 'NXT3602', 'NXT3603', 'XC9823A'],
     }
     fetch(`${protocol}//${hostname}:${minioBridgePort}/getLatestFirmwares`, {
         method: 'POST',

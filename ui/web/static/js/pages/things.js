@@ -954,7 +954,7 @@ function initMoreEditThingModal(device) {
         $('#moreEditThingModal-eqCfg-tab').hide();
 
         //NXT3602的6组扬声器音量、话筒EQ
-        if (deviceInfo.product_name.includes("3602") || deviceInfo.product_name.includes("9823")) {
+        if (deviceInfo.product_name.includes("3602") || deviceInfo.product_name.includes("3603") || deviceInfo.product_name.includes("9823")) {
             //音量设置
             const volume_trans_array = [-90, -30, -25, -22, -19, -16, -13, -10, -8, -6, -5, -4, -3, -2, -1, 0];
             $('#moreEditThingModal-speaker-volume-tab').show();
